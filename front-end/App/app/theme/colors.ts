@@ -44,6 +44,12 @@ export const colors = {
    * semantic names as much as possible.
    */
   palette,
+
+  kakao: "rgba(254, 229, 0, 1)",
+  naver: "rgba(3, 199, 90, 1)",
+  google: "rgba(255, 255, 255, 1)",
+  black: "rgba(0, 0, 0, 1)",
+  white: "rgba(255, 255, 255, 1)",
   /**
    * A helper for making something see-thru.
    */
@@ -59,7 +65,7 @@ export const colors = {
   /**
    * The default color of the screen background.
    */
-  background: palette.neutral200,
+  background: "rgba(255, 255, 255, 1)",
   /**
    * The default border color.
    */

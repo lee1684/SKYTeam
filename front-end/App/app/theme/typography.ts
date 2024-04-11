@@ -2,30 +2,40 @@
 // markdown file and add links from here
 
 import { Platform } from "react-native"
-import {
-  SpaceGrotesk_300Light as spaceGroteskLight,
-  SpaceGrotesk_400Regular as spaceGroteskRegular,
-  SpaceGrotesk_500Medium as spaceGroteskMedium,
-  SpaceGrotesk_600SemiBold as spaceGroteskSemiBold,
-  SpaceGrotesk_700Bold as spaceGroteskBold,
-} from "@expo-google-fonts/space-grotesk"
+
+const pretendardThin = require("../../assets/fonts/Pretendard-Thin.ttf")
+const pretendardExtraLight = require("../../assets/fonts/Pretendard-ExtraLight.ttf")
+const pretendardLight = require("../../assets/fonts/Pretendard-Light.ttf")
+const pretendardRegular = require("../../assets/fonts/Pretendard-Regular.ttf")
+const pretendardMedium = require("../../assets/fonts/Pretendard-Medium.ttf")
+const pretendardSemiBold = require("../../assets/fonts/Pretendard-SemiBold.ttf")
+const pretendardBold = require("../../assets/fonts/Pretendard-Bold.ttf")
+const pretendardExtraBold = require("../../assets/fonts/Pretendard-ExtraBold.ttf")
+const pretendardBlack = require("../../assets/fonts/Pretendard-Black.ttf")
 
 export const customFontsToLoad = {
-  spaceGroteskLight,
-  spaceGroteskRegular,
-  spaceGroteskMedium,
-  spaceGroteskSemiBold,
-  spaceGroteskBold,
+  pretendardThin,
+  pretendardExtraLight,
+  pretendardLight,
+  pretendardRegular,
+  pretendardMedium,
+  pretendardSemiBold,
+  pretendardBold,
+  pretendardExtraBold,
+  pretendardBlack,
 }
 
 const fonts = {
-  spaceGrotesk: {
-    // Cross-platform Google font.
-    light: "spaceGroteskLight",
-    normal: "spaceGroteskRegular",
-    medium: "spaceGroteskMedium",
-    semiBold: "spaceGroteskSemiBold",
-    bold: "spaceGroteskBold",
+  pretendard: {
+    thin: "pretendardThin",
+    extraLight: "pretendardExtraLight",
+    light: "pretendardLight",
+    regular: "pretendardRegular",
+    medium: "pretendardMedium",
+    semiBold: "pretendardSemiBold",
+    bold: "pretendardBold",
+    extraBold: "pretendardExtraBold",
+    black: "pretendardBlack",
   },
   helveticaNeue: {
     // iOS only font.
@@ -59,7 +69,7 @@ export const typography = {
   /**
    * The primary font. Used in most places.
    */
-  primary: fonts.spaceGrotesk,
+  primary: fonts.pretendard,
   /**
    * An alternate font used for perhaps titles and stuff.
    */

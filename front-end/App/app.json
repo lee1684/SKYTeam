@@ -11,15 +11,13 @@
     "splash": {
       "image": "./assets/images/splash-logo-all.png",
       "resizeMode": "contain",
-      "backgroundColor": "#191015"
+      "backgroundColor": "#FFFFFF"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
     "jsEngine": "hermes",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "android": {
       "icon": "./assets/images/app-icon-android-legacy.png",
       "package": "com.app",
@@ -30,7 +28,7 @@
       "splash": {
         "image": "./assets/images/splash-logo-android-universal.png",
         "resizeMode": "contain",
-        "backgroundColor": "#191015"
+        "backgroundColor": "#FFFFFF"
       }
     },
     "ios": {
@@ -41,7 +39,7 @@
         "image": "./assets/images/splash-logo-ios-mobile.png",
         "tabletImage": "./assets/images/splash-logo-ios-tablet.png",
         "resizeMode": "contain",
-        "backgroundColor": "#191015"
+        "backgroundColor": "#FFFFFF"
       }
     },
     "web": {
@@ -49,11 +47,27 @@
       "splash": {
         "image": "./assets/images/splash-logo-web.png",
         "resizeMode": "contain",
-        "backgroundColor": "#191015"
+        "backgroundColor": "#FFFFFF"
       },
       "bundler": "metro"
     },
     "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "assets/fonts/Pretendard-Thin.ttf",
+            "assets/fonts/Pretendard-ExtraLight.ttf",
+            "assets/fonts/Pretendard-Light.ttf",
+            "assets/fonts/Pretendard-Regular.ttf",
+            "assets/fonts/Pretendard-Medium.ttf",
+            "assets/fonts/Pretendard-SemiBold.ttf",
+            "assets/fonts/Pretendard-Bold.ttf",
+            "assets/fonts/Pretendard-ExtraBold.ttf",
+            "assets/fonts/Pretendard-Black.ttf"
+          ]
+        }
+      ],
       "expo-localization",
       [
         "expo-build-properties",
@@ -66,8 +80,7 @@
             "newArchEnabled": false
           }
         }
-      ],
-      "expo-font"
+      ]
     ],
     "experiments": {
       "tsconfigPaths": true
