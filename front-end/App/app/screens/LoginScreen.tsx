@@ -1,10 +1,13 @@
 import { observer } from "mobx-react-lite"
 import React, { ComponentType, FC, useEffect, useMemo, useRef, useState } from "react"
-import { TextInput, TextStyle, ViewStyle } from "react-native"
+import { Image, ImageStyle, TextInput, TextStyle, View, ViewStyle } from "react-native"
 import { Button, Icon, Screen, Text, TextField, TextFieldAccessoryProps } from "../components"
 import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
+import { KakaoLoginButton } from "app/components/KakaoLoginButton"
+import { NaverLoginButton } from "app/components/NaverLoginButton"
+import { GoogleLoginButton } from "app/components/GoogleLoginButton"
 
 interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 
@@ -19,18 +22,18 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     authenticationStore: { authEmail, setAuthEmail, setAuthToken, validationError },
   } = useStores()
 
-  useEffect(() => {
-    // Here is where you could fetch credentials from keychain or storage
-    // and pre-fill the form fields.
-    setAuthEmail("ignite@infinite.red")
-    setAuthPassword("ign1teIsAwes0m3")
+  // useEffect(() => {
+  //   // Here is where you could fetch credentials from keychain or storage
+  //   // and pre-fill the form fields.
+  //   setAuthEmail("ignite@infinite.red")
+  //   setAuthPassword("ign1teIsAwes0m3")
 
-    // Return a "cleanup" function that React will run when the component unmounts
-    return () => {
-      setAuthPassword("")
-      setAuthEmail("")
-    }
-  }, [])
+  //   // Return a "cleanup" function that React will run when the component unmounts
+  //   return () => {
+  //     setAuthPassword("")
+  //     setAuthEmail("")
+  //   }
+  // }, [])
 
   const error = isSubmitted ? validationError : ""
 
@@ -68,15 +71,23 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 
   return (
     <Screen
-      preset="auto"
+      preset="fixed"
       contentContainerStyle={$screenContentContainer}
       safeAreaEdges={["top", "bottom"]}
     >
-      <Text testID="login-heading" tx="loginScreen.signIn" preset="heading" style={$signIn} />
+      <View style={$logoView}>
+        <Image source={require("../../assets/icons/salong-logo.png")} />
+      </View>
+      <View style={$loginButtonBox}>
+        <GoogleLoginButton />
+        <KakaoLoginButton />
+        <NaverLoginButton />
+      </View>
+      {/* <Text testID="login-heading" tx="loginScreen.signIn" preset="heading" style={$signIn} />
       <Text tx="loginScreen.enterDetails" preset="subheading" style={$enterDetails} />
-      {attemptsCount > 2 && <Text tx="loginScreen.hint" size="sm" weight="light" style={$hint} />}
+      {attemptsCount > 2 && <Text tx="loginScreen.hint" size="sm" weight="light" style={$hint} />} */}
 
-      <TextField
+      {/* <TextField
         value={authEmail}
         onChangeText={setAuthEmail}
         containerStyle={$textField}
@@ -112,33 +123,27 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
         style={$tapButton}
         preset="reversed"
         onPress={login}
-      />
+      /> */}
     </Screen>
   )
 })
 
 const $screenContentContainer: ViewStyle = {
-  paddingVertical: spacing.xxl,
-  paddingHorizontal: spacing.lg,
+  flex: 1,
+  paddingTop: 120,
+  paddingBottom: 80,
 }
 
-const $signIn: TextStyle = {
-  marginBottom: spacing.sm,
+const $loginButtonBox: ViewStyle = {
+  display: "flex",
+  flexDirection: "column",
+  flex: 1,
+  justifyContent: "flex-end",
+  marginHorizontal: 32,
+  gap: 16,
 }
 
-const $enterDetails: TextStyle = {
-  marginBottom: spacing.lg,
-}
-
-const $hint: TextStyle = {
-  color: colors.tint,
-  marginBottom: spacing.md,
-}
-
-const $textField: ViewStyle = {
-  marginBottom: spacing.lg,
-}
-
-const $tapButton: ViewStyle = {
-  marginTop: spacing.xs,
+const $logoView: ViewStyle = {
+  display: "flex",
+  alignItems: "center",
 }
