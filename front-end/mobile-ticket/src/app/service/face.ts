@@ -16,10 +16,9 @@ export class Face extends CSS3DObject {
     this.ticketSize = ticketSize;
     this.side = side;
     this.decoration = decoration;
-    this.initCanvas();
-    this.addRect();
-    this.addText();
-    this.addImage();
+    this.initCanvas(); //
+    //this.addRect();
+    //this.addText();
   }
 
   public initCanvas(): void {
