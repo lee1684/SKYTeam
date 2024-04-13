@@ -1,0 +1,3 @@
+<div *ngIf="this.nowMode === this.mobileTicketMode.APPVIEW && this.isEditing === false" id="viewport" #rendererContainer
+    [style.height]="this.viewerHeight"></div>
+<div *ngIf="this.nowMode === this.mobileTicketMode.APPVIEW && this.isEditing === true" id="edit-view #editView"></div>

@@ -1,0 +1,13 @@
+<div id="editor-container">
+    <div>
+        <div></div>
+        <div></div>
+    </div>
+    <app-simple-button *ngFor="let label of this.editFeatureLabels" [label]="label"
+        (onClickEvent)="onClickEditFeatureButton(label)"></app-simple-button>
+    <button class="focus-front-button" (click)="this.onClickFocusFrontButton()">정면 포커스</button>
+    <button class="focus-front-button" (click)="this.onClickButton()">템프</button>
+    <div id="editor-feature-container">
+        <div #temp id="temp"></div>
+    </div>
+</div>
