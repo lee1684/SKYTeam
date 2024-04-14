@@ -32,19 +32,16 @@ export class Face extends CSS3DObject {
   public addRect(): void {
     const rect = new fabric.Rect({
       left: 0,
-      top: 0,
+      top: 30,
       fill: '#FF0000',
       width: 170,
       height: 40,
-    });
-    rect.on('selected', function () {
-      console.log('selected a rectangle');
     });
     this.fabricCanvas!.add(rect);
   }
 
   public addText(): void {
-    const text = new fabric.Text('안녕하세요 SSALON 모바일 증표 데모', {
+    const text = new fabric.Text('ll', {
       left: 20,
       top: 5,
       fill: 'black',
@@ -56,11 +53,13 @@ export class Face extends CSS3DObject {
 
   public addImage(): void {
     const imgElement = document.createElement('img');
-    imgElement.src = 'assets/image.png';
+    imgElement.src = 'assets/heart.png';
     const image = new fabric.Image(imgElement, {
       left: 0,
       top: 0,
       angle: 0,
+      width: 100,
+      height: 90,
     });
     this.fabricCanvas!.add(image);
   }

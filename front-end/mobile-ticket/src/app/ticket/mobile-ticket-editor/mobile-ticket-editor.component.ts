@@ -27,7 +27,7 @@ export class MobileTicketEditorComponent {
         this._sceneGraphService.mobileTicket!.frontSide!.addText();
         break;
       case 'Picture':
-        //this._sceneGraphService.mobileTicket!.frontSide!.addPicture();
+        this._sceneGraphService.mobileTicket!.frontSide!.addRect();
         break;
       case 'Draw':
         //this._sceneGraphService.mobileTicket!.frontSide!.addDraw();

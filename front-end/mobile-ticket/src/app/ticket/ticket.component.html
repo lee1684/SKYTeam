@@ -1,2 +1,34 @@
-<app-mobile-ticket-viewer [style.height]="this.viewerHeight"></app-mobile-ticket-viewer>
-<app-mobile-ticket-editor [style.height]="this.editorHeight"></app-mobile-ticket-editor>
+<!-- APPVIEW: 앱에서 보는 화면의 경우 -->
+<div class="container" *ngIf="this.mode === this.mobileTicketViewMode.APPVIEW">
+    <div [style.height]="this.viewerHeight">
+        <app-mobile-ticket-viewer></app-mobile-ticket-viewer>
+    </div>
+</div>
+
+<!-- APPEDITVIEW: 앱에서 보는 꾸미기 화면의 경우 -->
+<div class="container" *ngIf="this.mode === this.mobileTicketViewMode.APPEDITVIEW">
+    <div [style.height]="this.viewerHeight" *ngIf="this.editViewMode === this.mobileTicketEditViewMode.PREVIEW">
+        <app-mobile-ticket-viewer></app-mobile-ticket-viewer>
+    </div>
+    <div [style.height]="this.editViewerHeight" *ngIf="this.editViewMode === this.mobileTicketEditViewMode.EDITVIEW">
+        <app-mobile-ticket-edit-viewer></app-mobile-ticket-edit-viewer>
+    </div>
+    <div id="edit-features">
+        <div [style.width]="'20%'">d</div>
+        <div [style.width]="'80%'">
+            <app-circle-toggle-button-group [elements]="this.toggleButtonElements"
+                [selectedValue]="this.mobileTicketEditViewMode.PREVIEW"
+                (onClickToggleButtonEvent)="changeEditViewerMode($event)"></app-circle-toggle-button-group>
+        </div>
+    </div>
+    <div [style.height]="this.editorHeight">
+        <app-mobile-ticket-editor></app-mobile-ticket-editor>
+    </div>
+</div>
+
+<!-- WEBVIEW: 웹에서 보는 화면의 경우 -->
+<div class="container" *ngIf="this.mode === this.mobileTicketViewMode.WEBVIEW">
+    <div [style.height]="this.viewerHeight">
+        <app-mobile-ticket-viewer></app-mobile-ticket-viewer>
+    </div>
+</div>
