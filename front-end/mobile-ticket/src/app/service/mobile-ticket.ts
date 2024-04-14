@@ -12,17 +12,10 @@ import {
 import { ScenegraphService } from './scenegraph.service';
 import { Injectable } from '@angular/core';
 
-export enum MobileTicketMode {
-  APPVIEW,
-  EDIT,
-  WEBVIEW,
-}
-
 @Injectable({
   providedIn: 'root',
 })
 export class MobileTicket {
-  public mode: MobileTicketMode = MobileTicketMode.APPVIEW;
   public mobileTicket: Object3D | null = null;
   public frontSide: Face | null = null;
   public backSide: Face | null = null;

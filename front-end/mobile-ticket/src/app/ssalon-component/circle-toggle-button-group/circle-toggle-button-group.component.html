@@ -1,0 +1,6 @@
+<div id="container" #toggleButtonContainer>
+    <div class="toggle-button" #toggleButton *ngFor="let element of this.elements"
+        (click)="this.onClickToggleButton(element.value)">
+        <img src="assets/view.png" width="24px" height="24px" />
+    </div>
+</div>
