@@ -60,8 +60,4 @@ export class TicketComponent {
   public changeMode(mode: MobileTicketViewMode): void {
     this.mode = mode;
   }
-
-  public changeEditViewerMode(mode: MobileTicketEditViewMode): void {
-    this.editViewMode = mode;
-  }
 }
