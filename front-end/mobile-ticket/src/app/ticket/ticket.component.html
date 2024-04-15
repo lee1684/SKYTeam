@@ -13,14 +13,7 @@
     <div [style.height]="this.editViewerHeight" *ngIf="this.editViewMode === this.mobileTicketEditViewMode.EDITVIEW">
         <app-mobile-ticket-edit-viewer></app-mobile-ticket-edit-viewer>
     </div>
-    <div id="edit-features">
-        <div [style.width]="'20%'">d</div>
-        <div [style.width]="'80%'">
-            <app-circle-toggle-button-group [elements]="this.toggleButtonElements"
-                [selectedValue]="this.mobileTicketEditViewMode.PREVIEW"
-                (onClickToggleButtonEvent)="changeEditViewerMode($event)"></app-circle-toggle-button-group>
-        </div>
-    </div>
+
     <div [style.height]="this.editorHeight">
         <app-mobile-ticket-editor></app-mobile-ticket-editor>
     </div>

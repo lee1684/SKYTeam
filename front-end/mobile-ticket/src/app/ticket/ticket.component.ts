@@ -47,14 +47,6 @@ export class TicketComponent {
   public editViewMode: MobileTicketEditViewMode =
     MobileTicketEditViewMode.PREVIEW;
 
-  public toggleButtonElements: SimpleToggleButtonElement[] = [
-    { label: '미리보기 뷰', value: MobileTicketEditViewMode.PREVIEW },
-    { label: '편집뷰', value: MobileTicketEditViewMode.EDITVIEW },
-    { label: '편집뷰', value: 2 },
-    { label: '편집뷰', value: 3 },
-    { label: '편집뷰', value: 4 },
-    { label: '편집뷰', value: 5 },
-  ];
   constructor() {}
 
   public changeMode(mode: MobileTicketViewMode): void {
