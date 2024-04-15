@@ -10,6 +10,11 @@ import {
 import { SimpleToggleButtonElement } from '../simple-toggle-button-group/simple-toggle-button-group.component';
 import { NgFor } from '@angular/common';
 
+export interface CircleToggleButtonElement {
+  imgSrc: string;
+  value: number;
+  label: string;
+}
 @Component({
   selector: 'app-circle-toggle-button-group',
   standalone: true,
@@ -21,15 +26,14 @@ export class CircleToggleButtonGroupComponent {
   @ViewChildren('toggleButton')
   buttons: QueryList<ElementRef> | null = null;
 
-  @Input() public elements: SimpleToggleButtonElement[] = [];
+  @Input() public elements: CircleToggleButtonElement[] = [];
   @Input() public selectedValue: number = 0;
+  @Input() public outerSize: string = '44px';
+  @Input() public innerSize: string = '20px';
   @Output() public readonly onClickToggleButtonEvent = new EventEmitter();
 
-  public buttonWidth: string = '30%';
   constructor() {}
-  public ngOnInit(): void {
-    this.buttonWidth = `${100 / this.elements.length}%`;
-  }
+  public ngOnInit(): void {}
   public ngAfterViewInit(): void {
     const buttonsArray = this.buttons!.toArray();
     buttonsArray![this.selectedValue].nativeElement.classList.add('selected');
@@ -51,5 +55,13 @@ export class CircleToggleButtonGroupComponent {
     this.selectedValue = value;
     /* 부모 컴포넌트에 이벤트 전달 */
     this.onClickToggleButtonEvent.emit(value);
+  }
+
+  public getImgSrc(originalImgSrc: string, value: number): string {
+    let imgSrc = originalImgSrc;
+    if (this.selectedValue === value) {
+      imgSrc = imgSrc.replace('.png', '_selected.png');
+    }
+    return imgSrc;
   }
 }
