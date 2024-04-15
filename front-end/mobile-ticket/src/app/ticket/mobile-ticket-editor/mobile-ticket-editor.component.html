@@ -1,2 +1,13 @@
-<app-circle-toggle-button-group [elements]="this.editFeatures" [selectedValue]="this.mobileTicketEditMode.PREVIEW"
-    [innerSize]="'20px'" [outerSize]="'44px'"></app-circle-toggle-button-group>
+<div id="feature-button-container">
+  <app-simple-button
+    [buttonElement]="this.goBackButtonElement"
+    [heightSize]="40"
+  ></app-simple-button>
+  <app-circle-toggle-button-group
+    [elements]="this.editFeatures"
+    [selectedValue]="this.mobileTicketEditMode.PREVIEW"
+    [innerSize]="20"
+    [outerSize]="'40px'"
+    (onClickToggleButtonEvent)="this.onClickToggleButton($event)"
+  ></app-circle-toggle-button-group>
+</div>

@@ -69,7 +69,6 @@ export class ScenegraphService {
     this.css3dRenderer = new CSS3DRenderer();
     this.css3dRenderer.domElement.style.touchAction = 'none';
     this.css3dRenderer.domElement.style.position = 'absolute';
-    this.css3dRenderer.domElement.style.top = '0px';
     this.css3dRenderer.setSize(width, height);
     this.nativeElement.appendChild(this.css3dRenderer.domElement);
   }

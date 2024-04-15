@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ButtonElement } from '../circle-toggle-button-group/circle-toggle-button-group.component';
 
 @Component({
   selector: 'app-simple-button',
@@ -8,6 +9,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrl: './simple-button.component.scss',
 })
 export class SimpleButtonComponent {
-  @Input() label: string = '';
+  @Input() heightSize: number = 20;
+  @Input() buttonElement: ButtonElement | null = null;
   @Output() public readonly onClickEvent = new EventEmitter();
 }
