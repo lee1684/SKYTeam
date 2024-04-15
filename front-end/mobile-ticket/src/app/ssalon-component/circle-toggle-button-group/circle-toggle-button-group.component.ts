@@ -10,7 +10,7 @@ import {
 import { SimpleToggleButtonElement } from '../simple-toggle-button-group/simple-toggle-button-group.component';
 import { NgFor } from '@angular/common';
 
-export interface CircleToggleButtonElement {
+export interface ButtonElement {
   imgSrc: string;
   value: number;
   label: string;
@@ -26,10 +26,10 @@ export class CircleToggleButtonGroupComponent {
   @ViewChildren('toggleButton')
   buttons: QueryList<ElementRef> | null = null;
 
-  @Input() public elements: CircleToggleButtonElement[] = [];
+  @Input() public elements: ButtonElement[] = [];
   @Input() public selectedValue: number = 0;
-  @Input() public outerSize: string = '44px';
-  @Input() public innerSize: string = '20px';
+  @Input() public outerSize: string = '40px';
+  @Input() public innerSize: number = 20;
   @Output() public readonly onClickToggleButtonEvent = new EventEmitter();
 
   constructor() {}

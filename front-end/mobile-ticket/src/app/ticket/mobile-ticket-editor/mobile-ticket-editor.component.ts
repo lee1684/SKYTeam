@@ -1,12 +1,19 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { SimpleButtonComponent } from '../../ssalon-component/simple-button/simple-button.component';
 import { NgFor } from '@angular/common';
 import { MobileTicket } from '../../service/mobile-ticket';
 import { ScenegraphService } from '../../service/scenegraph.service';
 import {
-  CircleToggleButtonElement,
+  ButtonElement,
   CircleToggleButtonGroupComponent,
 } from '../../ssalon-component/circle-toggle-button-group/circle-toggle-button-group.component';
+import { MobileTicketViewMode } from '../ticket.component';
 
 export enum MobileTicketEditMode {
   BACKGROUND_COLOR_CHANGE,
@@ -26,11 +33,16 @@ export enum MobileTicketEditMode {
 })
 export class MobileTicketEditorComponent {
   @ViewChild('temp', { static: true }) temp: ElementRef | null = null;
-  public editFeatureLabels: string[] = ['Text', 'Picture', 'Draw'];
+  @Output() public readonly onChangeViewer = new EventEmitter();
   constructor(private _sceneGraphService: ScenegraphService) {}
 
   public mobileTicketEditMode = MobileTicketEditMode;
-  public editFeatures: CircleToggleButtonElement[] = [
+  public goBackButtonElement: ButtonElement = {
+    imgSrc: 'assets/icons/go-back.png',
+    label: '뒤로가기',
+    value: 0,
+  };
+  public editFeatures: ButtonElement[] = [
     {
       imgSrc: 'assets/icons/color-board.png',
       label: '미리보기 뷰',
@@ -65,5 +77,8 @@ export class MobileTicketEditorComponent {
   ngAfterViewInit(): void {}
   public onClickFocusFrontButton(): void {
     this._sceneGraphService.focusFront();
+  }
+  public onClickToggleButton(value: MobileTicketEditMode): void {
+    this.onChangeViewer.emit(value);
   }
 }

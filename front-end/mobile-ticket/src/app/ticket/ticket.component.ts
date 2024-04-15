@@ -1,6 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { MobileTicketViewerComponent } from './mobile-ticket-viewer/mobile-ticket-viewer.component';
-import { MobileTicketEditorComponent } from './mobile-ticket-editor/mobile-ticket-editor.component';
+import {
+  MobileTicketEditMode,
+  MobileTicketEditorComponent,
+} from './mobile-ticket-editor/mobile-ticket-editor.component';
 import { MobileTicketEditViewerComponent } from './mobile-ticket-edit-viewer/mobile-ticket-edit-viewer.component';
 import { NgIf } from '@angular/common';
 import {
@@ -14,11 +17,6 @@ export enum MobileTicketViewMode {
   APPVIEW,
   APPEDITVIEW,
   WEBVIEW,
-}
-
-export enum MobileTicketEditViewMode {
-  PREVIEW,
-  EDITVIEW,
 }
 
 @Component({
@@ -38,16 +36,17 @@ export enum MobileTicketEditViewMode {
 export class TicketComponent {
   public editViewerHeight: string = '60%';
   public viewerHeight: string = '60%';
-  public editorHeight: string = '35%';
 
   public mobileTicketViewMode = MobileTicketViewMode;
   public mode: MobileTicketViewMode = MobileTicketViewMode.APPEDITVIEW;
 
-  public mobileTicketEditViewMode = MobileTicketEditViewMode;
-  public editViewMode: MobileTicketEditViewMode =
-    MobileTicketEditViewMode.PREVIEW;
+  public mobileTicketEditMode = MobileTicketEditMode;
+  public editMode: MobileTicketEditMode = MobileTicketEditMode.PREVIEW;
 
   constructor() {}
+  public changeEditMode(mode: MobileTicketEditMode) {
+    this.editMode = mode;
+  }
 
   public changeMode(mode: MobileTicketViewMode): void {
     this.mode = mode;

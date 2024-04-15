@@ -24,9 +24,4 @@ export class MobileTicketViewerComponent {
   ngOnDestroy(): void {
     this._sceneGraphService.destroy();
   }
-
-  @HostListener('window:mousedown', ['$event'])
-  public onMouseDown(event: MouseEvent): void {
-    console.log('a');
-  }
 }

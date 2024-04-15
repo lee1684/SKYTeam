@@ -1,11 +1,13 @@
-#editor-container {
-    width: 100%;
-    height: 100%;
-    background-color: white;
+.editor-button {
+  width: 50px;
+  height: 50px;
+  margin: 10px;
 }
 
-.editor-button {
-    width: 50px;
-    height: 50px;
-    margin: 10px;
+#feature-button-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
 }
