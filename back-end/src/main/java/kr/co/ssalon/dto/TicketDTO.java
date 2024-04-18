@@ -1,5 +1,6 @@
 package kr.co.ssalon.dto;
 
+import kr.co.ssalon.domain.entity.*;
 import lombok.*;
 
 @Getter
@@ -8,5 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TicketDTO {
+    private Long id;
+    private Meeting meeting;
     private String decoration;
 }

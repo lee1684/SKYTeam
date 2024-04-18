@@ -47,28 +47,28 @@ public class TicketConroller {
         return new ResponseEntity<>((MultiValueMap<String, String>) diaryDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/users/{userId}/tickets")
-    public ResponseEntity<String> getTicketsById (@PathVariable("userId") Long userId) {
-        return null;
-    }
-
-    @GetMapping("/tickets/{moimId}/link")
-    public ResponseEntity<String> getLinkById (@PathVariable("moimId") Long moimId) {
-        return null;
-    }
-
-    @DeleteMapping("/tickets/{moimId}/link")
-    public ResponseEntity<HttpStatus> removeLinkById (@PathVariable("moimId") Long moimId) {
-        return new ResponseEntity<HttpStatus>(HttpStatus.ACCEPTED);
-    }
-
-    @GetMapping("/tickets/{moimId}/{userId}/link")
-    public  ResponseEntity<String> getQRLinkById (@PathVariable("moimid") Long moimId, @PathVariable("userId") Long userId) {
-        return null;
-    }
-
-    @PostMapping("/tickets/{moimId}/{userId}/link")
-    public  ResponseEntity<String> checkQRLinkById (@PathVariable("moimid") Long moimId, @PathVariable("userId") Long userId) {
-        return null;
-    }
+//    @GetMapping("/users/{userId}/tickets")
+//    public ResponseEntity<String> getTicketsById (@PathVariable("userId") Long userId) {
+//        return null;
+//    }
+//
+//    @GetMapping("/tickets/{moimId}/link")
+//    public ResponseEntity<String> getLinkById (@PathVariable("moimId") Long moimId) {
+//        return null;
+//    }
+//
+//    @DeleteMapping("/tickets/{moimId}/link")
+//    public ResponseEntity<HttpStatus> removeLinkById (@PathVariable("moimId") Long moimId) {
+//        return new ResponseEntity<HttpStatus>(HttpStatus.ACCEPTED);
+//    }
+//
+//    @GetMapping("/tickets/{moimId}/{userId}/link")
+//    public  ResponseEntity<String> getQRLinkById (@PathVariable("moimid") Long moimId, @PathVariable("userId") Long userId) {
+//        return null;
+//    }
+//
+//    @PostMapping("/tickets/{moimId}/{userId}/link")
+//    public  ResponseEntity<String> checkQRLinkById (@PathVariable("moimid") Long moimId, @PathVariable("userId") Long userId) {
+//        return null;
+//    }
 }

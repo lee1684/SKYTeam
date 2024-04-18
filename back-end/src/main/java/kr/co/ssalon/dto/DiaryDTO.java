@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DiaryDTO {
+    private String id;
     private String title;
     private String image_url;
     private String description;
