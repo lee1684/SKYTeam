@@ -1,13 +1,11 @@
-#edit-viewer {
-  background-color: black;
-  border-radius: 10px;
-  width: 90%;
-  height: 100%;
+.ticket-view-elements {
+    width: 250px;
+    height: 500px;
 }
 
 .container {
-  display: flex;
-  justify-content: center;
-  height: 100%;
-  width: 100%;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
 }

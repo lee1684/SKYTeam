@@ -34,6 +34,7 @@ export enum MobileTicketEditMode {
 export class MobileTicketEditorComponent {
   @ViewChild('temp', { static: true }) temp: ElementRef | null = null;
   @Output() public readonly onChangeViewer = new EventEmitter();
+  @Output() public readonly onAddObject = new EventEmitter();
   constructor(private _sceneGraphService: ScenegraphService) {}
 
   public mobileTicketEditMode = MobileTicketEditMode;
@@ -74,6 +75,7 @@ export class MobileTicketEditorComponent {
       value: MobileTicketEditMode.PREVIEW,
     },
   ];
+  public fabricObject: any = null;
   ngAfterViewInit(): void {}
   public onClickFocusFrontButton(): void {
     this._sceneGraphService.focusFront();

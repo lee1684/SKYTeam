@@ -51,4 +51,8 @@ export class TicketComponent {
   public changeMode(mode: MobileTicketViewMode): void {
     this.mode = mode;
   }
+
+  public addFabricObject(object: any) {
+    console.log(object);
+  }
 }
