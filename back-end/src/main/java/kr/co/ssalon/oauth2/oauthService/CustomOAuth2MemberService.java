@@ -5,6 +5,7 @@ import kr.co.ssalon.oauth2.*;
 import kr.co.ssalon.web.dto.Oauth2MemberDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -25,22 +26,26 @@ public class CustomOAuth2MemberService extends DefaultOAuth2UserService {
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         OAuth2Response oAuth2Response = null;
 
+        log.info("Attributes = {}", oAuth2User.getAttributes());
         if (registrationId.equals("naver")) {
             oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
         } else if (registrationId.equals("google")) {
             oAuth2Response = new GoogleResponse(oAuth2User.getAttributes());
+        } else if (registrationId.equals("kakao")) {
+            oAuth2Response = new KakaoResponse(oAuth2User.getAttributes());
         } else {
             return null;
         }
-
-        String username = oAuth2Response.getProvider() + " " + oAuth2Response.getProviderId();
-        String role = "ROLE_USER";
-        Oauth2MemberDto oauth2MemberDto = new Oauth2MemberDto(username, oAuth2Response.getEmail(), role);
+        Oauth2MemberDto oauth2MemberDto = new Oauth2MemberDto(oAuth2Response);
         try {
             memberService.register(oauth2MemberDto.getUsername(), oauth2MemberDto.getEmail(), oauth2MemberDto.getRole());
         } catch (Exception e) {
             log.info("{}", e.getMessage());
-            memberService.oauthUpdate(oauth2MemberDto.getUsername(), oauth2MemberDto.getEmail(), oauth2MemberDto.getRole());
+            try {
+                memberService.oauthUpdate(oauth2MemberDto.getUsername(), oauth2MemberDto.getEmail(), oauth2MemberDto.getRole());
+            } catch (BadRequestException ex) {
+                log.info("{}", ex.getMessage());
+            }
         }
         return new CustomOAuth2Member(oauth2MemberDto);
     }
