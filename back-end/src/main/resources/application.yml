@@ -38,8 +38,6 @@ spring:
             redirect-uri: http://localhost:8080/login/oauth2/code/naver
             authorization-grant-type: authorization_code
             scope: name,email
-<<<<<<< HEAD
-=======
 
           kakao:
             client-name: kakao
@@ -50,7 +48,6 @@ spring:
             authorization-grant-type: authorization_code
             scope: account_email
 
->>>>>>> 2dfe356 (refactor: application.yml 수정)
           google:
             client-name: google
             client-id:
