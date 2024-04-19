@@ -54,7 +54,7 @@ public class Meeting {
 
     public static Meeting createMeeting() {
         // Change to builder
-        Meeting meeting = new Meeting();
+        Meeting meeting = Meeting.builder().build();
         return meeting;
     }
 

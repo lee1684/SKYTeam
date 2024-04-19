@@ -38,8 +38,7 @@ public class MemberMeeting {
     protected MemberMeeting() {}
 
     public static MemberMeeting createMemberMeeting() {
-        // Change to builder
-        MemberMeeting memberMeeting = new MemberMeeting();
+        MemberMeeting memberMeeting = MemberMeeting.builder().build();
         return memberMeeting;
     }
 }

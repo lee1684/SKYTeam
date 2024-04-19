@@ -23,8 +23,7 @@ public class Ticket {
     protected Ticket() {}
 
     public static Ticket createTicket() {
-        // Change to builder
-        Ticket ticket = new Ticket();
+        Ticket ticket = Ticket.builder().build();
         return ticket;
     }
 }
