@@ -34,8 +34,7 @@ public class Payment {
     protected Payment() {}
 
     public static Payment createPayment() {
-        // Change to builder
-        Payment payment = new Payment();
+        Payment payment = Payment.builder().build();
         return payment;
     }
 }
