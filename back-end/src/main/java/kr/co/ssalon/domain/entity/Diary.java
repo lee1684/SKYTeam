@@ -27,8 +27,7 @@ public class Diary {
     protected Diary() {}
 
     public static Diary createDiary() {
-        // Change to builder
-        Diary diary = new Diary();
+        Diary diary = Diary.builder().build();
         return diary;
     }
 

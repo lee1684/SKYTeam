@@ -18,13 +18,12 @@ public class Category {
 
     private String name;
     private String description;
-    private String image_url;
+    private String imageUrl;
 
     protected Category() {}
 
     public static Category createCategory(){
-        // Change to builder
-        Category category = new Category();
+        Category category = Category.builder().build();
         return category;
     }
 

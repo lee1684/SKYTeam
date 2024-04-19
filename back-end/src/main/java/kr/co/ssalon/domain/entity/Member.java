@@ -44,7 +44,7 @@ public class Member {
     }
 
     public void changeRole(String role) {
-        this.email = role;
+        this.role = role;
     }
 
     public static Member createMember(String username, String email, String role){
