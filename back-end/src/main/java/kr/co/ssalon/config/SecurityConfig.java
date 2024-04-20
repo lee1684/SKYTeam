@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import kr.co.ssalon.jwt.JWTFilter;
 import kr.co.ssalon.jwt.JWTUtil;
 import kr.co.ssalon.jwt.RedisRefreshTokenRepository;
+import kr.co.ssalon.oauth2.handler.CustomLogoutFilter;
 import kr.co.ssalon.oauth2.handler.CustomSuccessHandler;
 import kr.co.ssalon.oauth2.oauthService.CustomOAuth2MemberService;
 import lombok.RequiredArgsConstructor;
@@ -81,7 +82,7 @@ public class SecurityConfig {
 
 
         // 로그아웃 필터 추가
-        // http.addFilterBefore(new CustomLogoutFilter(jwtUtil, redisRefreshTokenRepository), LogoutFilter.class);
+         http.addFilterBefore(new CustomLogoutFilter(jwtUtil, redisRefreshTokenRepository), LogoutFilter.class);
 
 
         // oauth2
