@@ -65,5 +65,20 @@ public class Member {
         return member;
     }
 
+    public static Member deleteMemberMeeting(Long moimId) {
+        Member member = new Member();
+        return member;
+
+    }
+
+    public static Member addJoinedMeetings(Member member, MemberMeeting memberMeeting) {
+        member.getJoinedMeetings().add(memberMeeting);
+        return member;
+    }
+
+    public static Member deleteJoinedMeetings(MemberMeeting memberMeeting) {
+        memberMeeting.getMember().getJoinedMeetings().remove(memberMeeting);
+        return memberMeeting.getMember();
+    }
 
 }
