@@ -85,7 +85,7 @@ public class MeetingController {
     // 사용자 JWT
     // 성공/실패 여부, 모임 참가자 목록
     @GetMapping("/moims/{moimId}/users")
-    public ResponseEntity<List<Long>> getUsers(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
+    public ResponseEntity<List<Member>> getUsers(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
 //        String username = customOAuth2Member.getUsername();
 //        Member member = memberService.findMember(username);
 //        Long userId = member.getId();
@@ -100,9 +100,8 @@ public class MeetingController {
     public ResponseEntity<Void> addUser(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
         String username = customOAuth2Member.getUsername();
         Member member = memberService.findMember(username);
-        Long userId = member.getId();
 
-        meetingService.addUser(moimId, userId);
+        meetingService.addUser(moimId, member);
 
         return ResponseEntity.ok(null);
     }

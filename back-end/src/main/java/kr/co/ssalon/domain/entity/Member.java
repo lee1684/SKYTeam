@@ -81,4 +81,9 @@ public class Member {
         return memberMeeting.getMember();
     }
 
+    public static Member addUser(Member member, MemberMeeting memberMeeting) {
+        member.getJoinedMeetings().add(memberMeeting);
+        return member;
+    }
+
 }
