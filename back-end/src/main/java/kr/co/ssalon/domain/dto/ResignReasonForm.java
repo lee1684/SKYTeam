@@ -8,6 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class ResignReasonForm {
-
+    private String type;
     private String reason;
 }

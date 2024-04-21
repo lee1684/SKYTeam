@@ -67,4 +67,8 @@ public class MemberService {
 
         return currentUser;
     }
+
+    public Member findMember(String username) {
+        return memberRepository.findByUsername(username);
+    }
 }
