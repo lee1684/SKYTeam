@@ -9,6 +9,9 @@ import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import kr.co.ssalon.web.dto.MeetingDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import kr.co.ssalon.web.dto.MeetingSearchCondition;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,5 +46,11 @@ public class MeetingService {
 
         // 참가한 모임 정보 반환
         return new MeetingDTO(meeting);
+    }
+
+    // 모임 목록 조회
+    public Page<Meeting> getMoims(MeetingSearchCondition meetingSearchCondition, Pageable pageable) {
+        Page<Meeting> meetings = meetingRepository.searchMoims(meetingSearchCondition, pageable);
+        return meetings;
     }
 }
