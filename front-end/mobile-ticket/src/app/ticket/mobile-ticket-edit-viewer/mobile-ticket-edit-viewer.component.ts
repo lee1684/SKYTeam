@@ -15,19 +15,16 @@ export class MobileTicketEditViewerComponent {
   }
   initFabric(): void {
     this.canvas = new fabric.Canvas('edit-canvas');
-    this.canvas.on({
-      'touch:gesture': function () {},
-      'touch:drag': function () {},
-      'touch:orientation': function () {},
-      'touch:shake': function () {},
-      'touch:longpress': function () {},
-    });
     console.log(this.canvas);
-    let a = new fabric.Text('Hello', {
+    let a = new fabric.Textbox('Hello', {
       left: 100,
       top: 100,
     });
-    a.perPixelTargetFind = true;
+    //a.perPixelTargetFind = true;
     this.canvas.add(a);
+    fabric.Image.fromURL('assets/heart.png', (img: any) => {
+      this.canvas!.add(img);
+      console.log(this.canvas!.toJSON());
+    });
   }
 }
