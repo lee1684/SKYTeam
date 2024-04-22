@@ -1,0 +1,30 @@
+#container {
+    width: auto;
+    height: auto;
+    display: flex;
+    position: relative;
+}
+
+#feature-buttons {
+    position: absolute;
+    display: flex;
+    right: 0;
+}
+
+.toggle-button {
+    border-radius: 50%;
+    background-color: #efefef;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 8px;
+}
+
+.toggle-button:hover {
+    cursor: pointer;
+    background-color: #0090f2;
+}
+
+.selected {
+    background-color: #0090f2;
+}
