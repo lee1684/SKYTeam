@@ -7,13 +7,11 @@ import {
 } from '@angular/core';
 import { SimpleButtonComponent } from '../../ssalon-component/simple-button/simple-button.component';
 import { NgFor, NgIf } from '@angular/common';
-import { MobileTicket } from '../../service/mobile-ticket';
 import { ScenegraphService } from '../../service/scenegraph.service';
 import {
   ButtonElement,
   CircleToggleButtonGroupComponent,
 } from '../../ssalon-component/circle-toggle-button-group/circle-toggle-button-group.component';
-import { MobileTicketViewMode } from '../ticket.component';
 import { ColorBoardComponent } from '../../ssalon-component/color-board/color-board.component';
 
 export enum MobileTicketEditMode {
