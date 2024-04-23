@@ -53,7 +53,6 @@ export class CircleToggleButtonGroupComponent {
       } else {
         buttonsArray![value].nativeElement.classList.add('selected');
         this.selectedValues.push(value);
-        console.log(this.selectedValues);
       }
     } else {
       if (this.selectedValues.includes(value)) return;
