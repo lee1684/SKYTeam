@@ -37,7 +37,9 @@ public class MeetingController {
         String username = customOAuth2Member.getUsername();
         Member member = memberService.findMember(username);
 
-        return ResponseEntity.ok(meetingService.createMoim(member, meetingForm));
+        Meeting meeting = Meeting.createMeeting(member, meetingForm);
+
+        return ResponseEntity.ok(meetingService.createMoim(member, meeting));
     }
 
     // 모임 정보 조회
@@ -58,12 +60,13 @@ public class MeetingController {
     // 모임 정보 수정
     // 사용자 JWT, 수정할 모임의 정보
     // 성공/실패 여부
-    @PutMapping("/moims/{moimId}")
+    @PatchMapping("/moims/{moimId}")
     public ResponseEntity<Void> updateMoim(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, MeetingForm meetingForm) {
         String username = customOAuth2Member.getUsername();
         Member member = memberService.findMember(username);
 
-        meetingService.updateMoim(moimId, member, meetingForm);
+        Meeting meeting = Meeting.createMeeting(member, meetingForm);
+        meetingService.updateMoim(moimId, member, meeting);
 
         return ResponseEntity.ok(null);
     }
