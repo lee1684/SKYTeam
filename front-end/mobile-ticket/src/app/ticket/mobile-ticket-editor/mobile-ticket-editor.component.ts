@@ -13,6 +13,7 @@ import {
   CircleToggleButtonGroupComponent,
 } from '../../ssalon-component/circle-toggle-button-group/circle-toggle-button-group.component';
 import { ColorBoardComponent } from '../../ssalon-component/color-board/color-board.component';
+import { Circle } from 'fabric/fabric-impl';
 
 export enum MobileTicketEditMode {
   BACKGROUND_COLOR_CHANGE,
@@ -20,6 +21,7 @@ export enum MobileTicketEditMode {
   STICKER,
   TEXT,
   DRAW,
+  NONE,
   PREVIEW,
 }
 
@@ -37,7 +39,8 @@ export enum MobileTicketEditMode {
   styleUrl: './mobile-ticket-editor.component.scss',
 })
 export class MobileTicketEditorComponent {
-  @ViewChild('temp', { static: true }) temp: ElementRef | null = null;
+  @ViewChild('editFeatureButtons', { static: false })
+  editFeatureButtons: CircleToggleButtonGroupComponent | null = null;
   @Output() public readonly onChangeViewer = new EventEmitter();
   @Output() public readonly onAddObject = new EventEmitter();
   public editMode: MobileTicketEditMode = MobileTicketEditMode.PREVIEW;
@@ -74,6 +77,11 @@ export class MobileTicketEditorComponent {
       imgSrc: 'assets/icons/draw.png',
       label: '그리기',
       value: MobileTicketEditMode.DRAW,
+    },
+    {
+      imgSrc: 'assets/icons/view.png',
+      label: '그리기',
+      value: MobileTicketEditMode.NONE,
     },
     {
       imgSrc: 'assets/icons/view.png',
@@ -164,5 +172,11 @@ export class MobileTicketEditorComponent {
   public onClickToggleButton(value: MobileTicketEditMode): void {
     this.editMode = value;
     this.onChangeViewer.emit(value);
+  }
+
+  public onClickEndDetailedEditViewer(): void {
+    this.editMode = MobileTicketEditMode.NONE;
+    this.editFeatureButtons!.onClickToggleButton(MobileTicketEditMode.NONE);
+    this.onChangeViewer.emit(MobileTicketEditMode.NONE);
   }
 }

@@ -1,6 +1,16 @@
 <div id="container" #toggleButtonContainer>
-    <div class="toggle-button" [style.width]="this.outerSize" [style.height]="this.outerSize" #toggleButton
-        *ngFor="let element of this.elements" (click)="this.onClickToggleButton(element.value)">
-        <img [src]="this.getImgSrc(element.imgSrc, element.value)" [width]="this.innerSize" [height]="this.innerSize" />
-    </div>
+  <div
+    class="toggle-button"
+    [style.width]="this.outerSize"
+    [style.height]="this.outerSize"
+    #toggleButton
+    *ngFor="let element of this.elements"
+    (click)="this.onClickToggleButton(element.value)"
+  >
+    <img
+      [src]="this.getImgSrc(element.imgSrc, element.value)"
+      [width]="this.innerSize"
+      [height]="this.innerSize"
+    />
+  </div>
 </div>

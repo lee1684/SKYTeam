@@ -1,31 +1,50 @@
 <!-- APPVIEW: 앱에서 보는 화면의 경우 -->
 <div class="container" *ngIf="this.mode === this.mobileTicketViewMode.APPVIEW">
-    <div [style.height]="this.viewerHeight">
-        <app-mobile-ticket-viewer></app-mobile-ticket-viewer>
-    </div>
+  <div [style.height]="this.viewerHeight">
+    <app-mobile-ticket-viewer></app-mobile-ticket-viewer>
+  </div>
 </div>
 
 <!-- APPEDITVIEW: 앱에서 보는 꾸미기 화면의 경우 -->
-<div class="container" *ngIf="this.mode === this.mobileTicketViewMode.APPEDITVIEW">
-
-
-
-    <div [style.height]="'100%'" [style.width]="'100%'" [style.position]="'absolute'" [style.top]="'60px'"
-        [style.left]="'0px'" *ngIf="this.editMode !== this.mobileTicketEditMode.PREVIEW">
-        <app-mobile-ticket-edit-viewer></app-mobile-ticket-edit-viewer>
-    </div>
-    <app-mobile-ticket-editor [style.position]="'absolute'" [style.top]="'0px'" [style.left]="'0px'"
-        [style.width]="'100%'" [style.height]="'100%'"
-        (onChangeViewer)="this.changeEditMode($event)"></app-mobile-ticket-editor>
-    <div [style.height]="'100%'" [style.width]="'100%'" [style.position]="'absolute'" [style.top]="'60px'"
-        [style.left]="'0px'" *ngIf="this.editMode === this.mobileTicketEditMode.PREVIEW">
-        <app-mobile-ticket-viewer></app-mobile-ticket-viewer>
-    </div>
+<div
+  class="container"
+  *ngIf="this.mode === this.mobileTicketViewMode.APPEDITVIEW"
+>
+  <div
+    [style.height]="'100%'"
+    [style.width]="'100%'"
+    [style.position]="'absolute'"
+    [style.top]="'60px'"
+    [style.left]="'0px'"
+    *ngIf="this.editMode !== this.mobileTicketEditMode.PREVIEW"
+  >
+    <app-mobile-ticket-edit-viewer></app-mobile-ticket-edit-viewer>
+  </div>
+  <app-mobile-ticket-editor
+    [style.position]="'absolute'"
+    [style.top]="'0px'"
+    [style.left]="'0px'"
+    [style.width]="'100%'"
+    [style.height]="
+      this.editMode === this.mobileTicketEditMode.NONE ? '60px' : '100%'
+    "
+    (onChangeViewer)="this.changeEditMode($event)"
+  ></app-mobile-ticket-editor>
+  <div
+    [style.height]="'100%'"
+    [style.width]="'100%'"
+    [style.position]="'absolute'"
+    [style.top]="'60px'"
+    [style.left]="'0px'"
+    *ngIf="this.editMode === this.mobileTicketEditMode.PREVIEW"
+  >
+    <app-mobile-ticket-viewer></app-mobile-ticket-viewer>
+  </div>
 </div>
 
 <!-- WEBVIEW: 웹에서 보는 화면의 경우 -->
 <div class="container" *ngIf="this.mode === this.mobileTicketViewMode.WEBVIEW">
-    <div [style.height]="this.viewerHeight">
-        <app-mobile-ticket-viewer></app-mobile-ticket-viewer>
-    </div>
+  <div [style.height]="this.viewerHeight">
+    <app-mobile-ticket-viewer></app-mobile-ticket-viewer>
+  </div>
 </div>
