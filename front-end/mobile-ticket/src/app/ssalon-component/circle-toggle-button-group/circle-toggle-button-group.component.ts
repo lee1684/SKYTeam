@@ -8,7 +8,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { SimpleToggleButtonElement } from '../simple-toggle-button-group/simple-toggle-button-group.component';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 
 export interface ButtonElement {
   imgSrc: string;
@@ -18,7 +18,7 @@ export interface ButtonElement {
 @Component({
   selector: 'app-circle-toggle-button-group',
   standalone: true,
-  imports: [NgFor],
+  imports: [NgFor, NgIf],
   templateUrl: './circle-toggle-button-group.component.html',
   styleUrl: './circle-toggle-button-group.component.scss',
 })
@@ -28,6 +28,7 @@ export class CircleToggleButtonGroupComponent {
 
   @Input() public elements: ButtonElement[] = [];
   @Input() public selectedValues: number[] = [];
+  @Input() public noneStatusValue: number = 0;
   @Input() public outerSize: string = '40px';
   @Input() public innerSize: number = 20;
   @Input() public enableMultipleSelection: boolean = false;
@@ -69,6 +70,15 @@ export class CircleToggleButtonGroupComponent {
 
     /* 부모 컴포넌트에 이벤트 전달 */
     this.onClickToggleButtonEvent.emit(value);
+  }
+
+  public setUnselectedStatus(): void {
+    const buttonsArray = this.buttons!.toArray();
+    for (let idx in buttonsArray) {
+      buttonsArray![Number(idx)].nativeElement.classList.remove('selected');
+    }
+    this.selectedValues = [];
+    this.onClickToggleButtonEvent.emit(this.noneStatusValue);
   }
 
   public getImgSrc(originalImgSrc: string, value: number): string {

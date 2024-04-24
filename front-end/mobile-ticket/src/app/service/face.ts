@@ -26,10 +26,6 @@ export class Face extends CSS3DObject {
       width: this.ticketSize!.x,
       height: this.ticketSize!.y,
     });
-    //this.fabricCanvas = new Canvas(this.name, {
-    //  width: this.ticketSize!.x,
-    //  height: this.ticketSize!.y,
-    //});
     this.element = this.fabricCanvas.getElement();
   }
 

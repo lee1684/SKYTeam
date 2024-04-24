@@ -23,7 +23,7 @@ export class ScenegraphService {
 
     /** create Scene */
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0xffffff);
+    this.scene.background = new THREE.Color(0xffffff); //
 
     /** create Perspective Camera */
     this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
