@@ -1,7 +1,7 @@
 import {
   Component,
-  ElementRef,
   EventEmitter,
+  HostListener,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -13,7 +13,6 @@ import {
   CircleToggleButtonGroupComponent,
 } from '../../ssalon-component/circle-toggle-button-group/circle-toggle-button-group.component';
 import { ColorBoardComponent } from '../../ssalon-component/color-board/color-board.component';
-import { Circle } from 'fabric/fabric-impl';
 
 export enum MobileTicketEditMode {
   BACKGROUND_COLOR_CHANGE,
@@ -22,7 +21,6 @@ export enum MobileTicketEditMode {
   TEXT,
   DRAW,
   NONE,
-  PREVIEW,
 }
 
 @Component({
@@ -42,8 +40,8 @@ export class MobileTicketEditorComponent {
   @ViewChild('editFeatureButtons', { static: false })
   editFeatureButtons: CircleToggleButtonGroupComponent | null = null;
   @Output() public readonly onChangeViewer = new EventEmitter();
-  @Output() public readonly onAddObject = new EventEmitter();
-  public editMode: MobileTicketEditMode = MobileTicketEditMode.PREVIEW;
+  @Output() public readonly onEditSsalonObject = new EventEmitter();
+  public editMode: MobileTicketEditMode = MobileTicketEditMode.NONE;
   constructor(private _sceneGraphService: ScenegraphService) {}
 
   public mobileTicketEditMode = MobileTicketEditMode;
@@ -52,6 +50,12 @@ export class MobileTicketEditorComponent {
     label: '뒤로가기',
     value: 0,
   };
+  public previewButtonElement: ButtonElement = {
+    imgSrc: 'assets/icons/view.png',
+    label: '미리보기',
+    value: 0,
+  };
+
   public editFeatures: ButtonElement[] = [
     {
       imgSrc: 'assets/icons/color-board.png',
@@ -83,92 +87,29 @@ export class MobileTicketEditorComponent {
       label: '그리기',
       value: MobileTicketEditMode.NONE,
     },
-    {
-      imgSrc: 'assets/icons/view.png',
-      label: '그리기',
-      value: MobileTicketEditMode.PREVIEW,
-    },
   ];
-
-  public colors: ButtonElement[] = [
-    {
-      imgSrc: 'assets/icons/color-board.png',
-      label: '미리보기 뷰',
-      value: 0,
-    },
-    {
-      imgSrc: 'assets/icons/color-board.png',
-      label: '미리보기 뷰',
-      value: 1,
-    },
-    {
-      imgSrc: 'assets/icons/color-board.png',
-      label: '미리보기 뷰',
-      value: 2,
-    },
-    {
-      imgSrc: 'assets/icons/color-board.png',
-      label: '미리보기 뷰',
-      value: 3,
-    },
-    {
-      imgSrc: 'assets/icons/color-board.png',
-      label: '미리보기 뷰',
-      value: 4,
-    },
-    {
-      imgSrc: 'assets/icons/color-board.png',
-      label: '미리보기 뷰',
-      value: 5,
-    },
-    {
-      imgSrc: 'assets/icons/color-board.png',
-      label: '미리보기 뷰',
-      value: 6,
-    },
-    {
-      imgSrc: 'assets/icons/color-board.png',
-      label: '미리보기 뷰',
-      value: 7,
-    },
-    {
-      imgSrc: 'assets/icons/color-board.png',
-      label: '미리보기 뷰',
-      value: 8,
-    },
-    {
-      imgSrc: 'assets/icons/color-board.png',
-      label: '미리보기 뷰',
-      value: 9,
-    },
-    {
-      imgSrc: 'assets/icons/color-board.png',
-      label: '미리보기 뷰',
-      value: 10,
-    },
-    {
-      imgSrc: 'assets/icons/color-board.png',
-      label: '미리보기 뷰',
-      value: 11,
-    },
-    {
-      imgSrc: 'assets/icons/color-board.png',
-      label: '미리보기 뷰',
-      value: 12,
-    },
-    {
-      imgSrc: 'assets/icons/color-board.png',
-      label: '미리보기 뷰',
-      value: 13,
-    },
+  public stickers: number[] = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5,
+    6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+    10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3,
+    4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
   ];
 
   public colorBoard: ButtonElement[] = [];
   public fabricObject: any = null;
   ngAfterViewInit(): void {}
+
+  public getStickerArray(): any[][] {
+    const stickerArray: any[][] = [];
+    for (let i = 0; i < this.stickers.length; i += 3) {
+      stickerArray.push(this.stickers.slice(i, i + 3));
+    }
+    return stickerArray;
+  }
   public onClickFocusFrontButton(): void {
     this._sceneGraphService.focusFront();
   }
+
   public onClickToggleButton(value: MobileTicketEditMode): void {
     this.editMode = value;
     this.onChangeViewer.emit(value);
@@ -176,7 +117,14 @@ export class MobileTicketEditorComponent {
 
   public onClickEndDetailedEditViewer(): void {
     this.editMode = MobileTicketEditMode.NONE;
-    this.editFeatureButtons!.onClickToggleButton(MobileTicketEditMode.NONE);
+    this.editFeatureButtons!.setUnselectedStatus();
     this.onChangeViewer.emit(MobileTicketEditMode.NONE);
+  }
+
+  public onChangeSsaslonTextAttribute(attributeName: string, value: any): void {
+    console.log(value);
+  }
+  public onBlurInput(): void {
+    this.onEditSsalonObject.emit(this.fabricObject);
   }
 }

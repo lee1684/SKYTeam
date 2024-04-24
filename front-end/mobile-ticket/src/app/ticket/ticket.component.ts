@@ -41,7 +41,7 @@ export class TicketComponent {
   public mode: MobileTicketViewMode = MobileTicketViewMode.APPEDITVIEW;
 
   public mobileTicketEditMode = MobileTicketEditMode;
-  public editMode: MobileTicketEditMode = MobileTicketEditMode.PREVIEW;
+  public editMode: MobileTicketEditMode = MobileTicketEditMode.NONE;
 
   constructor() {}
   public changeEditMode(mode: MobileTicketEditMode) {
