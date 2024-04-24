@@ -48,10 +48,15 @@ public class Member {
     }
 
     public static Member createMember(String username, String email, String role){
+        MemberDates memberDates = new MemberDates();
+        memberDates.prePersist();
+
         Member member = Member.builder()
                 .username(username)
                 .email(email)
-                .role(role).build();
+                .role(role)
+                .memberDates(memberDates)
+                .build();
         return member;
     }
 
