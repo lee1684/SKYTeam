@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "회원 API")
+@Tag(name = "회원")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -40,7 +40,7 @@ public class UserController {
 
     @Operation(summary = "회원 정보 조회")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "조회 성공"),
+            @ApiResponse(responseCode = "200", description = "회원 정보 조회 성공"),
     })
     @GetMapping("/users/me/profile")
     public MemberDTO getUserInfo(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) throws BadRequestException {
