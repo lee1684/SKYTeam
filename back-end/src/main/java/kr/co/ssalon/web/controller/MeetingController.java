@@ -20,6 +20,7 @@ import kr.co.ssalon.web.dto.MeetingSearchCondition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "모임")
@@ -52,7 +53,7 @@ public class MeetingController {
             @ApiResponse(responseCode = "200",description = "모임 목록 조회 성공"),
     })
     @GetMapping("/moims")
-    public ResponseEntity<Page<MeetingDTO>> getMoims(MeetingSearchCondition meetingSearchCondition, Pageable pageable) {
+    public ResponseEntity<Page<MeetingDTO>> getMoims(@RequestParam MeetingSearchCondition meetingSearchCondition, Pageable pageable) {
         Page<Meeting> moims = meetingService.getMoims(meetingSearchCondition, pageable);
         Page<MeetingDTO> moimsDto = moims.map(meeting -> new MeetingDTO(meeting));
         return ResponseEntity.ok().body(moimsDto);
