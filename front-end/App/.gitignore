@@ -86,3 +86,8 @@ web-build/
 !env.js
 
 /coverage
+
+# Expo
+.expo
+dist/
+web-build/
