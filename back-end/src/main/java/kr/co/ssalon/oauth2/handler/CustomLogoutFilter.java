@@ -31,13 +31,13 @@ public class CustomLogoutFilter extends GenericFilterBean {
     private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         log.info("logoutFilter");
         String requestURI = request.getRequestURI();
-        if (!requestURI.matches("^\\/logout$")) {
+        if (!requestURI.matches("^\\/auth\\/logout$")) {
             chain.doFilter(request, response);
             return;
         }
         String requestMethod = request.getMethod();
 
-        if (!requestMethod.equals("POST")) {
+        if (!requestMethod.equals("DELETE")) {
             chain.doFilter(request, response);
             return;
         }
@@ -45,9 +45,11 @@ public class CustomLogoutFilter extends GenericFilterBean {
         String refresh = null;
 
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("refresh")) {
-                refresh = cookie.getValue();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("refresh")) {
+                    refresh = cookie.getValue();
+                }
             }
         }
 
@@ -81,10 +83,6 @@ public class CustomLogoutFilter extends GenericFilterBean {
         RedisRefreshToken deleteRefresh = redisRefreshTokenRepository.findByRefresh(refresh);
         redisRefreshTokenRepository.delete(deleteRefresh);
 
-        Cookie logoutRefreshCookie = createLogoutRefreshCookie();
-        Cookie logoutAccessCookie = createLogoutAccessCookie();
-        response.addCookie(logoutAccessCookie);
-        response.addCookie(logoutRefreshCookie);
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
