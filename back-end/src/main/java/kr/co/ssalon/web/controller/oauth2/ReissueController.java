@@ -1,6 +1,10 @@
 package kr.co.ssalon.web.controller.oauth2;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+@Tag(name = "토큰")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +32,11 @@ public class ReissueController {
     private final RedisRefreshTokenRepository redisRefreshTokenRepository;
 
 
+    
+    @Operation(summary = "Access Token 재발급")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Access Token 재발급 성공"),
+    })
     @PostMapping("/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
