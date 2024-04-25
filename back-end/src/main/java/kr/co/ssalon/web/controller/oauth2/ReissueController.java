@@ -9,12 +9,14 @@ import kr.co.ssalon.jwt.RedisRefreshToken;
 import kr.co.ssalon.jwt.RedisRefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @Slf4j
 @RestController
@@ -32,9 +34,11 @@ public class ReissueController {
         String refresh = null;
         Cookie[] cookies = request.getCookies();
 
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("refresh")) {
-                refresh = cookie.getValue();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("refresh")) {
+                    refresh = cookie.getValue();
+                }
             }
         }
 
@@ -76,8 +80,19 @@ public class ReissueController {
 
         addRedisRefreshEntity(username, newRefresh);
 
-        response.addCookie(createCookieAccess("Authorization", newAccess));
-        response.addCookie(createCookie("refresh", newRefresh));
+        // JSON 객체 생성
+        JSONObject jsonResponse = new JSONObject();
+        jsonResponse.put("access", newAccess);
+        jsonResponse.put("refresh", newRefresh);
+
+        // response body의 MIME 타입 설정
+        response.setContentType("application/json");
+
+        // JSON response body 전송
+        PrintWriter out = response.getWriter();
+        out.print(jsonResponse.toString());
+        out.flush();
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
