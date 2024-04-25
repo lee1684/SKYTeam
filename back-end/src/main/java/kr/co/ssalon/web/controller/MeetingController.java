@@ -49,7 +49,7 @@ public class MeetingController {
     // 현재 개설된 모임 목록
     @Operation(summary = "모임 목록 조회")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",description = "조회 성공"),
+            @ApiResponse(responseCode = "200",description = "모임 목록 조회 성공"),
     })
     @GetMapping("/moims")
     public ResponseEntity<Page<MeetingDTO>> getMoims(MeetingSearchCondition meetingSearchCondition, Pageable pageable) {
