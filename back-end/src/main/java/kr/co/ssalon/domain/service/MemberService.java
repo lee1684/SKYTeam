@@ -2,6 +2,7 @@ package kr.co.ssalon.domain.service;
 
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.repository.MemberRepository;
+import kr.co.ssalon.web.dto.MemberDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
@@ -48,5 +49,22 @@ public class MemberService {
         if (findMember.isPresent()) {
             throw new Exception("이미 해당 소셜 로그인을 한 회원이 DB에 존재합니다. 업데이트를 진행합니다.");
         }
+    }
+
+    @Transactional
+    public Member signup(String username, MemberDTO additionalInfo) throws BadRequestException {
+        Member currentUser = this.findMember(username);
+
+        currentUser.setNickname(additionalInfo.getNickname());
+        currentUser.setProfilePictureUrl(additionalInfo.getProfilePictureUrl());
+        currentUser.setGender(additionalInfo.getGender());
+        currentUser.setAddress(additionalInfo.getAddress());
+        currentUser.setIntroduction(additionalInfo.getIntroduction());
+        currentUser.setInterests(additionalInfo.getInterests());
+        currentUser.setBlackReason(additionalInfo.getBlackReason());
+
+        memberRepository.save(currentUser);
+
+        return currentUser;
     }
 }
