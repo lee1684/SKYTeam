@@ -12,10 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @Tag(name = "회원 API")
@@ -48,5 +45,14 @@ public class UserController {
         Member member = memberService.findMember(username);
         log.info("user = {}", member);
         return new MemberDTO(member);
+    }
+
+    @Operation(summary = "로그아웃")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "로그아웃 성공"),
+    })
+    @DeleteMapping("/auth/logout")
+    public void logout() {
+        // swagger logout API 작성용으로 만든 빈 메소드
     }
 }
