@@ -33,6 +33,8 @@ public class MemberDTO {
     private String address;
     @NotBlank
     private String role;
+    private String introduction;
+    private List<String> interests;
     private String blackReason;
     @NotBlank
     private LocalDateTime joinDate;
@@ -50,6 +52,8 @@ public class MemberDTO {
         this.gender = member.getGender();
         this.address = member.getAddress();
         this.role = member.getRole();
+        this.introduction = member.getIntroduction();
+        this.interests = member.getInterests();
         this.blackReason = member.getBlackReason();
         this.joinDate = member.getMemberDates().getJoinDate();
         this.lastLoginDate = member.getMemberDates().getLastLoginDate();

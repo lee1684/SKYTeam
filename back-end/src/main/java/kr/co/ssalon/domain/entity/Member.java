@@ -4,12 +4,14 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 public class Member {
@@ -32,6 +34,9 @@ public class Member {
     private Character gender;
     private String address;
     private String role;
+    private String introduction;
+    @ElementCollection
+    private List<String> interests;
     private String blackReason;
 
     @Embedded
