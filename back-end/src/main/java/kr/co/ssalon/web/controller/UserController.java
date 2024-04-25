@@ -12,12 +12,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@Tag(name = "회원가입 API")
+@Tag(name = "회원 API")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -35,5 +36,17 @@ public class UserController {
         Member currentUser = memberService.signup(username, additionalInfo);
 
         return new MemberDTO(currentUser);
+    }
+
+    @Operation(summary = "회원 정보 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공"),
+    })
+    @GetMapping("/users/me/profile")
+    public MemberDTO getUserInfo(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) throws BadRequestException {
+        String username = customOAuth2Member.getUsername();
+        Member member = memberService.findMember(username);
+        log.info("user = {}", member);
+        return new MemberDTO(member);
     }
 }
