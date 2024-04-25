@@ -1,6 +1,15 @@
 // TODO: write documentation for colors and palette in own markdown file and add links from here
 
 const palette = {
+  // Custom colors
+  gray50: "rgba(239, 239, 239, 1)",
+  blue: "rgba(0, 107,255,1)",
+  gray100: "rgba(216, 216, 218, 1)",
+  gray200: "rgba(188, 188, 188, 1)",
+  gray800: "rgba(44,44,44,1)",
+
+  // Custom colors End
+
   neutral100: "#FFFFFF",
   neutral200: "#F4F2F1",
   neutral300: "#D7CEC9",
