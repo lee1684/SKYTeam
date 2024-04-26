@@ -6,12 +6,27 @@ import { Text } from "./Text"
 
 const kakaoLogo = require("../../assets/icons/kakao.png")
 
-export function KakaoLoginButton() {
+export function KakaoLoginButton({
+  onSuccessfulLogin,
+  onFailedLogin,
+}: {
+  onSuccessfulLogin: () => void
+  onFailedLogin: () => void
+}) {
+  function onPress() {
+    try {
+      onSuccessfulLogin()
+    } catch {
+      onFailedLogin()
+    }
+  }
+
   return (
     <Button
       style={$viewStyle}
       pressedStyle={$pressedViewStyle}
       LeftAccessory={(props) => <Image source={kakaoLogo} {...props} style={$imageStyle} />}
+      onPress={onPress}
     >
       <Text size="sm" weight="medium">
         Kakao로 시작하기

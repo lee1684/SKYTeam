@@ -6,12 +6,27 @@ import { Text } from "./Text"
 
 const googleLogo = require("../../assets/icons/google.png")
 
-export function GoogleLoginButton() {
+export function GoogleLoginButton({
+  onSuccessfulLogin,
+  onFailedLogin,
+}: {
+  onSuccessfulLogin: () => void
+  onFailedLogin: () => void
+}) {
+  function onPress() {
+    try {
+      onSuccessfulLogin()
+    } catch {
+      onFailedLogin()
+    }
+  }
+
   return (
     <Button
       style={$viewStyle}
       pressedStyle={$pressedViewStyle}
       LeftAccessory={(props) => <Image source={googleLogo} {...props} style={$imageStyle} />}
+      onPress={onPress}
     >
       <Text size="sm" weight="medium">
         Google로 시작하기

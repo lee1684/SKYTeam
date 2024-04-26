@@ -6,12 +6,27 @@ import { Text } from "./Text"
 
 const naverLogo = require("../../assets/icons/naver.png")
 
-export function NaverLoginButton() {
+export function NaverLoginButton({
+  onSuccessfulLogin,
+  onFailedLogin,
+}: {
+  onSuccessfulLogin: () => void
+  onFailedLogin: () => void
+}) {
+  async function onPress() {
+    try {
+      onSuccessfulLogin()
+    } catch {
+      onFailedLogin()
+    }
+  }
+
   return (
     <Button
       style={$viewStyle}
       pressedStyle={$pressedViewStyle}
       LeftAccessory={(props) => <Image source={naverLogo} {...props} style={$imageStyle} />}
+      onPress={onPress}
     >
       <Text style={$textStyle} size="sm" weight="medium">
         Naver로 시작하기
