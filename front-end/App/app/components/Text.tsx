@@ -38,6 +38,7 @@ export interface TextProps extends RNTextProps {
    * Text size modifier.
    */
   size?: Sizes
+
   /**
    * Children components.
    */
@@ -89,12 +90,20 @@ const $fontWeightStyles = Object.entries(typography.primary).reduce((acc, [weigh
 
 const $baseStyle: StyleProp<TextStyle> = [
   $sizeStyles.sm,
-  $fontWeightStyles.regular,
-  { color: colors.text },
+  $fontWeightStyles.medium,
+  { color: colors.black },
 ]
 
 const $presets = {
   default: $baseStyle,
+
+  white: [$baseStyle, { color: colors.white } as StyleProp<TextStyle>],
+
+  blur: [$baseStyle, { color: colors.palette.gray200 } as StyleProp<TextStyle>],
+
+  focus: [$baseStyle, { color: colors.black } as StyleProp<TextStyle>],
+
+  accent: [$baseStyle, { color: colors.palette.blue } as StyleProp<TextStyle>],
 
   bold: [$baseStyle, $fontWeightStyles.bold] as StyleProp<TextStyle>,
 

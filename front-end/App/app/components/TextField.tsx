@@ -1,4 +1,4 @@
-import React, { ComponentType, forwardRef, Ref, useImperativeHandle, useRef } from "react"
+import React, { ComponentType, forwardRef, Ref, useImperativeHandle, useRef, useState } from "react"
 import {
   StyleProp,
   TextInput,
@@ -27,7 +27,7 @@ export interface TextFieldProps extends Omit<TextInputProps, "ref"> {
   /**
    * The label text to display if not using `labelTx`.
    */
-  label?: TextProps["text"]
+  label?: TextProps["text"] | React.ReactNode
   /**
    * Label text which is looked up via i18n.
    */
@@ -125,6 +125,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
     ...TextInputProps
   } = props
   const input = useRef<TextInput>(null)
+  const [isFocused, setIsFocused] = useState(false)
 
   const disabled = TextInputProps.editable === false || status === "disabled"
 
@@ -137,7 +138,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
   const $labelStyles = [$labelStyle, LabelTextProps?.style]
 
   const $inputWrapperStyles = [
-    $inputWrapperStyle,
+    isFocused ? { ...$inputWrapperStyle, borderColor: colors.palette.gray800 } : $inputWrapperStyle,
     status === "error" && { borderColor: colors.error },
     TextInputProps.multiline && { minHeight: 112 },
     LeftAccessory && { paddingStart: 0 },
@@ -180,7 +181,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
       {!!(label || labelTx) && (
         <Text
           preset="formLabel"
-          text={label}
+          text={label as string}
           tx={labelTx}
           txOptions={labelTxOptions}
           {...LabelTextProps}
@@ -203,9 +204,12 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
           underlineColorAndroid={colors.transparent}
           textAlignVertical="top"
           placeholder={placeholderContent}
-          placeholderTextColor={colors.textDim}
+          placeholderTextColor={colors.palette.gray200}
           {...TextInputProps}
           editable={!disabled}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          blurOnSubmit={true}
           style={$inputStyles}
         />
 
@@ -234,31 +238,28 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
 })
 
 const $labelStyle: TextStyle = {
-  marginBottom: spacing.xs,
+  marginBottom: spacing.sm,
 }
 
 const $inputWrapperStyle: ViewStyle = {
   flexDirection: "row",
   alignItems: "flex-start",
-  borderWidth: 1,
+  borderWidth: 1.5,
+  height: 48,
   borderRadius: 4,
-  backgroundColor: colors.palette.neutral200,
-  borderColor: colors.palette.neutral400,
+  borderColor: colors.palette.gray100,
+  backgroundColor: colors.white,
   overflow: "hidden",
 }
 
 const $inputStyle: TextStyle = {
   flex: 1,
   alignSelf: "stretch",
-  fontFamily: typography.primary.normal,
-  color: colors.text,
+  fontFamily: typography.primary.regular,
+  color: colors.black,
   fontSize: 16,
-  height: 24,
-  // https://github.com/facebook/react-native/issues/21720#issuecomment-532642093
   paddingVertical: 0,
-  paddingHorizontal: 0,
-  marginVertical: spacing.xs,
-  marginHorizontal: spacing.sm,
+  paddingHorizontal: spacing.lg - 4,
 }
 
 const $helperStyle: TextStyle = {
