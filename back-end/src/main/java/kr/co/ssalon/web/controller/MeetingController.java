@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Tag(name = "모임")
 @Slf4j
 @RestController
@@ -53,9 +55,9 @@ public class MeetingController {
             @ApiResponse(responseCode = "200",description = "모임 목록 조회 성공"),
     })
     @GetMapping("/moims")
-    public ResponseEntity<Page<MeetingDTO>> getMoims(@RequestParam MeetingSearchCondition meetingSearchCondition, Pageable pageable) {
+    public ResponseEntity<List<MeetingDTO>> getMoims(@RequestParam MeetingSearchCondition meetingSearchCondition, Pageable pageable) {
         Page<Meeting> moims = meetingService.getMoims(meetingSearchCondition, pageable);
         Page<MeetingDTO> moimsDto = moims.map(meeting -> new MeetingDTO(meeting));
-        return ResponseEntity.ok().body(moimsDto);
+        return ResponseEntity.ok().body(moimsDto.getContent());
     }
 }
