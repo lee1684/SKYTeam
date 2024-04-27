@@ -1,6 +1,5 @@
-package kr.co.ssalon.Service;
+package kr.co.ssalon.domain.service;
 
-import io.awspring.cloud.s3.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -65,23 +64,24 @@ public class AwsS3Service {
         return "Success";
     }
 
-    public List<String> uploadFilesViaMultipart(Long moimId, List<MultipartFile> multipartFiles) {
+    public List<String> uploadFilesViaMultipart(Long moimId, List<MultipartFile> multipartFiles, Map<String, String> imageSrcMap) {
         List<String> fileUrlList = new ArrayList<>();
 
         multipartFiles.forEach(multipartFile -> {
-            if(multipartFile.isEmpty()) {
+            if (multipartFile.isEmpty()) {
                 // log.info("image is null");
                 fileUrlList.add("Failed to upload - null image: " + getFileName(multipartFile));
             }
 
             String fileName = getFileName(multipartFile);
+            String newFileName = imageSrcMap.get(fileName) + "." + fileName.substring(fileName.lastIndexOf(".") + 1);
 
             try {
                 PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                         .bucket(bucketStaticName)
                         .contentType(multipartFile.getContentType())
                         .contentLength(multipartFile.getSize())
-                        .key(moimId + "/" + fileName)
+                        .key(moimId + "/" + newFileName)
                         .build();
                 RequestBody requestBody = RequestBody.fromBytes(multipartFile.getBytes());
                 s3Client.putObject(putObjectRequest, requestBody);
@@ -91,7 +91,7 @@ public class AwsS3Service {
             }
             GetUrlRequest getUrlRequest = GetUrlRequest.builder()
                     .bucket(bucketStaticName)
-                    .key(moimId + "/" + fileName)
+                    .key(moimId + "/" + newFileName)
                     .build();
 
             fileUrlList.add(s3Client.utilities().getUrl(getUrlRequest).toString());

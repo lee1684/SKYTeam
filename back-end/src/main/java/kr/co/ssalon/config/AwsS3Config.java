@@ -1,4 +1,4 @@
-package kr.co.ssalon.Configuration;
+package kr.co.ssalon.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -9,7 +9,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 
 // AWS 연결을 위한 Config
 @Configuration
-public class AwsConfig {
+public class AwsS3Config {
     @Value("${spring.cloud.aws.credentials.access-key}")
     private String accessKey;
 
