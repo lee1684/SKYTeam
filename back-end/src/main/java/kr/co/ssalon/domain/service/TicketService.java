@@ -8,6 +8,7 @@ import kr.co.ssalon.web.dto.TicketEditResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
+@Transactional
 public class TicketService {
 
     @Value("${spring.cloud.aws.s3.endpoint}")
@@ -25,6 +27,7 @@ public class TicketService {
     @Autowired
     AwsS3Service awsS3Service;
 
+    @Transactional
     public String initTicket(Long moimId) {
         // 템플릿 복제 후 해당 경로 반환
         // JSON 복제 후, 해당 JSON 내 파일명에 맞게 나머지 복제 필요
@@ -55,6 +58,7 @@ public class TicketService {
         return awsS3Service.getFileAsJsonString(moimId.toString());
     }
 
+    @Transactional
     public TicketEditResponseDTO editTicket(Long moimId, String json, List<MultipartFile> multipartFiles) {
         // 주어진 모임ID 바탕으로 티켓 업로드 내용 수정
         // 현재(240424)는 기존 내용 삭제 후 새로 업로드
@@ -75,6 +79,7 @@ public class TicketService {
         return new TicketEditResponseDTO(resultJson, jsonElement.toString(), resultSrc);
     }
 
+    @Transactional
     public void deleteTicket() {
         // 주어진 모임ID의 S3 파일 삭제
         // 해당 모임ID 티켓 JSON 파일 내 Objects의 Type: image의 Link 추출 후 Key 리스트 작성
