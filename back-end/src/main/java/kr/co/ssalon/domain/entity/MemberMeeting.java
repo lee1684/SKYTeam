@@ -5,12 +5,14 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 public class MemberMeeting {
@@ -37,8 +39,10 @@ public class MemberMeeting {
 
     protected MemberMeeting() {}
 
-    public static MemberMeeting createMemberMeeting() {
-        MemberMeeting memberMeeting = MemberMeeting.builder().build();
-        return memberMeeting;
+    public static MemberMeeting createMemberMeeting(Member member, Meeting meeting) {
+        return MemberMeeting.builder()
+                .member(member)
+                .meeting(meeting)
+                .build();
     }
 }
