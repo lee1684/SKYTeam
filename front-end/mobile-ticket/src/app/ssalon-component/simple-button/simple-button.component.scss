@@ -3,11 +3,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 50%;
+  border-radius: 5px;
 }
 
 #simple-button:hover {
-  background-color: #f0f0f0;
   cursor: pointer;
 }
 

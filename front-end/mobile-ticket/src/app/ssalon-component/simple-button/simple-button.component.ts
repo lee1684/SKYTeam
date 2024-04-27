@@ -13,5 +13,6 @@ export class SimpleButtonComponent {
   @Input() heightSize: number = 20;
   @Input() buttonElement: ButtonElement | null = null;
   @Input() type: 'img' | 'text' = 'img';
+  @Input() highContrast: boolean = false;
   @Output() public readonly onClickEvent = new EventEmitter();
 }
