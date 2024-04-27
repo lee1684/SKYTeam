@@ -56,6 +56,13 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
+    // AWS 관련 : 240416 기준 S3 Dependency
+    implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.1.1")
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3'
+
+    // GSON : JSON 직렬화/역직렬화
+    implementation 'com.google.code.gson:gson:2.10.1'
 }
 
 tasks.named('test') {
