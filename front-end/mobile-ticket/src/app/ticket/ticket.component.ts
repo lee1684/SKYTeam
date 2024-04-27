@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { MobileTicketViewerComponent } from './mobile-ticket-viewer/mobile-ticket-viewer.component';
 import {
   MobileTicketEditMode,
@@ -11,7 +11,10 @@ import {
   SimpleToggleButtonGroupComponent,
 } from '../ssalon-component/simple-toggle-button-group/simple-toggle-button-group.component';
 import { SimpleButtonComponent } from '../ssalon-component/simple-button/simple-button.component';
-import { CircleToggleButtonGroupComponent } from '../ssalon-component/circle-toggle-button-group/circle-toggle-button-group.component';
+import {
+  ButtonElement,
+  CircleToggleButtonGroupComponent,
+} from '../ssalon-component/circle-toggle-button-group/circle-toggle-button-group.component';
 
 export enum MobileTicketViewMode {
   APPVIEW,
@@ -28,6 +31,7 @@ export enum MobileTicketViewMode {
     MobileTicketEditViewerComponent,
     SimpleToggleButtonGroupComponent,
     CircleToggleButtonGroupComponent,
+    SimpleButtonComponent,
     NgIf,
   ],
   templateUrl: './ticket.component.html',
@@ -35,24 +39,32 @@ export enum MobileTicketViewMode {
 })
 export class TicketComponent {
   public editViewerHeight: string = '60%';
-  public viewerHeight: string = '60%';
+  public viewerHeight: string = '100%';
 
   public mobileTicketViewMode = MobileTicketViewMode;
   public mode: MobileTicketViewMode = MobileTicketViewMode.APPEDITVIEW;
 
   public mobileTicketEditMode = MobileTicketEditMode;
   public editMode: MobileTicketEditMode = MobileTicketEditMode.NONE;
-
+  public goBackButtonElement: ButtonElement = {
+    imgSrc: 'assets/icons/go-back.png',
+    label: '뒤로가기',
+    value: 0,
+  };
   constructor() {}
   public changeEditMode(mode: MobileTicketEditMode) {
     this.editMode = mode;
   }
 
-  public changeMode(mode: MobileTicketViewMode): void {
+  public changeViewMode(mode: MobileTicketViewMode): void {
     this.mode = mode;
   }
 
   public addFabricObject(object: any) {
     console.log(object);
+  }
+
+  public onClickBackButton() {
+    this.changeViewMode(MobileTicketViewMode.APPEDITVIEW);
   }
 }

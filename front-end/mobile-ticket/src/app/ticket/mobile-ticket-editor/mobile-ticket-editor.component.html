@@ -1,22 +1,15 @@
-<!--
-<div class="container">
-    <div class="feature-button-container">
-        <app-simple-button [buttonElement]="this.goBackButtonElement" [heightSize]="40"></app-simple-button>
-        <app-circle-toggle-button-group [elements]="this.editFeatures"
-            [selectedValues]="[this.mobileTicketEditMode.PREVIEW]" [innerSize]="20" [outerSize]="'40px'"
-            (onClickToggleButtonEvent)="this.onClickToggleButton($event)"></app-circle-toggle-button-group>
-    </div>
-</div>
--->
 <div class="container">
     <!-- edit buttons & back button-->
     <div class="horizontal-container">
-        <app-simple-button class="back-button" [buttonElement]="this.goBackButtonElement"
-            [heightSize]="36"></app-simple-button>
-        <app-circle-toggle-button-group id="edit-feature-buttons" #editFeatureButtons [elements]="this.editFeatures"
-            [selectedValues]="[this.mobileTicketEditMode.NONE]" [innerSize]="20" [outerSize]="'36px'"
-            [noneStatusValue]="this.mobileTicketEditMode.NONE"
-            (onClickToggleButtonEvent)="this.onClickToggleButton($event)"></app-circle-toggle-button-group>
+        <div><app-simple-button class="back-button" [buttonElement]="this.goBackButtonElement"
+                [heightSize]="36"></app-simple-button></div>
+        <div><app-circle-toggle-button-group id="edit-feature-buttons" #editFeatureButtons
+                [elements]="this.editFeatures" [innerSize]="20" [outerSize]="'36px'"
+                [noneStatusValue]="this.mobileTicketEditMode.NONE"
+                (onClickToggleButtonEvent)="this.onClickChangeEditMode($event)"></app-circle-toggle-button-group>
+        </div>
+        <div><app-simple-button class="complete-button" [buttonElement]="this.previewButtonElement" [heightSize]="15"
+                (onClickEvent)="this.onClickPreviewButton()" [type]="'text'"></app-simple-button></div>
     </div>
     <!-- detailed editor view -->
     <div id="detail-editor" [hidden]="
@@ -27,15 +20,28 @@
     ">
         <!--back button-->
         <div class="horizontal-container">
-            <app-simple-button class="back-button" [buttonElement]="this.goBackButtonElement" [heightSize]="40"
-                (onClickEvent)="this.onClickEndDetailedEditViewer()"></app-simple-button>
+            <div><app-simple-button class="back-button" [buttonElement]="this.goBackButtonElement" [heightSize]="40"
+                    (onClickEvent)="this.onClickEndDetailedEditViewer()"></app-simple-button></div>
+            <div><app-simple-button class="complete-button" [buttonElement]="this.completeButtonElement"
+                    [heightSize]="15" (onClickEvent)="this.onClickEndDetailedEditViewer()" [type]="'text'"
+                    [highContrast]="true"></app-simple-button></div>
         </div>
         <!-- text edit feature -->
-        <div id="text-edit-feature-container" #textEditFeatureContainer
-            *ngIf="this.editMode===this.mobileTicketEditMode.TEXT">
-            <input id="text-edit-input" autocomplete="off" type="text" autofocus (blur)="this.onBlurInput()"
-                (input)="this.onChangeSsaslonTextAttribute('text', $event)" />
+        <div *ngIf="this.editMode===this.mobileTicketEditMode.TEXT">
+            <div id="text-edit-feature-container" #textEditFeatureContainer>
+                <textarea id="text-edit-input" #textEditInput autocomplete="off" type="text"
+                    [style.text-align]="this.textAlign" (blur)="this.onBlurInput()" [style.color]="this.textColor.color"
+                    (input)="this.onChangeSsaslonTextAttribute('text', $event)"></textarea>
+            </div>
+            <div class="horizontal-container" id="text-align" [style.justify-content]="'center'">
+                <app-circle-toggle-button-group [elements]="this.textAlignButtons" [outerSize]="'30px'"
+                    (onClickToggleButtonEvent)="this.onClickChangeTextAlignButton($event)"></app-circle-toggle-button-group>
+            </div>
+            <app-simple-toggle-button-group class="fonts" [elements]="this.fonts"></app-simple-toggle-button-group>
+            <app-color-board class="color-board" [outerSize]="'30px'" [innerSize]="'24px'"
+                (onClickToggleButtonEvent)="this.onClickChangeTextColor($event)"></app-color-board>
         </div>
+
         <!-- sticker edit feature -->
         <div id="sticker-edit-feature-container" #stickerEditFeatureContainer
             *ngIf="this.editMode===this.mobileTicketEditMode.STICKER" [style.scroll-y]="'auto'">
@@ -48,5 +54,8 @@
                 </div>
             </div>
         </div>
+        <!-- color edit feature -->
+
+
     </div>
 </div>

@@ -4,3 +4,9 @@
     flex-direction: column;
     position: relative;
 }
+
+.horizontal-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}

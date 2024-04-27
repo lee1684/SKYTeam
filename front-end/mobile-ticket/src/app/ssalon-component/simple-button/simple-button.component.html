@@ -1,6 +1,7 @@
 <div id="simple-button" (click)="this.onClickEvent.emit()">
     <img *ngIf="this.type === 'img'" [src]="this.buttonElement!.imgSrc" [height]="this.heightSize" />
-    <div id="text-div" *ngIf="this.type === 'text'" [style.font-size.px]="this.heightSize">
+    <div id="text-div" *ngIf="this.type === 'text'" [style.font-size.px]="this.heightSize"
+        [style.color]="this.highContrast?'#f0f0f0':'black'">
         {{this.buttonElement!.label}}
     </div>
 </div>

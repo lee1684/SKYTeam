@@ -1,12 +1,16 @@
 <!-- APPVIEW: 앱에서 보는 화면의 경우 -->
-<div class="container" *ngIf="this.mode === this.mobileTicketViewMode.APPVIEW">
+<div class="container" *ngIf="this.mode === this.mobileTicketViewMode.APPVIEW" #appView>
+  <div class="horizontal-container">
+    <div><app-simple-button class="back-button" [buttonElement]="this.goBackButtonElement" [heightSize]="36"
+        (onClickEvent)="this.onClickBackButton()"></app-simple-button></div>
+  </div>
   <div [style.height]="this.viewerHeight">
     <app-mobile-ticket-viewer></app-mobile-ticket-viewer>
   </div>
 </div>
 
 <!-- APPEDITVIEW: 앱에서 보는 꾸미기 화면의 경우 -->
-<div class="container" *ngIf="this.mode === this.mobileTicketViewMode.APPEDITVIEW">
+<div class="container" *ngIf="this.mode === this.mobileTicketViewMode.APPEDITVIEW" #appEditView>
   <div [style.height]="'100%'" [style.width]="'100%'" [style.position]="'absolute'" [style.top]="'60px'"
     [style.left]="'0px'">
     <app-mobile-ticket-edit-viewer></app-mobile-ticket-edit-viewer>
@@ -14,11 +18,12 @@
   <app-mobile-ticket-editor [style.position]="'absolute'" [style.top]="'0px'" [style.left]="'0px'"
     [style.width]="'100%'" [style.height]="
       this.editMode === this.mobileTicketEditMode.NONE ? '60px' : '100%'
-    " (onChangeViewer)="this.changeEditMode($event)"></app-mobile-ticket-editor>
+    " (onChangeViewer)="this.changeEditMode($event)"
+    (onClickPreview)="this.changeViewMode(this.mobileTicketViewMode.APPVIEW)"></app-mobile-ticket-editor>
 </div>
 
 <!-- WEBVIEW: 웹에서 보는 화면의 경우 -->
-<div class="container" *ngIf="this.mode === this.mobileTicketViewMode.WEBVIEW">
+<div class="container" *ngIf="this.mode === this.mobileTicketViewMode.WEBVIEW" #webView>
   <div [style.height]="this.viewerHeight">
     <app-mobile-ticket-viewer></app-mobile-ticket-viewer>
   </div>

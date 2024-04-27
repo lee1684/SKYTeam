@@ -8,6 +8,7 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
+import { ButtonElement } from '../circle-toggle-button-group/circle-toggle-button-group.component';
 
 export interface SimpleToggleButtonElement {
   label: string;
@@ -25,7 +26,7 @@ export class SimpleToggleButtonGroupComponent {
   @ViewChildren('toggleButton')
   buttons: QueryList<ElementRef> | null = null;
 
-  @Input() public elements: SimpleToggleButtonElement[] = [];
+  @Input() public elements: ButtonElement[] = [];
   @Input() public selectedValue: number = 0;
   @Output() public readonly onClickToggleButtonEvent = new EventEmitter();
 

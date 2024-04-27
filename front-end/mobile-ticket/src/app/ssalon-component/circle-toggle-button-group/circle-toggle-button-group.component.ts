@@ -28,7 +28,7 @@ export class CircleToggleButtonGroupComponent {
 
   @Input() public elements: ButtonElement[] = [];
   @Input() public selectedValues: number[] = [];
-  @Input() public noneStatusValue: number = 0;
+  @Input() public noneStatusValue: number = -1;
   @Input() public outerSize: string = '40px';
   @Input() public innerSize: number = 20;
   @Input() public enableMultipleSelection: boolean = false;
@@ -38,6 +38,7 @@ export class CircleToggleButtonGroupComponent {
   public ngOnInit(): void {}
   public ngAfterViewInit(): void {
     const buttonsArray = this.buttons!.toArray();
+    console.log(this.selectedValues);
     for (let selectedValue of this.selectedValues) {
       buttonsArray[selectedValue].nativeElement.classList.add('selected');
     }
