@@ -26,15 +26,16 @@ export class ScenegraphService {
     this.scene.background = new THREE.Color(0xffffff); //
 
     /** create Perspective Camera */
-    this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-    this.camera!.position.z = 200;
+    this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 2000);
+    this.camera!.position.z = 700;
 
     /** create Lights
      * because ArcballControl transforms the camera,
      * if the camera goes behind of the object, we can't see the object.
      */
-    this.createLight('pointLight1', new THREE.Vector3(0, 0, 100));
-    this.createLight('pointLight2', new THREE.Vector3(0, 0, -100));
+    this.createLight('pointLight1', new THREE.Vector3(0, 0, 300));
+    this.createLight('pointLight2', new THREE.Vector3(0, 0, -300));
+    this.createLight('pointLight3', new THREE.Vector3(0, 400, 300));
 
     /** create and init Renderers */
     this.initCss3dRenderer(width, height);
@@ -102,13 +103,25 @@ export class ScenegraphService {
   public focusFront(): void {
     this.arcballControls!.reset();
   }
+
+  public rotateCard(): void {
+    this.mobileTicket!.mobileTicket?.rotateX(0.005);
+    //this.mobileTicket!.mobileTicket?.rotateY(0.005);
+    if (
+      this.mobileTicket?.frontSide !== null &&
+      this.mobileTicket?.backSide !== null
+    ) {
+      this.mobileTicket?.checkFaceVisible();
+    }
+    //this.mobileTicket?.checkFaceVisible();
+  }
 }
 
 /** 애니메이션 함수 */
 const startAnimation = function (sceneSetting: ScenegraphService) {
   const clock = new THREE.Clock();
   const animationFrame = function () {
-    //sceneSetting.rotateCard();
+    sceneSetting.rotateCard();
     sceneSetting.onRender();
     requestAnimationFrame(animationFrame);
   };

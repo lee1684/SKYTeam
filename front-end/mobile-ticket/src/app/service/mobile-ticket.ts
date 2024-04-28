@@ -28,7 +28,7 @@ export class MobileTicket {
   /** load material */
   private loadMaterial(): void {
     const mtlLoader = new MTLLoader();
-    mtlLoader.load('assets/ticket.mtl', (materials) => {
+    mtlLoader.load('assets/untitled.mtl', (materials) => {
       materials.preload();
       this.loadObject(materials);
     });
@@ -40,7 +40,7 @@ export class MobileTicket {
     loader.setMaterials(materials);
     // load a resource
     loader.load(
-      'assets/ticket.obj',
+      'assets/untitled.obj',
       (obj) => {
         this.initCardObject(obj);
       },
@@ -59,7 +59,7 @@ export class MobileTicket {
     this.mobileTicket = obj.children[0];
     //0xb76e79
     ((this.mobileTicket as Mesh).material as MeshPhongMaterial).color.set(
-      0x0090f2
+      0xefefef
     );
     this.mobileTicket.rotateOnAxis(new Vector3(0, 0, 1), Math.PI / 2);
     this._sceneGraphService.scene!.add(this.mobileTicket!);
@@ -70,11 +70,11 @@ export class MobileTicket {
 
   private initSide(side: string): void {
     if (side === 'front') {
-      this.frontSide = new Face(new Vector2(160, 90), 'front', 'decoration');
+      this.frontSide = new Face(new Vector2(350, 600), 'front', 'decoration');
       this.frontSide.rotateZ(-Math.PI / 2);
       this.mobileTicket?.add(this.frontSide);
     } else if (side === 'back') {
-      this.backSide = new Face(new Vector2(160, 90), 'back', 'decoration');
+      this.backSide = new Face(new Vector2(350, 600), 'back', 'decoration');
       this.backSide.rotateZ(-Math.PI / 2);
       this.backSide.rotateY(-Math.PI);
       this.mobileTicket?.add(this.backSide);

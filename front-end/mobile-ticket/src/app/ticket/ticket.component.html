@@ -13,13 +13,15 @@
 <div class="container" *ngIf="this.mode === this.mobileTicketViewMode.APPEDITVIEW" #appEditView>
   <div [style.height]="'100%'" [style.width]="'100%'" [style.position]="'absolute'" [style.top]="'60px'"
     [style.left]="'0px'">
-    <app-mobile-ticket-edit-viewer></app-mobile-ticket-edit-viewer>
+    <app-mobile-ticket-edit-viewer #mobileTicketEditViewer
+      (onClickText)="this.openTextEditor($event)"></app-mobile-ticket-edit-viewer>
   </div>
-  <app-mobile-ticket-editor [style.position]="'absolute'" [style.top]="'0px'" [style.left]="'0px'"
+  <app-mobile-ticket-editor #mobileTicketEditor [style.position]="'absolute'" [style.top]="'0px'" [style.left]="'0px'"
     [style.width]="'100%'" [style.height]="
       this.editMode === this.mobileTicketEditMode.NONE ? '60px' : '100%'
     " (onChangeViewer)="this.changeEditMode($event)"
-    (onClickPreview)="this.changeViewMode(this.mobileTicketViewMode.APPVIEW)"></app-mobile-ticket-editor>
+    (onClickPreview)="this.changeViewMode(this.mobileTicketViewMode.APPVIEW)"
+    (onObjectEditEnded)="this.applyEdit($event)"></app-mobile-ticket-editor>
 </div>
 
 <!-- WEBVIEW: 웹에서 보는 화면의 경우 -->

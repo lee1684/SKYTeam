@@ -102,6 +102,9 @@ export class SsalonColor {
   ): SsalonColorElement {
     return this.SsalonColors.find((color) => color.value === value)!;
   }
+  public getSsalonColorObjectByColor(color: string): SsalonColorElement {
+    return this.SsalonColors.find((c) => c.color === color)!;
+  }
 }
 export interface SsalonColorElement {
   color: string;
