@@ -37,6 +37,8 @@ public class MemberMeeting {
     @OneToMany(mappedBy = "memberMeeting")
     private final List<Message> messages = new ArrayList<>();
 
+    private String QrLink;
+
     protected MemberMeeting() {}
 
     public static MemberMeeting createMemberMeeting(Member member, Meeting meeting) {
