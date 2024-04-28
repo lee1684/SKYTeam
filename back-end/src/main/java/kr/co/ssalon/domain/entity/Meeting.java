@@ -1,6 +1,7 @@
 package kr.co.ssalon.domain.entity;
 
 import jakarta.persistence.*;
+import kr.co.ssalon.web.dto.MeetingDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -54,10 +55,22 @@ public class Meeting {
 
     protected Meeting() {}
 
-    public static Meeting createMeeting() {
+    public static Meeting createMeeting(MeetingDTO meetingDTO) {
         // Change to builder
-        Meeting meeting = Meeting.builder().build();
+        Meeting meeting = Meeting.builder()
+                .id(meetingDTO.getId())
+                .category(meetingDTO.getCategory())
+                .payment(meetingDTO.getPayment())
+                .creator(meetingDTO.getCreator())
+                .ticket(meetingDTO.getTicket())
+                .participants(meetingDTO.getParticipants())
+                .meetingPictureUrls(meetingDTO.getMeetingPictureUrls())
+                .title(meetingDTO.getTitle())
+                .description(meetingDTO.getDescription())
+                .location(meetingDTO.getLocation())
+                .capacity(meetingDTO.getCapacity())
+                .meetingDate(meetingDTO.getMeetingDate())
+                .build();
         return meeting;
     }
-
 }
