@@ -47,9 +47,9 @@ public class MeetingDTO {
     public MeetingDTO(Meeting meeting) {
         this.id = meeting.getId();
         this.categoryId = meeting.getCategory().getId();
-        this.paymentId = meeting.getPayment().getId();
-        this.creatorId = meeting.getCreator().getId();
-        this.ticketId = meeting.getTicket().getId();
+        this.paymentId = meeting.getPayment() != null ? meeting.getPayment().getId() : null;
+        this.creatorId = meeting.getCreator() != null ? meeting.getCreator().getId() : null;
+        this.ticketId = meeting.getTicket() != null ? meeting.getTicket().getId() : null;
         this.participantIds = meeting.getParticipants().stream().map(MemberMeeting::getId).collect(Collectors.toList());
         this.meetingPictureUrls = meeting.getMeetingPictureUrls();
         this.title = meeting.getTitle();
