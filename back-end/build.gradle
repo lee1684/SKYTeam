@@ -63,6 +63,10 @@ dependencies {
 
     // GSON : JSON 직렬화/역직렬화
     implementation 'com.google.code.gson:gson:2.10.1'
+
+    // QR Code - zxing
+    implementation group: 'com.google.zxing', name: 'javase', version: '3.5.0'
+    implementation group: 'com.google.zxing', name: 'core', version: '3.5.0'
 }
 
 tasks.named('test') {
