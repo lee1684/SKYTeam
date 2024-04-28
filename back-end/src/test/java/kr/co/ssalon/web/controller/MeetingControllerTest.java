@@ -35,7 +35,7 @@ public class MeetingControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    @DisplayName("모임 목록 조회 API(GET /moims) 테스트")
+    @DisplayName("모임 목록 조회 API(GET /api/moims) 테스트")
     @WithMockUser(username = "test")
     public void 모임목록조회API() throws Exception {
         // given
@@ -63,7 +63,7 @@ public class MeetingControllerTest {
         when(meetingService.getMoims(meetingSearchCondition, pageable)).thenReturn(meetingsPage);
 
         // when
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/moims")
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/api/moims")
                 .param("categoryName", "운동")
                 .param("region", "SEOUL")
                 .param("page", "0")

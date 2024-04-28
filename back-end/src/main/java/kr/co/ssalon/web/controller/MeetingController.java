@@ -36,7 +36,7 @@ public class MeetingController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",description = "모임 참가 성공"),
     })
-    @PostMapping("/moims/{moimId}/users")
+    @PostMapping("/api/moims/{moimId}/users")
     public ResponseEntity<?> joinMoim(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
         try {
             MeetingDTO joinedMoim = meetingService.join(customOAuth2Member, moimId);
@@ -53,7 +53,7 @@ public class MeetingController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",description = "모임 목록 조회 성공"),
     })
-    @GetMapping("/moims")
+    @GetMapping("/api/moims")
     public ResponseEntity<List<MeetingDTO>> getMoims(MeetingSearchCondition meetingSearchCondition, Pageable pageable) {
         Page<Meeting> moims = meetingService.getMoims(meetingSearchCondition, pageable);
         Page<MeetingDTO> moimsDto = moims.map(meeting -> new MeetingDTO(meeting));

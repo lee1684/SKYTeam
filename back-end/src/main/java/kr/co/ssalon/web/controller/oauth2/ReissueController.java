@@ -37,7 +37,7 @@ public class ReissueController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Access Token 재발급 성공"),
     })
-    @PostMapping("/reissue")
+    @PostMapping("/api/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         log.info("refresh 토큰 검증 및 access 토큰 재발급");

@@ -27,7 +27,7 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원가입 성공"),
     })
-    @PostMapping("/auth/signup")
+    @PostMapping("/api/auth/signup")
     public MemberDTO signup(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MemberDTO additionalInfo) throws BadRequestException {
         String username = customOAuth2Member.getUsername();
         Member currentUser = memberService.signup(username, additionalInfo);
@@ -39,7 +39,7 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 정보 조회 성공"),
     })
-    @GetMapping("/users/me/profile")
+    @GetMapping("/api/users/me/profile")
     public MemberDTO getUserInfo(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) throws BadRequestException {
         String username = customOAuth2Member.getUsername();
         Member member = memberService.findMember(username);
@@ -51,7 +51,7 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "로그아웃 성공"),
     })
-    @DeleteMapping("/auth/logout")
+    @DeleteMapping("/api/auth/logout")
     public void logout() {
         // swagger logout API 작성용으로 만든 빈 메소드
     }
