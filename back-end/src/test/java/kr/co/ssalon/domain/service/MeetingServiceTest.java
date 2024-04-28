@@ -30,7 +30,7 @@ public class MeetingServiceTest {
     private MeetingService meetingService;
 
     @Test
-    @DisplayName("meetingService.getMoims 메소드 테스트")
+    @DisplayName("MeetingService.getMoims 메소드 테스트")
     public void 모임목록조회() {
         // given
 

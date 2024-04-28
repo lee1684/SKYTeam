@@ -4,6 +4,7 @@ import kr.co.ssalon.domain.entity.Category;
 import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Region;
 import kr.co.ssalon.web.dto.MeetingSearchCondition;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -28,6 +29,7 @@ public class MeetingRepositoryTest {
     CategoryRepository categoryRepository;
 
     @Test
+    @DisplayName("MeetingRepository.searchMoims 메소드 테스트")
     public void 모임목록조회() {
         // given
 
