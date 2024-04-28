@@ -38,6 +38,11 @@ export enum MobileTicketViewMode {
   styleUrl: './ticket.component.scss',
 })
 export class TicketComponent {
+  @ViewChild('mobileTicketEditViewer', { static: false })
+  mobileTicketEditViewer: MobileTicketEditViewerComponent | null = null;
+  @ViewChild('mobileTicketEditor', { static: false })
+  mobileTicketEditor: MobileTicketEditorComponent | null = null;
+
   public editViewerHeight: string = '60%';
   public viewerHeight: string = '100%';
 
@@ -66,5 +71,15 @@ export class TicketComponent {
 
   public onClickBackButton() {
     this.changeViewMode(MobileTicketViewMode.APPEDITVIEW);
+  }
+
+  public applyEdit(object: fabric.Object | null) {
+    this.mobileTicketEditViewer?.updateCanvas(object);
+  }
+
+  public openTextEditor(IText: fabric.IText) {
+    this.mobileTicketEditor!.isTextAddMode = false;
+    this.mobileTicketEditor!.editingIText = IText;
+    this.mobileTicketEditor!.onClickChangeEditMode(MobileTicketEditMode.TEXT);
   }
 }

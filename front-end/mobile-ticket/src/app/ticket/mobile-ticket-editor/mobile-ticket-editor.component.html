@@ -30,16 +30,16 @@
         <div *ngIf="this.editMode===this.mobileTicketEditMode.TEXT">
             <div id="text-edit-feature-container" #textEditFeatureContainer>
                 <textarea id="text-edit-input" #textEditInput autocomplete="off" type="text"
-                    [style.text-align]="this.textAlign" (blur)="this.onBlurInput()" [style.color]="this.textColor.color"
+                    [style.text-align]="this.textAlign" [style.color]="this.textColor.color"
                     (input)="this.onChangeSsaslonTextAttribute('text', $event)"></textarea>
             </div>
             <div class="horizontal-container" id="text-align" [style.justify-content]="'center'">
                 <app-circle-toggle-button-group [elements]="this.textAlignButtons" [outerSize]="'30px'"
-                    (onClickToggleButtonEvent)="this.onClickChangeTextAlignButton($event)"></app-circle-toggle-button-group>
+                    (onClickToggleButtonEvent)="this.onChangeSsaslonTextAttribute('textAlign', $event)"></app-circle-toggle-button-group>
             </div>
             <app-simple-toggle-button-group class="fonts" [elements]="this.fonts"></app-simple-toggle-button-group>
             <app-color-board class="color-board" [outerSize]="'30px'" [innerSize]="'24px'"
-                (onClickToggleButtonEvent)="this.onClickChangeTextColor($event)"></app-color-board>
+                (onClickToggleButtonEvent)="this.onChangeSsaslonTextAttribute('color', $event)"></app-color-board>
         </div>
 
         <!-- sticker edit feature -->

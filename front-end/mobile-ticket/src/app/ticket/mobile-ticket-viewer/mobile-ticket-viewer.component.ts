@@ -15,13 +15,14 @@ export class MobileTicketViewerComponent {
   public majorFace: string = 'front';
   public isEditing: boolean = false;
   constructor(private _sceneGraphService: ScenegraphService) {}
-  ngAfterViewInit(): void {
+  public ngOnInit(): void {}
+  public ngAfterViewInit(): void {
     this._sceneGraphService.nativeElement =
       this.rendererContainer!.nativeElement;
     this._sceneGraphService.initThree();
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this._sceneGraphService.destroy();
   }
 }

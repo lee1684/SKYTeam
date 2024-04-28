@@ -20,6 +20,7 @@ import {
   SsalonColorEnum,
 } from '../../ssalon-component/color-board/color-board.component';
 import { SimpleToggleButtonGroupComponent } from '../../ssalon-component/simple-toggle-button-group/simple-toggle-button-group.component';
+import { fabric } from 'fabric';
 
 export enum MobileTicketEditMode {
   BACKGROUND_COLOR_CHANGE,
@@ -34,6 +35,13 @@ export enum TextAlign {
   LEFT,
   CENTER,
   RIGHT,
+}
+
+export interface TextAttribute {
+  text: string;
+  fontFamily: string;
+  color: string;
+  textAlign: string;
 }
 
 @Component({
@@ -57,10 +65,10 @@ export class MobileTicketEditorComponent {
   textEditInput: ElementRef | null = null;
 
   @Output() public readonly onChangeViewer = new EventEmitter();
-  @Output() public readonly onEditSsalonObject = new EventEmitter();
+  @Output() public readonly onObjectEditEnded = new EventEmitter();
   @Output() public readonly onClickPreview = new EventEmitter();
   public editMode: MobileTicketEditMode = MobileTicketEditMode.NONE;
-  constructor(private _sceneGraphService: ScenegraphService) {}
+  public ssalonColor: SsalonColor = new SsalonColor();
 
   public mobileTicketEditMode = MobileTicketEditMode;
   public goBackButtonElement: ButtonElement = {
@@ -155,16 +163,37 @@ export class MobileTicketEditorComponent {
     { imgSrc: '', label: '폰트7', value: 14 },
     { imgSrc: '', label: '폰트8', value: 15 },
   ];
+  public isTextAddMode: boolean = true;
+  public textColor: SsalonColorElement = this.ssalonColor.WHITE;
+  public editingIText: fabric.IText | null = null;
 
-  public ssalonColor: SsalonColor = new SsalonColor();
-  public textColor: SsalonColorElement = this.ssalonColor.BLACK;
   public colorBoard: ButtonElement[] = [];
   public fabricObject: any = null;
+  constructor(private _sceneGraphService: ScenegraphService) {}
   public ngAfterViewInit(): void {}
   public ngAfterViewChecked(): void {
     if (this.textEditInput !== undefined && !this.textFocused) {
-      this.textEditInput!.nativeElement.focus();
-      this.textFocused = true;
+      if (this.editingIText === null && this.isTextAddMode) {
+        this.editingIText = new fabric.IText('', {
+          top: 100,
+          left: 100,
+          fill: '#FFFFFF',
+          textAlign: 'left',
+        });
+      }
+      if (this.editingIText !== null) {
+        this.textColor = this.ssalonColor.getSsalonColorObjectByColor(
+          this.editingIText!.fill as string
+        );
+        this.textAlign = this.editingIText!.textAlign as
+          | 'left'
+          | 'center'
+          | 'right';
+        this.textEditInput!.nativeElement.value = this.editingIText!.text;
+        this.textEditInput!.nativeElement.focus();
+        this.textFocused = true;
+        console.log(this.editingIText);
+      }
     }
   }
 
@@ -179,20 +208,6 @@ export class MobileTicketEditorComponent {
     this._sceneGraphService.focusFront();
   }
 
-  public onClickChangeTextAlignButton(value: TextAlign): void {
-    switch (value) {
-      case TextAlign.LEFT:
-        this.textAlign = 'left';
-        break;
-      case TextAlign.CENTER:
-        this.textAlign = 'center';
-        break;
-      case TextAlign.RIGHT:
-        this.textAlign = 'right';
-        break;
-    }
-  }
-
   public onClickChangeEditMode(value: MobileTicketEditMode): void {
     switch (value) {
       case MobileTicketEditMode.BACKGROUND_COLOR_CHANGE:
@@ -202,6 +217,7 @@ export class MobileTicketEditorComponent {
       case MobileTicketEditMode.STICKER:
         break;
       case MobileTicketEditMode.TEXT:
+        this.isTextAddMode = true;
         this.textFocused = false;
         break;
       case MobileTicketEditMode.DRAW:
@@ -221,17 +237,56 @@ export class MobileTicketEditorComponent {
     this.editMode = MobileTicketEditMode.NONE;
     this.editFeatureButtons!.setUnselectedStatus();
     this.onChangeViewer.emit(MobileTicketEditMode.NONE);
+    this.onEndEditObject();
   }
 
+  /**
+   * @param attributeName ={
+   * 'text': string,
+   * 'fontFamily': string,
+   * 'color': string,
+   * 'textAlign': string,
+   * }
+   * @param value
+   */
   public onChangeSsaslonTextAttribute(attributeName: string, value: any): void {
-    console.log(value);
+    if (this.editingIText !== null) {
+      switch (attributeName) {
+        case 'text':
+          let editedText = this.textEditInput!.nativeElement.value;
+          this.editingIText.set('text', editedText);
+          break;
+        case 'fontFamily':
+          this.editingIText.fontFamily = value;
+          break;
+        case 'color':
+          this.textColor = this.ssalonColor.getSsalonColorObjectByValue(value);
+          this.editingIText.set('fill', this.textColor.color);
+          break;
+        case 'textAlign':
+          switch (value) {
+            case TextAlign.LEFT:
+              this.textAlign = 'left';
+              break;
+            case TextAlign.CENTER:
+              this.textAlign = 'center';
+              break;
+            case TextAlign.RIGHT:
+              this.textAlign = 'right';
+              break;
+          }
+          this.editingIText.set('textAlign', this.textAlign);
+          break;
+      }
+    }
   }
 
-  public onClickChangeTextColor(value: SsalonColorEnum): void {
-    this.textColor = this.ssalonColor.getSsalonColorObjectByValue(value);
-  }
-
-  public onBlurInput(): void {
-    this.onEditSsalonObject.emit(this.fabricObject);
+  public onEndEditObject(): void {
+    if (this.isTextAddMode) {
+      this.onObjectEditEnded.emit(this.editingIText);
+    } else {
+      this.onObjectEditEnded.emit(null);
+    }
+    this.editingIText = null;
   }
 }
