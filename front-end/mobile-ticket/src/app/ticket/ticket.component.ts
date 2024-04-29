@@ -77,6 +77,10 @@ export class TicketComponent {
     this.mobileTicketEditViewer?.updateCanvas(object);
   }
 
+  public applyBackgroundColorEdit(color: string) {
+    this.mobileTicketEditViewer?.updateBackgroundColor(color);
+  }
+
   public openTextEditor(IText: fabric.IText) {
     this.mobileTicketEditor!.isTextAddMode = false;
     this.mobileTicketEditor!.editingIText = IText;
