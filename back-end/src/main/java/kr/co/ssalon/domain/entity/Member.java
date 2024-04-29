@@ -20,7 +20,7 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private final List<MemberMeeting> joinedMeetings = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
@@ -65,6 +65,10 @@ public class Member {
         return member;
     }
 
+    public void addMemberMeeting(MemberMeeting memberMeeting) {
+        this.joinedMeetings.add(memberMeeting);
+        memberMeeting.setMember(this);
+    }
 
     public static Member addJoinedMeetings(Member member, MemberMeeting memberMeeting) {
         member.getJoinedMeetings().add(memberMeeting);

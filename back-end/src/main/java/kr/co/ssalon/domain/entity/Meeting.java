@@ -39,7 +39,7 @@ public class Meeting {
     @JoinColumn(name = "ticket_id")
     private Ticket ticket;
 
-    @OneToMany(mappedBy = "meeting")
+    @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL)
     private final List<MemberMeeting> participants = new ArrayList<>();
 
     @ElementCollection
@@ -55,16 +55,14 @@ public class Meeting {
 
     protected Meeting() {}
 
-    public static Meeting createMeeting(MeetingDTO meetingDTO) {
+    public static Meeting createMeeting(MeetingDTO meetingDTO, Category category, Payment payment, Member creator, Ticket ticket) {
         // Change to builder
         Meeting meeting = Meeting.builder()
                 .id(meetingDTO.getId())
-                .category(meetingDTO.getCategory())
-                .payment(meetingDTO.getPayment())
-                .creator(meetingDTO.getCreator())
-                .ticket(meetingDTO.getTicket())
-                .participants(meetingDTO.getParticipants())
-                .meetingPictureUrls(meetingDTO.getMeetingPictureUrls())
+                .category(category)
+                .payment(payment)
+                .creator(creator)
+                .ticket(ticket)
                 .title(meetingDTO.getTitle())
                 .description(meetingDTO.getDescription())
                 .location(meetingDTO.getLocation())
@@ -72,5 +70,19 @@ public class Meeting {
                 .meetingDate(meetingDTO.getMeetingDate())
                 .build();
         return meeting;
+    }
+
+
+    public void addMemberMeeting(MemberMeeting memberMeeting) {
+        this.participants.add(memberMeeting);
+        memberMeeting.setMeeting(this);
+    }
+
+    public void setMeetingPictureUrls(List<String> meetingPictureUrls) {
+        this.meetingPictureUrls.addAll(meetingPictureUrls);
+    }
+
+    public void setParticipants(List<MemberMeeting> participants) {
+        this.participants.addAll(participants);
     }
 }

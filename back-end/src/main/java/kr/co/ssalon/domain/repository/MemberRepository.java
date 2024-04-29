@@ -15,7 +15,4 @@ public interface MemberRepository extends JpaRepository<Member,Long> {
     Member findMemberById(long id);
 
     void update(Member member);
-
-    @Query("SELECT m FROM Member m WHERE m.username = :username")
-    Member getByUsername(String username);
 }

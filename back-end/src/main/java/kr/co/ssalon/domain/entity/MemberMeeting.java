@@ -2,10 +2,7 @@ package kr.co.ssalon.domain.entity;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +36,14 @@ public class MemberMeeting {
 
     protected MemberMeeting() {}
 
+
     public static MemberMeeting createMemberMeeting(Member member, Meeting meeting) {
-        return MemberMeeting.builder()
-                .member(member)
-                .meeting(meeting)
-                .build();
+        MemberMeeting memberMeeting = new MemberMeeting();
+        memberMeeting.member = member;
+        memberMeeting.meeting = meeting;
+        member.getJoinedMeetings().add(memberMeeting);
+        meeting.getParticipants().add(memberMeeting);
+        return memberMeeting;
     }
+
 }

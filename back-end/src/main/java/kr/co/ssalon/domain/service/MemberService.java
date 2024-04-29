@@ -38,6 +38,12 @@ public class MemberService {
         return member;
     }
 
+    public Member findMember(Long id) throws BadRequestException {
+        Optional<Member> findMember = memberRepository.findById(id);
+        Member member = validaitonMember(findMember);
+        return member;
+    }
+
     private Member validaitonMember(Optional<Member> member) throws BadRequestException {
         if (member.isPresent()) {
             return member.get();
@@ -67,6 +73,4 @@ public class MemberService {
 
         return currentUser;
     }
-
-    public Member getByUsername(String username) {return memberRepository.getByUsername(username);}
 }
