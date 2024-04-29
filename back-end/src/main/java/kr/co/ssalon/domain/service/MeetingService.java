@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
@@ -52,5 +54,18 @@ public class MeetingService {
     public Page<Meeting> getMoims(MeetingSearchCondition meetingSearchCondition, Pageable pageable) {
         Page<Meeting> meetings = meetingRepository.searchMoims(meetingSearchCondition, pageable);
         return meetings;
+    }
+
+    public Meeting findMeeting(Long id) throws BadRequestException {
+        Optional<Meeting> findMeeting = meetingRepository.findById(id);
+        Meeting meeting = validaitonMeeting(findMeeting);
+        return meeting;
+    }
+
+    private Meeting validaitonMeeting(Optional<Meeting> meeting) throws BadRequestException {
+        if (meeting.isPresent()) {
+            return meeting.get();
+        }else
+            throw new BadRequestException("해당 회원을 찾을 수 없습니다");
     }
 }
