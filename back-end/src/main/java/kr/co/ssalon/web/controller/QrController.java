@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +33,7 @@ public class QrController {
     @GetMapping("/api/tickets/{moimId}/{userId}/link")
     public ResponseEntity<?> getQrLink(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @PathVariable Long userId) {
         try {
-            return ResponseEntity.ok().body(qrService.getQrLink(customOAuth2Member, moimId, userId));
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(qrService.getQrLink(customOAuth2Member, moimId, userId));
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
