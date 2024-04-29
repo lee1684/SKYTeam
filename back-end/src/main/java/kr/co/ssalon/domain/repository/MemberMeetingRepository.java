@@ -9,6 +9,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MemberMeetingRepository extends JpaRepository<MemberMeeting,Long> {
-    @Query("SELECT mm FROM MemberMeeting mm WHERE mm.member = :member AND mm.meeting = :meeting")
-    MemberMeeting findByMemberAndMeeting(Member member, Meeting meeting);
+
 }
