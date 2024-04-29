@@ -25,23 +25,4 @@ public class MemberMeetingService {
     private final MemberMeetingRepository memberMeetingRepository;
     private final MemberRepository memberRepository;
 
-//    public void deleteMemberMeeting(Long moimId, Long memberId, Long userId, ResignReasonForm resignReasonForm) throws Exception {
-//        Meeting meeting = meetingRepository.findMeetingById(moimId);
-//        Member member = memberRepository.findMemberById(memberId);
-//        if (meeting.getCreator().getId().equals(userId)) {
-//
-//        } else {
-//            if (memberId.equals(userId)) {
-//                meeting.deleteMemberMeeting(memberId);
-//                member.deleteMemberMeeting(moimId);
-//                meetingRepository.updateById(moimId, meeting);
-//                memberMeetingRepository.deleteById(moimId);
-//            } else {
-//                meeting.deleteMemberMeeting(memberId);
-//                member.deleteMemberMeeting(moimId);
-//                meetingRepository.updateById(moimId, meeting);
-//                memberMeetingRepository.deleteById(moimId);
-//            }
-//        }
-//    }
 }
