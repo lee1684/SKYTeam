@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,10 +35,12 @@ public class MemberMeeting {
     @JoinColumn(name = "diary_id")
     private Diary diary;
 
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "qr_link_id")
+    private QrLink qrLink;
+
     @OneToMany(mappedBy = "memberMeeting")
     private final List<Message> messages = new ArrayList<>();
-
-    private String QrLink;
 
     protected MemberMeeting() {}
 
