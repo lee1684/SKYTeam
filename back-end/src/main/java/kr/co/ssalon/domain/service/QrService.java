@@ -58,8 +58,8 @@ public class QrService {
             byte[] qrImage = generateQRCode(randomStr);
 
             // Redis에 QR 이미지 저장
-            String redisKey = "QR_" + memberMeeting.getId();
-            redisTemplate.opsForValue().set(redisKey, qrImage); // 예시로 1일 동안 유지
+            String redisKey = "QR_" + memberMeeting.getQrLink().getId();
+            redisTemplate.opsForValue().set(redisKey, qrImage);
 
             // MemberMeeting에 URL 저장
             memberMeeting.getQrLink().setQrLink(redisKey);
