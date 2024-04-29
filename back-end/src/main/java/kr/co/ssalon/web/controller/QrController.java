@@ -1,7 +1,10 @@
 package kr.co.ssalon.web.controller;
 
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.ssalon.domain.service.QrService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.multipart.MultipartFile;
+
 
 @Tag(name = "QR")
 @Slf4j

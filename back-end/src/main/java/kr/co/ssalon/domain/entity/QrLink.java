@@ -26,7 +26,13 @@ public class QrLink {
 
     private String QrLink;
 
-    public QrLink() {
+    protected QrLink() {
 
+    }
+
+    public static QrLink createQrLink(String qrLink) {
+        QrLink qrLinkEntity = new QrLink();
+        qrLinkEntity.setQrLink(qrLink);
+        return qrLinkEntity;
     }
 }
