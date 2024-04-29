@@ -22,6 +22,11 @@ export enum MobileTicketViewMode {
   WEBVIEW,
 }
 
+export interface DecorationJSON {
+  backgroundColor: string;
+  fabric: any;
+}
+
 @Component({
   selector: 'app-ticket',
   standalone: true,
@@ -79,6 +84,19 @@ export class TicketComponent {
 
   public applyBackgroundColorEdit(color: string) {
     this.mobileTicketEditViewer?.updateBackgroundColor(color);
+  }
+
+  public updateServer() {
+    if (
+      this.mobileTicketEditViewer !== null &&
+      this.mobileTicketEditor !== null
+    ) {
+      let body: DecorationJSON = {
+        backgroundColor: this.mobileTicketEditor!.backgroundColor.color,
+        fabric: this.mobileTicketEditViewer!.canvas?.toJSON(),
+      };
+      /* 서버에 저장 API 연결해야함. */
+    }
   }
 
   public openTextEditor(IText: fabric.IText) {

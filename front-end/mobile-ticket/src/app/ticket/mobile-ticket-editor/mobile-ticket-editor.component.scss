@@ -63,6 +63,7 @@
     bottom: 120px;
     left: 0px;
     width: 100%;
+    height: 20px;
 }
 
 .color-board {
@@ -86,13 +87,25 @@
 
 .sticker {
     width: 100px;
-    height: 100px;
-    background-color: black;
+    height: 75px;
 }
 
-#ticket-background {
+.sticker:hover {
+    cursor: pointer;
+}
+
+.selected {
+    border: 2px solid #006BFF;
+}
+
+.ticket-background {
     position: absolute;
     top: 0px;
     left: 50%;
     transform: translateX(-50%);
+}
+
+#sticker-edit-feature-container {
+    overflow-y: auto;
+    height: 100%;
 }

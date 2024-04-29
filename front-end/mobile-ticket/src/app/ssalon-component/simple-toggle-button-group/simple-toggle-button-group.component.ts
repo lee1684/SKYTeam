@@ -55,6 +55,6 @@ export class SimpleToggleButtonGroupComponent {
     }
     this.selectedValue = value;
     /* 부모 컴포넌트에 이벤트 전달 */
-    this.onClickToggleButtonEvent.emit(value);
+    this.onClickToggleButtonEvent.emit(this.elements[value].imgSrc);
   }
 }
