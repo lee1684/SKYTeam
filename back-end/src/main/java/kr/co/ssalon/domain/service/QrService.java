@@ -7,6 +7,7 @@ import com.google.zxing.common.BitMatrix;
 import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.MemberMeeting;
+import kr.co.ssalon.domain.entity.QrLink;
 import kr.co.ssalon.domain.repository.MeetingRepository;
 import kr.co.ssalon.domain.repository.MemberMeetingRepository;
 import kr.co.ssalon.domain.repository.MemberRepository;
@@ -45,39 +46,51 @@ public class QrService {
     @Autowired
     private MemberMeetingRepository memberMeetingRepository;
 
-    public byte[] getQrLink(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, Long moimId, Long userId) throws BadRequestException {
-        Meeting meeting = meetingRepository.getReferenceById(moimId);
-        Member member = memberRepository.getReferenceById(userId);
+    @Autowired
+    private MemberService memberService;
 
-        MemberMeeting memberMeeting = memberMeetingRepository.findByMemberAndMeeting(member, meeting);
-        String key = memberMeeting.getQrLink().getQrLink();
-        if (StringUtils.isEmpty(key)) {
+    @Autowired
+    private MeetingService meetingService;
+
+
+    private MemberMeetingService memberMeetingService;
+
+
+    public byte[] getQrLink(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, Long moimId, Long userId) throws BadRequestException {
+        Meeting meeting = meetingService.findMeeting(moimId);
+        Member member = memberService.findMember(userId);
+        MemberMeeting memberMeeting = memberMeetingService.findByMemberAndMeeting(member, meeting);
+
+        try {
+            return redisTemplate.opsForValue().get(memberMeeting.getQrLink().getQrLink());
+
+        } catch (NullPointerException e) {
             String randomStr = RandomStringUtils.random(200, true, true);
 
             // QR 이미지 생성
             byte[] qrImage = generateQRCode(randomStr);
 
             // Redis에 QR 이미지 저장
-            String redisKey = "QR_" + memberMeeting.getQrLink().getId();
+            String redisKey = "QR_" + memberMeeting.getId();
             redisTemplate.opsForValue().set(redisKey, qrImage);
 
             // MemberMeeting에 URL 저장
-            memberMeeting.getQrLink().setQrLink(redisKey);
+            QrLink qrlink = QrLink.createQrLink(memberMeeting, redisKey);
+            memberMeeting.setQrLink(qrlink);
             memberMeetingRepository.save(memberMeeting);
 
             return qrImage;
-        } else {
-            // 이미 URL이 존재할 경우 해당 이미지를 가져와 반환
-            return redisTemplate.opsForValue().get(key);
+
+
         }
     }
 
     @Transactional
     public boolean checkQrLink(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, Long moimId, Long userId, MultipartFile file) throws BadRequestException {
-        Meeting meeting = meetingRepository.getReferenceById(moimId);
-        Member member = memberRepository.getReferenceById(userId);
+        Meeting meeting = meetingService.findMeeting(moimId);
+        Member member = memberService.findMember(userId);
+        MemberMeeting memberMeeting = memberMeetingService.findByMemberAndMeeting(member, meeting);
 
-        MemberMeeting memberMeeting = memberMeetingRepository.findByMemberAndMeeting(member, meeting);
         String redisKey = memberMeeting.getQrLink().getQrLink();
 
         try {

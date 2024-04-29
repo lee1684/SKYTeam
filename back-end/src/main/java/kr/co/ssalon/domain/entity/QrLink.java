@@ -30,8 +30,9 @@ public class QrLink {
 
     }
 
-    public static QrLink createQrLink(String qrLink) {
+    public static QrLink createQrLink(MemberMeeting memberMeeting, String qrLink) {
         QrLink qrLinkEntity = new QrLink();
+        qrLinkEntity.setMemberMeeting(memberMeeting);
         qrLinkEntity.setQrLink(qrLink);
         return qrLinkEntity;
     }
