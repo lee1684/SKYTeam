@@ -21,7 +21,8 @@
       this.editMode === this.mobileTicketEditMode.NONE ? '60px' : '100%'
     " (onChangeViewer)="this.changeEditMode($event)"
     (onClickPreview)="this.changeViewMode(this.mobileTicketViewMode.APPVIEW)"
-    (onObjectEditEnded)="this.applyEdit($event)"></app-mobile-ticket-editor>
+    (onObjectEditEnded)="this.applyEdit($event)"
+    (onBackgroundColorEditEnded)="this.applyBackgroundColorEdit($event)"></app-mobile-ticket-editor>
 </div>
 
 <!-- WEBVIEW: 웹에서 보는 화면의 경우 -->

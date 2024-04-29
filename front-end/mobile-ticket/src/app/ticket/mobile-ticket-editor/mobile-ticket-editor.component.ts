@@ -61,11 +61,14 @@ export interface TextAttribute {
 export class MobileTicketEditorComponent {
   @ViewChild('editFeatureButtons', { static: false })
   editFeatureButtons: CircleToggleButtonGroupComponent | null = null;
+  @ViewChild('backgroundPath', { static: false })
+  backgroundPath: ElementRef | null = null;
   @ViewChild('textEditInput', { static: false })
   textEditInput: ElementRef | null = null;
 
   @Output() public readonly onChangeViewer = new EventEmitter();
   @Output() public readonly onObjectEditEnded = new EventEmitter();
+  @Output() public readonly onBackgroundColorEditEnded = new EventEmitter();
   @Output() public readonly onClickPreview = new EventEmitter();
   public editMode: MobileTicketEditMode = MobileTicketEditMode.NONE;
   public ssalonColor: SsalonColor = new SsalonColor();
@@ -119,6 +122,9 @@ export class MobileTicketEditorComponent {
       value: MobileTicketEditMode.NONE,
     },
   ];
+
+  public backgroundColor: SsalonColorElement = this.ssalonColor.WHITE;
+
   public stickers: number[] = [
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5,
     6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -172,6 +178,13 @@ export class MobileTicketEditorComponent {
   constructor(private _sceneGraphService: ScenegraphService) {}
   public ngAfterViewInit(): void {}
   public ngAfterViewChecked(): void {
+    if (this.backgroundPath) {
+      this.backgroundPath.nativeElement.setAttribute(
+        'fill',
+        this.backgroundColor.color
+      );
+    }
+
     if (this.textEditInput !== undefined && !this.textFocused) {
       if (this.editingIText === null && this.isTextAddMode) {
         this.editingIText = new fabric.IText('', {
@@ -179,6 +192,7 @@ export class MobileTicketEditorComponent {
           left: 100,
           fill: '#FFFFFF',
           textAlign: 'left',
+          fontFamily: 'Josefin Sans',
         });
       }
       if (this.editingIText !== null) {
@@ -240,6 +254,14 @@ export class MobileTicketEditorComponent {
     this.onEndEditObject();
   }
 
+  public changeBackgroundColor(value: number): void {
+    this.backgroundPath?.nativeElement.setAttribute(
+      'fill',
+      this.ssalonColor.getSsalonColorObjectByValue(value).color
+    );
+    this.backgroundColor = this.ssalonColor.getSsalonColorObjectByValue(value);
+  }
+
   /**
    * @param attributeName ={
    * 'text': string,
@@ -282,11 +304,17 @@ export class MobileTicketEditorComponent {
   }
 
   public onEndEditObject(): void {
-    if (this.isTextAddMode) {
-      this.onObjectEditEnded.emit(this.editingIText);
+    /* 배경색 변경 모드 */
+    if (this.editingIText === null) {
+      this.onBackgroundColorEditEnded.emit(this.backgroundColor.color);
     } else {
-      this.onObjectEditEnded.emit(null);
+      /* fabric.js 오브젝트 편집 모드 */
+      if (this.isTextAddMode) {
+        this.onObjectEditEnded.emit(this.editingIText);
+      } else {
+        this.onObjectEditEnded.emit(null);
+      }
+      this.editingIText = null;
     }
-    this.editingIText = null;
   }
 }

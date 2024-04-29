@@ -36,6 +36,7 @@
 
 #text-edit-input {
     font-size: 30px;
+    font-family: 'Courier New', Courier, monospace;
     -webkit-text-size-adjust: 100%;
     background-color: transparent;
     caret-color: #006BFF;
@@ -87,4 +88,11 @@
     width: 100px;
     height: 100px;
     background-color: black;
+}
+
+#ticket-background {
+    position: absolute;
+    top: 0px;
+    left: 50%;
+    transform: translateX(-50%);
 }

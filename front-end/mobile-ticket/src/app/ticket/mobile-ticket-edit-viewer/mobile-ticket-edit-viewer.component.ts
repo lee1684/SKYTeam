@@ -1,9 +1,11 @@
 import {
   Component,
+  ElementRef,
   EventEmitter,
   HostListener,
   Input,
   Output,
+  ViewChild,
 } from '@angular/core';
 import { fabric } from 'fabric';
 @Component({
@@ -14,6 +16,8 @@ import { fabric } from 'fabric';
   styleUrl: './mobile-ticket-edit-viewer.component.scss',
 })
 export class MobileTicketEditViewerComponent {
+  @ViewChild('backgroundPath', { static: false })
+  backgroundPath: ElementRef | null = null;
   @Input() private _moimId: number = -1;
   @Output() public readonly onClickText = new EventEmitter();
   public canvas: fabric.Canvas | null = null;
@@ -58,6 +62,10 @@ export class MobileTicketEditViewerComponent {
     }
     this.canvas?.renderAll();
     console.log(this.canvas?.toJSON());
+  }
+
+  public updateBackgroundColor(color: string): void {
+    this.backgroundPath?.nativeElement.setAttribute('fill', color);
   }
 
   @HostListener('touchstart', ['$event'])
