@@ -1,5 +1,9 @@
 package kr.co.ssalon.domain.service;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
 import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.MemberMeeting;
@@ -21,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -39,13 +44,14 @@ public class QrService {
 
     @Autowired
     private MemberMeetingRepository memberMeetingRepository;
+    private
 
     public byte[] getQrLink(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, Long moimId, Long userId) throws BadRequestException {
         Meeting meeting = meetingRepository.getReferenceById(moimId);
         Member member = memberRepository.getReferenceById(userId);
 
         MemberMeeting memberMeeting = memberMeetingRepository.findByMemberAndMeeting(member, meeting);
-        String key = memberMeeting.getQrLink();
+        String key = memberMeeting.getQrLink().getQrLink();
         if (StringUtils.isEmpty(key)) {
             String randomStr = RandomStringUtils.random(200, true, true);
 
@@ -57,7 +63,7 @@ public class QrService {
             redisTemplate.opsForValue().set(redisKey, qrImage); // 예시로 1일 동안 유지
 
             // MemberMeeting에 URL 저장
-            memberMeeting.setQrLink(redisKey);
+            memberMeeting.getQrLink().setQrLink(redisKey);
             memberMeetingRepository.save(memberMeeting);
 
             return qrImage;
@@ -72,8 +78,8 @@ public class QrService {
         Meeting meeting = meetingRepository.getReferenceById(moimId);
         Member member = memberRepository.getReferenceById(userId);
 
-        MemberMeeting memberMeeting = memberMeetingRepository.findByMemberAndMeeting(meeting, member);
-        String redisKey = memberMeeting.getQrLink();
+        MemberMeeting memberMeeting = memberMeetingRepository.findByMemberAndMeeting(member, meeting);
+        String redisKey = memberMeeting.getQrLink().getQrLink();
 
         try {
             byte[] savedImage = redisTemplate.opsForValue().get(redisKey);
