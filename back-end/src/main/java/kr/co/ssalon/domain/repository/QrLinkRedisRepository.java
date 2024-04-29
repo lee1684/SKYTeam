@@ -8,6 +8,5 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 public interface QrLinkRedisRepository extends CrudRepository<QrLink, String> {
-    @Query("SELECT mm FROM MemberMeeting mm WHERE mm.member = :member AND mm.meeting = :meeting")
-    MemberMeeting findByMemberAndMeeting(Member member, Meeting meeting);
+
 }
