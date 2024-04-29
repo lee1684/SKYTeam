@@ -44,7 +44,6 @@ public class QrService {
 
     @Autowired
     private MemberMeetingRepository memberMeetingRepository;
-    private
 
     public byte[] getQrLink(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, Long moimId, Long userId) throws BadRequestException {
         Meeting meeting = meetingRepository.getReferenceById(moimId);
