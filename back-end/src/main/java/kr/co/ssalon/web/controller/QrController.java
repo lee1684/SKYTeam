@@ -26,10 +26,10 @@ public class QrController {
     private final QrService qrService;
 
     @Operation(summary = "QR 생성/조회")
-    @ApiResponse(value = {
+    @ApiResponses(value = {
             @ApiResponse(responseCode =  "200", description = "QR 생성/조회 성공"),
     })
-    @GetMapping("/tickets/{moimId}/{userId}/link")
+    @GetMapping("/api/tickets/{moimId}/{userId}/link")
     public ResponseEntity<?> getQrLink(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @PathVariable Long userId) {
         try {
             return ResponseEntity.ok().body(qrService.getQrLink(customOAuth2Member, moimId, userId));
@@ -39,10 +39,10 @@ public class QrController {
     }
 
     @Operation(summary = "QR 검증")
-    @ApiResponse(value = {
+    @ApiResponses(value = {
             @ApiResponse(responseCode =  "200", description = "QR 검증 성공"),
     })
-    @PostMapping("/tickets/{moimId}/{userId}/link")
+    @PostMapping("/api/tickets/{moimId}/{userId}/link")
     public ResponseEntity<?> checkQrLink(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @PathVariable Long userId, @RequestParam("file") MultipartFile file) {
         try {
             return ResponseEntity.ok().body(qrService.checkQrLink(customOAuth2Member, moimId, userId, file));
