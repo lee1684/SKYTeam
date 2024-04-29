@@ -33,7 +33,7 @@ public class MeetingService {
     @Transactional
     public MeetingDTO joinMoim(CustomOAuth2Member customOAuth2Member, Long moimId) throws BadRequestException {
         String username = customOAuth2Member.getUsername();
-        Member currentUser = memberService.findMember(username);
+        Member currentUser = memberService.getByUsername(username);
 
         Meeting meeting = meetingRepository.findById(moimId)
                 .orElseThrow(() -> new BadRequestException("해당 모임을 찾을 수 없습니다. ID: " + moimId));
@@ -63,7 +63,7 @@ public class MeetingService {
     @Transactional
     public Long createMoim(CustomOAuth2Member customOAuth2Member, MeetingDTO meetingDTO) throws BadRequestException {
         String username = customOAuth2Member.getUsername();
-        Member currentUser = memberService.findMember(username);
+        Member currentUser = memberService.getByUsername(username);
 
         Meeting meeting = Meeting.createMeeting(meetingDTO);
         MemberMeeting memberMeeting = MemberMeeting.createMemberMeeting(currentUser, meeting);
@@ -102,7 +102,7 @@ public class MeetingService {
     @Transactional
     public Meeting updateMoim(CustomOAuth2Member customOAuth2Member, Long moimId, MeetingDTO meetingDTO) throws BadRequestException {
         String username = customOAuth2Member.getUsername();
-        Member currentUser = memberService.findMember(username);
+        Member currentUser = memberService.getByUsername(username);
 
         if (!meetingRepository.getReferenceById(moimId).getCreator().equals(currentUser)) {
             throw new BadRequestException();
@@ -116,7 +116,7 @@ public class MeetingService {
     @Transactional
     public Long deleteMoim(CustomOAuth2Member customOAuth2Member, Long moimId) throws  BadRequestException {
         String username = customOAuth2Member.getUsername();
-        Member currentUser = memberService.findMember(username);
+        Member currentUser = memberService.getByUsername(username);
 
         Meeting meeting = meetingRepository.getReferenceById(moimId);
         if (!meeting.getCreator().equals(currentUser)) {
