@@ -105,6 +105,7 @@ public class MeetingService {
         Member currentUser = memberService.findMember(username);
 
         if (!meetingRepository.getReferenceById(moimId).getCreator().equals(currentUser)) {
+            throw new BadRequestException();
         }
 
         meetingDTO.setId(moimId);
@@ -118,13 +119,15 @@ public class MeetingService {
         Member currentUser = memberService.findMember(username);
 
         Meeting meeting = meetingRepository.getReferenceById(moimId);
-        if (meeting.getCreator().equals(currentUser)) {
+        if (!meeting.getCreator().equals(currentUser)) {
+            throw new BadRequestException();
         }
 
         List<MemberMeeting> participants = meeting.getParticipants();
         for (MemberMeeting memberMeeting : participants) {
             Member roopMember = memberRepository.getReferenceById(memberMeeting.getMember().getId());
-            memberRepository.save(roopMember.getJoinedMeetings().remove(memberMeeting));
+            roopMember.getJoinedMeetings().remove(memberMeeting);
+            memberRepository.save(roopMember);
             memberMeetingRepository.deleteById(memberMeeting.getId());
         }
         meetingRepository.deleteById(moimId);
