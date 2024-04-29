@@ -40,10 +40,10 @@ public class MeetingService {
         MemberMeeting memberMeeting = MemberMeeting.createMemberMeeting(currentUser, meeting);
 
         // member entity 업데이트
-        currentUser.getJoinedMeetings.add(memberMeeting);
+        currentUser.getJoinedMeetings().add(memberMeeting);
 
         // meeting entity 업데이트
-        meeting.getParticipants.add(memberMeeting);
+        meeting.getParticipants().add(memberMeeting);
 
         // memberMeeting entity 업데이트
         memberMeeting.setMeeting(meeting);
@@ -69,10 +69,10 @@ public class MeetingService {
         MemberMeeting memberMeeting = MemberMeeting.createMemberMeeting(currentUser, meeting);
 
         // member entity 업데이트
-        currentUser.getJoinedMeetings.add(memberMeeting);
+        currentUser.getJoinedMeetings().add(memberMeeting);
 
         // meeting entity 업데이트
-        meeting.getParticipants.add(memberMeeting);
+        meeting.getParticipants().add(memberMeeting);
 
         // memberMeeting entity 업데이트
         memberMeeting.setMeeting(meeting);
