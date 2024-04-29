@@ -21,6 +21,7 @@ import {
 } from '../../ssalon-component/color-board/color-board.component';
 import { SimpleToggleButtonGroupComponent } from '../../ssalon-component/simple-toggle-button-group/simple-toggle-button-group.component';
 import { fabric } from 'fabric';
+import { Vector2 } from 'three';
 
 export enum MobileTicketEditMode {
   BACKGROUND_COLOR_CHANGE,
@@ -65,6 +66,8 @@ export class MobileTicketEditorComponent {
   backgroundPath: ElementRef | null = null;
   @ViewChild('textEditInput', { static: false })
   textEditInput: ElementRef | null = null;
+  @ViewChild('drawCanvas', { static: false })
+  drawCanvas: ElementRef | null = null;
 
   @Output() public readonly onChangeViewer = new EventEmitter();
   @Output() public readonly onObjectEditEnded = new EventEmitter();
@@ -123,13 +126,18 @@ export class MobileTicketEditorComponent {
     },
   ];
 
-  public backgroundColor: SsalonColorElement = this.ssalonColor.WHITE;
+  public backgroundColor: SsalonColorElement = this.ssalonColor.LIGHT_GRAY;
+  private _backgroundColorViewLoaded: boolean = false;
 
   public stickers: number[] = [
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5,
     6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9,
     10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3,
-    4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+    4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8,
+    9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2,
+    3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7,
+    8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1,
+    2, 3, 4, 5, 6, 7, 8, 9, 10,
   ];
 
   public textFocused: boolean = false;
@@ -152,39 +160,39 @@ export class MobileTicketEditorComponent {
     },
   ];
   public fonts: ButtonElement[] = [
-    { imgSrc: '', label: '폰트1', value: 0 },
-    { imgSrc: '', label: '폰트2', value: 1 },
-    { imgSrc: '', label: '폰트3', value: 2 },
-    { imgSrc: '', label: '폰트4', value: 3 },
-    { imgSrc: '', label: '폰트5', value: 4 },
-    { imgSrc: '', label: '폰트6', value: 5 },
-    { imgSrc: '', label: '폰트7', value: 6 },
-    { imgSrc: '', label: '폰트8', value: 7 },
-    { imgSrc: '', label: '폰트1', value: 8 },
-    { imgSrc: '', label: '폰트2', value: 9 },
-    { imgSrc: '', label: '폰트3', value: 10 },
-    { imgSrc: '', label: '폰트4', value: 11 },
-    { imgSrc: '', label: '폰트5', value: 12 },
-    { imgSrc: '', label: '폰트6', value: 13 },
-    { imgSrc: '', label: '폰트7', value: 14 },
-    { imgSrc: '', label: '폰트8', value: 15 },
+    { imgSrc: 'Ariel', label: 'Aa', value: 0 },
+    { imgSrc: 'Josefin Sans', label: 'Aa', value: 1 },
+    { imgSrc: 'Jersey 15', label: 'Aa', value: 2 },
+    { imgSrc: 'Roboto', label: 'Aa', value: 3 },
+    { imgSrc: 'Jacquarda Bastarda 9 Charted', label: 'Aa', value: 4 },
   ];
+  public fontFamily: string = 'Josefin Sans';
+
   public isTextAddMode: boolean = true;
   public textColor: SsalonColorElement = this.ssalonColor.WHITE;
   public editingIText: fabric.IText | null = null;
 
   public colorBoard: ButtonElement[] = [];
   public fabricObject: any = null;
+
+  public drawingFabricCanvas: fabric.Canvas | null = null;
+  private _isDrawing = false;
+  private _drawingPoints: Vector2[] = [];
+  private _isDrawingFabricCanvasLoaded: boolean = false;
+
   constructor(private _sceneGraphService: ScenegraphService) {}
   public ngAfterViewInit(): void {}
   public ngAfterViewChecked(): void {
-    if (this.backgroundPath) {
+    /* background color feature */
+    if (this.backgroundPath && !this._backgroundColorViewLoaded) {
       this.backgroundPath.nativeElement.setAttribute(
         'fill',
         this.backgroundColor.color
       );
+      this._backgroundColorViewLoaded = true;
     }
 
+    /* text feature */
     if (this.textEditInput !== undefined && !this.textFocused) {
       if (this.editingIText === null && this.isTextAddMode) {
         this.editingIText = new fabric.IText('', {
@@ -206,8 +214,13 @@ export class MobileTicketEditorComponent {
         this.textEditInput!.nativeElement.value = this.editingIText!.text;
         this.textEditInput!.nativeElement.focus();
         this.textFocused = true;
-        console.log(this.editingIText);
       }
+    }
+
+    /* draw feature */
+    if (this.drawCanvas && !this._isDrawingFabricCanvasLoaded) {
+      this.initDrawingCanvas();
+      this._isDrawingFabricCanvasLoaded = true;
     }
   }
 
@@ -279,7 +292,8 @@ export class MobileTicketEditorComponent {
           this.editingIText.set('text', editedText);
           break;
         case 'fontFamily':
-          this.editingIText.fontFamily = value;
+          this.fontFamily = value;
+          this.editingIText.set('fontFamily', value);
           break;
         case 'color':
           this.textColor = this.ssalonColor.getSsalonColorObjectByValue(value);
@@ -309,12 +323,61 @@ export class MobileTicketEditorComponent {
       this.onBackgroundColorEditEnded.emit(this.backgroundColor.color);
     } else {
       /* fabric.js 오브젝트 편집 모드 */
-      if (this.isTextAddMode) {
+      if (this.isTextAddMode && this.editingIText.text !== '') {
         this.onObjectEditEnded.emit(this.editingIText);
       } else {
         this.onObjectEditEnded.emit(null);
       }
       this.editingIText = null;
     }
+    this._isDrawingFabricCanvasLoaded = false;
+  }
+
+  public initDrawingCanvas(): void {
+    this.drawingFabricCanvas = new fabric.Canvas(
+      this.drawCanvas!.nativeElement
+    );
+    this.drawingFabricCanvas.add(
+      new fabric.Text('hello', { left: 100, top: 100 })
+    );
+    this.drawingFabricCanvas.renderAll();
+
+    this.drawingFabricCanvas!.on('mouse:down', (options) => {
+      this._isDrawing = true;
+      this.addPoint(options.e);
+      this.drawPath();
+    });
+
+    this.drawingFabricCanvas!.on('mouse:move', (options) => {
+      if (!this._isDrawing) return;
+      this.addPoint(options.e);
+      this.drawPath();
+    });
+
+    this.drawingFabricCanvas!.on('mouse:up', () => {
+      this._isDrawing = false;
+      this._drawingPoints.length = 0;
+    });
+  }
+
+  private addPoint(e: MouseEvent | TouchEvent) {
+    const pointer = this.drawingFabricCanvas!.getPointer(e);
+    console.log(pointer);
+    this._drawingPoints.push(
+      new Vector2(pointer.x as number, pointer.y as number)
+    );
+  }
+
+  private drawPath() {
+    const pathData = this._drawingPoints
+      .map((point) => `${point.x} ${point.y}`)
+      .join(' ');
+    const path = new fabric.Path(`M ${pathData}`, {
+      fill: 'transparent',
+      stroke: 'black',
+      strokeWidth: 2,
+    });
+    this.drawingFabricCanvas!.clear().renderAll();
+    this.drawingFabricCanvas!.add(path);
   }
 }

@@ -33,6 +33,7 @@ export class MobileTicketEditViewerComponent {
       left: 100,
       top: 100,
       fill: '#FFFFFF',
+      fontFamily: 'Roboto',
     });
     a.set('text', 'hello\nworld');
     this.canvas.add(a);
@@ -62,6 +63,16 @@ export class MobileTicketEditViewerComponent {
     }
     this.canvas?.renderAll();
     console.log(this.canvas?.toJSON());
+    const dataURL = this.canvas?.toDataURL({
+      format: 'png',
+      quality: 1,
+    });
+
+    // 이미지 다운로드
+    const link = document.createElement('a');
+    link.href = dataURL!;
+    link.download = 'canvas_image.png';
+    //link.click();
   }
 
   public updateBackgroundColor(color: string): void {

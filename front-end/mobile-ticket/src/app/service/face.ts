@@ -2,6 +2,7 @@ import axios, { Axios, AxiosInstance } from 'axios';
 import { fabric } from 'fabric';
 import { Vector2 } from 'three';
 import { CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer';
+import { create } from 'apisauce';
 
 export class Face extends CSS3DObject {
   public fabricCanvas: fabric.Canvas | null = null;
@@ -19,21 +20,28 @@ export class Face extends CSS3DObject {
     this.side = side;
     this.decoration = decoration;
     this.initAxios();
-    this.initCanvas(); //
+    this.initCanvas();
     this.getDecoration();
   }
 
-  public initAxios(): void {
-    this.axiosInstance = axios.create({
-      baseURL: 'http://3.34.0.190:8080/api/tickets',
-      timeout: 2000,
+  public async initAxios() {
+    // define the api
+    const api = create({
+      baseURL: 'http://192.168.0.59:8080',
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+        'Access-Control-Allow-Origin': 'http://localhost:3000',
       },
       withCredentials: true,
     });
+    //api.setHeader(
+    //  'Cookie',
+    //  'access=eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTQzODYzMTcsImV4cCI6MTcxNDM4NjkxN30.PxsZSQ2ylzs9w_8rpKz5wEG7PrxeNB7pF8anrWM0BDo'
+    //);
+    // start making calls
+    api
+      .post('/api/tickets/1212312313')
+      .then((response) => console.log(response));
   }
 
   public initCanvas(): void {

@@ -13,7 +13,6 @@
     </div>
     <!-- detailed editor view -->
     <div id="detail-editor" [hidden]="
-    
       (
         this.editMode === this.mobileTicketEditMode.NONE
       )
@@ -26,9 +25,9 @@
                     [heightSize]="15" (onClickEvent)="this.onClickEndDetailedEditViewer()" [type]="'text'"
                     [highContrast]="true"></app-simple-button></div>
         </div>
-        <!-- bacground color edit feature -->
+        <!-- background color edit feature -->
         <div *ngIf="this.editMode === this.mobileTicketEditMode.BACKGROUND_COLOR_CHANGE">
-            <svg id="ticket-background" width="350" height="600" viewBox="-87.5 -150 525 900" fill="none"
+            <svg class="ticket-background" width="350" height="600" viewBox="-87.5 -150 525 900" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd" #backgroundPath
                     d="M9.53674e-06 40C9.53674e-06 17.9086 17.9086 0 40 0H310C332.091 0 350 17.9086 350 40L350 451.714C333.431 451.714 320 463.227 320 477.429C320 491.63 333.431 503.143 350 503.143L350 560C350 582.091 332.091 600 310 600H40C17.9086 600 9.53674e-06 582.091 9.53674e-06 560L0 503.143C16.5685 503.143 30 491.63 30 477.429C30 463.227 16.5685 451.714 0 451.714L9.53674e-06 40Z"
@@ -42,30 +41,46 @@
             <div id="text-edit-feature-container" #textEditFeatureContainer>
                 <textarea id="text-edit-input" #textEditInput autocomplete="off" type="text"
                     [style.text-align]="this.textAlign" [style.color]="this.textColor.color"
+                    [style.font-family]="this.fontFamily"
                     (input)="this.onChangeSsaslonTextAttribute('text', $event)"></textarea>
             </div>
             <div class="horizontal-container" id="text-align" [style.justify-content]="'center'">
                 <app-circle-toggle-button-group [elements]="this.textAlignButtons" [outerSize]="'30px'"
                     (onClickToggleButtonEvent)="this.onChangeSsaslonTextAttribute('textAlign', $event)"></app-circle-toggle-button-group>
+                <!--<input type="color" />-->
             </div>
-            <app-simple-toggle-button-group class="fonts" [elements]="this.fonts"></app-simple-toggle-button-group>
+            <app-simple-toggle-button-group class="fonts" [elements]="this.fonts"
+                (onClickToggleButtonEvent)="this.onChangeSsaslonTextAttribute('fontFamily', $event)"></app-simple-toggle-button-group>
             <app-color-board class="color-board" [outerSize]="'30px'" [innerSize]="'24px'"
                 (onClickToggleButtonEvent)="this.onChangeSsaslonTextAttribute('color', $event)"></app-color-board>
         </div>
 
         <!-- sticker edit feature -->
         <div id="sticker-edit-feature-container" #stickerEditFeatureContainer
-            *ngIf="this.editMode===this.mobileTicketEditMode.STICKER" [style.scroll-y]="'auto'">
+            *ngIf="this.editMode===this.mobileTicketEditMode.STICKER">
             <div [style.display]="'flex'" [style.justify-content]="'space-evenly'" [style.margin-bottom]="'20px'"
                 *ngFor="let stickerRow of this.getStickerArray()">
                 <div *ngFor="let sticker of stickerRow">
                     <div class="sticker">
-                        <img src="assets/heart.png" [width]="'50px'" [height]="'50px'" />
+                        <img src="assets/heart.png" width="100px" height="75px" />
                     </div>
                 </div>
             </div>
         </div>
-        <!-- color edit feature -->
+        <!-- draw edit feature -->
+        <div *ngIf="this.editMode === this.mobileTicketEditMode.DRAW">
+            <svg class="ticket-background" width="350" height="600" viewBox="-87.5 -150 525 900" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" #backgroundPath
+                    d="M9.53674e-06 40C9.53674e-06 17.9086 17.9086 0 40 0H310C332.091 0 350 17.9086 350 40L350 451.714C333.431 451.714 320 463.227 320 477.429C320 491.63 333.431 503.143 350 503.143L350 560C350 582.091 332.091 600 310 600H40C17.9086 600 9.53674e-06 582.091 9.53674e-06 560L0 503.143C16.5685 503.143 30 491.63 30 477.429C30 463.227 16.5685 451.714 0 451.714L9.53674e-06 40Z"
+                    fill="#D9D9D9" />
+                <foreignObject width="350" height="600">
+                    <canvas id="draw-canvas" #drawCanvas width="350" height="600"></canvas>
+                </foreignObject>
+            </svg>
+            <app-color-board class="color-board" [outerSize]="'30px'" [innerSize]="'24px'"
+                (onClickToggleButtonEvent)="this.onChangeSsaslonTextAttribute('color', $event)"></app-color-board>
+        </div>
 
 
     </div>

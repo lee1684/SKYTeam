@@ -1,5 +1,6 @@
 <div class="container" #toggleButtonContainer>
     <div class="toggle-button" #toggleButton *ngFor="let element of this.elements"
-        (click)="this.onClickToggleButton(element.value)" [style.width]="this.buttonWidth">
+        (click)="this.onClickToggleButton(element.value)" [style.width]="this.buttonWidth"
+        [style.font-family]="element.imgSrc">
         {{element.label}}</div>
 </div>

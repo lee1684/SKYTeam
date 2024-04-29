@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { MobileTicketEditorComponent } from './ticket/mobile-ticket-editor/mobile-ticket-editor.component';
-import { MobileTicketViewerComponent } from './ticket/mobile-ticket-viewer/mobile-ticket-viewer.component';
 import { TicketComponent } from './ticket/ticket.component';
 
 @Component({
@@ -14,9 +12,9 @@ import { TicketComponent } from './ticket/ticket.component';
 export class AppComponent {
   public moimId: number = -1;
   private readonly _token =
-    'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoia2FrYW8gMzQ1NzYwNDk5MCIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTQyOTk5NzQsImV4cCI6MTcxNDMwMDU3NH0.NlK4TuuE70Jc7cA3eHXMOCfAUrot4TdOKnblQroYCJw';
+    'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTQzODMxOTQsImV4cCI6MTcxNDM4Mzc5NH0.h6YWas--xg78ySTZ4Vwku6Kvkye2Z3lnAvm8iXJGXGs';
   constructor() {
-    this.setCookie('Cookie', `access=${this._token}`, 14);
+    //this.setCookie('Cookie', `access=${this._token}`, 14);
   }
   private setCookie(name: string, value: string, exp: number) {
     var date = new Date();
