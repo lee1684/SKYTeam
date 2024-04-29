@@ -20,7 +20,7 @@ export const LoginScreen: FC<LoginScreenProps<"Login">> = function LoginScreen(_
         setAuthToken("google")
         break
       case "kakao":
-        setAuthToken("kakao")
+        navigation.navigate("Auth", { screen: "Kakao" })
         break
       case "naver":
         navigation.navigate("Auth", { screen: "Naver" })
