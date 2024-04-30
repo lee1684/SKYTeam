@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import * as THREE from 'three';
 import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer';
 import { ArcballControls } from 'three/examples/jsm/controls/ArcballControls';
-import { MobileTicket } from './mobile-ticket';
+import { MobileTicket } from '../mobile-ticket/mobile-ticket';
+import { SsalonConfigService } from './ssalon-config.service';
+import { ApiExecutorService } from './api-executor.service';
 @Injectable({
   providedIn: 'root',
 })
@@ -16,7 +18,10 @@ export class ScenegraphService {
   private arcballControls: ArcballControls | null = null;
 
   public mobileTicket: MobileTicket | null = null;
-  constructor() {}
+  constructor(
+    private _apiExecutorService: ApiExecutorService,
+    private _ssalonConfig: SsalonConfigService
+  ) {}
   public initThree(): void {
     const width = this.nativeElement!.clientWidth;
     const height = this.nativeElement!.clientHeight;
@@ -43,7 +48,7 @@ export class ScenegraphService {
 
     /** create ArcballControl */
     this.createArcballControls();
-    this.mobileTicket = new MobileTicket(this);
+    this.mobileTicket = new MobileTicket(this._apiExecutorService, this);
     this.mobileTicket!.initMobileTicket();
     startAnimation(this);
   }
@@ -87,7 +92,7 @@ export class ScenegraphService {
     );
     this.arcballControls.setGizmosVisible(false);
     this.arcballControls.enableAnimations = true;
-    this.arcballControls.dampingFactor = 3;
+    this.arcballControls.dampingFactor = 2;
     this.arcballControls.addEventListener('change', () => {
       this.css3dRenderer!.render(this.scene!, this.camera!);
       this.mobileTicket?.checkFaceVisible();
@@ -105,15 +110,15 @@ export class ScenegraphService {
   }
 
   public rotateCard(): void {
-    this.mobileTicket!.mobileTicket?.rotateX(0.005);
-    //this.mobileTicket!.mobileTicket?.rotateY(0.005);
+    this.mobileTicket!.mobileTicket?.rotateX(0.002);
+    this.mobileTicket!.mobileTicket?.rotateY(0.002);
+    this.mobileTicket!.mobileTicket?.rotateZ(0.002);
     if (
       this.mobileTicket?.frontSide !== null &&
       this.mobileTicket?.backSide !== null
     ) {
       this.mobileTicket?.checkFaceVisible();
     }
-    //this.mobileTicket?.checkFaceVisible();
   }
 }
 

@@ -8,6 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { fabric } from 'fabric';
+import { ApiExecutorService } from '../../service/api-executor.service';
 @Component({
   selector: 'app-mobile-ticket-edit-viewer',
   standalone: true,
@@ -18,35 +19,23 @@ import { fabric } from 'fabric';
 export class MobileTicketEditViewerComponent {
   @ViewChild('backgroundPath', { static: false })
   backgroundPath: ElementRef | null = null;
-  @Input() private _moimId: number = -1;
+  @ViewChild('editCanvas', { static: false })
+  editCanvas: ElementRef | null = null;
   @Output() public readonly onClickText = new EventEmitter();
   public canvas: fabric.Canvas | null = null;
   public isTouchDown: boolean = false;
-  constructor() {}
+  constructor(private _apiExecutorService: ApiExecutorService) {}
   public ngOnInit(): void {}
   public ngAfterViewInit(): void {
     this.initFabric();
   }
-  initFabric(): void {
-    this.canvas = new fabric.Canvas('edit-canvas');
-    let a = new fabric.IText('', {
-      left: 100,
-      top: 100,
-      fill: '#FFFFFF',
-      fontFamily: 'Roboto',
-    });
-    a.set('text', 'hello\nworld');
-    this.canvas.add(a);
-    fabric.Image.fromURL('assets/heart.png', (img: any) => {
-      this.canvas!.add(img);
-      console.log(this.canvas!.toJSON());
-    });
-
+  public async initFabric() {
+    this.canvas = new fabric.Canvas(this.editCanvas?.nativeElement);
+    this.canvas.selection = false;
     this.canvas.on(
       'selection:created',
       function (this: MobileTicketEditViewerComponent, e: any) {
         if (e.selected.length === 1 && e.selected[0] instanceof fabric.IText) {
-          console.log(this.onClickText);
           this.onClickText?.emit(e.selected[0]);
         }
       }.bind(this)
@@ -55,6 +44,14 @@ export class MobileTicketEditViewerComponent {
       'selection:updated',
       function (this: MobileTicketEditViewerComponent, e: any) {}.bind(this)
     );
+    this.loadDecorationInfo();
+  }
+
+  public async loadDecorationInfo() {
+    let decorationInfo = await this._apiExecutorService.getTicket();
+    this.canvas?.loadFromJSON(decorationInfo.fabric, () => {
+      this.canvas?.renderAll();
+    });
   }
 
   public updateCanvas(object: fabric.Object | null): void {
@@ -62,17 +59,15 @@ export class MobileTicketEditViewerComponent {
       this.canvas?.add(object);
     }
     this.canvas?.renderAll();
+  }
+
+  public getCanvasCapture(): any {
     console.log(this.canvas?.toJSON());
     const dataURL = this.canvas?.toDataURL({
       format: 'png',
       quality: 1,
     });
-
-    // 이미지 다운로드
-    const link = document.createElement('a');
-    link.href = dataURL!;
-    link.download = 'canvas_image.png';
-    //link.click();
+    return dataURL;
   }
 
   public updateBackgroundColor(color: string): void {

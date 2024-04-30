@@ -86,8 +86,9 @@
 }
 
 .sticker {
-    width: 100px;
-    height: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .sticker:hover {
