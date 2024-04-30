@@ -24,16 +24,16 @@ public class QrLink {
     @OneToOne(fetch = FetchType.LAZY)
     private MemberMeeting memberMeeting;
 
-    private String QrLink;
+    private String qrKey;
 
     protected QrLink() {
 
     }
 
-    public static QrLink createQrLink(MemberMeeting memberMeeting, String qrLink) {
-        QrLink qrLinkEntity = new QrLink();
-        qrLinkEntity.setMemberMeeting(memberMeeting);
-        qrLinkEntity.setQrLink(qrLink);
-        return qrLinkEntity;
+    public static QrLink createQrLink(MemberMeeting memberMeeting, String qrKey) {
+        return QrLink.builder()
+                .memberMeeting(memberMeeting)
+                .qrKey(qrKey)
+                .build();
     }
 }

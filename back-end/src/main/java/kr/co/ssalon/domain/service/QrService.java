@@ -30,32 +30,18 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 @Service
-@RestController
-@Transactional
+@Transactional(readOnly = true)
 public class QrService {
 
-    @Autowired
-    private RedisTemplate<String, byte[]> redisTemplate;
+    private final RedisTemplate<String, byte[]> redisTemplate;
+    private final MeetingRepository meetingRepository;
+    private final MemberRepository memberRepository;
+    private final MemberMeetingRepository memberMeetingRepository;
+    private final MemberService memberService;
+    private final MeetingService meetingService;
+    private final MemberMeetingService memberMeetingService;
 
-    @Autowired
-    private MeetingRepository meetingRepository;
-
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private MemberMeetingRepository memberMeetingRepository;
-
-    @Autowired
-    private MemberService memberService;
-
-    @Autowired
-    private MeetingService meetingService;
-
-
-    private MemberMeetingService memberMeetingService;
-
-
+    @Transactional
     public byte[] getQrLink(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, Long moimId, Long userId) throws BadRequestException {
         Meeting meeting = meetingService.findMeeting(moimId);
         Member member = memberService.findMember(userId);
@@ -100,22 +86,20 @@ public class QrService {
             // 이미지 비교
             return Arrays.equals(savedImage, uploadedImage);
         } catch (IOException e) {
-            e.printStackTrace();
             throw new BadRequestException("QR 코드 비교 중 오류가 발생했습니다.");
         }
     }
 
     // QR 코드 생성 메서드
-    private byte[] generateQRCode(String randomStr) {
+    @Transactional
+    private byte[] generateQRCode(String randomStr) throws BadRequestException {
         try {
             BitMatrix encode = new MultiFormatWriter().encode(randomStr, BarcodeFormat.QR_CODE, 200, 200);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             MatrixToImageWriter.writeToStream(encode, "PNG", out);
             return out.toByteArray();
         } catch (Exception e) {
-            // QR 코드 생성에 실패한 경우 예외 처리
-            e.printStackTrace();
-            return new byte[0];
+            throw new BadRequestException("QR 코드 생성에 실패하였습니다.");
         }
     }
 }

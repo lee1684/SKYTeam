@@ -23,6 +23,6 @@ public class MemberMeetingService {
         if (findMemberMeeting.isPresent()) {
             return findMemberMeeting.get();
         } else
-            throw new BadRequestException("멤버 미팅을 찾을 수 없습니다.");
+            throw new BadRequestException("회원이 참여하고 있는 모임을 찾을 수 없습니다.");
     }
 }

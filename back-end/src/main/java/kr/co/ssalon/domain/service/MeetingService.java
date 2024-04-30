@@ -58,11 +58,11 @@ public class MeetingService {
 
     public Meeting findMeeting(Long id) throws BadRequestException {
         Optional<Meeting> findMeeting = meetingRepository.findById(id);
-        Meeting meeting = validaitonMeeting(findMeeting);
+        Meeting meeting = validationMeeting(findMeeting);
         return meeting;
     }
 
-    private Meeting validaitonMeeting(Optional<Meeting> meeting) throws BadRequestException {
+    private Meeting validationMeeting(Optional<Meeting> meeting) throws BadRequestException {
         if (meeting.isPresent()) {
             return meeting.get();
         }else
