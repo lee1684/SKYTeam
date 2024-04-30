@@ -25,8 +25,8 @@ public class TicketController {
     }
 
     @PutMapping("/{moimId}") // 모임 증표 편집에 의한 신규 파일 업로드
-    public ResponseEntity<TicketEditResponseDTO> uploadFiles(@PathVariable("moimId") Long moimId, @RequestPart String json, @RequestPart List<MultipartFile> files) {
-        return ResponseEntity.ok(ticketService.editTicket(moimId, json, files));
+    public ResponseEntity<TicketEditResponseDTO> uploadFiles(@PathVariable("moimId") Long moimId, @RequestPart String json, @RequestPart List<MultipartFile> files, @RequestPart MultipartFile thumbnail) {
+        return ResponseEntity.ok(ticketService.editTicket(moimId, json, files, thumbnail));
     }
 
     @DeleteMapping("/{moimId}") // 모임 삭제에 의한 S3 등록 데이터 삭제

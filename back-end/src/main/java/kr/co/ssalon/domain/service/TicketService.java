@@ -40,7 +40,7 @@ public class TicketService {
         Map<String, String> imageSrcMap = new HashMap<>();
 
         // JSON 파싱 및 수정 작업
-        JsonElement jsonElement = editJsonSrc(moimId, jsonStr, imageSrcMap);
+        JsonElement jsonElement = editTicketJsonSrc(moimId, jsonStr, imageSrcMap);
 
         // 이제 수정된 JSON 업로드 필요
         // 이후 JSON 내용과 동일하게 이미지 파일 복제 및 이름 변경 작업 진행
@@ -59,7 +59,7 @@ public class TicketService {
     }
 
     @Transactional
-    public TicketEditResponseDTO editTicket(Long moimId, String json, List<MultipartFile> multipartFiles) {
+    public TicketEditResponseDTO editTicket(Long moimId, String json, List<MultipartFile> multipartFiles, MultipartFile thumbnail) {
         // 주어진 모임ID 바탕으로 티켓 업로드 내용 수정
         // 현재(240424)는 기존 내용 삭제 후 새로 업로드
         // 추후 : 이전 티켓 수정 기록 보존을 고려할 것
@@ -69,11 +69,12 @@ public class TicketService {
 
         // JSON src 수정 후 업로드 진행
         Map<String, String> imageSrcMap = new HashMap<>();
-        JsonElement jsonElement = editJsonSrc(moimId, json, imageSrcMap);
+        JsonElement jsonElement = editTicketJsonSrc(moimId, json, imageSrcMap);
         String resultJson = awsS3Service.uploadFileViaStream(moimId, jsonElement.toString());
 
         // 파일 업로드 진행
-        List<String> resultSrc = awsS3Service.uploadFilesViaMultipart(moimId, multipartFiles, imageSrcMap);
+        List<String> resultSrc = awsS3Service.uploadMultiFilesViaMultipart(moimId, multipartFiles, imageSrcMap);
+        resultSrc.add(awsS3Service.uploadSingleFileViaMultipart(moimId, thumbnail, imageSrcMap));
 
         // 결과 반환
         return new TicketEditResponseDTO(resultJson, jsonElement.toString(), resultSrc);
@@ -90,11 +91,21 @@ public class TicketService {
         return UUID.randomUUID().toString();
     }
 
-    private JsonElement editJsonSrc(Long moimId, String jsonStr, Map<String, String> imageSrcMap) {
+    private JsonElement editTicketJsonSrc(Long moimId, String jsonStr, Map<String, String> imageSrcMap) {
         // JSON 파일 이름 대조하여 변경 작업
         JsonElement jsonElement = JsonParser.parseString(jsonStr);
         JsonObject topLevelObject = jsonElement.getAsJsonObject();
-        JsonArray objectsArray = topLevelObject.get("objects").getAsJsonArray();
+
+        // thumbnail 이미지 파일 이름 수정
+        String uuidThumb = generateRandomUUID();
+        String urlThumb = topLevelObject.get("thumbnailUrl").getAsString();
+        String urlThumbSrc = urlThumb.substring(urlThumb.lastIndexOf('/') + 1);
+
+        imageSrcMap.put(urlThumbSrc, uuidThumb);
+        topLevelObject.addProperty("thumbnailUrl", AWS_S3_ASSET_URI + "Thumbnails/" + moimId + "/" + uuidThumb + ".png");
+
+        JsonObject fabricObject = topLevelObject.get("fabric").getAsJsonObject();
+        JsonArray objectsArray = fabricObject.get("objects").getAsJsonArray();
 
         // objects 리스트 내 Image 파일에 대해서만 작업 진행
         for (JsonElement object : objectsArray) {
