@@ -1,8 +1,6 @@
 package kr.co.ssalon.web.controller;
 
-import kr.co.ssalon.domain.entity.Category;
-import kr.co.ssalon.domain.entity.Meeting;
-import kr.co.ssalon.domain.entity.Region;
+import kr.co.ssalon.domain.entity.*;
 import kr.co.ssalon.domain.service.MeetingService;
 import kr.co.ssalon.web.dto.MeetingSearchCondition;
 import org.junit.jupiter.api.DisplayName;
@@ -44,10 +42,20 @@ public class MeetingControllerTest {
         Category category = mock(Category.class);
         when(category.getName()).thenReturn("운동");
 
+        // Payment, Member(creator), Ticket Mock 객체 생성
+        Payment payment = mock(Payment.class);
+        Member creator = mock(Member.class);
+        Ticket ticket = mock(Ticket.class);
+
         // "운동", "서울특별시" 모임 Mock 객체 생성
         Meeting meeting = mock(Meeting.class);
         when(meeting.getCategory()).thenReturn(category);
         when(meeting.getLocation()).thenReturn(Region.SEOUL.getLocalName());
+
+        // @NotNull 통과를 위해 payment, creator, ticket 빈 객체(mock) 추가
+        when(meeting.getPayment()).thenReturn(payment);
+        when(meeting.getCreator()).thenReturn(creator);
+        when(meeting.getTicket()).thenReturn(ticket);
 
         // 모임 목록 필터("운동", "서울특별시") 객체 생성
         MeetingSearchCondition meetingSearchCondition = MeetingSearchCondition.builder()
