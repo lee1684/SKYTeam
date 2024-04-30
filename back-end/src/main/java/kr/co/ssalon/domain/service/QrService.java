@@ -12,6 +12,7 @@ import kr.co.ssalon.domain.repository.MeetingRepository;
 import kr.co.ssalon.domain.repository.MemberMeetingRepository;
 import kr.co.ssalon.domain.repository.MemberRepository;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -30,6 +31,7 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class QrService {
 
@@ -48,7 +50,7 @@ public class QrService {
         MemberMeeting memberMeeting = memberMeetingService.findByMemberAndMeeting(member, meeting);
 
         try {
-            return redisTemplate.opsForValue().get(memberMeeting.getQrLink().getQrLink());
+            return redisTemplate.opsForValue().get(memberMeeting.getQrLink().getQrKey());
 
         } catch (NullPointerException e) {
             String randomStr = RandomStringUtils.random(200, true, true);
@@ -77,7 +79,7 @@ public class QrService {
         Member member = memberService.findMember(userId);
         MemberMeeting memberMeeting = memberMeetingService.findByMemberAndMeeting(member, meeting);
 
-        String redisKey = memberMeeting.getQrLink().getQrLink();
+        String redisKey = memberMeeting.getQrLink().getQrKey();
 
         try {
             byte[] savedImage = redisTemplate.opsForValue().get(redisKey);
