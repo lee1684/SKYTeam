@@ -31,16 +31,15 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         log.info("JWTFilter");
-        Cookie[] cookies = request.getCookies();
         String accessToken = null;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if(cookie.getName().equals("access")){
-                    accessToken = cookie.getValue();
-                }
-            }
-        }
 
+        // 'Authorization' 헤더 추출
+        String authorizationHeader = request.getHeader("Authorization");
+
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            // Bearer 토큰에서 실제 토큰 값만 추출
+            accessToken = authorizationHeader.substring(7);
+        }
 
         if (accessToken == null) {
             filterChain.doFilter(request, response);
