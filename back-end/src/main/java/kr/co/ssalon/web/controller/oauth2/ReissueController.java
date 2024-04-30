@@ -42,15 +42,8 @@ public class ReissueController {
 
         log.info("refresh 토큰 검증 및 access 토큰 재발급");
         String refresh = null;
-        Cookie[] cookies = request.getCookies();
 
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("refresh")) {
-                    refresh = cookie.getValue();
-                }
-            }
-        }
+        refresh = request.getHeader("Refresh");
 
         if (refresh == null) {
             return new ResponseEntity<>("refresh token null", HttpStatus.BAD_REQUEST);
