@@ -40,19 +40,20 @@
         <div *ngIf="this.editMode===this.mobileTicketEditMode.TEXT">
             <div id="text-edit-feature-container" #textEditFeatureContainer>
                 <textarea id="text-edit-input" #textEditInput autocomplete="off" type="text"
-                    [style.text-align]="this.textAlign" [style.color]="this.textColor.color"
-                    [style.font-family]="this.fontFamily"
-                    (input)="this.onChangeSsaslonTextAttribute('text', $event)"></textarea>
+                    [style.text-align]="this.ssalonTextAttribute.textAlign"
+                    [style.color]="this.ssalonTextAttribute.color"
+                    [style.font-family]="this.ssalonTextAttribute.fontFamily"
+                    (input)="this.onChangeSsalonTextAttribute('text', $event)"></textarea>
             </div>
             <div class="horizontal-container" id="text-align" [style.justify-content]="'center'">
                 <app-circle-toggle-button-group [elements]="this.textAlignButtons" [outerSize]="'30px'"
-                    (onClickToggleButtonEvent)="this.onChangeSsaslonTextAttribute('textAlign', $event)"></app-circle-toggle-button-group>
+                    (onClickToggleButtonEvent)="this.onChangeSsalonTextAttribute('textAlign', $event)"></app-circle-toggle-button-group>
                 <!--<input type="color" />-->
             </div>
             <app-simple-toggle-button-group class="fonts" [elements]="this.fonts"
-                (onClickToggleButtonEvent)="this.onChangeSsaslonTextAttribute('fontFamily', $event)"></app-simple-toggle-button-group>
+                (onClickToggleButtonEvent)="this.onChangeSsalonTextAttribute('fontFamily', $event)"></app-simple-toggle-button-group>
             <app-color-board class="color-board" [outerSize]="'30px'" [innerSize]="'24px'"
-                (onClickToggleButtonEvent)="this.onChangeSsaslonTextAttribute('color', $event)"></app-color-board>
+                (onClickToggleButtonEvent)="this.onChangeSsalonTextAttribute('color', $event)"></app-color-board>
         </div>
 
         <!-- sticker edit feature -->
@@ -61,12 +62,13 @@
             <div [style.display]="'flex'" [style.justify-content]="'space-evenly'" [style.margin-bottom]="'20px'"
                 *ngFor="let stickerRow of this.getStickerArray()">
                 <div *ngFor="let sticker of stickerRow">
-                    <div class="sticker">
-                        <img src="assets/heart.png" width="100px" height="75px" />
+                    <div class="sticker" [style.width]="'100px'" [style.height]="'150px'">
+                        <img [src]="sticker.imgSrc" width="80px" />
                     </div>
                 </div>
             </div>
         </div>
+
         <!-- draw edit feature -->
         <div *ngIf="this.editMode === this.mobileTicketEditMode.DRAW">
             <svg class="ticket-background" width="350" height="600" viewBox="-87.5 -150 525 900" fill="none"
@@ -79,7 +81,7 @@
                 </foreignObject>
             </svg>
             <app-color-board class="color-board" [outerSize]="'30px'" [innerSize]="'24px'"
-                (onClickToggleButtonEvent)="this.onChangeSsaslonTextAttribute('color', $event)"></app-color-board>
+                (onClickToggleButtonEvent)="this.onChangeSsalonTextAttribute('color', $event)"></app-color-board>
         </div>
 
 

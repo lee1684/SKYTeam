@@ -9,19 +9,26 @@ import {
   Vector2,
   Vector3,
 } from 'three';
-import { ScenegraphService } from './scenegraph.service';
-import { Injectable } from '@angular/core';
+import { ScenegraphService } from '../service/scenegraph.service';
+import { ApiExecutorService } from '../service/api-executor.service';
+import { DecorationInfo } from '../service/ssalon-config.service';
 
-@Injectable({
-  providedIn: 'root',
-})
 export class MobileTicket {
   public mobileTicket: Object3D | null = null;
   public frontSide: Face | null = null;
+  public frontDecorationInfo: DecorationInfo | null = null;
   public backSide: Face | null = null;
-  constructor(private _sceneGraphService: ScenegraphService) {}
+  public backDecorationinfo: DecorationInfo | null = null;
+  constructor(
+    private _apiExecutorService: ApiExecutorService,
+    private _sceneGraphService: ScenegraphService
+  ) {}
 
-  public initMobileTicket(): void {
+  /** get front, back decoration info */
+  public async initMobileTicket(): Promise<any> {
+    /** 앞의 정보가 있다면 받아오기(앞면 정보는 항상 있을듯) */
+    this.frontDecorationInfo = await this._apiExecutorService.getTicket();
+    this.backDecorationinfo = await this._apiExecutorService.getDiary();
     this.loadMaterial();
   }
 
@@ -38,28 +45,18 @@ export class MobileTicket {
   private loadObject(materials: any) {
     const loader = new OBJLoader();
     loader.setMaterials(materials);
-    // load a resource
-    loader.load(
-      'assets/untitled.obj',
-      (obj) => {
-        this.initCardObject(obj);
-      },
-      // called when loading is in progresses
-      function (xhr) {
-        console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
-      },
-      // called when loading has errors
-      function (error) {
-        console.log('An error happened');
-      }
-    );
+    loader.load('assets/untitled.obj', (obj) => {
+      this.initCardObject(obj);
+    });
   }
 
+  /** load face */
   private initCardObject(obj: Group): void {
     this.mobileTicket = obj.children[0];
-    //0xb76e79
+    this.mobileTicket.scale.multiplyScalar(5);
+    let backgroundColorString = this.frontDecorationInfo?.backgroundColor;
     ((this.mobileTicket as Mesh).material as MeshPhongMaterial).color.set(
-      0xefefef
+      parseInt(backgroundColorString?.slice(1)!, 16)
     );
     this.mobileTicket.rotateOnAxis(new Vector3(0, 0, 1), Math.PI / 2);
     this._sceneGraphService.scene!.add(this.mobileTicket!);
@@ -70,14 +67,27 @@ export class MobileTicket {
 
   private initSide(side: string): void {
     if (side === 'front') {
-      this.frontSide = new Face(new Vector2(350, 600), 'front', 'decoration');
+      /** get decoration info from the server */
+      this.frontSide = new Face(
+        new Vector2(350, 600),
+        'front',
+        this.frontDecorationInfo?.fabric
+      );
       this.frontSide.rotateZ(-Math.PI / 2);
       this.mobileTicket?.add(this.frontSide);
+      this.frontSide.scale.multiplyScalar(0.205);
     } else if (side === 'back') {
-      this.backSide = new Face(new Vector2(350, 600), 'back', 'decoration');
+      /** get decoration info from the server */
+
+      this.backSide = new Face(
+        new Vector2(350, 600),
+        'back',
+        this.backDecorationinfo?.fabric
+      );
       this.backSide.rotateZ(-Math.PI / 2);
       this.backSide.rotateY(-Math.PI);
       this.mobileTicket?.add(this.backSide);
+      this.backSide.scale.multiplyScalar(0.205);
     }
   }
 

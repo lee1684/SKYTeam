@@ -6,25 +6,19 @@ import {
 } from './mobile-ticket-editor/mobile-ticket-editor.component';
 import { MobileTicketEditViewerComponent } from './mobile-ticket-edit-viewer/mobile-ticket-edit-viewer.component';
 import { NgIf } from '@angular/common';
-import {
-  SimpleToggleButtonElement,
-  SimpleToggleButtonGroupComponent,
-} from '../ssalon-component/simple-toggle-button-group/simple-toggle-button-group.component';
+import { SimpleToggleButtonGroupComponent } from '../ssalon-component/simple-toggle-button-group/simple-toggle-button-group.component';
 import { SimpleButtonComponent } from '../ssalon-component/simple-button/simple-button.component';
 import {
   ButtonElement,
   CircleToggleButtonGroupComponent,
 } from '../ssalon-component/circle-toggle-button-group/circle-toggle-button-group.component';
+import axios, { Axios } from 'axios';
+import { DecorationInfo } from '../service/ssalon-config.service';
 
 export enum MobileTicketViewMode {
   APPVIEW,
   APPEDITVIEW,
   WEBVIEW,
-}
-
-export interface DecorationJSON {
-  backgroundColor: string;
-  fabric: any;
 }
 
 @Component({
@@ -67,6 +61,9 @@ export class TicketComponent {
   }
 
   public changeViewMode(mode: MobileTicketViewMode): void {
+    if (mode === MobileTicketViewMode.APPVIEW) {
+      this.updateServer();
+    }
     this.mode = mode;
   }
 
@@ -91,7 +88,10 @@ export class TicketComponent {
       this.mobileTicketEditViewer !== null &&
       this.mobileTicketEditor !== null
     ) {
-      let body: DecorationJSON = {
+      /** png로 변환해서 서버에 올려야함. */
+      this.mobileTicketEditViewer.getCanvasCapture();
+      let body: DecorationInfo = {
+        thumbnailUrl: '서버에 올라간 url',
         backgroundColor: this.mobileTicketEditor!.backgroundColor.color,
         fabric: this.mobileTicketEditViewer!.canvas?.toJSON(),
       };
@@ -100,8 +100,7 @@ export class TicketComponent {
   }
 
   public openTextEditor(IText: fabric.IText) {
-    this.mobileTicketEditor!.isTextAddMode = false;
-    this.mobileTicketEditor!.editingIText = IText;
+    (this.mobileTicketEditor!.fabricObjects as fabric.IText[]).push(IText);
     this.mobileTicketEditor!.onClickChangeEditMode(MobileTicketEditMode.TEXT);
   }
 }
