@@ -1,7 +1,5 @@
 package kr.co.ssalon.domain.entity;
 
-
-import org.springframework.data.redis.core.RedisHash;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +11,6 @@ import lombok.Setter;
 @Setter
 @Builder
 @AllArgsConstructor
-@RedisHash(value = "QrLink")
 public class QrLink {
 
     @Id
