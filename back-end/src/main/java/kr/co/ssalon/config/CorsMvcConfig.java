@@ -10,6 +10,6 @@ public class CorsMvcConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry corsRegistry) {
         corsRegistry.addMapping("/**")
                 .exposedHeaders("Set-Cookie")
-                .allowedOrigins("ssalon 어플 도메인");
+                .allowedOrigins("http://localhost:3000");
     }
 }

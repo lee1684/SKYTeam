@@ -44,7 +44,7 @@ public class SecurityConfig {
                         CorsConfiguration configuration = new CorsConfiguration();
 
                         // ssalon 어플의 모든 요청 허용
-                        configuration.setAllowedOrigins(Collections.singletonList("ssalon 어플 도메인"));
+                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
                         // get, post, put 모든 요청 허용
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         // 클라이언트로부터 쿠키 및 토큰 전송 허용
