@@ -4,13 +4,19 @@ import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.MemberMeeting;
 import kr.co.ssalon.domain.repository.MemberMeetingRepository;
+import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberMeetingService {
 
-    private MemberMeetingRepository memberMeetingRepository;
+    private final MemberMeetingRepository memberMeetingRepository;
 
     public MemberMeeting findByMemberAndMeeting(Member member, Meeting meeting) throws BadRequestException {
 
