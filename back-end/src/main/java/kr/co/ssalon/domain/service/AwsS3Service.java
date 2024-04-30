@@ -64,7 +64,7 @@ public class AwsS3Service {
         return "Success";
     }
 
-    public List<String> uploadFilesViaMultipart(Long moimId, List<MultipartFile> multipartFiles, Map<String, String> imageSrcMap) {
+    public List<String> uploadMultiFilesViaMultipart(Long moimId, List<MultipartFile> multipartFiles, Map<String, String> imageSrcMap) {
         List<String> fileUrlList = new ArrayList<>();
 
         multipartFiles.forEach(multipartFile -> {
@@ -98,6 +98,39 @@ public class AwsS3Service {
         });
 
         return fileUrlList;
+    }
+
+    public String uploadSingleFileViaMultipart(Long moimId, MultipartFile multipartFile, Map<String, String> imageSrcMap) {
+        String fileUrl = "";
+
+        if (multipartFile.isEmpty()) {
+            // log.info("image is null");
+            return "Failed to upload - null image: " + getFileName(multipartFile);
+        }
+
+        String fileName = getFileName(multipartFile);
+        String newFileName = imageSrcMap.get(fileName) + "." + fileName.substring(fileName.lastIndexOf(".") + 1);
+
+        try {
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucketStaticName)
+                    .contentType(multipartFile.getContentType())
+                    .contentLength(multipartFile.getSize())
+                    .key("Thumbnails/" + moimId + "/" + newFileName)
+                    .build();
+            RequestBody requestBody = RequestBody.fromBytes(multipartFile.getBytes());
+            s3Client.putObject(putObjectRequest, requestBody);
+        } catch (IOException e) {
+            // log.error("cannot upload image",e);
+            throw new RuntimeException(e);
+        }
+
+        GetUrlRequest getUrlRequest = GetUrlRequest.builder()
+                .bucket(bucketStaticName)
+                .key("Thumbnails/" + moimId + "/" + newFileName)
+                .build();
+
+        return s3Client.utilities().getUrl(getUrlRequest).toString();
     }
 
     public String copyFilesFromTemplate(String moimIdSrc, String moimIdDest, Map<String, String> fileNameMap) {
