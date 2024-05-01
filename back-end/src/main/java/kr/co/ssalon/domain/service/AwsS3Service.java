@@ -64,7 +64,7 @@ public class AwsS3Service {
         return "Success";
     }
 
-    public List<String> uploadMultiFilesViaMultipart(Long moimId, List<MultipartFile> multipartFiles, Map<String, String> imageSrcMap) {
+    public List<String> uploadMultiFilesViaMultipart(List<MultipartFile> multipartFiles, Map<String, String> imageKeyMap) {
         List<String> fileUrlList = new ArrayList<>();
 
         multipartFiles.forEach(multipartFile -> {
@@ -73,15 +73,23 @@ public class AwsS3Service {
                 fileUrlList.add("Failed to upload - null image: " + getFileName(multipartFile));
             }
 
-            String fileName = getFileName(multipartFile);
-            String newFileName = imageSrcMap.get(fileName) + "." + fileName.substring(fileName.lastIndexOf(".") + 1);
+            String oldfileName = getFileName(multipartFile);
+            String newFileURI = "";
+            for (String fileURI : imageKeyMap.keySet()) {
+                String regexName = "\\S*" + oldfileName;
+
+                if (fileURI.matches(regexName)) {
+                    newFileURI = imageKeyMap.get(fileURI);
+                    break;
+                }
+            }
 
             try {
                 PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                         .bucket(bucketStaticName)
                         .contentType(multipartFile.getContentType())
                         .contentLength(multipartFile.getSize())
-                        .key(moimId + "/" + newFileName)
+                        .key(newFileURI)
                         .build();
                 RequestBody requestBody = RequestBody.fromBytes(multipartFile.getBytes());
                 s3Client.putObject(putObjectRequest, requestBody);
@@ -91,7 +99,7 @@ public class AwsS3Service {
             }
             GetUrlRequest getUrlRequest = GetUrlRequest.builder()
                     .bucket(bucketStaticName)
-                    .key(moimId + "/" + newFileName)
+                    .key(newFileURI)
                     .build();
 
             fileUrlList.add(s3Client.utilities().getUrl(getUrlRequest).toString());
@@ -133,26 +141,27 @@ public class AwsS3Service {
         return s3Client.utilities().getUrl(getUrlRequest).toString();
     }
 
-    public String copyFilesFromTemplate(String moimIdSrc, String moimIdDest, Map<String, String> fileNameMap) {
-        for (String key : fileNameMap.keySet()) {
+    public List<String> copyFilesFromTemplate(Map<String, String> fileKeyMap) {
+        List<String> resultCopy = new ArrayList<>();
+
+        for (String key : fileKeyMap.keySet()) {
             CopyObjectRequest copyReq = CopyObjectRequest.builder()
                     .sourceBucket(bucketStaticName)
-                    .sourceKey(moimIdSrc + "/" + key)
+                    .sourceKey(key)
                     .destinationBucket(bucketStaticName)
-                    .destinationKey(moimIdDest + "/" + fileNameMap.get(key) + ".png")
+                    .destinationKey(fileKeyMap.get(key))
                     .build();
 
             try {
                 CopyObjectResponse copyRes = s3Client.copyObject(copyReq);
-                return copyRes.copyObjectResult().toString();
+                resultCopy.add(copyRes.copyObjectResult().toString());
 
             } catch (S3Exception e) {
-                System.err.println(e.awsErrorDetails().errorMessage());
-                System.exit(1);
+                System.err.println("Error on AWS S3 Service: " + e.awsErrorDetails().errorMessage());
             }
         }
 
-        return "";
+        return resultCopy;
     }
 
     public String deleteFiles(Long moimId) {
@@ -164,7 +173,7 @@ public class AwsS3Service {
 
             s3Client.deleteObject(deleteObjectRequest);
         } catch (S3Exception e) {
-            System.err.println(e.awsErrorDetails().errorMessage());
+            System.err.println("Error on AWS S3 Service: " + e.awsErrorDetails().errorMessage());
         }
 
         return "OK";
