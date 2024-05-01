@@ -1,11 +1,3 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  HostListener,
-  Output,
-  ViewChild,
-} from '@angular/core';
 import { SimpleButtonComponent } from '../../ssalon-component/simple-button/simple-button.component';
 import { NgFor, NgIf } from '@angular/common';
 import { ScenegraphService } from '../../service/scenegraph.service';
@@ -23,6 +15,13 @@ import { SimpleToggleButtonGroupComponent } from '../../ssalon-component/simple-
 import { fabric } from 'fabric';
 import { Vector2 } from 'three';
 import { ApiExecutorService } from '../../service/api-executor.service';
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 
 export enum MobileTicketEditMode {
   BACKGROUND_COLOR_CHANGE,

@@ -1,11 +1,11 @@
 import {
   Component,
+  ViewChildren,
+  QueryList,
   ElementRef,
-  EventEmitter,
   Input,
   Output,
-  QueryList,
-  ViewChildren,
+  EventEmitter,
 } from '@angular/core';
 import { SimpleToggleButtonElement } from '../simple-toggle-button-group/simple-toggle-button-group.component';
 import { NgFor, NgIf } from '@angular/common';

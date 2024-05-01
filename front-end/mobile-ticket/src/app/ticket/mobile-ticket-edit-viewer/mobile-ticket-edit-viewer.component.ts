@@ -1,14 +1,12 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  HostListener,
-  Input,
-  Output,
-  ViewChild,
-} from '@angular/core';
 import { fabric } from 'fabric';
 import { ApiExecutorService } from '../../service/api-executor.service';
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 @Component({
   selector: 'app-mobile-ticket-edit-viewer',
   standalone: true,
