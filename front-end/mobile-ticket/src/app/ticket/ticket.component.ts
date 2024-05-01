@@ -14,6 +14,7 @@ import {
 } from '../ssalon-component/circle-toggle-button-group/circle-toggle-button-group.component';
 import axios, { Axios } from 'axios';
 import { DecorationInfo } from '../service/ssalon-config.service';
+import { ApiExecutorService } from '../service/api-executor.service';
 
 export enum MobileTicketViewMode {
   APPVIEW,
@@ -55,7 +56,7 @@ export class TicketComponent {
     label: '뒤로가기',
     value: 0,
   };
-  constructor() {}
+  constructor(private _apiExecutorService: ApiExecutorService) {}
   public changeEditMode(mode: MobileTicketEditMode) {
     this.editMode = mode;
   }
@@ -75,15 +76,17 @@ export class TicketComponent {
     this.changeViewMode(MobileTicketViewMode.APPEDITVIEW);
   }
 
-  public applyEdit(object: fabric.Object | null) {
-    this.mobileTicketEditViewer?.updateCanvas(object);
+  public applyEdit(
+    fabricObjects: fabric.Image[] | fabric.IText[] | fabric.Path[] | null
+  ) {
+    this.mobileTicketEditViewer?.updateCanvas(fabricObjects);
   }
 
   public applyBackgroundColorEdit(color: string) {
     this.mobileTicketEditViewer?.updateBackgroundColor(color);
   }
 
-  public updateServer() {
+  public async updateServer() {
     if (
       this.mobileTicketEditViewer !== null &&
       this.mobileTicketEditor !== null
@@ -96,11 +99,13 @@ export class TicketComponent {
         fabric: this.mobileTicketEditViewer!.canvas?.toJSON(),
       };
       /* 서버에 저장 API 연결해야함. */
+      await this._apiExecutorService.editTicket(body);
     }
   }
 
   public openTextEditor(IText: fabric.IText) {
     (this.mobileTicketEditor!.fabricObjects as fabric.IText[]).push(IText);
+    this.mobileTicketEditor!.syncTextAttributeWithSelectedText();
     this.mobileTicketEditor!.onClickChangeEditMode(MobileTicketEditMode.TEXT);
   }
 }
