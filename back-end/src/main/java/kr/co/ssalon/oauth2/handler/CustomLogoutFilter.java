@@ -31,7 +31,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
     private void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         log.info("logoutFilter");
         String requestURI = request.getRequestURI();
-        if (!requestURI.matches("^\\/auth\\/logout$")) {
+        if (!requestURI.matches("^\\/api\\/auth\\/logout$")) {
             chain.doFilter(request, response);
             return;
         }
@@ -44,14 +44,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         log.info("logoutFilter check");
         String refresh = null;
 
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("refresh")) {
-                    refresh = cookie.getValue();
-                }
-            }
-        }
+        refresh = request.getHeader("Refresh");
 
         if (refresh == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
