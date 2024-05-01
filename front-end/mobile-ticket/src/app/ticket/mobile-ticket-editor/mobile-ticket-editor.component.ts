@@ -138,45 +138,7 @@ export class MobileTicketEditorComponent {
 
   private _backgroundColorViewLoaded: boolean = false;
 
-  public stickers: ButtonElement[] = [
-    {
-      imgSrc:
-        'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/sticker/image+1.png',
-      label: '1',
-      value: 1,
-    },
-    {
-      imgSrc:
-        'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/sticker/image+1.png',
-      label: '2',
-      value: 2,
-    },
-    {
-      imgSrc: 'assets/stickers/image_3.png',
-      label: '3',
-      value: 3,
-    },
-    {
-      imgSrc: 'assets/stickers/image_4.png',
-      label: '4',
-      value: 4,
-    },
-    {
-      imgSrc: 'assets/stickers/image_5.png',
-      label: '5',
-      value: 5,
-    },
-    {
-      imgSrc: 'assets/stickers/image_6.png',
-      label: '6',
-      value: 6,
-    },
-    {
-      imgSrc: 'assets/stickers/image_7.png',
-      label: '7',
-      value: 7,
-    },
-  ];
+  public stickers: ButtonElement[] = [];
   public editingSticker: fabric.Image | null = null;
   public editingStickerSrc: string = '';
 
@@ -209,7 +171,7 @@ export class MobileTicketEditorComponent {
   public fontFamily: string = 'Josefin Sans';
   public isTextAddMode: boolean = true;
   public textColor: SsalonColorElement = this.ssalonColor.WHITE;
-  public editingIText: fabric.IText | null = null;
+  public editingText: fabric.Text | null = null;
 
   public colorBoard: ButtonElement[] = [];
 
@@ -244,7 +206,7 @@ export class MobileTicketEditorComponent {
     strokeWidth: 1,
   };
   /** 새로 추가할 fabric object */
-  public fabricObjects: fabric.Image[] | fabric.IText[] | fabric.Path[] = [];
+  public fabricObjects: fabric.Image[] | fabric.Text[] | fabric.Path[] = [];
   /** 완료 버튼 클릭 후, editor view에 적용하기 위해 사용한 기능이 무엇인지 저장 */
   public lastUsedFeature: MobileTicketEditMode = MobileTicketEditMode.NONE;
 
@@ -254,6 +216,7 @@ export class MobileTicketEditorComponent {
   ) {}
   public ngAfterViewInit(): void {
     this.loadDecorationInfo();
+    this.getStickers();
   }
   /** 기능 실행 버튼 클릭 후, detailed editor view가 켜진 후에 설정 값들을 적용. */
   public ngAfterViewChecked(): void {
@@ -271,20 +234,12 @@ export class MobileTicketEditorComponent {
 
     /* text feature */
     if (this.textEditInput && !this.textFocused) {
-      /** 기존에 있던 IText를 수정하는 경우 */
       if (this.fabricObjects.length === 1) {
-        this.ssalonTextAttribute = {
-          text: (this.fabricObjects[0] as fabric.IText).text!,
-          fontFamily: (this.fabricObjects[0] as fabric.IText)
-            .fontFamily as string,
-          color: (this.fabricObjects[0] as fabric.IText).fill as string,
-          textAlign: (this.fabricObjects[0] as fabric.IText)
-            .textAlign as string,
-        };
         this.textEditInput!.nativeElement.value = this.ssalonTextAttribute.text;
-        this.textEditInput!.nativeElement.focus();
-        this.textFocused = true;
       }
+
+      this.textEditInput!.nativeElement.focus();
+      this.textFocused = true;
     }
 
     /* draw feature */
@@ -308,7 +263,6 @@ export class MobileTicketEditorComponent {
 
   /** 기능 실행 */
   public onClickChangeEditMode(value: MobileTicketEditMode): void {
-    this.lastUsedFeature = value;
     switch (value) {
       case MobileTicketEditMode.BACKGROUND_COLOR_CHANGE:
         break;
@@ -339,6 +293,7 @@ export class MobileTicketEditorComponent {
     this.editMode = MobileTicketEditMode.NONE;
     this.editFeatureButtons!.setUnselectedStatus();
     this.onChangeViewer.emit(MobileTicketEditMode.NONE);
+
     this.onEndEditObject();
   }
 
@@ -350,6 +305,25 @@ export class MobileTicketEditorComponent {
     this.backgroundColor = this.ssalonColor.getSsalonColorObjectByValue(value);
   }
 
+  public getStickers() {
+    let array = [
+      'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/sticker/image+1.png',
+      'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/sticker/image+2.png',
+      'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/sticker/image+3.png',
+      'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/sticker/image+4.png',
+      'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/sticker/image+5.png',
+      'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/sticker/image+6.png',
+      'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/sticker/image+8.png',
+    ];
+    array.forEach((url, index) => {
+      this.stickers.push({
+        imgSrc: url,
+        label: `${index}`,
+        value: index,
+      });
+    });
+  }
+
   public getStickerArray(): any[][] {
     const stickerArray: any[][] = [];
     for (let i = 0; i < this.stickers.length; i += 3) {
@@ -359,7 +333,26 @@ export class MobileTicketEditorComponent {
   }
 
   public selectSticker(value: number): void {
-    this.editingStickerSrc = this.stickers[value].imgSrc;
+    if (this.ssalonStickerAttribute.src.includes(this.stickers[value].imgSrc)) {
+      this.ssalonStickerAttribute.src.splice(
+        this.ssalonStickerAttribute.src.indexOf(this.stickers[value].imgSrc),
+        1
+      );
+    } else {
+      this.ssalonStickerAttribute.src.push(this.stickers[value].imgSrc);
+    }
+    console.log(this.ssalonStickerAttribute);
+  }
+
+  public syncTextAttributeWithSelectedText() {
+    if (this.fabricObjects.length === 1) {
+      this.ssalonTextAttribute = {
+        text: (this.fabricObjects[0] as fabric.Text).text!,
+        fontFamily: (this.fabricObjects[0] as fabric.Text).fontFamily as string,
+        color: (this.fabricObjects[0] as fabric.Text).fill as string,
+        textAlign: (this.fabricObjects[0] as fabric.Text).textAlign as string,
+      };
+    }
   }
 
   /**
@@ -399,6 +392,38 @@ export class MobileTicketEditorComponent {
     }
   }
 
+  public getSsalonTextEnumByString(value: string): TextAlign {
+    switch (value) {
+      case 'left':
+        return TextAlign.LEFT;
+      case 'center':
+        return TextAlign.CENTER;
+      case 'right':
+        return TextAlign.RIGHT;
+      default:
+        return TextAlign.CENTER;
+    }
+  }
+
+  public loadImageRecursive(index: number) {
+    let array =
+      this.lastUsedFeature === MobileTicketEditMode.PHOTO
+        ? this.ssalonPhotoAttribute
+        : this.ssalonStickerAttribute;
+    if (index === array.src.length) {
+      this.onObjectEditEnded.emit(this.fabricObjects);
+      this.lastUsedFeature === MobileTicketEditMode.PHOTO
+        ? (this.ssalonPhotoAttribute.src = [])
+        : (this.ssalonStickerAttribute.src = []);
+      this.lastUsedFeature = MobileTicketEditMode.NONE;
+    } else {
+      fabric.Image.fromURL(array.src[index], (img: fabric.Image) => {
+        (this.fabricObjects as fabric.Image[]).push(img);
+        this.loadImageRecursive(index + 1);
+      });
+    }
+  }
+
   /** 완료를 눌러야 fabric object를 생성 */
   public onEndEditObject(): void {
     if (this.lastUsedFeature === MobileTicketEditMode.BACKGROUND_COLOR_CHANGE) {
@@ -406,37 +431,15 @@ export class MobileTicketEditorComponent {
     } else {
       switch (this.lastUsedFeature) {
         case MobileTicketEditMode.PHOTO:
-          for (
-            let index = 0;
-            index < this.ssalonPhotoAttribute.src.length;
-            index++
-          ) {
-            fabric.Image.fromURL(
-              this.ssalonPhotoAttribute.src[index],
-              (img: fabric.Image) => {
-                (this.fabricObjects as fabric.Image[]).push(img);
-              }
-            );
-          }
-          break;
+          this.loadImageRecursive(0);
+          return;
         case MobileTicketEditMode.STICKER:
-          for (
-            let index = 0;
-            index < this.ssalonStickerAttribute.src.length;
-            index++
-          ) {
-            fabric.Image.fromURL(
-              this.ssalonStickerAttribute.src[index],
-              (img: fabric.Image) => {
-                (this.fabricObjects as fabric.Image[]).push(img);
-              }
-            );
-          }
-          break;
+          this.loadImageRecursive(0);
+          return;
         case MobileTicketEditMode.TEXT:
           if (this.fabricObjects.length === 0) {
-            (this.fabricObjects as fabric.IText[]).push(
-              new fabric.IText(this.ssalonTextAttribute.text, {
+            (this.fabricObjects as fabric.Text[]).push(
+              new fabric.Text(this.ssalonTextAttribute.text, {
                 top: 100,
                 left: 100,
                 fill: this.ssalonTextAttribute.color,
@@ -445,19 +448,19 @@ export class MobileTicketEditorComponent {
               })
             );
           } else {
-            (this.fabricObjects[0] as fabric.IText).set(
+            (this.fabricObjects[0] as fabric.Text).set(
               'text',
               this.ssalonTextAttribute.text
             );
-            (this.fabricObjects[0] as fabric.IText).set(
+            (this.fabricObjects[0] as fabric.Text).set(
               'fill',
               this.ssalonTextAttribute.color
             );
-            (this.fabricObjects[0] as fabric.IText).set(
+            (this.fabricObjects[0] as fabric.Text).set(
               'textAlign',
               this.ssalonTextAttribute.textAlign
             );
-            (this.fabricObjects[0] as fabric.IText).set(
+            (this.fabricObjects[0] as fabric.Text).set(
               'fontFamily',
               this.ssalonTextAttribute.fontFamily
             );
@@ -472,6 +475,7 @@ export class MobileTicketEditorComponent {
       /** text의 경우, 수정하는 경우가 있는데, 이 함수에서 미리 다 바꾸기 때문에 object를 넘길 필요가 없음.
        * 그렇기 때문에, 미리 editMode를 NONE으로 바꿔버려 null을 보냄.
        * null을 받은 editor viewer는 canvas.renderAll()만 진행.
+       * 이미지의 경우, asyncronous하게 진행되기 때문에 밑의 코드가 진행되지 않게 해놔야 의도대로 진행될 수 있음.
        */
       this.onObjectEditEnded.emit(
         this.lastUsedFeature === MobileTicketEditMode.NONE
@@ -511,7 +515,6 @@ export class MobileTicketEditorComponent {
 
   private addPoint(e: MouseEvent | TouchEvent) {
     const pointer = this.drawingFabricCanvas!.getPointer(e);
-    console.log(pointer);
     this._drawingPoints.push(
       new Vector2(pointer.x as number, pointer.y as number)
     );
