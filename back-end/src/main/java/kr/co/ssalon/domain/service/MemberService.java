@@ -26,7 +26,7 @@ public class MemberService {
     @Transactional
     public void oauthUpdate(String username, String email, String role) throws BadRequestException {
         Optional<Member> findMember = memberRepository.findByUsername(username);
-        Member member = validaitonMember(findMember);
+        Member member = validationMember(findMember);
         member.changeEmail(email);
         member.changeRole(role);
     }
@@ -34,16 +34,23 @@ public class MemberService {
 
     public Member findMember(String username) throws BadRequestException {
         Optional<Member> findMember = memberRepository.findByUsername(username);
-        Member member = validaitonMember(findMember);
+        Member member = validationMember(findMember);
         return member;
     }
 
-    private Member validaitonMember(Optional<Member> member) throws BadRequestException {
+    public Member findMember(Long id) throws BadRequestException {
+        Optional<Member> findMember = memberRepository.findById(id);
+        Member member = validationMember(findMember);
+        return member;
+    }
+
+    private Member validationMember(Optional<Member> member) throws BadRequestException {
         if (member.isPresent()) {
             return member.get();
         }else
             throw new BadRequestException("해당 회원을 찾을 수 없습니다");
     }
+
     private void validationUsername(String username) throws Exception {
         Optional<Member> findMember = memberRepository.findByUsername(username);
         if (findMember.isPresent()) {
