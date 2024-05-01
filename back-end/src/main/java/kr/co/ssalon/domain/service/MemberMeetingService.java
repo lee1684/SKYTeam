@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class MemberMeetingService {
 
     private final MemberMeetingRepository memberMeetingRepository;
