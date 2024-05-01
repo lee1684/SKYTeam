@@ -1,10 +1,10 @@
 import axios, { Axios, AxiosInstance } from 'axios';
-import { fabric } from 'fabric';
+import { Canvas } from 'fabric';
 import { Vector2 } from 'three';
-import { CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer';
+import { CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
 
 export class Face extends CSS3DObject {
-  public fabricCanvas: fabric.Canvas | null = null;
+  public fabricCanvas: Canvas | null = null;
   public ticketSize: Vector2 | null = null;
   public side: 'front' | 'back' | null = null;
   public decoration: string | null = null;
@@ -23,7 +23,7 @@ export class Face extends CSS3DObject {
   }
 
   public initCanvas(): void {
-    this.fabricCanvas = new fabric.Canvas(this.name, {
+    this.fabricCanvas = new Canvas(this.name, {
       width: this.ticketSize!.x,
       height: this.ticketSize!.y,
     });
@@ -31,8 +31,7 @@ export class Face extends CSS3DObject {
   }
 
   public async loadFabric(decorationJson: any) {
-    this.fabricCanvas?.loadFromJSON(decorationJson, () => {
-      this.fabricCanvas?.renderAll();
-    });
+    await this.fabricCanvas?.loadFromJSON(decorationJson);
+    this.fabricCanvas?.renderAll();
   }
 }

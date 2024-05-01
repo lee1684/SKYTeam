@@ -12,16 +12,16 @@ import {
   SsalonColorEnum,
 } from '../../ssalon-component/color-board/color-board.component';
 import { SimpleToggleButtonGroupComponent } from '../../ssalon-component/simple-toggle-button-group/simple-toggle-button-group.component';
-import { fabric } from 'fabric';
 import { Vector2 } from 'three';
 import { ApiExecutorService } from '../../service/api-executor.service';
 import {
-  Component,
   ViewChild,
   ElementRef,
   Output,
   EventEmitter,
+  Component,
 } from '@angular/core';
+import { Canvas, FabricImage, FabricText, Path } from 'fabric';
 
 export enum MobileTicketEditMode {
   BACKGROUND_COLOR_CHANGE,
@@ -138,7 +138,7 @@ export class MobileTicketEditorComponent {
   private _backgroundColorViewLoaded: boolean = false;
 
   public stickers: ButtonElement[] = [];
-  public editingSticker: fabric.Image | null = null;
+  public editingSticker: FabricImage | null = null;
   public editingStickerSrc: string = '';
 
   public textFocused: boolean = false;
@@ -170,15 +170,15 @@ export class MobileTicketEditorComponent {
   public fontFamily: string = 'Josefin Sans';
   public isTextAddMode: boolean = true;
   public textColor: SsalonColorElement = this.ssalonColor.WHITE;
-  public editingText: fabric.Text | null = null;
+  public editingText: Text | null = null;
 
   public colorBoard: ButtonElement[] = [];
 
-  public drawingFabricCanvas: fabric.Canvas | null = null;
+  public drawingFabricCanvas: Canvas | null = null;
   private _isDrawing = false;
   private _drawingPoints: Vector2[] = [];
   private _isDrawingFabricCanvasLoaded: boolean = false;
-  public drawingFabricPaths: fabric.Path[] = [];
+  public drawingFabricPaths: Path[] = [];
 
   /** ssalon editor 설정 값 관련
    * @param backgroundColor: SsalonColorElement 배경색
@@ -205,7 +205,7 @@ export class MobileTicketEditorComponent {
     strokeWidth: 1,
   };
   /** 새로 추가할 fabric object */
-  public fabricObjects: fabric.Image[] | fabric.Text[] | fabric.Path[] = [];
+  public fabricObjects: FabricImage[] | FabricText[] | Path[] = [];
   /** 완료 버튼 클릭 후, editor view에 적용하기 위해 사용한 기능이 무엇인지 저장 */
   public lastUsedFeature: MobileTicketEditMode = MobileTicketEditMode.NONE;
 
@@ -346,10 +346,10 @@ export class MobileTicketEditorComponent {
   public syncTextAttributeWithSelectedText() {
     if (this.fabricObjects.length === 1) {
       this.ssalonTextAttribute = {
-        text: (this.fabricObjects[0] as fabric.Text).text!,
-        fontFamily: (this.fabricObjects[0] as fabric.Text).fontFamily as string,
-        color: (this.fabricObjects[0] as fabric.Text).fill as string,
-        textAlign: (this.fabricObjects[0] as fabric.Text).textAlign as string,
+        text: (this.fabricObjects[0] as FabricText).text!,
+        fontFamily: (this.fabricObjects[0] as FabricText).fontFamily as string,
+        color: (this.fabricObjects[0] as FabricText).fill as string,
+        textAlign: (this.fabricObjects[0] as FabricText).textAlign as string,
       };
     }
   }
@@ -404,7 +404,7 @@ export class MobileTicketEditorComponent {
     }
   }
 
-  public loadImageRecursive(index: number) {
+  public async loadImageRecursive(index: number) {
     let array =
       this.lastUsedFeature === MobileTicketEditMode.PHOTO
         ? this.ssalonPhotoAttribute
@@ -416,10 +416,11 @@ export class MobileTicketEditorComponent {
         : (this.ssalonStickerAttribute.src = []);
       this.lastUsedFeature = MobileTicketEditMode.NONE;
     } else {
-      fabric.Image.fromURL(array.src[index], (img: fabric.Image) => {
-        (this.fabricObjects as fabric.Image[]).push(img);
-        this.loadImageRecursive(index + 1);
+      let tempImg = await FabricImage.fromURL(array.src[index], {
+        crossOrigin: 'anonymous',
       });
+      (this.fabricObjects as FabricImage[]).push(tempImg);
+      this.loadImageRecursive(index + 1);
     }
   }
 
@@ -437,8 +438,8 @@ export class MobileTicketEditorComponent {
           return;
         case MobileTicketEditMode.TEXT:
           if (this.fabricObjects.length === 0) {
-            (this.fabricObjects as fabric.Text[]).push(
-              new fabric.Text(this.ssalonTextAttribute.text, {
+            (this.fabricObjects as FabricText[]).push(
+              new FabricText(this.ssalonTextAttribute.text, {
                 top: 100,
                 left: 100,
                 fill: this.ssalonTextAttribute.color,
@@ -447,19 +448,19 @@ export class MobileTicketEditorComponent {
               })
             );
           } else {
-            (this.fabricObjects[0] as fabric.Text).set(
+            (this.fabricObjects[0] as FabricText).set(
               'text',
               this.ssalonTextAttribute.text
             );
-            (this.fabricObjects[0] as fabric.Text).set(
+            (this.fabricObjects[0] as FabricText).set(
               'fill',
               this.ssalonTextAttribute.color
             );
-            (this.fabricObjects[0] as fabric.Text).set(
+            (this.fabricObjects[0] as FabricText).set(
               'textAlign',
               this.ssalonTextAttribute.textAlign
             );
-            (this.fabricObjects[0] as fabric.Text).set(
+            (this.fabricObjects[0] as FabricText).set(
               'fontFamily',
               this.ssalonTextAttribute.fontFamily
             );
@@ -489,9 +490,7 @@ export class MobileTicketEditorComponent {
   public onClickCompletedEditing(): void {}
 
   public initDrawingCanvas(): void {
-    this.drawingFabricCanvas = new fabric.Canvas(
-      this.drawCanvas!.nativeElement
-    );
+    this.drawingFabricCanvas = new Canvas(this.drawCanvas!.nativeElement);
     this.drawingFabricCanvas.renderAll();
 
     this.drawingFabricCanvas!.on('mouse:down', (options) => {
@@ -523,12 +522,13 @@ export class MobileTicketEditorComponent {
     const pathData = this._drawingPoints
       .map((point) => `${point.x} ${point.y}`)
       .join(' ');
-    const path = new fabric.Path(`M ${pathData}`, {
+    const path = new Path(`M ${pathData}`, {
       fill: 'transparent',
       stroke: 'black',
       strokeWidth: 2,
     });
-    this.drawingFabricCanvas!.clear().renderAll();
+    this.drawingFabricCanvas!.clear();
+    this.drawingFabricCanvas!.renderAll();
     this.drawingFabricCanvas!.add(path);
   }
 }

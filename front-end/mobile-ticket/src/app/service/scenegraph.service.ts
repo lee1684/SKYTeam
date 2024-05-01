@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer';
-import { ArcballControls } from 'three/examples/jsm/controls/ArcballControls';
+import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
+import { ArcballControls } from 'three/examples/jsm/controls/ArcballControls.js';
 import { MobileTicket } from '../mobile-ticket/mobile-ticket';
 import { SsalonConfigService } from './ssalon-config.service';
 import { ApiExecutorService } from './api-executor.service';

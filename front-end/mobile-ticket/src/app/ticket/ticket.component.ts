@@ -15,6 +15,7 @@ import axios, { Axios } from 'axios';
 import { DecorationInfo } from '../service/ssalon-config.service';
 import { ApiExecutorService } from '../service/api-executor.service';
 import { Component, ViewChild } from '@angular/core';
+import { FabricImage, FabricText, Path } from 'fabric';
 
 export enum MobileTicketViewMode {
   APPVIEW,
@@ -77,7 +78,7 @@ export class TicketComponent {
   }
 
   public applyEdit(
-    fabricObjects: fabric.Image[] | fabric.IText[] | fabric.Path[] | null
+    fabricObjects: FabricImage[] | FabricText[] | Path[] | null
   ) {
     this.mobileTicketEditViewer?.updateCanvas(fabricObjects);
   }
@@ -103,8 +104,8 @@ export class TicketComponent {
     }
   }
 
-  public openTextEditor(IText: fabric.IText) {
-    (this.mobileTicketEditor!.fabricObjects as fabric.IText[]).push(IText);
+  public openTextEditor(IText: FabricText) {
+    (this.mobileTicketEditor!.fabricObjects as FabricText[]).push(IText);
     this.mobileTicketEditor!.syncTextAttributeWithSelectedText();
     this.mobileTicketEditor!.onClickChangeEditMode(MobileTicketEditMode.TEXT);
   }
