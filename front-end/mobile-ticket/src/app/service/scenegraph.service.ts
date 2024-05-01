@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
 import * as THREE from 'three';
 import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer';
 import { ArcballControls } from 'three/examples/jsm/controls/ArcballControls';
 import { MobileTicket } from '../mobile-ticket/mobile-ticket';
 import { SsalonConfigService } from './ssalon-config.service';
 import { ApiExecutorService } from './api-executor.service';
+import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })

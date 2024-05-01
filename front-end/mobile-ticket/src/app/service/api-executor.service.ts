@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
 import axios, { AxiosInstance } from 'axios';
 import { DecorationInfo, SsalonConfigService } from './ssalon-config.service';
+import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })

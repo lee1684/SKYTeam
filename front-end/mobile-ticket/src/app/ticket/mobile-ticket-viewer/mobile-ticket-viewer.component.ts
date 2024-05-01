@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ScenegraphService } from '../../service/scenegraph.service';
 import { NgIf } from '@angular/common';
 

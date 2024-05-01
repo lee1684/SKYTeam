@@ -1,4 +1,3 @@
-import { Component, Input, ViewChild } from '@angular/core';
 import { MobileTicketViewerComponent } from './mobile-ticket-viewer/mobile-ticket-viewer.component';
 import {
   MobileTicketEditMode,
@@ -15,6 +14,7 @@ import {
 import axios, { Axios } from 'axios';
 import { DecorationInfo } from '../service/ssalon-config.service';
 import { ApiExecutorService } from '../service/api-executor.service';
+import { Component, ViewChild } from '@angular/core';
 
 export enum MobileTicketViewMode {
   APPVIEW,
