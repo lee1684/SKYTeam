@@ -236,7 +236,6 @@ export class MobileTicketEditorComponent {
       if (this.fabricObjects.length === 1) {
         this.textEditInput!.nativeElement.value = this.ssalonTextAttribute.text;
       }
-
       this.textEditInput!.nativeElement.focus();
       this.textFocused = true;
     }
@@ -340,7 +339,6 @@ export class MobileTicketEditorComponent {
     } else {
       this.ssalonStickerAttribute.src.push(this.stickers[value].imgSrc);
     }
-    console.log(this.ssalonStickerAttribute);
   }
 
   public syncTextAttributeWithSelectedText() {
@@ -416,9 +414,7 @@ export class MobileTicketEditorComponent {
         : (this.ssalonStickerAttribute.src = []);
       this.lastUsedFeature = MobileTicketEditMode.NONE;
     } else {
-      let tempImg = await FabricImage.fromURL(array.src[index], {
-        crossOrigin: 'anonymous',
-      });
+      let tempImg = await FabricImage.fromURL(array.src[index]);
       (this.fabricObjects as FabricImage[]).push(tempImg);
       this.loadImageRecursive(index + 1);
     }
@@ -484,7 +480,10 @@ export class MobileTicketEditorComponent {
       );
       this.lastUsedFeature = MobileTicketEditMode.NONE;
     }
+
     this.fabricObjects = [];
+
+    this.drawingFabricCanvas?.destroy();
   }
 
   public onClickCompletedEditing(): void {}
@@ -524,9 +523,11 @@ export class MobileTicketEditorComponent {
       .join(' ');
     const path = new Path(`M ${pathData}`, {
       fill: 'transparent',
-      stroke: 'black',
+      stroke: 'white',
       strokeWidth: 2,
     });
+    (this.fabricObjects as Path[]).length = 0;
+    (this.fabricObjects as Path[]).push(path);
     this.drawingFabricCanvas!.clear();
     this.drawingFabricCanvas!.renderAll();
     this.drawingFabricCanvas!.add(path);
