@@ -56,7 +56,7 @@ public class Meeting {
     protected Meeting() {}
 
 
-    public static Meeting createMeeting(Category category, Member creator, List<String> meetingPictureUrls, String title, String description, String location, Integer capacity) {
+    public static Meeting createMeeting(Category category, Member creator, List<String> meetingPictureUrls, String title, String description, String location, Integer capacity, LocalDateTime meetingDate) {
         Meeting meeting = Meeting.builder()
                 .category(category)
                 .creator(creator)
@@ -64,7 +64,7 @@ public class Meeting {
                 .description(description)
                 .location(location)
                 .capacity(capacity)
-                .meetingDate(LocalDateTime.now())
+                .meetingDate(meetingDate)
                 .build();
 
         meeting.setMeetingPictureUrls(meetingPictureUrls);
@@ -78,11 +78,17 @@ public class Meeting {
                 .category(category)
                 .payment(payment)
                 .creator(creator)
-                .participants(participants)
+                .title(title)
+                .description(description)
+                .location(location)
+                .capacity(capacity)
+                .meetingDate(meetingDates)
                 .build();
 
-        meeting.setParticipants();
+        meeting.setParticipants(participants);
+        meeting.setMeetingPictureUrls(meetingPictureUrls);
 
+        return meeting;
     }
 
     public void addMemberMeeting(MemberMeeting memberMeeting) {

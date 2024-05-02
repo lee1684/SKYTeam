@@ -64,31 +64,6 @@ public class MeetingService {
         return meetings;
     }
 
-    @Transactional
-    public Long createMoim(CustomOAuth2Member customOAuth2Member, MeetingDTO meetingDTO) throws BadRequestException {
-        String username = customOAuth2Member.getUsername();
-        Member currentUser = memberService.findMember(username);
-
-        Meeting meeting = Meeting.createMeeting(categoryService.findCategory(meetingDTO.getCategoryId()), currentUser, meetingDTO.getMeetingPictureUrls(), meetingDTO.getTitle(), meetingDTO.getDescription(), meetingDTO.getLocation(), meetingDTO.getCapacity());
-
-        MemberMeeting memberMeeting = MemberMeeting.createMemberMeeting(currentUser, meeting);
-
-        // member entity 업데이트
-        // meeting entity 업데이트
-        currentUser.addMemberMeeting(memberMeeting);
-        meeting.addMemberMeeting(memberMeeting);
-
-        memberMeetingRepository.save(memberMeeting);
-
-        memberRepository.save(currentUser);
-
-        Meeting savedMeeting = meetingRepository.save(meeting);
-
-        ticketService.initTicket(savedMeeting.getId());
-
-        return savedMeeting.getId();
-    }
-
     public Boolean isParticipant(Long moimId, Member member) throws BadRequestException {
         Meeting meeting = findMeeting(moimId);
         List<MemberMeeting> participants = meeting.getParticipants();
@@ -102,11 +77,6 @@ public class MeetingService {
     }
 
     @Transactional
-    public MeetingDTO getMoim(CustomOAuth2Member customOAuth2Member, Long moimId) throws BadRequestException {
-        return new MeetingDTO(findMeeting(moimId));
-    }
-
-    @Transactional
     public Meeting updateMoim(CustomOAuth2Member customOAuth2Member, Long moimId, MeetingDTO meetingDTO) throws BadRequestException {
         String username = customOAuth2Member.getUsername();
         Member currentUser = memberService.findMember(username);
@@ -117,14 +87,7 @@ public class MeetingService {
 
         Meeting currentMeeting = findMeeting(moimId);
 
-        Meeting meeting = Meeting.updateMeeting(currentMeeting.getId(), categoryService.findCategory(meetingDTO.getCategoryId()), paymentService.findPayment(meetingDTO.getPaymentId()), currentMeeting.getCreator(), currentMeeting.getParticipants(), meetingDTO.getMeetingPictureUrls(), meetingDTO.getTitle(), meetingDTO.getDescription(), meetingDTO.getLocation(), meetingDTO.getCapacity(), currentMeeting.getMeetingDate());
-        meeting.setMeetingPictureUrls(meetingDTO.getMeetingPictureUrls());
-
-        List<MemberMeeting> participants = null;
-        for(Long id : meetingDTO.getParticipantIds()) {
-            participants.add(memberMeetingService.findMemberMeeting(id));
-        }
-        meeting.setParticipants(participants);
+        Meeting meeting = Meeting.updateMeeting(currentMeeting.getId(), categoryService.findCategory(meetingDTO.getCategoryId()), paymentService.findPayment(meetingDTO.getPaymentId()), currentMeeting.getCreator(), currentMeeting.getParticipants(), meetingDTO.getMeetingPictureUrls(), meetingDTO.getTitle(), meetingDTO.getDescription(), meetingDTO.getLocation(), meetingDTO.getCapacity(), meetingDTO.getMeetingDate());
 
         return meetingRepository.save(meeting);
     }

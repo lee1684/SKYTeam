@@ -60,40 +60,6 @@ public class MeetingController {
         return ResponseEntity.ok().body(moimsDto.getContent());
     }
 
-    // 모임 개설
-    // 사용자 JWT, 개설할 모임의 정보
-    // 성공/실패 여부, 개설된 모임의 ID
-    @Operation(summary = "모임 개설")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",description = "모임 개설 성공"),
-    })
-    @PostMapping("/moims")
-    public ResponseEntity<?> createMoim(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MeetingDTO meetingDTO) {
-        try {
-            return ResponseEntity.ok().body(meetingService.createMoim(customOAuth2Member, meetingDTO));
-        } catch (BadRequestException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    // 모임 정보 조회
-    // 사용자 JWT
-    // 성공/실패 여부, 모임 관련 정보 데이터
-    // (소속 여부에 따라 변동) -> ?
-    @Operation(summary = "모임 정보 조회")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",description = "모임 정보 조회 성공"),
-    })
-    @GetMapping("/api/moims/{moimId}")
-    public ResponseEntity<?> getMoim(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
-        try {
-
-            return ResponseEntity.ok().body(meetingService.getMoim(customOAuth2Member, moimId));
-        } catch (BadRequestException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
     // 모임 정보 수정
     // 사용자 JWT, 수정할 모임의 정보
     // 성공/실패 여부
