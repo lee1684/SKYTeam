@@ -73,7 +73,6 @@ public class Meeting {
 
     }
 
-
     public void addMemberMeeting(MemberMeeting memberMeeting) {
         this.participants.add(memberMeeting);
         memberMeeting.setMeeting(this);
