@@ -17,18 +17,19 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long register(String username, String email, String role) throws Exception {
+    public Member register(String username, String email, String role) throws Exception {
         validationUsername(username);
         Member member = Member.createMember(username, email, role);
-        memberRepository.save(member);
-        return member.getId();
+        member = memberRepository.save(member);
+        return member;
     }
     @Transactional
-    public void oauthUpdate(String username, String email, String role) throws BadRequestException {
+    public Member oauthUpdate(String username, String email, String role) throws BadRequestException {
         Optional<Member> findMember = memberRepository.findByUsername(username);
         Member member = validationMember(findMember);
         member.changeEmail(email);
         member.changeRole(role);
+        return member;
     }
 
 
