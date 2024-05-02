@@ -6,10 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.MemberMeeting;
 import lombok.*;
-import org.hibernate.validator.constraints.Range;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

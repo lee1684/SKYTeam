@@ -1,7 +1,6 @@
 package kr.co.ssalon.domain.entity;
 
 import jakarta.persistence.*;
-import kr.co.ssalon.web.dto.MeetingDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
