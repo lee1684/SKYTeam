@@ -64,7 +64,7 @@ public class MeetingService {
         String username = customOAuth2Member.getUsername();
         Member currentUser = memberService.findMember(username);
 
-        Meeting meeting = Meeting.createMeeting(categoryService.findCategory(meetingDTO.getCategoryId()), currentUser, meetingDTO.getMeetingPictureUrls(), meetingDTO.getTitle(), meetingDTO.getDescription(), meetingDTO.getLocation(), meetingDTO.getCapacity());
+        Meeting meeting = Meeting.createMeeting(categoryService.findCategory(meetingDTO.getCategoryId()), currentUser, meetingDTO.getMeetingPictureUrls(), meetingDTO.getTitle(), meetingDTO.getDescription(), meetingDTO.getLocation(), meetingDTO.getCapacity(), meetingDTO.getMeetingDate());
 
         MemberMeeting memberMeeting = MemberMeeting.createMemberMeeting(currentUser, meeting);
 
