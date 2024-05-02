@@ -39,7 +39,7 @@ public class MeetingController {
     @PostMapping("/api/moims/{moimId}/users")
     public ResponseEntity<?> joinMoim(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
         try {
-            MeetingDTO joinedMoim = meetingService.join(customOAuth2Member, moimId);
+            MeetingDTO joinedMoim = meetingService.joinMoim(customOAuth2Member, moimId);
             return ResponseEntity.ok().body(joinedMoim);
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -94,13 +94,17 @@ public class MeetingController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",description = "모임 정보 조회 성공"),
     })
-    @GetMapping("/moims/{moimId}")
+    @GetMapping("/api/moims/{moimId}")
     public ResponseEntity<?> getMoim(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
+        return ResponseEntity.ok().body("123");
+        /*
         try {
+
             return ResponseEntity.ok().body(meetingService.getMoim(customOAuth2Member, moimId));
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+        */
     }
 
     // 모임 정보 수정

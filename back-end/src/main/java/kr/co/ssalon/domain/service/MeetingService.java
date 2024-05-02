@@ -3,8 +3,7 @@ package kr.co.ssalon.domain.service;
 import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.MemberMeeting;
-import kr.co.ssalon.domain.repository.MeetingRepository;
-import kr.co.ssalon.domain.repository.MemberMeetingRepository;
+import kr.co.ssalon.domain.repository.*;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import kr.co.ssalon.web.dto.MeetingDTO;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Transactional(readOnly = true)
@@ -25,25 +26,29 @@ public class MeetingService {
     private final MeetingRepository meetingRepository;
     private final MemberMeetingRepository memberMeetingRepository;
     private final MemberService memberService;
+    private final MemberRepository memberRepository;
+    private final CategoryService categoryService;
+    private final PaymentService paymentService;
+    private final TicketService ticketService;
+    private final MemberMeetingService memberMeetingService;
 
     // 모임 참가
     @Transactional
-    public MeetingDTO join(CustomOAuth2Member customOAuth2Member, Long moimId) throws BadRequestException {
+    public MeetingDTO joinMoim(CustomOAuth2Member customOAuth2Member, Long moimId) throws BadRequestException {
         String username = customOAuth2Member.getUsername();
         Member currentUser = memberService.findMember(username);
+
         Meeting meeting = meetingRepository.findById(moimId)
                 .orElseThrow(() -> new BadRequestException("해당 모임을 찾을 수 없습니다. ID: " + moimId));
+
         MemberMeeting memberMeeting = MemberMeeting.createMemberMeeting(currentUser, meeting);
 
         // member entity 업데이트
-        currentUser.getJoinedMeetings().add(memberMeeting);
-
         // meeting entity 업데이트
-        meeting.getParticipants().add(memberMeeting);
+        currentUser.addMemberMeeting(memberMeeting);
+        meeting.addMemberMeeting(memberMeeting);
 
         // memberMeeting entity 업데이트
-        memberMeeting.setMeeting(meeting);
-        memberMeeting.setMember(currentUser);
         memberMeetingRepository.save(memberMeeting);
 
         // 참가한 모임 정보 반환
@@ -56,6 +61,100 @@ public class MeetingService {
         return meetings;
     }
 
+    @Transactional
+    public Long createMoim(CustomOAuth2Member customOAuth2Member, MeetingDTO meetingDTO) throws BadRequestException {
+        String username = customOAuth2Member.getUsername();
+        Member currentUser = memberService.findMember(username);
+
+        Meeting meeting = Meeting.createMeeting(meetingDTO, categoryService.findCategory(meetingDTO.getCategoryId()), paymentService.findPayment(meetingDTO.getPaymentId()), memberService.findMember(meetingDTO.getCreatorId()), ticketService.findTicket(meetingDTO.getTicketId()));
+        meeting.setMeetingPictureUrls(meetingDTO.getMeetingPictureUrls());
+        MemberMeeting memberMeeting = MemberMeeting.createMemberMeeting(currentUser, meeting);
+
+        // member entity 업데이트
+        // meeting entity 업데이트
+        currentUser.addMemberMeeting(memberMeeting);
+        meeting.addMemberMeeting(memberMeeting);
+
+        memberMeetingRepository.save(memberMeeting);
+
+        return meeting.getId();
+    }
+
+    public Boolean isParticipant(Long moimId, Member member) throws BadRequestException {
+        Meeting meeting = findMeeting(moimId);
+        List<MemberMeeting> participants = meeting.getParticipants();
+
+        for (MemberMeeting memberMeeting : participants) {
+            if (memberMeeting.getMember().equals(member)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Transactional
+    public MeetingDTO getMoim(CustomOAuth2Member customOAuth2Member, Long moimId) throws BadRequestException {
+        return new MeetingDTO(findMeeting(moimId));
+    }
+
+    @Transactional
+    public Meeting updateMoim(CustomOAuth2Member customOAuth2Member, Long moimId, MeetingDTO meetingDTO) throws BadRequestException {
+        String username = customOAuth2Member.getUsername();
+        Member currentUser = memberService.findMember(username);
+
+        if (!findMeeting(moimId).getCreator().equals(currentUser)) {
+            throw new BadRequestException();
+        }
+
+        meetingDTO.setId(moimId);
+        Meeting meeting = Meeting.createMeeting(meetingDTO, categoryService.findCategory(meetingDTO.getCategoryId()), paymentService.findPayment(meetingDTO.getPaymentId()), memberService.findMember(meetingDTO.getCreatorId()), ticketService.findTicket(meetingDTO.getTicketId()));
+        meeting.setMeetingPictureUrls(meetingDTO.getMeetingPictureUrls());
+
+        List<MemberMeeting> participants = null;
+        for(Long id : meetingDTO.getParticipantIds()) {
+            participants.add(memberMeetingService.findMemberMeeting(id));
+        }
+        meeting.setParticipants(participants);
+
+        return meetingRepository.save(meeting);
+    }
+
+    @Transactional
+    public Long deleteMoim(CustomOAuth2Member customOAuth2Member, Long moimId) throws  BadRequestException {
+        String username = customOAuth2Member.getUsername();
+        Member currentUser = memberService.findMember(username);
+
+        Meeting meeting = findMeeting(moimId);
+        if (!meeting.getCreator().equals(currentUser)) {
+            throw new BadRequestException();
+        }
+
+        List<MemberMeeting> participants = meeting.getParticipants();
+        for (MemberMeeting memberMeeting : participants) {
+            Member roopMember = memberService.findMember(memberMeeting.getMember().getId());
+            roopMember.getJoinedMeetings().remove(memberMeeting);
+            memberRepository.save(roopMember);
+            memberMeetingRepository.deleteById(memberMeeting.getId());
+        }
+        meetingRepository.deleteById(moimId);
+
+        return moimId;
+    }
+
+    @Transactional
+    public List<Member> getUsers(CustomOAuth2Member customOAuth2Member, Long moimId) throws BadRequestException {
+        Meeting meeting = findMeeting(moimId);
+        List<MemberMeeting> participants = meeting.getParticipants();
+        List<Member> memberList = new ArrayList<>();
+
+        for (MemberMeeting memberMeeting : participants) {
+            Member member = memberMeeting.getMember();
+            memberList.add(member);
+        }
+
+        return memberList;
+    }
+
     public Meeting findMeeting(Long id) throws BadRequestException {
         Optional<Meeting> findMeeting = meetingRepository.findById(id);
         Meeting meeting = validationMeeting(findMeeting);
@@ -66,6 +165,6 @@ public class MeetingService {
         if (meeting.isPresent()) {
             return meeting.get();
         }else
-            throw new BadRequestException("해당 회원을 찾을 수 없습니다");
+            throw new BadRequestException("해당 모임을 찾을 수 없습니다");
     }
 }
