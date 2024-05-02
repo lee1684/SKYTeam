@@ -39,7 +39,7 @@ public class MeetingController {
     @PostMapping("/api/moims/{moimId}/users")
     public ResponseEntity<?> joinMoim(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
         try {
-            MeetingDTO joinedMoim = meetingService.joinMoim(customOAuth2Member, moimId);
+            MeetingDTO joinedMoim = meetingService.join(customOAuth2Member, moimId);
             return ResponseEntity.ok().body(joinedMoim);
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

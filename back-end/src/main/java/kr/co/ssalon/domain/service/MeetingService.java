@@ -30,7 +30,7 @@ public class MeetingService {
 
     // 모임 참가
     @Transactional
-    public MeetingDTO joinMoim(CustomOAuth2Member customOAuth2Member, Long moimId) throws BadRequestException {
+    public MeetingDTO join(CustomOAuth2Member customOAuth2Member, Long moimId) throws BadRequestException {
         String username = customOAuth2Member.getUsername();
         Member currentUser = memberService.findMember(username);
 
