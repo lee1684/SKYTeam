@@ -67,7 +67,7 @@ public class MeetingController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",description = "모임 개설 성공"),
     })
-    @PostMapping("/moims")
+    @PostMapping("/api/moims")
     public ResponseEntity<?> createMoim(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MeetingDTO meetingDTO) {
         try {
             return ResponseEntity.ok().body(meetingService.createMoim(customOAuth2Member, meetingDTO));
@@ -101,7 +101,7 @@ public class MeetingController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",description = "모임 정보 수정 성공"),
     })
-    @PatchMapping("/moims/{moimId}")
+    @PatchMapping("/api/moims/{moimId}")
     public ResponseEntity<?> updateMoim(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, MeetingDTO meetingDTO) {
         try {
             return ResponseEntity.ok().body(meetingService.updateMoim(customOAuth2Member, moimId, meetingDTO));
@@ -117,7 +117,7 @@ public class MeetingController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",description = "모임 해산 성공"),
     })
-    @DeleteMapping("/moims/{moimId}")
+    @DeleteMapping("/api/moims/{moimId}")
     public ResponseEntity<?> deleteMoim(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
         try {
             return ResponseEntity.ok().body(meetingService.deleteMoim(customOAuth2Member, moimId));
@@ -133,7 +133,7 @@ public class MeetingController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",description = "모임 참가자 목록 조회"),
     })
-    @GetMapping("/moims/{moimId}/users")
+    @GetMapping("/api/moims/{moimId}/users")
     public ResponseEntity<?> getUsers(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
         try {
             return ResponseEntity.ok().body(meetingService.getUsers(customOAuth2Member, moimId));
