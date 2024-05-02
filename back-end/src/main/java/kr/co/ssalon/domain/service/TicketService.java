@@ -4,22 +4,26 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import kr.co.ssalon.domain.entity.Ticket;
+import kr.co.ssalon.domain.repository.TicketRepository;
 import kr.co.ssalon.web.dto.TicketEditResponseDTO;
 import kr.co.ssalon.web.dto.TicketInitResponseDTO;
+import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class TicketService {
+
+    private final TicketRepository ticketRepository;
 
     @Value("${spring.cloud.aws.s3.endpoint}")
     private String AWS_S3_ASSET_URI;
@@ -128,5 +132,19 @@ public class TicketService {
 //            }
 //        }
         return jsonElement;
+    }
+
+
+    public Ticket findTicket(Long id) throws BadRequestException {
+        Optional<Ticket> findTicket = ticketRepository.findById(id);
+        Ticket ticket = validationTicket(findTicket);
+        return ticket;
+    }
+
+    private Ticket validationTicket(Optional<Ticket> ticket) throws BadRequestException {
+        if (ticket.isPresent()) {
+            return ticket.get();
+        }else
+            throw new BadRequestException("해당 회원을 찾을 수 없습니다");
     }
 }

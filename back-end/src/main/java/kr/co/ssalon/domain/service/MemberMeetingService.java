@@ -1,5 +1,6 @@
 package kr.co.ssalon.domain.service;
 
+import kr.co.ssalon.domain.entity.Category;
 import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.MemberMeeting;
@@ -25,10 +26,20 @@ public class MemberMeetingService {
         return memberMeeting;
     }
 
+    public MemberMeeting findMemberMeeting(Long id) throws BadRequestException {
+        Optional<MemberMeeting> findMemberMeeting = memberMeetingRepository.findById(id);
+        MemberMeeting memberMeeting = validationMemberMeeting(findMemberMeeting);
+        return memberMeeting;
+    }
+
     private MemberMeeting validationMemberMeeting(Optional<MemberMeeting> findMemberMeeting) throws BadRequestException {
         if (findMemberMeeting.isPresent()) {
             return findMemberMeeting.get();
         } else
             throw new BadRequestException("회원이 참여하고 있는 모임을 찾을 수 없습니다.");
     }
+
+
+
+
 }
