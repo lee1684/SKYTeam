@@ -1,7 +1,6 @@
 package kr.co.ssalon.domain.entity;
 
 import jakarta.persistence.*;
-import kr.co.ssalon.web.dto.MeetingDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -72,6 +71,7 @@ public class Meeting {
         return meeting;
     }
 
+
     public static Meeting updateMeeting(Long id, Category category, Payment payment, Member creator, List<MemberMeeting> participants, List<String> meetingPictureUrls, String title, String description, String location, Integer capacity, LocalDateTime meetingDates) {
         Meeting meeting = Meeting.builder()
                 .id(id)
@@ -90,7 +90,6 @@ public class Meeting {
 
         return meeting;
     }
-
     public void addMemberMeeting(MemberMeeting memberMeeting) {
         this.participants.add(memberMeeting);
         memberMeeting.setMeeting(this);

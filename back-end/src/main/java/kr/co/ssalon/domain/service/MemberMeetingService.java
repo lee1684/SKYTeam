@@ -1,6 +1,5 @@
 package kr.co.ssalon.domain.service;
 
-import kr.co.ssalon.domain.entity.Category;
 import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.MemberMeeting;
