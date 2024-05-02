@@ -4,6 +4,7 @@ import kr.co.ssalon.domain.entity.Category;
 import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Region;
 import kr.co.ssalon.web.dto.MeetingSearchCondition;
+import org.apache.coyote.BadRequestException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +12,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.transaction.annotation.Transactional;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -64,5 +62,28 @@ public class MeetingRepositoryTest {
         assertThat(result.getContent()).hasSize(1);
         assertThat(result.getContent().get(0).getLocation()).isEqualTo("서울특별시");
         assertThat(result.getContent().get(0).getCategory().getName()).isEqualTo("운동");
+    }
+
+    @Test
+    @DisplayName("MeetingRepository.findById() 테스트")
+    public void id로특정모임조회() throws BadRequestException {
+        // given
+        Long moimId = 1L;
+
+        // moimId를 id로 가지는 모임을 테스트 DB에 저장
+        Meeting meeting = Meeting.builder()
+                .id(moimId)
+                .description("독서 모임입니다.")
+                .build();
+        meeting.setId(moimId);
+        meetingRepository.save(meeting);
+
+        // when
+        Meeting foundMeeting = meetingRepository.findById(moimId)
+                .orElseThrow(() -> new BadRequestException("해당 모임을 찾을 수 없습니다. ID: " + moimId));
+
+        // then
+        assertThat(foundMeeting.getId()).isEqualTo(moimId);
+        assertThat(foundMeeting.getDescription()).isEqualTo("독서 모임입니다.");
     }
 }
