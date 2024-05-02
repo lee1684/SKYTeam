@@ -1,6 +1,7 @@
 package kr.co.ssalon.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kr.co.ssalon.domain.dto.MemberDomainDTO;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.MemberDates;
 import kr.co.ssalon.domain.entity.Region;
@@ -59,16 +60,22 @@ public class MemberControllerTest {
                 .address(Region.GANGWONDO.getLocalName())
                 .build();
 
+        MemberDomainDTO memberDomainDTO = MemberDomainDTO.builder()
+                .nickname(additionalInfo.getNickname())
+                .interests(additionalInfo.getInterests())
+                .address(additionalInfo.getAddress())
+                .build();
+
         // MemberService.signup() stub
         MemberDates memberDates = new MemberDates();
         memberDates.prePersist();
         Member joinedMember = Member.builder()
                         .nickname("닉네임")
-                        .interests(new ArrayList<>(Arrays.asList("독서", "영화감상")))
                         .address(Region.GANGWONDO.getLocalName())
                         .memberDates(memberDates)
                         .build();
-        Mockito.when(memberService.signup(username, additionalInfo)).thenReturn(joinedMember);
+        joinedMember.addInterests(Arrays.asList("독서", "영화감상"));
+        Mockito.when(memberService.signup(username, memberDomainDTO)).thenReturn(joinedMember);
 
         // when
         String requestBody = objectMapper.writeValueAsString(additionalInfo);
