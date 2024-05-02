@@ -1,6 +1,7 @@
 package kr.co.ssalon.domain.entity;
 
 import jakarta.persistence.*;
+import kr.co.ssalon.web.dto.MeetingDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -54,10 +55,52 @@ public class Meeting {
 
     protected Meeting() {}
 
-    public static Meeting createMeeting() {
-        // Change to builder
-        Meeting meeting = Meeting.builder().build();
+
+    public static Meeting createMeeting(Category category, Member creator, List<String> meetingPictureUrls, String title, String description, String location, Integer capacity, LocalDateTime meetingDate) {
+        Meeting meeting = Meeting.builder()
+                .category(category)
+                .creator(creator)
+                .title(title)
+                .description(description)
+                .location(location)
+                .capacity(capacity)
+                .meetingDate(meetingDate)
+                .build();
+
+        meeting.setMeetingPictureUrls(meetingPictureUrls);
+
         return meeting;
     }
 
+    public static Meeting updateMeeting(Long id, Category category, Payment payment, Member creator, List<MemberMeeting> participants, List<String> meetingPictureUrls, String title, String description, String location, Integer capacity, LocalDateTime meetingDates) {
+        Meeting meeting = Meeting.builder()
+                .id(id)
+                .category(category)
+                .payment(payment)
+                .creator(creator)
+                .title(title)
+                .description(description)
+                .location(location)
+                .capacity(capacity)
+                .meetingDate(meetingDates)
+                .build();
+
+        meeting.setParticipants(participants);
+        meeting.setMeetingPictureUrls(meetingPictureUrls);
+
+        return meeting;
+    }
+
+    public void addMemberMeeting(MemberMeeting memberMeeting) {
+        this.participants.add(memberMeeting);
+        memberMeeting.setMeeting(this);
+    }
+
+    public void setMeetingPictureUrls(List<String> meetingPictureUrls) {
+        this.meetingPictureUrls.addAll(meetingPictureUrls);
+    }
+
+    public void setParticipants(List<MemberMeeting> participants) {
+        this.participants.addAll(participants);
+    }
 }
