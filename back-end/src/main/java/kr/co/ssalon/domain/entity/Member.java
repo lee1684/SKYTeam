@@ -84,15 +84,8 @@ public class Member {
         return member;
     }
 
-
-
-
     public void addMemberMeeting(MemberMeeting memberMeeting) {
         this.joinedMeetings.add(memberMeeting);
         memberMeeting.setMember(this);
     }
-
-
-
-
 }

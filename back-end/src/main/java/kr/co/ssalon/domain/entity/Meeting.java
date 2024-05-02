@@ -70,9 +70,20 @@ public class Meeting {
         meeting.setMeetingPictureUrls(meetingPictureUrls);
 
         return meeting;
-
     }
 
+    public static Meeting updateMeeting(Long id, Category category, Payment payment, Member creator, List<MemberMeeting> participants, List<String> meetingPictureUrls, String title, String description, String location, Integer capacity, LocalDateTime meetingDates) {
+        Meeting meeting = Meeting.builder()
+                .id(id)
+                .category(category)
+                .payment(payment)
+                .creator(creator)
+                .participants(participants)
+                .build();
+
+        meeting.setParticipants();
+
+    }
 
     public void addMemberMeeting(MemberMeeting memberMeeting) {
         this.participants.add(memberMeeting);

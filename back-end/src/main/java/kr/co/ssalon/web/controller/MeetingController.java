@@ -39,7 +39,7 @@ public class MeetingController {
     @PostMapping("/api/moims/{moimId}/users")
     public ResponseEntity<?> joinMoim(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
         try {
-            MeetingDTO joinedMoim = meetingService.joinMoim(customOAuth2Member, moimId);
+            MeetingDTO joinedMoim = meetingService.join(customOAuth2Member, moimId);
             return ResponseEntity.ok().body(joinedMoim);
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -60,17 +60,6 @@ public class MeetingController {
         return ResponseEntity.ok().body(moimsDto.getContent());
     }
 
-
-    @Operation(summary = "테스트")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",description = "테스트 성공"),
-    })
-    @GetMapping("/api/test")
-    public ResponseEntity<?> getTest(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
-        return ResponseEntity.ok().body("123");
-    }
-
-    /*
     // 모임 개설
     // 사용자 JWT, 개설할 모임의 정보
     // 성공/실패 여부, 개설된 모임의 ID
@@ -86,32 +75,6 @@ public class MeetingController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
-    */
-
-    // 모임 개설
-    // 사용자 JWT, 개설할 모임의 정보
-    // 성공/실패 여부, 개설된 모임의 ID
-    @Operation(summary = "모임 개설")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",description = "모임 개설 성공"),
-    })
-    @PostMapping("/moims")
-    public ResponseEntity<?> createMoim(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MeetingDTO meetingDTO) {
-        try {
-            return ResponseEntity.ok().body(meetingService.createMoimTest(meetingDTO));
-        } catch (BadRequestException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        /*
-        try {
-            return ResponseEntity.ok().body(meetingService.createMoim(customOAuth2Member, meetingDTO));
-        } catch (BadRequestException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-         */
-    }
-
-
 
     // 모임 정보 조회
     // 사용자 JWT
@@ -124,18 +87,11 @@ public class MeetingController {
     @GetMapping("/api/moims/{moimId}")
     public ResponseEntity<?> getMoim(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
         try {
-            return ResponseEntity.ok().body(meetingService.getMoimTest(moimId));
-        } catch (BadRequestException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        /*
-        try {
 
             return ResponseEntity.ok().body(meetingService.getMoim(customOAuth2Member, moimId));
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        */
     }
 
     // 모임 정보 수정
