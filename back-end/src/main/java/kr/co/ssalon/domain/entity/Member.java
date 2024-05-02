@@ -69,8 +69,4 @@ public class Member {
         this.joinedMeetings.add(memberMeeting);
         memberMeeting.setMember(this);
     }
-
-
-
-
 }

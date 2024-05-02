@@ -13,7 +13,6 @@ public class MemberDates {
     private LocalDateTime joinDate;
     private LocalDateTime lastLoginDate;
 
-
     @PrePersist
     public void prePersist() {
         LocalDateTime now = LocalDateTime.now();
@@ -25,5 +24,4 @@ public class MemberDates {
     public void preUpdate() {
         lastLoginDate = LocalDateTime.now();
     }
-
 }
