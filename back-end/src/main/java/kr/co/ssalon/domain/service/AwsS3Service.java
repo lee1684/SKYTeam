@@ -185,7 +185,7 @@ public class AwsS3Service {
     }
 
     private String getFileName(MultipartFile multipartFile) {
-        if(multipartFile.isEmpty()) return "";
+        if (multipartFile.isEmpty()) return "";
         return multipartFile.getOriginalFilename();
     }
 }
