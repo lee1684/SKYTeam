@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import kr.co.ssalon.web.dto.TicketEditResponseDTO;
+import kr.co.ssalon.web.dto.TicketInitResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class TicketService {
     AwsS3Service awsS3Service;
 
     @Transactional
-    public String initTicket(Long moimId) {
+    public TicketInitResponseDTO initTicket(Long moimId) {
         // 템플릿 복제 후 해당 경로 반환
         // JSON 복제 후, 해당 JSON 내 파일명에 맞게 나머지 복제 필요
         // 따라서, JSON 복제 과정에서 신규 파일명 명명 후 해당 파일명 Key-Value 형태로 넘겨줘야 할 것
@@ -40,15 +41,18 @@ public class TicketService {
         Map<String, String> imageSrcMap = new HashMap<>();
 
         // JSON 파싱 및 수정 작업
-        JsonElement jsonElement = editTicketJsonSrc(moimId, jsonStr, imageSrcMap);
+        JsonElement jsonElement = editTicketJsonSrc(TEMPLATE_FOLDER, moimId.toString(), jsonStr, imageSrcMap);
 
         // 이제 수정된 JSON 업로드 필요
         // 이후 JSON 내용과 동일하게 이미지 파일 복제 및 이름 변경 작업 진행
         // ** 추후 고려 : 중간에 실패한다면? **
-        awsS3Service.uploadFileViaStream(moimId, jsonElement.toString());                       // JSON 업로드
-        awsS3Service.copyFilesFromTemplate(TEMPLATE_FOLDER, moimId.toString(), imageSrcMap);    // JSON 기반 정적 파일 복제
+        String resultJson = awsS3Service.uploadFileViaStream(moimId, jsonElement.toString());   // JSON 업로드
+        List<String> resultCopy = awsS3Service.copyFilesFromTemplate(imageSrcMap);                    // JSON 기반 정적 파일 복제
 
-        return jsonElement.toString();
+        return TicketInitResponseDTO.builder()
+                .resultJsonUpload(resultJson)
+                .resultCopyFiles(resultCopy)
+                .build();
     }
 
     public String loadTicket(Long moimId) {
@@ -59,7 +63,7 @@ public class TicketService {
     }
 
     @Transactional
-    public TicketEditResponseDTO editTicket(Long moimId, String json, List<MultipartFile> multipartFiles, MultipartFile thumbnail) {
+    public TicketEditResponseDTO editTicket(Long moimId, String json, List<MultipartFile> multipartFiles) {
         // 주어진 모임ID 바탕으로 티켓 업로드 내용 수정
         // 현재(240424)는 기존 내용 삭제 후 새로 업로드
         // 추후 : 이전 티켓 수정 기록 보존을 고려할 것
@@ -69,12 +73,12 @@ public class TicketService {
 
         // JSON src 수정 후 업로드 진행
         Map<String, String> imageSrcMap = new HashMap<>();
-        JsonElement jsonElement = editTicketJsonSrc(moimId, json, imageSrcMap);
+        JsonElement jsonElement = editTicketJsonSrc(moimId.toString(), moimId.toString(), json, imageSrcMap);
         String resultJson = awsS3Service.uploadFileViaStream(moimId, jsonElement.toString());
 
         // 파일 업로드 진행
-        List<String> resultSrc = awsS3Service.uploadMultiFilesViaMultipart(moimId, multipartFiles, imageSrcMap);
-        resultSrc.add(awsS3Service.uploadSingleFileViaMultipart(moimId, thumbnail, imageSrcMap));
+        List<String> resultSrc = awsS3Service.uploadMultiFilesViaMultipart(multipartFiles, imageSrcMap);
+        // resultSrc.add(awsS3Service.uploadSingleFileViaMultipart(moimId, thumbnail, imageSrcMap));
 
         // 결과 반환
         return new TicketEditResponseDTO(resultJson, jsonElement.toString(), resultSrc);
@@ -91,18 +95,21 @@ public class TicketService {
         return UUID.randomUUID().toString();
     }
 
-    private JsonElement editTicketJsonSrc(Long moimId, String jsonStr, Map<String, String> imageSrcMap) {
+    private JsonElement editTicketJsonSrc(String fromMoimId, String toMoimId, String jsonStr, Map<String, String> imageSrcMap) {
+        // 목표 : 키 파싱 설계를 좀더 Portable 하게 수정하기
+
         // JSON 파일 이름 대조하여 변경 작업
         JsonElement jsonElement = JsonParser.parseString(jsonStr);
         JsonObject topLevelObject = jsonElement.getAsJsonObject();
 
         // thumbnail 이미지 파일 이름 수정
-        String uuidThumb = generateRandomUUID();
         String urlThumb = topLevelObject.get("thumbnailUrl").getAsString();
-        String urlThumbSrc = urlThumb.substring(urlThumb.lastIndexOf('/') + 1);
+        String extFile = urlThumb.substring(urlThumb.lastIndexOf('.') + 1);
+        String newThumbURI = "Thumbnails/" + toMoimId + "/" + generateRandomUUID() + "." + extFile;
+        String oldThumbURI = "Thumbnails/" + fromMoimId + "/" + urlThumb.substring(urlThumb.lastIndexOf('/') + 1);
 
-        imageSrcMap.put(urlThumbSrc, uuidThumb);
-        topLevelObject.addProperty("thumbnailUrl", AWS_S3_ASSET_URI + "Thumbnails/" + moimId + "/" + uuidThumb + ".png");
+        imageSrcMap.put(oldThumbURI, newThumbURI);
+        topLevelObject.addProperty("thumbnailUrl", AWS_S3_ASSET_URI + newThumbURI);
 
         JsonObject fabricObject = topLevelObject.get("fabric").getAsJsonObject();
         JsonArray objectsArray = fabricObject.get("objects").getAsJsonArray();
@@ -111,12 +118,13 @@ public class TicketService {
         for (JsonElement object : objectsArray) {
             JsonObject objCandidate = object.getAsJsonObject();
             if (objCandidate.get("type").getAsString().equals("image")) {
-                String uuid = generateRandomUUID();
                 String urlOrigin = objCandidate.get("src").getAsString();
-                String urlSrc = urlOrigin.substring(urlOrigin.lastIndexOf('/') + 1);
+                String extOldFile = urlOrigin.substring(urlOrigin.lastIndexOf('.') + 1);
+                String newFileURI = toMoimId + "/" + generateRandomUUID() + "." + extOldFile;
+                String oldFileURI = fromMoimId + "/" + urlOrigin.substring(urlOrigin.lastIndexOf('/') + 1);
 
-                imageSrcMap.put(urlSrc, uuid);
-                objCandidate.addProperty("src", AWS_S3_ASSET_URI + moimId + "/" + uuid + ".png");
+                imageSrcMap.put(oldFileURI, newFileURI);
+                objCandidate.addProperty("src", AWS_S3_ASSET_URI + newFileURI);
             }
         }
         return jsonElement;
