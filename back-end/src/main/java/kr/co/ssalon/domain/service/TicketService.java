@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.*;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class TicketService {
 
@@ -136,14 +136,9 @@ public class TicketService {
 
     public Ticket findTicket(Long id) throws BadRequestException {
         Optional<Ticket> findTicket = ticketRepository.findById(id);
-        Ticket ticket = validationTicket(findTicket);
+        Ticket ticket = ValidationService.validationTicket(findTicket);
         return ticket;
     }
 
-    private Ticket validationTicket(Optional<Ticket> ticket) throws BadRequestException {
-        if (ticket.isPresent()) {
-            return ticket.get();
-        }else
-            throw new BadRequestException("해당 회원을 찾을 수 없습니다");
-    }
+
 }

@@ -4,10 +4,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kr.co.ssalon.domain.dto.MemberDomainDTO;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.service.MemberService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
+import kr.co.ssalon.web.dto.JsonResult;
 import kr.co.ssalon.web.dto.MemberDTO;
+import kr.co.ssalon.web.dto.MemberSignDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
@@ -28,11 +31,17 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "회원가입 성공"),
     })
     @PostMapping("/api/auth/signup")
-    public MemberDTO signup(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MemberDTO additionalInfo) throws BadRequestException {
+    public JsonResult<MemberSignDTO> signup(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MemberDTO additionalInfo) throws BadRequestException {
         String username = customOAuth2Member.getUsername();
-        Member currentUser = memberService.signup(username, additionalInfo);
+        MemberDomainDTO memberDomainDTO = new MemberDomainDTO(
+                additionalInfo.getNickname(), additionalInfo.getProfilePictureUrl(),
+                additionalInfo.getGender(), additionalInfo.getAddress(), additionalInfo.getIntroduction(),
+                additionalInfo.getInterests(), additionalInfo.getBlackReason()
+        );
 
-        return new MemberDTO(currentUser);
+        Member currentUser = memberService.signup(username, memberDomainDTO);
+        MemberSignDTO memberSignDTO = new MemberSignDTO(currentUser);
+        return new JsonResult<>(memberSignDTO);
     }
 
     @Operation(summary = "회원 정보 조회")

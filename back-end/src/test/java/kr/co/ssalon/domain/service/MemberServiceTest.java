@@ -1,5 +1,6 @@
 package kr.co.ssalon.domain.service;
 
+import kr.co.ssalon.domain.dto.MemberDomainDTO;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.Region;
 import kr.co.ssalon.domain.repository.MemberRepository;
@@ -22,6 +23,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.*;
@@ -63,7 +65,7 @@ public class MemberServiceTest {
 
     @Test
     @DisplayName("MemberService.signup() 테스트")
-    @WithCustomMockUser(username = "username", email = "email@email.com",  role = "ROLE_USER")
+    @WithCustomMockUser(username = "username", email = "email@email.com", role = "ROLE_USER")
     public void 회원가입() throws BadRequestException {
         // given
 
@@ -79,8 +81,15 @@ public class MemberServiceTest {
                 .address(Region.GANGWONDO.getLocalName())
                 .build();
 
+        MemberDomainDTO memberDomainDTO = MemberDomainDTO.builder()
+                .nickname(additionalInfo.getNickname())
+                .interests(additionalInfo.getInterests())
+                .address(additionalInfo.getAddress())
+                .build();
+
+
         // when
-        Member joinedMember = memberService.signup(username, additionalInfo);
+        Member joinedMember = memberService.signup(username, memberDomainDTO);
 
         // then
         assertThat(joinedMember.getNickname()).isEqualTo("닉네임");
@@ -90,7 +99,7 @@ public class MemberServiceTest {
 
     @Test
     @DisplayName("MemberService.register() 테스트")
-    @WithCustomMockUser(username = "username", email = "email@email.com",  role = "ROLE_USER")
+    @WithCustomMockUser(username = "username", email = "email@email.com", role = "ROLE_USER")
     public void 소셜로그인등록() throws Exception {
         // given
 
@@ -109,7 +118,7 @@ public class MemberServiceTest {
 
     @Test
     @DisplayName("MemberService.oauthUpdate() 테스트")
-    @WithCustomMockUser(username = "username", email = "email@email.com",  role = "ROLE_USER")
+    @WithCustomMockUser(username = "username", email = "email@email.com", role = "ROLE_USER")
     public void 소셜정보업데이트() throws Exception {
         // given
 

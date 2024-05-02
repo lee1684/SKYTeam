@@ -24,10 +24,20 @@ public class Diary {
     private String description;
 
 
-    protected Diary() {}
+    protected Diary() {
+    }
 
-    public static Diary createDiary() {
-        Diary diary = Diary.builder().build();
+    // ***** 연관 메서드 *****
+    public void settingMemberMeeting(MemberMeeting memberMeeting) {
+        this.memberMeeting = memberMeeting;
+    }
+
+    public static Diary createDiary(String title, String image_url, String description) {
+        Diary diary = Diary.builder()
+                .title(title)
+                .image_url(image_url)
+                .description(description)
+                .build();
         return diary;
     }
 

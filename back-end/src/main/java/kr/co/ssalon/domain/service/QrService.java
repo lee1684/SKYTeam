@@ -27,8 +27,8 @@ import java.util.Arrays;
 
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class QrService {
 
     private final RedisTemplate<String, byte[]> redisTemplate;
@@ -60,12 +60,7 @@ public class QrService {
 
             // MemberMeeting에 URL 저장
             QrLink qrlink = QrLink.createQrLink(memberMeeting, redisKey);
-            memberMeeting.setQrLink(qrlink);
-            memberMeetingRepository.save(memberMeeting);
-
             return qrImage;
-
-
         }
     }
 
@@ -90,7 +85,7 @@ public class QrService {
 
     // QR 코드 생성 메서드
     @Transactional
-    private byte[] generateQRCode(String randomStr) throws BadRequestException {
+    public byte[] generateQRCode(String randomStr) throws BadRequestException {
         try {
             BitMatrix encode = new MultiFormatWriter().encode(randomStr, BarcodeFormat.QR_CODE, 200, 200);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
