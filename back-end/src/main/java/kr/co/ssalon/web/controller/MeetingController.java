@@ -60,16 +60,6 @@ public class MeetingController {
         return ResponseEntity.ok().body(moimsDto.getContent());
     }
 
-
-    @Operation(summary = "테스트")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200",description = "테스트 성공"),
-    })
-    @GetMapping("/api/test")
-    public ResponseEntity<?> getTest(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
-        return ResponseEntity.ok().body("123");
-    }
-
     // 모임 개설
     // 사용자 JWT, 개설할 모임의 정보
     // 성공/실패 여부, 개설된 모임의 ID
