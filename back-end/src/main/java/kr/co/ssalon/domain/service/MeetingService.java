@@ -75,6 +75,37 @@ public class MeetingService {
         }
         return false;
     }
+  
+    @Transactional
+    public Long createMoim(CustomOAuth2Member customOAuth2Member, MeetingDTO meetingDTO) throws BadRequestException {
+        String username = customOAuth2Member.getUsername();
+        Member currentUser = memberService.findMember(username);
+
+        Meeting meeting = Meeting.createMeeting(categoryService.findCategory(meetingDTO.getCategoryId()), currentUser, meetingDTO.getMeetingPictureUrls(), meetingDTO.getTitle(), meetingDTO.getDescription(), meetingDTO.getLocation(), meetingDTO.getCapacity(), meetingDTO.getMeetingDate());
+
+        MemberMeeting memberMeeting = MemberMeeting.createMemberMeeting(currentUser, meeting);
+
+        // member entity 업데이트
+        // meeting entity 업데이트
+        currentUser.addMemberMeeting(memberMeeting);
+        meeting.addMemberMeeting(memberMeeting);
+
+        memberMeetingRepository.save(memberMeeting);
+
+        memberRepository.save(currentUser);
+
+        Meeting savedMeeting = meetingRepository.save(meeting);
+
+        ticketService.initTicket(savedMeeting.getId());
+
+        return savedMeeting.getId();
+    }
+
+    @Transactional
+    public MeetingDTO getMoim(CustomOAuth2Member customOAuth2Member, Long moimId) throws BadRequestException {
+        return new MeetingDTO(findMeeting(moimId));
+    }
+  
 
     @Transactional
     public Meeting updateMoim(CustomOAuth2Member customOAuth2Member, Long moimId, MeetingDTO meetingDTO) throws BadRequestException {
