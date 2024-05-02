@@ -2,6 +2,8 @@ package kr.co.ssalon.web.controller;
 
 import kr.co.ssalon.domain.entity.*;
 import kr.co.ssalon.domain.service.MeetingService;
+import kr.co.ssalon.web.controller.annotation.WithCustomMockUser;
+import kr.co.ssalon.web.dto.MeetingDTO;
 import kr.co.ssalon.web.dto.MeetingSearchCondition;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,8 +20,10 @@ import java.util.Collections;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -82,5 +86,30 @@ public class MeetingControllerTest {
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].location", is("서울특별시")));
 
+    }
+
+    @Test
+    @DisplayName("모임 참가 API(POST /api/moims/{moimId}/users) 테스트")
+    @WithCustomMockUser
+    public void 모임참가API() throws Exception {
+        // given
+        String moimId = "1";
+
+        MeetingDTO meetingDTO = MeetingDTO.builder()
+                .id(Long.parseLong(moimId))
+                .description("독서 모임입니다.")
+                .build();
+
+        // MeetingService stub
+        when(meetingService.join(any(), any())).thenReturn(meetingDTO);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/moims/" + moimId + "/users")
+                .with(csrf()));
+
+        // then
+        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(jsonPath("$.id", is(1)));
+        resultActions.andExpect(jsonPath("$.description", is("독서 모임입니다.")));
     }
 }
