@@ -1,6 +1,7 @@
 package kr.co.ssalon.domain.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class AwsS3Service {
@@ -34,10 +36,13 @@ public class AwsS3Service {
                 .key(moimId + "/" + moimId + ".json")
                 .build();
 
-        ResponseBytes<GetObjectResponse> s3Object = s3Client.getObjectAsBytes(getObjectRequest);
-        String jsonStr = s3Object.asString(StandardCharsets.US_ASCII);
-
-        return jsonStr;
+        try {
+            ResponseBytes<GetObjectResponse> s3Object = s3Client.getObjectAsBytes(getObjectRequest);
+            return s3Object.asString(StandardCharsets.UTF_8);
+        } catch (S3Exception e) {
+            log.error("Error occurred while load JSON from S3", e);
+            return "Error occurred while load JSON from S3";
+        }
     }
 
     public String uploadFileViaStream(Long moimId, String uploadFile) {
