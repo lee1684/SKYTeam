@@ -7,11 +7,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 public class Member {
@@ -36,37 +36,83 @@ public class Member {
     private String role;
     private String introduction;
     @ElementCollection
-    private List<String> interests;
+    @CollectionTable(name = "member_interests", joinColumns = @JoinColumn(name = "member_id"))
+    private final List<String> interests = new ArrayList<>();
     private String blackReason;
 
     @Embedded
     private MemberDates memberDates;
 
-    protected Member() {}
+    protected Member() {
+    }
 
+    // ***** 필드 메서드 *****
     public void changeEmail(String email) {
         this.email = email;
+    }
+
+    public void changeNickname(String nickname) {
+        this.nickname = nickname != null ? nickname : this.nickname;
     }
 
     public void changeRole(String role) {
         this.role = role;
     }
 
-    public static Member createMember(String username, String email, String role){
-        MemberDates memberDates = new MemberDates();
-        memberDates.prePersist();
+    public void changeProfilePictureUrl(String profilePictureUrl) {
+        this.profilePictureUrl = profilePictureUrl != null ? profilePictureUrl : this.profilePictureUrl;
+    }
 
+    public void changeGender(Character gender) {
+        this.gender = gender != null ? gender : this.gender;
+    }
+
+    public void changeAddress(String address) {
+        this.address = address != null ? address : this.address;
+    }
+
+    public void changeIntroduction(String introduction) {
+        this.introduction = introduction != null ? introduction : this.introduction;
+    }
+
+    public void addInterests(List<String> interests) {
+        for (String interest : interests) {
+            getInterests().add(interest);
+        }
+    }
+
+    public void changeBlackReason(String blackReason) {
+        this.blackReason = blackReason != null ? blackReason : this.blackReason;
+    }
+
+    public void initDetailSignInfo(String nickname, String profilePictureUrl, Character gender, String address, String introduction, List<String> interests, String blackReason) {
+        changeNickname(nickname);
+        changeProfilePictureUrl(profilePictureUrl);
+        changeGender(gender);
+        changeAddress(address);
+        changeIntroduction(introduction);
+        addInterests(interests);
+        changeBlackReason(blackReason);
+    }
+
+    // ***** 연관 메서드 *****
+    public void addMemberMeeting(MemberMeeting memberMeeting) {
+        getJoinedMeetings().add(memberMeeting);
+    }
+
+    public void deleteMemberMeeting(MemberMeeting... memberMeeting) {
+        getJoinedMeetings().removeAll(Arrays.asList(memberMeeting));
+    }
+
+    // ***** 생성 메서드 *****
+    public static Member createMember(String username, String email, String role) {
         Member member = Member.builder()
                 .username(username)
                 .email(email)
                 .role(role)
-                .memberDates(memberDates)
                 .build();
+
         return member;
     }
 
-    public void addMemberMeeting(MemberMeeting memberMeeting) {
-        this.joinedMeetings.add(memberMeeting);
-        memberMeeting.setMember(this);
-    }
 }
