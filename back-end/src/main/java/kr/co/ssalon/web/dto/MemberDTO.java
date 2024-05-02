@@ -61,27 +61,4 @@ public class MemberDTO {
         this.joinedMeetingIds = member.getJoinedMeetings().stream().map(MemberMeeting::getId).collect(Collectors.toList());
         this.paymentIds = member.getPayments().stream().map(Payment::getId).collect(Collectors.toList());
     }
-
-    public MemberDTO(String testMember) {
-        this.id = 123456789L;
-        this.username = "testMember";
-        this.email = "testMember@ssal.com";
-        this.nickname = "testMemberNickName";
-        this.profilePictureUrl = "testMemberURL";
-        this.gender = 'M';
-        this.address = "testMemberAddress";
-        this.role = "testMemberRole";
-        this.introduction = "testMemberIntroduction";
-        List<String> interests = new ArrayList<>();
-        interests.add("Soccer");
-        interests.add("Baseball");
-        this.interests = interests;
-        this.blackReason = "testMemberBlackReason";
-        this.joinDate = LocalDateTime.now();
-        this.lastLoginDate = LocalDateTime.now();
-        List<Long> joinedMeetingIds = new ArrayList<>();
-        this.joinedMeetingIds = joinedMeetingIds;
-        List<Long> paymentIds = new ArrayList<>();
-        this.paymentIds = paymentIds;
-    }
 }
