@@ -4,6 +4,7 @@ import kr.co.ssalon.domain.entity.*;
 import kr.co.ssalon.domain.repository.*;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import kr.co.ssalon.web.dto.MeetingDTO;
+import kr.co.ssalon.web.dto.TicketInitResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import kr.co.ssalon.web.dto.MeetingSearchCondition;
@@ -77,6 +78,8 @@ public class MeetingService {
         memberRepository.save(currentUser);
 
         Meeting savedMeeting = meetingRepository.save(meeting);
+
+        ticketService.initTicket(savedMeeting.getId());
 
         return savedMeeting.getId();
     }
