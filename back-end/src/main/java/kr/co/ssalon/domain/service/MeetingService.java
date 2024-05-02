@@ -33,18 +33,19 @@ public class MeetingService {
     public MeetingDTO join(CustomOAuth2Member customOAuth2Member, Long moimId) throws BadRequestException {
         String username = customOAuth2Member.getUsername();
         Member currentUser = memberService.findMember(username);
-
         Meeting meeting = meetingRepository.findById(moimId)
                 .orElseThrow(() -> new BadRequestException("해당 모임을 찾을 수 없습니다. ID: " + moimId));
-
         MemberMeeting memberMeeting = MemberMeeting.createMemberMeeting(currentUser, meeting);
 
         // member entity 업데이트
+        currentUser.getJoinedMeetings().add(memberMeeting);
+
         // meeting entity 업데이트
-        currentUser.addMemberMeeting(memberMeeting);
-        meeting.addMemberMeeting(memberMeeting);
+        meeting.getParticipants().add(memberMeeting);
 
         // memberMeeting entity 업데이트
+        memberMeeting.setMeeting(meeting);
+        memberMeeting.setMember(currentUser);
         memberMeetingRepository.save(memberMeeting);
 
         // 참가한 모임 정보 반환
