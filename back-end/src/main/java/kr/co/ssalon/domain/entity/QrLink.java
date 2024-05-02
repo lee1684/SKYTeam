@@ -8,7 +8,6 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 public class QrLink {
@@ -27,10 +26,17 @@ public class QrLink {
 
     }
 
+    // ***** 연관 메서드 *****
+    public void settingMemberMeeting(MemberMeeting memberMeeting) {
+        this.memberMeeting = memberMeeting;
+        memberMeeting.settingQrLink(this);
+    }
+
     public static QrLink createQrLink(MemberMeeting memberMeeting, String qrKey) {
-        return QrLink.builder()
-                .memberMeeting(memberMeeting)
+        QrLink qrLink = QrLink.builder()
                 .qrKey(qrKey)
                 .build();
+        qrLink.settingMemberMeeting(memberMeeting);
+        return qrLink;
     }
 }
