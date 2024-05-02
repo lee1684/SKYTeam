@@ -65,28 +65,6 @@ public class Member {
         return member;
     }
 
-    public static Member getMember(Long id, String username, String email, String nickname, String profilePictureUrl, Character gender, String address, String role, String introduction, List<String> interests, String blackReason, MemberDates memberDates){
-        List<String> interestsList = new ArrayList<>(interests);
-        Member member = Member.builder()
-                .id(id)
-                .username(username)
-                .email(email)
-                .nickname(nickname)
-                .profilePictureUrl(profilePictureUrl)
-                .gender(gender)
-                .address(address)
-                .role(role)
-                .introduction(introduction)
-                .interests(interestsList)
-                .blackReason(blackReason)
-                .memberDates(memberDates)
-                .build();
-        return member;
-    }
-
-
-
-
     public void addMemberMeeting(MemberMeeting memberMeeting) {
         this.joinedMeetings.add(memberMeeting);
         memberMeeting.setMember(this);
