@@ -9,24 +9,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-@Transactional(readOnly = true)
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
 
-    public Payment findPayment(Long id) throws BadRequestException {
-        Optional<Payment> findPayment = paymentRepository.findById(id);
-        Payment payment = validationPayment(findPayment);
+    public Payment findPayment(Long paymentId) throws BadRequestException {
+        Optional<Payment> findPayment = paymentRepository.findById(paymentId);
+        Payment payment = ValidationService.validationPayment(findPayment);
         return payment;
     }
 
-    private Payment validationPayment(Optional<Payment> payment) throws BadRequestException {
-        if (payment.isPresent()) {
-            return payment.get();
-        }else
-            throw new BadRequestException("해당 회원을 찾을 수 없습니다");
-    }
 
 }

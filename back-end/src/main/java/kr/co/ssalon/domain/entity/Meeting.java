@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,7 +11,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 public class Meeting {
@@ -52,13 +50,67 @@ public class Meeting {
     private Integer capacity;
     private LocalDateTime meetingDate;
 
-    protected Meeting() {}
+    protected Meeting() {
+    }
 
+    // ***** 필드 메서드 *****
+    public void changeTitle(String title) {
+        this.title = title != null ? title : this.title;
+    }
+
+    public void changeDescription(String description) {
+        this.description = description != null ? description : this.description;
+    }
+
+    public void changeLocation(String location) {
+        this.location = location != null ? location : this.location;
+    }
+
+    public void changeCapacity(Integer capacity) {
+        this.capacity = capacity != null ? capacity : this.capacity;
+    }
+
+    public void changeLocalDateTime(LocalDateTime meetingDate) {
+        this.meetingDate = meetingDate != null ? meetingDate : this.meetingDate;
+    }
+
+    public void addMeetingPictureUrls(List<String> meetingPictureUrls) {
+        for (String meetingPictureUrl : meetingPictureUrls) {
+            getMeetingPictureUrls().add(meetingPictureUrl);
+        }
+    }
+
+    public void updateMeeting(Category category, List<String> meetingPictureUrls, String title, String description, String location, Integer capacity, LocalDateTime meetingDates) {
+        changeCategory(category);
+        addMeetingPictureUrls(meetingPictureUrls);
+        changeTitle(title);
+        changeDescription(description);
+        changeLocation(location);
+        changeCapacity(capacity);
+        changeLocalDateTime(meetingDates);
+
+    }
+
+    // ***** 연관 메서드 *****
+    public void ownerMember(Member member) {
+        this.creator = member;
+    }
+
+    public void changeTicket(Ticket ticket) {
+        this.ticket = ticket;
+        ticket.changeMeeting(this);
+    }
+
+    public void changeCategory(Category category) {
+        this.category = category;
+    }
+
+    public void addParticipants(MemberMeeting memberMeeting) {
+        getParticipants().add(memberMeeting);
+    }
 
     public static Meeting createMeeting(Category category, Member creator, List<String> meetingPictureUrls, String title, String description, String location, Integer capacity, LocalDateTime meetingDate) {
         Meeting meeting = Meeting.builder()
-                .category(category)
-                .creator(creator)
                 .title(title)
                 .description(description)
                 .location(location)
@@ -66,37 +118,10 @@ public class Meeting {
                 .meetingDate(meetingDate)
                 .build();
 
-        meeting.setMeetingPictureUrls(meetingPictureUrls);
-
+        meeting.ownerMember(creator);
+        meeting.addMeetingPictureUrls(meetingPictureUrls);
+        meeting.changeCategory(category);
         return meeting;
-    }
-
-
-    public static Meeting updateMeeting(Long id, Category category, Payment payment, Member creator, List<MemberMeeting> participants, List<String> meetingPictureUrls, String title, String description, String location, Integer capacity, LocalDateTime meetingDates) {
-        Meeting meeting = Meeting.builder()
-                .id(id)
-                .category(category)
-                .payment(payment)
-                .creator(creator)
-                .title(title)
-                .description(description)
-                .location(location)
-                .capacity(capacity)
-                .meetingDate(meetingDates)
-                .build();
-
-        meeting.setParticipants(participants);
-        meeting.setMeetingPictureUrls(meetingPictureUrls);
-
-        return meeting;
-    }
-    public void addMemberMeeting(MemberMeeting memberMeeting) {
-        this.participants.add(memberMeeting);
-        memberMeeting.setMeeting(this);
-    }
-
-    public void setMeetingPictureUrls(List<String> meetingPictureUrls) {
-        this.meetingPictureUrls.addAll(meetingPictureUrls);
     }
 
     public void setParticipants(List<MemberMeeting> participants) {

@@ -20,10 +20,16 @@ public class Category {
     private String description;
     private String imageUrl;
 
-    protected Category() {}
+    protected Category() {
+    }
 
-    public static Category createCategory(){
-        Category category = Category.builder().build();
+    public static Category createCategory(String name, String description, String imageUrl) {
+        Category category = Category
+                .builder()
+                .name(name)
+                .description(description)
+                .imageUrl(imageUrl)
+                .build();
         return category;
     }
 

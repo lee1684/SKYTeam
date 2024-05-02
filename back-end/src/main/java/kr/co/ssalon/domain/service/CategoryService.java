@@ -9,8 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-@Transactional(readOnly = true)
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CategoryService {
 
@@ -18,15 +18,9 @@ public class CategoryService {
 
     public Category findCategory(Long id) throws BadRequestException {
         Optional<Category> findCategory = categoryRepository.findById(id);
-        Category category = validationCategory(findCategory);
+        Category category = ValidationService.validationCategory(findCategory);
         return category;
     }
 
-    private Category validationCategory(Optional<Category> category) throws BadRequestException {
-        if (category.isPresent()) {
-            return category.get();
-        }else
-            throw new BadRequestException("해당 회원을 찾을 수 없습니다");
-    }
 
 }
