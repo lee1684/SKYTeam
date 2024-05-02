@@ -5,15 +5,12 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
-import org.springframework.data.redis.core.RedisHash;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 public class MemberMeeting {
@@ -31,23 +28,47 @@ public class MemberMeeting {
     @JoinColumn(name = "meeting_id")
     private Meeting meeting;
 
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "diary_id")
     private Diary diary;
 
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "qr_link_id")
     private QrLink qrLink;
 
     @OneToMany(mappedBy = "memberMeeting")
     private final List<Message> messages = new ArrayList<>();
 
-    protected MemberMeeting() {}
+    protected MemberMeeting() {
+    }
+
+    // ***** 연관 메서드 *****
+    public void joinMember(Member member) {
+        this.member = member;
+        member.addMemberMeeting(this);
+    }
+
+    public void joinMeeting(Meeting meeting) {
+        this.meeting = meeting;
+        meeting.addParticipants(this);
+    }
+
+    public void settingDiary(Diary diary) {
+        this.diary = diary;
+        diary.settingMemberMeeting(this);
+    }
+
+    public void settingQrLink(QrLink qrLink) {
+        this.qrLink = qrLink;
+        qrLink.settingMemberMeeting(this);
+    }
 
     public static MemberMeeting createMemberMeeting(Member member, Meeting meeting) {
-        return MemberMeeting.builder()
-                .member(member)
-                .meeting(meeting)
-                .build();
+        Diary diary = Diary.createDiary("제목을 작성해보세요.", null, "일기를 작성해보세요.");
+        MemberMeeting memberMeeting = MemberMeeting.builder().build();
+        memberMeeting.joinMember(member);
+        memberMeeting.joinMeeting(meeting);
+        memberMeeting.settingDiary(diary);
+        return memberMeeting;
     }
 }
