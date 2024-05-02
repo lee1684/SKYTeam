@@ -59,25 +59,4 @@ public class MeetingDTO {
         this.capacity = meeting.getCapacity();
         this.meetingDate = meeting.getMeetingDate();
     }
-
-    public MeetingDTO(String test) {
-        this.id = 1L;
-        this.categoryId = 1L;
-        this.paymentId = 1L;
-        this.creatorId = 1L;
-        this.ticketId = 1L;
-        List<Long> participantIds = new ArrayList<>();
-        participantIds.add(1L);
-        participantIds.add(2L);
-        this.participantIds = participantIds;
-        List<String> meetingPictureUrls = new ArrayList<>();
-        meetingPictureUrls.add("1234");
-        meetingPictureUrls.add("abcde");
-        this.meetingPictureUrls = meetingPictureUrls;
-        this.title = test;
-        this.description = test;
-        this.location = test;
-        this.capacity = 1;
-        this.meetingDate = LocalDateTime.now();
-    }
 }
