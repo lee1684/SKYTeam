@@ -4,19 +4,14 @@ import kr.co.ssalon.domain.entity.*;
 import kr.co.ssalon.domain.repository.*;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import kr.co.ssalon.web.dto.MeetingDTO;
-import kr.co.ssalon.web.dto.MemberDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import kr.co.ssalon.web.dto.MeetingSearchCondition;
-import org.hibernate.query.sqm.internal.MultiTableInsertQueryPlan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Transactional(readOnly = true)
