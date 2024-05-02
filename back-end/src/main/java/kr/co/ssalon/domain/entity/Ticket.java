@@ -21,6 +21,10 @@ public class Ticket {
     private String decoration;
 
     protected Ticket() {}
+    // ***** 연관 메서드 *****  
+    public void changeMeeting(Meeting meeting) {
+        this.meeting = meeting;
+    }
 
     public static Ticket createTicket() {
         Ticket ticket = Ticket.builder().build();
