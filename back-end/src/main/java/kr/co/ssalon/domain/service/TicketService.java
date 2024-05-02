@@ -111,22 +111,22 @@ public class TicketService {
         imageSrcMap.put(oldThumbURI, newThumbURI);
         topLevelObject.addProperty("thumbnailUrl", AWS_S3_ASSET_URI + newThumbURI);
 
-        JsonObject fabricObject = topLevelObject.get("fabric").getAsJsonObject();
-        JsonArray objectsArray = fabricObject.get("objects").getAsJsonArray();
-
-        // objects 리스트 내 Image 파일에 대해서만 작업 진행
-        for (JsonElement object : objectsArray) {
-            JsonObject objCandidate = object.getAsJsonObject();
-            if (objCandidate.get("type").getAsString().equals("image")) {
-                String urlOrigin = objCandidate.get("src").getAsString();
-                String extOldFile = urlOrigin.substring(urlOrigin.lastIndexOf('.') + 1);
-                String newFileURI = toMoimId + "/" + generateRandomUUID() + "." + extOldFile;
-                String oldFileURI = fromMoimId + "/" + urlOrigin.substring(urlOrigin.lastIndexOf('/') + 1);
-
-                imageSrcMap.put(oldFileURI, newFileURI);
-                objCandidate.addProperty("src", AWS_S3_ASSET_URI + newFileURI);
-            }
-        }
+//        JsonObject fabricObject = topLevelObject.get("fabric").getAsJsonObject();
+//        JsonArray objectsArray = fabricObject.get("objects").getAsJsonArray();
+//
+//        // objects 리스트 내 Image 파일에 대해서만 작업 진행
+//        for (JsonElement object : objectsArray) {
+//            JsonObject objCandidate = object.getAsJsonObject();
+//            if (objCandidate.get("type").getAsString().equals("image")) {
+//                String urlOrigin = objCandidate.get("src").getAsString();
+//                String extOldFile = urlOrigin.substring(urlOrigin.lastIndexOf('.') + 1);
+//                String newFileURI = toMoimId + "/" + generateRandomUUID() + "." + extOldFile;
+//                String oldFileURI = fromMoimId + "/" + urlOrigin.substring(urlOrigin.lastIndexOf('/') + 1);
+//
+//                imageSrcMap.put(oldFileURI, newFileURI);
+//                objCandidate.addProperty("src", AWS_S3_ASSET_URI + newFileURI);
+//            }
+//        }
         return jsonElement;
     }
 }
