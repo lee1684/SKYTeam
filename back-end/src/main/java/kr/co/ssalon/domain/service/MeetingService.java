@@ -1,19 +1,20 @@
 package kr.co.ssalon.domain.service;
 
-import kr.co.ssalon.domain.entity.Meeting;
-import kr.co.ssalon.domain.entity.Member;
-import kr.co.ssalon.domain.entity.MemberMeeting;
+import kr.co.ssalon.domain.entity.*;
 import kr.co.ssalon.domain.repository.*;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import kr.co.ssalon.web.dto.MeetingDTO;
+import kr.co.ssalon.web.dto.MemberDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import kr.co.ssalon.web.dto.MeetingSearchCondition;
+import org.hibernate.query.sqm.internal.MultiTableInsertQueryPlan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -80,6 +81,25 @@ public class MeetingService {
         return meeting.getId();
     }
 
+    @Transactional
+    public Long createMoimTest(MeetingDTO meetingDTO) throws BadRequestException {
+        MemberDTO memberDTO = new MemberDTO("testMember");
+        Member member = Member.getMember(memberDTO.getId(), memberDTO.getUsername(), memberDTO.getEmail(), memberDTO.getNickname(), memberDTO.getProfilePictureUrl(), memberDTO.getGender(), memberDTO.getAddress(), memberDTO.getRole(), memberDTO.getIntroduction(), memberDTO.getInterests(), memberDTO.getBlackReason(), null);
+
+        Meeting meeting = Meeting.createMeeting(meetingDTO.getId(), categoryService.findCategory(meetingDTO.getCategoryId(), member, meetingDTO.getMeetingPictureUrls(), meetingDTO.getTitle(), meetingDTO.getDescription(), meetingDTO.getLocation(), meetingDTO.getCapacity(), meetingDTO);
+        meeting.setMeetingPictureUrls(meetingDTO.getMeetingPictureUrls());
+        MemberMeeting memberMeeting = MemberMeeting.createMemberMeeting(currentUser, meeting);
+
+        // member entity 업데이트
+        // meeting entity 업데이트
+        currentUser.addMemberMeeting(memberMeeting);
+        meeting.addMemberMeeting(memberMeeting);
+
+        memberMeetingRepository.save(memberMeeting);
+
+        return meeting.getId();
+    }
+
     public Boolean isParticipant(Long moimId, Member member) throws BadRequestException {
         Meeting meeting = findMeeting(moimId);
         List<MemberMeeting> participants = meeting.getParticipants();
@@ -95,6 +115,11 @@ public class MeetingService {
     @Transactional
     public MeetingDTO getMoim(CustomOAuth2Member customOAuth2Member, Long moimId) throws BadRequestException {
         return new MeetingDTO(findMeeting(moimId));
+    }
+
+    @Transactional
+    public MeetingDTO getMoimTest(Long moimId) throws BadRequestException {
+        return new MeetingDTO("1234");
     }
 
     @Transactional

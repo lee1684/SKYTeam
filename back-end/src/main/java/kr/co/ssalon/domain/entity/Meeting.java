@@ -55,22 +55,24 @@ public class Meeting {
 
     protected Meeting() {}
 
-    public static Meeting createMeeting(MeetingDTO meetingDTO, Category category, Payment payment, Member creator, Ticket ticket) {
-        // Change to builder
+
+    public static Meeting createMeeting(Category category, Member creator, List<String> meetingPictureUrls, String title, String description, String location, Integer capacity) {
         Meeting meeting = Meeting.builder()
-                .id(meetingDTO.getId())
                 .category(category)
-                .payment(payment)
                 .creator(creator)
-                .ticket(ticket)
-                .title(meetingDTO.getTitle())
-                .description(meetingDTO.getDescription())
-                .location(meetingDTO.getLocation())
-                .capacity(meetingDTO.getCapacity())
-                .meetingDate(meetingDTO.getMeetingDate())
+                .title(title)
+                .description(description)
+                .location(location)
+                .capacity(capacity)
+                .meetingDate(LocalDateTime.now())
                 .build();
+
+        meeting.setMeetingPictureUrls(meetingPictureUrls);
+
         return meeting;
+
     }
+
 
     public void addMemberMeeting(MemberMeeting memberMeeting) {
         this.participants.add(memberMeeting);
