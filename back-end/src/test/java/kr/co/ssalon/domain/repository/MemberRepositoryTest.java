@@ -43,10 +43,10 @@ public class MemberRepositoryTest {
         }
 
         // 온보딩 페이지에서 입력된 추가정보
-        currentUser.setNickname("닉네임");
+        currentUser.changeNickname("닉네임");
         List<String> interests = new ArrayList<>(Arrays.asList("독서", "영화감상"));
-        currentUser.setInterests(interests);
-        currentUser.setAddress(Region.GYEONGGIDO.getLocalName());
+        currentUser.addInterests(interests);
+        currentUser.changeAddress(Region.GYEONGGIDO.getLocalName());
 
         // when
         currentUser = memberRepository.save(currentUser);
