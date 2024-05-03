@@ -97,11 +97,10 @@ public class SecurityConfig {
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/").permitAll()
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html/**").permitAll()
-                        .requestMatchers("/api/reissue").permitAll()
                         .requestMatchers("/api/tickets/**").permitAll()
-                        .anyRequest().authenticated());
+                        .requestMatchers("/api/reissue").permitAll()
+                        .requestMatchers("/api/**").authenticated()
+                        .requestMatchers("/**").permitAll());
 
         // 세션 설정 : STATELESS
         http
