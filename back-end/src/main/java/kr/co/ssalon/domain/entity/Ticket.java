@@ -30,4 +30,19 @@ public class Ticket {
         Ticket ticket = Ticket.builder().build();
         return ticket;
     }
+
+    public static Ticket createTicket(Meeting meeting) {
+        Ticket ticket = Ticket.builder()
+                .meeting(meeting)
+                .build();
+        return ticket;
+    }
+
+    public void setMeeting(Meeting meeting) {
+        this.meeting = meeting;
+    }
+
+    public void setDecoration(String decoration) {
+        this.decoration = decoration;
+    }
 }

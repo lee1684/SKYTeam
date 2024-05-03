@@ -19,7 +19,6 @@ public class Payment {
     @Column(name = "payment_id")
     private Long id;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -35,6 +34,17 @@ public class Payment {
 
     public static Payment createPayment() {
         Payment payment = Payment.builder().build();
+        return payment;
+    }
+
+    public static Payment createPayment(Member member, Meeting meeting) {
+        Payment payment = Payment.builder()
+                .member(member)
+                .meeting(meeting)
+                .amount(BigDecimal.ZERO)
+                .purpose(null)
+                .build();
+
         return payment;
     }
 }

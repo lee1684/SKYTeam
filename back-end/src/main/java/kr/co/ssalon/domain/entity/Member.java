@@ -104,6 +104,10 @@ public class Member {
         getJoinedMeetings().removeAll(Arrays.asList(memberMeeting));
     }
 
+    public void deletePayment(Payment payment) {
+        getPayments().remove(payment);
+    }
+
     // ***** 생성 메서드 *****
     public static Member createMember(String username, String email, String role) {
         Member member = Member.builder()
@@ -115,4 +119,7 @@ public class Member {
         return member;
     }
 
+    public void addPayment(Payment payment) {
+        this.payments.add(payment);
+    }
 }

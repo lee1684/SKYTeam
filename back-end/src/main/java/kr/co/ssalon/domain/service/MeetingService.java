@@ -27,6 +27,8 @@ public class MeetingService {
     private final MemberRepository memberRepository;
     private final TicketService ticketService;
     private final CategoryRepository categoryRepository;
+    private final PaymentRepository paymentRepository;
+    private final TicketRepository ticketRepository;
 
 
     // 모임 개설
@@ -39,6 +41,17 @@ public class MeetingService {
         Category category = findCategory(meetingDomainDTO.getCategoryId());
         // 모임 생성 { 카테고리, 회원, 모임 이미지, 모임 제목, 모임 설명, 모임 장소, 모임 수용인원, 모임 날짜 }
         Meeting meeting = Meeting.createMeeting(category, currentUser, meetingDomainDTO.getMeetingPictureUrls(), meetingDomainDTO.getTitle(), meetingDomainDTO.getDescription(), meetingDomainDTO.getLocation(), meetingDomainDTO.getCapacity(), meetingDomainDTO.getMeetingDate());
+
+        // 지불 정보 생성
+        Payment payment = Payment.createPayment(currentUser, meeting);
+        meeting.setPayment(payment);
+        currentUser.addPayment(payment);
+        paymentRepository.save(payment);
+
+        // 티켓 정보 생성
+        Ticket ticket = Ticket.createTicket(meeting);
+        meeting.setTicket(ticket);
+        ticketRepository.save(ticket);
 
         // 모임 참가 생성 및 나의 가입된 모임에 추가
         MemberMeeting memberMeeting = MemberMeeting.createMemberMeeting(currentUser, meeting);
@@ -60,6 +73,20 @@ public class MeetingService {
         Member currentUser = ValidationService.validationMember(findMember);
         // 모임 찾기
         Meeting meeting = findMeeting(moimId);
+        // 이미 참여한 회원인지 체크
+        List<MemberMeeting> participants = meeting.getParticipants();
+        for (MemberMeeting participant : participants) {
+            if (participant.getMember().equals(currentUser)) {
+                throw new BadRequestException("이미 등록된 회원입니다.");
+            }
+        }
+
+        // 지불 정보 생성
+        Payment payment = Payment.createPayment(currentUser, meeting);
+        meeting.setPayment(payment);
+        currentUser.addPayment(payment);
+        paymentRepository.save(payment);
+
         // 모임 참가 생성 및 나의 가입된 모임에 추가
         MemberMeeting memberMeeting = MemberMeeting.createMemberMeeting(currentUser, meeting);
         MemberMeeting joinedMemberMeeting = memberMeetingRepository.save(memberMeeting);
@@ -104,6 +131,9 @@ public class MeetingService {
         // 카테고리 찾기
         Category category = findCategory(meetingDomainDTO.getCategoryId());
 
+        // MeetingURL 내용 비우기
+        currentMeeting.deleteMeetingPictureUrls();
+
         // Dirty Checking
         currentMeeting.updateMeeting(category, meetingDomainDTO.getMeetingPictureUrls(), meetingDomainDTO.getTitle(), meetingDomainDTO.getDescription(), meetingDomainDTO.getLocation(), meetingDomainDTO.getCapacity(), meetingDomainDTO.getMeetingDate());
         return currentMeeting.getId();
@@ -126,11 +156,15 @@ public class MeetingService {
 
         // 모임 참여자 찾기
         List<MemberMeeting> participants = currentMeeting.getParticipants();
-
+        Payment payment = paymentRepository.findByMeetingId(moimId);
 
         // 연관 관계 제거
         // 내가 참여한 모임 중에서 해당 모임을 삭제
         participants.forEach(participant -> participant.getMember().deleteMemberMeeting(participant));
+        participants.forEach(participant -> participant.getMember().deletePayment(payment));
+
+        // 지불 정보 삭제
+        paymentRepository.deleteByMeetingId(moimId);
 
         // 해당 모임 참가자 삭제
         memberMeetingRepository.deleteByMeetingId(moimId);
