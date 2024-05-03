@@ -60,7 +60,7 @@ public class MemberMeeting {
 
     public void settingQrLink(QrLink qrLink) {
         this.qrLink = qrLink;
-        qrLink.settingMemberMeeting(this);
+        // qrLink.settingMemberMeeting(this);
     }
 
     public static MemberMeeting createMemberMeeting(Member member, Meeting meeting) {
