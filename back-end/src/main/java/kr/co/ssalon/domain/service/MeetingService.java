@@ -145,11 +145,11 @@ public class MeetingService {
     }
 
     // 모임에 참여한 유저 조회
-    public List<Member> getUsers(Long moimId) throws BadRequestException {
+    public List<Long> getUsers(Long moimId) throws BadRequestException {
         Meeting meeting = findMeeting(moimId);
         List<MemberMeeting> participants = meeting.getParticipants();
-        List<Member> members = participants.stream().map(MemberMeeting::getMember).collect(Collectors.toList());
-        return members;
+        List<Long> participantsId = participants.stream().map(MemberMeeting::getId).collect(Collectors.toList());
+        return participantsId;
     }
 
 
