@@ -9,6 +9,7 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -31,6 +32,7 @@ public class MemberService {
         Member member = ValidationService.validationMember(findMember);
         member.changeEmail(email);
         member.changeRole(role);
+        member.changeLastLoginDate();
         return member;
     }
 
@@ -58,12 +60,16 @@ public class MemberService {
     @Transactional
     public Member signup(String username, MemberDomainDTO additionalInfo) throws BadRequestException {
         Member currentUser = findMember(username);
+        boolean isRealSignup = currentUser.getNickname() == null;
 
         currentUser.initDetailSignInfo(
                 additionalInfo.getNickname(), additionalInfo.getProfilePictureUrl(),
                 additionalInfo.getGender(), additionalInfo.getAddress(), additionalInfo.getIntroduction(),
-                additionalInfo.getInterests(), additionalInfo.getBlackReason()
+                additionalInfo.getInterests()
         );
+        if (isRealSignup) {
+            currentUser.initMemberDates();
+        }
         return currentUser;
     }
 }
