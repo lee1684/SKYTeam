@@ -5,7 +5,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.ssalon.jwt.JWTUtil;
@@ -16,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -41,55 +41,49 @@ public class CustomLogoutFilter extends GenericFilterBean {
             chain.doFilter(request, response);
             return;
         }
-        log.info("logoutFilter check");
+
         String refresh = null;
 
         refresh = request.getHeader("Refresh");
-
         if (refresh == null) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            sendResponse(response, "refresh token is null", HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
         try {
             jwtUtil.isExpired(refresh);
-
         } catch (ExpiredJwtException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            sendResponse(response, "refresh token is expired", HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
         String category = jwtUtil.getCategory(refresh);
-
         if (!category.equals("refresh")) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            sendResponse(response, "not a refresh token", HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
-        Boolean isExist = redisRefreshTokenRepository.existsByRefresh(refresh);
+
+        boolean isExist = redisRefreshTokenRepository.existsByRefresh(refresh);
         if (!isExist) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            sendResponse(response, "refresh token does not exist", HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
-
-        //***** 로그아웃 진행 *****
+        // 로그아웃 진행
         RedisRefreshToken deleteRefresh = redisRefreshTokenRepository.findByRefresh(refresh);
         redisRefreshTokenRepository.delete(deleteRefresh);
 
-        response.setStatus(HttpServletResponse.SC_OK);
+        sendResponse(response, "logout success", HttpServletResponse.SC_OK);
     }
 
-    private Cookie createLogoutRefreshCookie() {
-        Cookie cookie = new Cookie("refresh", null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-        return cookie;
-    }
-
-    private Cookie createLogoutAccessCookie() {
-        Cookie cookie = new Cookie("Authorization", null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-        return cookie;
+    private void sendResponse(HttpServletResponse response, String message, int status) {
+        log.info(message);
+        try (PrintWriter writer = response.getWriter()) {
+            writer.print(message);
+            writer.flush();
+        } catch (IOException e) {
+            log.error("Error writing to response", e);
+        }
+        response.setStatus(status);
     }
 }
