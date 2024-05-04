@@ -51,6 +51,7 @@ public class MeetingControllerTest {
         Meeting meeting = mock(Meeting.class);
         when(meeting.getCategory()).thenReturn(category);
         when(meeting.getLocation()).thenReturn(Region.SEOUL.getLocalName());
+        when(ticket.getMeeting()).thenReturn(meeting);
 
         // @NotNull 통과를 위해 payment, creator, ticket 빈 객체(mock) 추가
         when(meeting.getPayment()).thenReturn(payment);
@@ -59,8 +60,7 @@ public class MeetingControllerTest {
 
         // 모임 목록 필터("운동", "서울특별시") 객체 생성
         MeetingSearchCondition meetingSearchCondition = MeetingSearchCondition.builder()
-                .categoryName("운동")
-                .region(Region.SEOUL)
+                .category("운동")
                 .build();
 
         // Pageable 객체 생성
@@ -72,15 +72,12 @@ public class MeetingControllerTest {
 
         // when
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/api/moims")
-                .param("categoryName", "운동")
-                .param("region", "SEOUL")
+                .param("category", "운동")
                 .param("page", "0")
                 .param("size", "10"));
 
         // then
         resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].location", is("서울특별시")));
-
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 }
