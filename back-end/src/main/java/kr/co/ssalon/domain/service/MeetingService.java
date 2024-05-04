@@ -60,6 +60,9 @@ public class MeetingService {
         Member currentUser = ValidationService.validationMember(findMember);
         // 모임 찾기
         Meeting meeting = findMeeting(moimId);
+        if (memberMeetingRepository.existsByMemberId(currentUser.getId())) {
+            throw new BadRequestException("이미 모임에 참가하고 있습니다.");
+        };
         // 모임 참가 생성 및 나의 가입된 모임에 추가
         MemberMeeting memberMeeting = MemberMeeting.createMemberMeeting(currentUser, meeting);
         MemberMeeting joinedMemberMeeting = memberMeetingRepository.save(memberMeeting);
@@ -142,11 +145,11 @@ public class MeetingService {
     }
 
     // 모임에 참여한 유저 조회
-    public List<Member> getUsers(Long moimId) throws BadRequestException {
+    public List<Long> getUsers(Long moimId) throws BadRequestException {
         Meeting meeting = findMeeting(moimId);
         List<MemberMeeting> participants = meeting.getParticipants();
-        List<Member> members = participants.stream().map(MemberMeeting::getMember).collect(Collectors.toList());
-        return members;
+        List<Long> participantsId = participants.stream().map(MemberMeeting::getId).collect(Collectors.toList());
+        return participantsId;
     }
 
 

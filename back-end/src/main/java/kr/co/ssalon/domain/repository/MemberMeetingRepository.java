@@ -4,7 +4,6 @@ import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.MemberMeeting;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -17,5 +16,6 @@ public interface MemberMeetingRepository extends JpaRepository<MemberMeeting,Lon
     void deleteByMeetingId(Long meetingId);
 
 
+    boolean existsByMemberId(Long memberId);
 
 }
