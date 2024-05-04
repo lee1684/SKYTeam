@@ -5,7 +5,6 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import kr.co.ssalon.domain.entity.Meeting;
-import kr.co.ssalon.domain.entity.Region;
 import kr.co.ssalon.web.dto.MeetingSearchCondition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static kr.co.ssalon.domain.entity.QMeeting.meeting;
-import static org.springframework.util.StringUtils.hasText;
 
 @Component
 public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
@@ -36,8 +34,7 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
         List<Meeting> content = query
                 .selectFrom(meeting)
                 .where(
-                        regionEq(meetingSearchCondition.getRegion()),
-                        categoryNameEq(meetingSearchCondition.getCategoryName()))
+                        categoryNameEq(meetingSearchCondition.getCategoryId()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -46,23 +43,16 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
                 .select(meeting.count())
                 .from(meeting)
                 .where(
-                        regionEq(meetingSearchCondition.getRegion()),
-                        categoryNameEq(meetingSearchCondition.getCategoryName())
+                        categoryNameEq(meetingSearchCondition.getCategoryId())
                 );
         return PageableExecutionUtils.getPage(content, pageable, totalCountQuery::fetchOne);
 
 
     }
 
-
-    // 지역 필터링
-    private BooleanExpression regionEq(Region region) {
-        return region != null ? meeting.location.contains(region.getLocalName()) : null;
-    }
-
     // 카테고리 필터링
-    private BooleanExpression categoryNameEq(String categoryName) {
-        return hasText(categoryName) ? meeting.category.name.eq(categoryName) : null;
+    private BooleanExpression categoryNameEq(Long categoryId) {
+        return categoryId != null ? meeting.category.id.eq(categoryId) : null;
     }
 
 }

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +36,7 @@ public class Member {
     private String introduction;
     @ElementCollection
     @CollectionTable(name = "member_interests", joinColumns = @JoinColumn(name = "member_id"))
-    private final List<String> interests = new ArrayList<>();
+    private List<String> interests = new ArrayList<>();
     private String blackReason;
 
     @Embedded
@@ -75,24 +74,31 @@ public class Member {
         this.introduction = introduction != null ? introduction : this.introduction;
     }
 
+    public void changeLastLoginDate() {
+        this.memberDates.preUpdate();
+    }
+
+    public void initMemberDates() {
+        MemberDates memberDates = new MemberDates();
+        memberDates.prePersist();
+        this.memberDates = memberDates;
+    }
+
     public void addInterests(List<String> interests) {
-        for (String interest : interests) {
-            getInterests().add(interest);
-        }
+        this.interests = interests;
     }
 
     public void changeBlackReason(String blackReason) {
         this.blackReason = blackReason != null ? blackReason : this.blackReason;
     }
 
-    public void initDetailSignInfo(String nickname, String profilePictureUrl, Character gender, String address, String introduction, List<String> interests, String blackReason) {
+    public void initDetailSignInfo(String nickname, String profilePictureUrl, Character gender, String address, String introduction, List<String> interests) {
         changeNickname(nickname);
         changeProfilePictureUrl(profilePictureUrl);
         changeGender(gender);
         changeAddress(address);
         changeIntroduction(introduction);
         addInterests(interests);
-        changeBlackReason(blackReason);
     }
 
     // ***** 연관 메서드 *****

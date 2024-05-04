@@ -9,7 +9,6 @@ import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.service.MemberService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import kr.co.ssalon.web.dto.JsonResult;
-import kr.co.ssalon.web.dto.MemberDTO;
 import kr.co.ssalon.web.dto.MemberSignDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,22 +25,17 @@ public class UserController {
 
     private final MemberService memberService;
 
-    @Operation(summary = "회원가입")
+    @Operation(summary = "회원가입 / 회원 정보 수정")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "회원가입 성공"),
+            @ApiResponse(responseCode = "200", description = "회원가입 성공 / 회원 정보 수정"),
     })
     @PostMapping("/api/auth/signup")
-    public JsonResult<MemberSignDTO> signup(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MemberDTO additionalInfo) throws BadRequestException {
+    public MemberSignDTO signup(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MemberDomainDTO additionalInfo) throws BadRequestException {
         String username = customOAuth2Member.getUsername();
-        MemberDomainDTO memberDomainDTO = new MemberDomainDTO(
-                additionalInfo.getNickname(), additionalInfo.getProfilePictureUrl(),
-                additionalInfo.getGender(), additionalInfo.getAddress(), additionalInfo.getIntroduction(),
-                additionalInfo.getInterests(), additionalInfo.getBlackReason()
-        );
 
-        Member currentUser = memberService.signup(username, memberDomainDTO);
+        Member currentUser = memberService.signup(username, additionalInfo);
         MemberSignDTO memberSignDTO = new MemberSignDTO(currentUser);
-        return new JsonResult<>(memberSignDTO);
+        return new JsonResult<>(memberSignDTO).getData();
     }
 
     @Operation(summary = "회원 정보 조회")
@@ -49,11 +43,11 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "회원 정보 조회 성공"),
     })
     @GetMapping("/api/users/me/profile")
-    public MemberDTO getUserInfo(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) throws BadRequestException {
+    public MemberDomainDTO getUserInfo(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) throws BadRequestException {
         String username = customOAuth2Member.getUsername();
         Member member = memberService.findMember(username);
         log.info("user = {}", member);
-        return new MemberDTO(member);
+        return new MemberDomainDTO(member);
     }
 
     @Operation(summary = "로그아웃")

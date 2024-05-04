@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @Getter
 public class MemberDates {
 
-    @Column(updatable = false)
     private LocalDateTime joinDate;
     private LocalDateTime lastLoginDate;
 
