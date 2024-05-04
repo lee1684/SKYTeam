@@ -23,7 +23,7 @@ public class MeetingListSearchDTO {
     public MeetingListSearchDTO(Meeting meeting) {
         this.moimId = meeting.getId();
         this.categoryName = meeting.getCategory().getName();
-        this.ticketDTO = new TicketDTO(meeting.getTicket());
+        this.ticketDTO = meeting.getTicket() == null ? null : new TicketDTO(meeting.getTicket());
     }
 
 }

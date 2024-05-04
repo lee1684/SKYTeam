@@ -1,13 +1,12 @@
 package kr.co.ssalon.domain.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import kr.co.ssalon.domain.entity.Member;
+import kr.co.ssalon.domain.entity.MemberDates;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -22,5 +21,15 @@ public class MemberDomainDTO {
     private String address;
     private String introduction;
     private List<String> interests;
-    private String blackReason;
+    private MemberDates memberDates;
+
+    public MemberDomainDTO(Member member) {
+        this.nickname = member.getNickname();
+        this.profilePictureUrl = member.getProfilePictureUrl();
+        this.gender = member.getGender();
+        this.address = member.getAddress();
+        this.introduction = member.getIntroduction();
+        this.interests = member.getInterests();
+        this.memberDates = member.getMemberDates();
+    }
 }
