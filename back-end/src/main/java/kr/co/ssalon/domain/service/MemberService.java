@@ -32,7 +32,9 @@ public class MemberService {
         Member member = ValidationService.validationMember(findMember);
         member.changeEmail(email);
         member.changeRole(role);
-        member.changeLastLoginDate();
+        if (member.getMemberDates() != null) {
+            member.changeLastLoginDate();
+        }
         return member;
     }
 
