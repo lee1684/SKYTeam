@@ -47,10 +47,9 @@ public class MeetingRepositoryTest {
                 .build();
         meetingRepository.save(meeting);
 
-        // 모임 목록 필터("운동", "서울특별시") 객체 생성
+        // 모임 목록 필터("운동") 객체 생성
         MeetingSearchCondition meetingSearchCondition = MeetingSearchCondition.builder()
-                .categoryName("운동")
-                .region(Region.SEOUL)
+                .category("운동")
                 .build();
 
         // Pageable 객체 생성
@@ -62,7 +61,6 @@ public class MeetingRepositoryTest {
         // then (조회한 모임에 대한 검증)
         assertThat(result).isNotNull();
         assertThat(result.getContent()).hasSize(1);
-        assertThat(result.getContent().get(0).getLocation()).isEqualTo("서울특별시");
         assertThat(result.getContent().get(0).getCategory().getName()).isEqualTo("운동");
     }
 }
