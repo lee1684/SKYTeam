@@ -60,11 +60,11 @@ public class MeetingController {
             @ApiResponse(responseCode = "200", description = "모임 목록 조회 성공"),
     })
     @GetMapping("/api/moims")
-    public ResponseEntity<JsonResult<List<MeetingListSearchDTO>>> getMoims(MeetingSearchCondition meetingSearchCondition, Pageable pageable) {
+    public ResponseEntity<List<MeetingListSearchDTO>> getMoims(MeetingSearchCondition meetingSearchCondition, Pageable pageable) {
         Page<Meeting> moims = meetingService.getMoims(meetingSearchCondition, pageable);
         Page<MeetingListSearchDTO> moimsDto = moims.map(meeting -> new MeetingListSearchDTO(meeting));
         List<MeetingListSearchDTO> content = moimsDto.getContent();
-        return ResponseEntity.ok().body(new JsonResult<>(content));
+        return ResponseEntity.ok().body(new JsonResult<>(content).getData());
     }
 
     // 모임 개설
@@ -75,19 +75,13 @@ public class MeetingController {
             @ApiResponse(responseCode = "200", description = "모임 개설 성공"),
     })
     @PostMapping("/api/moims")
-    public ResponseEntity<?> createMoim(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MeetingDTO meetingDTO) {
+    public ResponseEntity<?> createMoim(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MeetingDomainDTO meetingDomainDTO) {
         try {
             String username = customOAuth2Member.getUsername();
-            //  { 카테고리ID, 모임 이미지, 모임 제목, 모임 설명, 모임 장소, 모임 수용인원, 모임 날짜 }
-            MeetingDomainDTO meetingDomainDTO = new MeetingDomainDTO(
-                    meetingDTO.getCategoryId(), meetingDTO.getMeetingPictureUrls(), meetingDTO.getTitle(),
-                    meetingDTO.getDescription(), meetingDTO.getLocation(),
-                    meetingDTO.getCapacity(), meetingDTO.getMeetingDate()
-            );
             Long moimId = meetingService.createMoim(username, meetingDomainDTO);
             Meeting meeting = meetingService.findMeeting(moimId);
             MeetingDTO sendMeetingDTO = new MeetingDTO(meeting);
-            return ResponseEntity.ok().body(new JsonResult<>(sendMeetingDTO));
+            return ResponseEntity.ok().body(new JsonResult<>(sendMeetingDTO).getData());
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -106,7 +100,7 @@ public class MeetingController {
         try {
             Meeting moim = meetingService.findMeeting(moimId);
             MeetingDTO sendMeetingDTO = new MeetingDTO(moim);
-            return ResponseEntity.ok().body(new JsonResult<>(sendMeetingDTO));
+            return ResponseEntity.ok().body(new JsonResult<>(sendMeetingDTO).getData());
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -120,14 +114,9 @@ public class MeetingController {
             @ApiResponse(responseCode = "200", description = "모임 정보 수정 성공"),
     })
     @PatchMapping("/api/moims/{moimId}")
-    public ResponseEntity<?> updateMoim(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, MeetingDTO meetingDTO) {
+    public ResponseEntity<?> updateMoim(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MeetingDomainDTO meetingDomainDTO) {
         try {
             String username = customOAuth2Member.getUsername();
-            MeetingDomainDTO meetingDomainDTO = new MeetingDomainDTO(
-                    meetingDTO.getCategoryId(), meetingDTO.getMeetingPictureUrls(),
-                    meetingDTO.getTitle(), meetingDTO.getDescription(), meetingDTO.getLocation(),
-                    meetingDTO.getCapacity(), meetingDTO.getMeetingDate()
-            );
             return ResponseEntity.ok().body(meetingService.editMoim(username, moimId, meetingDomainDTO));
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
