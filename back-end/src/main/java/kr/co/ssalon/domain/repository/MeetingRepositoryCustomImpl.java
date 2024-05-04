@@ -34,7 +34,7 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
         List<Meeting> content = query
                 .selectFrom(meeting)
                 .where(
-                        categoryNameEq(meetingSearchCondition.getCategoryId()))
+                        categoryNameEq(meetingSearchCondition.getCategory()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -43,7 +43,7 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
                 .select(meeting.count())
                 .from(meeting)
                 .where(
-                        categoryNameEq(meetingSearchCondition.getCategoryId())
+                        categoryNameEq(meetingSearchCondition.getCategory())
                 );
         return PageableExecutionUtils.getPage(content, pageable, totalCountQuery::fetchOne);
 
@@ -51,8 +51,8 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
     }
 
     // 카테고리 필터링
-    private BooleanExpression categoryNameEq(Long categoryId) {
-        return categoryId != null ? meeting.category.id.eq(categoryId) : null;
+    private BooleanExpression categoryNameEq(String category) {
+        return category != null ? meeting.category.name.eq(category) : null;
     }
 
 }
