@@ -24,6 +24,7 @@ import org.apache.coyote.BadRequestException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 
 @Service
@@ -65,20 +66,22 @@ public class QrService {
     }
 
     @Transactional
-    public boolean checkQrLink(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, Long moimId, Long userId, MultipartFile file) throws BadRequestException {
+    public boolean checkQrLink(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, Long moimId, byte[] key) throws BadRequestException {
         Meeting meeting = meetingService.findMeeting(moimId);
-        Member member = memberService.findMember(userId);
-        MemberMeeting memberMeeting = memberMeetingService.findByMemberAndMeeting(member, meeting);
-
-        String redisKey = memberMeeting.getQrLink().getQrKey();
+        List<MemberMeeting> memberMeetingList = meeting.getParticipants();
 
         try {
-            byte[] savedImage = redisTemplate.opsForValue().get(redisKey);
-            byte[] uploadedImage = file.getBytes();
+            for(MemberMeeting memberMeeting : memberMeetingList) {
+                String redisKey = memberMeeting.getQrLink().getQrKey();
 
-            // 이미지 비교
-            return Arrays.equals(savedImage, uploadedImage);
-        } catch (IOException e) {
+                byte[] savedImage = redisTemplate.opsForValue().get(redisKey);
+
+                if(Arrays.equals(savedImage, key)) {
+                    return true;
+                }
+            }
+            return false;
+        } catch (Exception e) {
             throw new BadRequestException("QR 코드 비교 중 오류가 발생했습니다.");
         }
     }
