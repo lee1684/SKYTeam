@@ -6,10 +6,8 @@ import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.MemberMeeting;
 import kr.co.ssalon.domain.entity.Payment;
 import lombok.*;
-import org.eclipse.jdt.internal.compiler.codegen.LongCache;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,8 +54,6 @@ public class MemberDTO {
         this.introduction = member.getIntroduction();
         this.interests = member.getInterests();
         this.blackReason = member.getBlackReason();
-        this.joinDate = member.getMemberDates().getJoinDate();
-        this.lastLoginDate = member.getMemberDates().getLastLoginDate();
         this.joinedMeetingIds = member.getJoinedMeetings().stream().map(MemberMeeting::getId).collect(Collectors.toList());
         this.paymentIds = member.getPayments().stream().map(Payment::getId).collect(Collectors.toList());
     }
