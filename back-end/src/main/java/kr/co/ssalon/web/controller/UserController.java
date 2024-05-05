@@ -25,9 +25,9 @@ public class UserController {
 
     private final MemberService memberService;
 
-    @Operation(summary = "회원가입 / 회원 정보 수정")
+    @Operation(summary = "회원가입")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "회원가입 성공 / 회원 정보 수정"),
+            @ApiResponse(responseCode = "200", description = "회원가입 성공"),
     })
     @PostMapping("/api/auth/signup")
     public MemberSignDTO signup(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MemberDomainDTO additionalInfo) throws BadRequestException {
@@ -48,6 +48,20 @@ public class UserController {
         Member member = memberService.findMember(username);
         log.info("user = {}", member);
         return new MemberDomainDTO(member);
+    }
+
+    @Operation(summary = "회원 정보 수정")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원 정보 수정 성공"),
+    })
+    @PatchMapping("/api/users/me/profile")
+    public MemberSignDTO update(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MemberDomainDTO additionalInfo) throws BadRequestException {
+        String username = customOAuth2Member.getUsername();
+
+        // 회원가입(/api/auth/signup) 로직과 일치함
+        Member currentUser = memberService.signup(username, additionalInfo);
+        MemberSignDTO memberSignDTO = new MemberSignDTO(currentUser);
+        return new JsonResult<>(memberSignDTO).getData();
     }
 
     @Operation(summary = "로그아웃")
