@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @Schema(description = "목록 조회 condition")
 @Builder
 public class MeetingSearchCondition {
-    @Schema(description = "카테고리 id",example = "1, 2,... 등")
-    private Long categoryId;
+    @Schema(description = "카테고리 이름",example = "운동, 공부, ... 등")
+    private String category;
 }
