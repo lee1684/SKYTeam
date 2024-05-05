@@ -36,7 +36,7 @@ public class MeetingService {
         // 회원 찾기
         Member currentUser = findMember(username);
         // 카테고리 찾기
-        Category category = findCategory(meetingDomainDTO.getCategoryId());
+        Category category = findCategory(meetingDomainDTO.getCategory());
         // 모임 생성 { 카테고리, 회원, 모임 이미지, 모임 제목, 모임 설명, 모임 장소, 모임 수용인원, 모임 날짜 }
         Meeting meeting = Meeting.createMeeting(category, currentUser, meetingDomainDTO.getMeetingPictureUrls(), meetingDomainDTO.getTitle(), meetingDomainDTO.getDescription(), meetingDomainDTO.getLocation(), meetingDomainDTO.getCapacity(), meetingDomainDTO.getMeetingDate());
 
@@ -105,7 +105,7 @@ public class MeetingService {
         }
 
         // 카테고리 찾기
-        Category category = findCategory(meetingDomainDTO.getCategoryId());
+        Category category = findCategory(meetingDomainDTO.getCategory());
 
         // Dirty Checking
         currentMeeting.updateMeeting(category, meetingDomainDTO.getMeetingPictureUrls(), meetingDomainDTO.getTitle(), meetingDomainDTO.getDescription(), meetingDomainDTO.getLocation(), meetingDomainDTO.getCapacity(), meetingDomainDTO.getMeetingDate());
@@ -165,8 +165,8 @@ public class MeetingService {
         return meeting;
     }
 
-    private Category findCategory(Long categoryId) throws BadRequestException {
-        Optional<Category> findCategory = categoryRepository.findById(categoryId);
+    private Category findCategory(String categoryName) throws BadRequestException {
+        Optional<Category> findCategory = categoryRepository.findByName(categoryName);
         Category category = ValidationService.validationCategory(findCategory);
         return category;
     }

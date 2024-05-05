@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 public class MeetingDomainDTO {
 
-    private Long categoryId;
+    private String category;
     private List<String> meetingPictureUrls;
     private String title;
     private String description;
