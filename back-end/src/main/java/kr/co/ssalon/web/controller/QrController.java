@@ -30,10 +30,11 @@ public class QrController {
     @ApiResponses(value = {
             @ApiResponse(responseCode =  "200", description = "QR 생성/조회 성공"),
     })
-    @GetMapping("/api/tickets/{moimId}/{userId}/link")
-    public ResponseEntity<?> getQrLink(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @PathVariable Long userId) {
+    @GetMapping("/api/tickets/{moimId}/link")
+    public ResponseEntity<?> getQrLink(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
         try {
-            return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(qrService.getQrLink(customOAuth2Member, moimId, userId));
+            String username = customOAuth2Member.getUsername();
+            return ResponseEntity.ok().body(qrService.getQrLink(username, moimId));
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -46,7 +47,7 @@ public class QrController {
     @PostMapping("/api/tickets/{moimId}/link")
     public ResponseEntity<?> checkQrLink(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @RequestBody byte[] key) {
         try {
-            return ResponseEntity.ok().body(qrService.checkQrLink(customOAuth2Member, moimId, key));
+            return ResponseEntity.ok().body(qrService.checkQrLink(moimId, key));
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
