@@ -41,9 +41,9 @@ public class QrService {
     private final MemberMeetingService memberMeetingService;
 
     @Transactional
-    public byte[] getQrLink(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, Long moimId, Long userId) throws BadRequestException {
+    public byte[] getQrLink(String username, Long moimId) throws BadRequestException {
         Meeting meeting = meetingService.findMeeting(moimId);
-        Member member = memberService.findMember(userId);
+        Member member = memberService.findMember(username);
         MemberMeeting memberMeeting = memberMeetingService.findByMemberAndMeeting(member, meeting);
 
         try {
@@ -66,7 +66,7 @@ public class QrService {
     }
 
     @Transactional
-    public boolean checkQrLink(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, Long moimId, byte[] key) throws BadRequestException {
+    public boolean checkQrLink(Long moimId, byte[] key) throws BadRequestException {
         Meeting meeting = meetingService.findMeeting(moimId);
         List<MemberMeeting> memberMeetingList = meeting.getParticipants();
 
