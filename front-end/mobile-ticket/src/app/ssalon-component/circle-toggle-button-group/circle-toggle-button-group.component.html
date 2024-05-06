@@ -1,18 +1,8 @@
 <div id="container" #toggleButtonContainer>
-  <div id="feature-buttons">
-    <div
-      class="toggle-button"
-      [style.width]="this.outerSize"
-      [style.height]="this.outerSize"
-      #toggleButton
-      *ngFor="let element of this.elements"
-      (click)="this.onClickToggleButton(element.value)"
-    >
-      <img
-        [src]="this.getImgSrc(element.imgSrc, element.value)"
-        [width]="this.innerSize"
-        [height]="this.innerSize"
-      />
+  <ng-container *ngFor="let element of this.elements">
+    <div class="toggle-button" [style.width]="this.outerSize" [style.height]="this.outerSize" #toggleButton
+      (click)="this.onClickToggleButton(element.value)" *ngIf="element.value !== this.noneStatusValue">
+      <img [src]="this.getImgSrc(element.imgSrc, element.value)" [width]="this.innerSize" [height]="this.innerSize" />
     </div>
-  </div>
+  </ng-container>
 </div>

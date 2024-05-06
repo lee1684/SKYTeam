@@ -1,8 +1,10 @@
-import { Injectable } from '@angular/core';
 import * as THREE from 'three';
-import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer';
-import { ArcballControls } from 'three/examples/jsm/controls/ArcballControls';
-import { MobileTicket } from './mobile-ticket';
+import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
+import { ArcballControls } from 'three/examples/jsm/controls/ArcballControls.js';
+import { MobileTicket } from '../mobile-ticket/mobile-ticket';
+import { SsalonConfigService } from './ssalon-config.service';
+import { ApiExecutorService } from './api-executor.service';
+import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
@@ -16,25 +18,29 @@ export class ScenegraphService {
   private arcballControls: ArcballControls | null = null;
 
   public mobileTicket: MobileTicket | null = null;
-  constructor() {}
+  constructor(
+    private _apiExecutorService: ApiExecutorService,
+    private _ssalonConfig: SsalonConfigService
+  ) {}
   public initThree(): void {
     const width = this.nativeElement!.clientWidth;
     const height = this.nativeElement!.clientHeight;
 
     /** create Scene */
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0xffffff);
+    this.scene.background = new THREE.Color(0xffffff); //
 
     /** create Perspective Camera */
-    this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-    this.camera!.position.z = 200;
+    this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 2000);
+    this.camera!.position.z = 600;
 
     /** create Lights
      * because ArcballControl transforms the camera,
      * if the camera goes behind of the object, we can't see the object.
      */
-    this.createLight('pointLight1', new THREE.Vector3(0, 0, 100));
-    this.createLight('pointLight2', new THREE.Vector3(0, 0, -100));
+    this.createLight('pointLight1', new THREE.Vector3(0, 0, 300));
+    this.createLight('pointLight2', new THREE.Vector3(0, 0, -300));
+    this.createLight('pointLight3', new THREE.Vector3(0, 400, 300));
 
     /** create and init Renderers */
     this.initCss3dRenderer(width, height);
@@ -42,7 +48,7 @@ export class ScenegraphService {
 
     /** create ArcballControl */
     this.createArcballControls();
-    this.mobileTicket = new MobileTicket(this);
+    this.mobileTicket = new MobileTicket(this._apiExecutorService, this);
     this.mobileTicket!.initMobileTicket();
     startAnimation(this);
   }
@@ -86,7 +92,7 @@ export class ScenegraphService {
     );
     this.arcballControls.setGizmosVisible(false);
     this.arcballControls.enableAnimations = true;
-    this.arcballControls.dampingFactor = 3;
+    this.arcballControls.dampingFactor = 2;
     this.arcballControls.addEventListener('change', () => {
       this.css3dRenderer!.render(this.scene!, this.camera!);
       this.mobileTicket?.checkFaceVisible();
@@ -101,6 +107,18 @@ export class ScenegraphService {
 
   public focusFront(): void {
     this.arcballControls!.reset();
+  }
+
+  public rotateCard(): void {
+    this.mobileTicket!.mobileTicket?.rotateX(0.002);
+    this.mobileTicket!.mobileTicket?.rotateY(0.002);
+    this.mobileTicket!.mobileTicket?.rotateZ(0.002);
+    if (
+      this.mobileTicket?.frontSide !== null &&
+      this.mobileTicket?.backSide !== null
+    ) {
+      this.mobileTicket?.checkFaceVisible();
+    }
   }
 }
 

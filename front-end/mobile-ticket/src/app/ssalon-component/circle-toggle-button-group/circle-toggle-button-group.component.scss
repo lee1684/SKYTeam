@@ -1,8 +1,9 @@
 #container {
-    width: auto;
-    height: auto;
     display: flex;
-    position: relative;
+}
+
+#container::-webkil-scrollbar {
+    display: none;
 }
 
 #feature-buttons {
@@ -13,18 +14,18 @@
 
 .toggle-button {
     border-radius: 50%;
-    background-color: #efefef;
+    background-color: transparent;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 8px;
+    flex: 0 0 auto;
 }
 
 .toggle-button:hover {
     cursor: pointer;
-    background-color: #0090f2;
 }
 
 .selected {
-    background-color: #0090f2;
+    background-color: #000000 !important;
 }

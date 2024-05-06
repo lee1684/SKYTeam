@@ -1,13 +1,13 @@
 <!--<canvas id="edit-viewer" #editViewer></canvas>-->
 
 <div class="container">
-    <svg class="ticket-view-elements" width="250" height="500" viewBox="0 0 250 500" fill="none"
+    <svg class="ticket-view-elements" width="350" height="600" viewBox="0 0 350 600" fill="none"
         xmlns="http://www.w3.org/2000/svg">
-        <path fill-rule="evenodd" clip-rule="evenodd"
-            d="M0 20C0 8.95432 8.9543 0 20 0H230C241.046 0 250 8.9543 250 20V335C233.431 335 220 348.431 220 365C220 381.569 233.431 395 250 395V480C250 491.046 241.046 500 230 500H20C8.9543 500 0 491.046 0 480V395C16.5685 395 30 381.569 30 365C30 348.431 16.5685 335 0 335V20Z"
+        <path fill-rule="evenodd" clip-rule="evenodd" #backgroundPath
+            d="M0 40C0 17.9086 17.9086 0 40 0H310C332.091 0 350 17.9086 350 40V425C336.193 425 325 436.193 325 450C325 463.807 336.193 475 350 475V560C350 582.091 332.091 600 310 600H40C17.9086 600 0 582.091 0 560V475C13.8071 475 25 463.807 25 450C25 436.193 13.8071 425 0 425V40Z"
             fill="#D9D9D9" />
         <foreignObject width="100%" height="100%">
-            <canvas id="edit-canvas" #distanceCanvasVertical width="250" height="500"></canvas>
+            <canvas #editCanvas width="350" height="600"></canvas>
         </foreignObject>
     </svg>
 </div>
