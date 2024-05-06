@@ -32,7 +32,7 @@ export class ScenegraphService {
 
     /** create Perspective Camera */
     this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 2000);
-    this.camera!.position.z = 700;
+    this.camera!.position.z = 600;
 
     /** create Lights
      * because ArcballControl transforms the camera,
@@ -126,7 +126,7 @@ export class ScenegraphService {
 const startAnimation = function (sceneSetting: ScenegraphService) {
   const clock = new THREE.Clock();
   const animationFrame = function () {
-    sceneSetting.rotateCard();
+    //sceneSetting.rotateCard();
     sceneSetting.onRender();
     requestAnimationFrame(animationFrame);
   };

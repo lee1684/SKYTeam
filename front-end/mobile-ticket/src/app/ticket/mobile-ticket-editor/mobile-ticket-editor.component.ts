@@ -77,6 +77,8 @@ export class MobileTicketEditorComponent {
   textEditInput: ElementRef | null = null;
   @ViewChild('drawCanvas', { static: false })
   drawCanvas: ElementRef | null = null;
+  @ViewChild('selectedPhotoContainer', { static: false })
+  selectedPhotoContainer: ElementRef | null = null;
 
   @Output() public readonly onChangeViewer = new EventEmitter();
   @Output() public readonly onObjectEditEnded = new EventEmitter();
@@ -265,6 +267,30 @@ export class MobileTicketEditorComponent {
       case MobileTicketEditMode.BACKGROUND_COLOR_CHANGE:
         break;
       case MobileTicketEditMode.PHOTO:
+        // 파일 선택 대화 상자 열기
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'image/*';
+
+        // 파일 선택 이벤트 처리
+        fileInput.onchange = function () {
+          // 파일이 선택되었는지 확인
+          if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function (e: any) {
+              let img = document.getElementById('selected-photo-container');
+              (img! as HTMLImageElement).src = e.target.result;
+              (img! as HTMLImageElement).width = 200; // 이미지 크기 조절
+            }.bind(this);
+
+            // 파일을 읽어들임
+            reader.readAsDataURL(fileInput.files[0]);
+          }
+        };
+
+        // 파일 선택 대화 상자 열기
+        fileInput.click();
         break;
       case MobileTicketEditMode.STICKER:
         break;
@@ -427,7 +453,7 @@ export class MobileTicketEditorComponent {
     } else {
       switch (this.lastUsedFeature) {
         case MobileTicketEditMode.PHOTO:
-          this.loadImageRecursive(0);
+          //this.loadImageRecursive(0);
           return;
         case MobileTicketEditMode.STICKER:
           this.loadImageRecursive(0);
@@ -532,4 +558,6 @@ export class MobileTicketEditorComponent {
     this.drawingFabricCanvas!.renderAll();
     this.drawingFabricCanvas!.add(path);
   }
+
+  public endTicketWebView(): void {}
 }

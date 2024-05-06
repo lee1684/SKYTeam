@@ -14,7 +14,7 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { degToRad } from 'three/src/math/MathUtils';
+import { degToRad } from 'three/src/math/MathUtils.js';
 @Component({
   selector: 'app-mobile-ticket-edit-viewer',
   standalone: true,
@@ -121,12 +121,11 @@ export class MobileTicketEditViewerComponent {
   }
 
   public getCanvasCapture(): any {
-    this.canvas?.toDataURL({
+    const dataURL = this.canvas?.toDataURL({
       format: 'png',
       multiplier: 2,
       enableRetinaScaling: true,
     });
-    const dataURL = this.canvas?.toDataURL({ format: 'png', multiplier: 2 });
     return dataURL;
   }
 

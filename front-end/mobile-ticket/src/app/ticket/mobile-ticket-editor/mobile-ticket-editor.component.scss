@@ -110,3 +110,13 @@
     overflow-y: auto;
     height: 100%;
 }
+
+#selected-photo-container {
+    position: absolute;
+    width: 200px;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    display: flex;
+    justify-content: center;
+}

@@ -28,7 +28,7 @@ export class MobileTicket {
   public async initMobileTicket(): Promise<any> {
     /** 앞의 정보가 있다면 받아오기(앞면 정보는 항상 있을듯) */
     this.frontDecorationInfo = await this._apiExecutorService.getTicket();
-    this.backDecorationinfo = await this._apiExecutorService.getDiary();
+    this.backDecorationinfo = await this._apiExecutorService.getTicket();
     this.loadMaterial();
   }
 
@@ -54,11 +54,16 @@ export class MobileTicket {
   private initCardObject(obj: Group): void {
     this.mobileTicket = obj.children[0];
     this.mobileTicket.scale.multiplyScalar(5);
+    //roughness: 0.8,
+    //color: 0xffffff,
+    //metalness: 0.2,
     let backgroundColorString = this.frontDecorationInfo?.backgroundColor;
     ((this.mobileTicket as Mesh).material as MeshPhongMaterial).color.set(
       parseInt(backgroundColorString?.slice(1)!, 16)
     );
     this.mobileTicket.rotateOnAxis(new Vector3(0, 0, 1), Math.PI / 2);
+    this.mobileTicket!.rotateX(Math.PI / 8);
+    this.mobileTicket!.rotateY(Math.PI / 8);
     this._sceneGraphService.scene!.add(this.mobileTicket!);
     this.initSide('front');
     this.initSide('back');
@@ -74,6 +79,7 @@ export class MobileTicket {
         this.frontDecorationInfo?.fabric
       );
       this.frontSide.rotateZ(-Math.PI / 2);
+      this.frontSide.position.add(new Vector3(0, 0, 2.05));
       this.mobileTicket?.add(this.frontSide);
       this.frontSide.scale.multiplyScalar(0.205);
     } else if (side === 'back') {
@@ -95,7 +101,10 @@ export class MobileTicket {
     const cameraDirection = this._sceneGraphService.camera?.getWorldDirection(
       new Vector3(0, 0, 0)
     );
-    const frontSideDirection = new Vector3(0, 0, 1);
+    const frontSideDirection =
+      this.frontSide === null
+        ? new Vector3(0, 0, 1)
+        : new Vector3(0, 0, 1).applyQuaternion(this.frontSide.quaternion);
     if (cameraDirection!.dot(frontSideDirection!) >= 0) {
       this.frontSide!.visible = false;
       this.backSide!.visible = true;
