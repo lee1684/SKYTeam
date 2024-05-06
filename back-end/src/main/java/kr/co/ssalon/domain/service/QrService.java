@@ -7,19 +7,26 @@ import com.google.zxing.common.BitMatrix;
 import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.MemberMeeting;
+import kr.co.ssalon.domain.entity.QrLink;
 import kr.co.ssalon.domain.repository.MeetingRepository;
 import kr.co.ssalon.domain.repository.MemberMeetingRepository;
 import kr.co.ssalon.domain.repository.MemberRepository;
+import kr.co.ssalon.domain.repository.QrLinkRepository;
+import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.multipart.MultipartFile;
 import org.apache.coyote.BadRequestException;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -27,28 +34,40 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QrService {
 
+    private final RedisTemplate<String, String> redisTemplate;
+    private final MeetingRepository meetingRepository;
+    private final MemberRepository memberRepository;
     private final MemberMeetingRepository memberMeetingRepository;
     private final MemberService memberService;
     private final MeetingService meetingService;
     private final MemberMeetingService memberMeetingService;
+    private final QrLinkRepository qrLinkRepository;
 
     @Transactional
-    public String getQrLink(String username, Long moimId) throws BadRequestException {
+    public byte[] getQrLink(String username, Long moimId) throws BadRequestException {
         Meeting meeting = meetingService.findMeeting(moimId);
         Member member = memberService.findMember(username);
         MemberMeeting memberMeeting = memberMeetingService.findByMemberAndMeeting(member, meeting);
 
         try {
-            return memberMeeting.getIdentityVerificationKey();
+
+            return generateQRCode(redisTemplate.opsForValue().get(memberMeeting.getQrLink().getQrKey()));
 
         } catch (NullPointerException e) {
             String randomStr = RandomStringUtils.random(200, true, true);
 
-            memberMeeting.settingIdentityVerificationKey(randomStr);
+            // QR 이미지 생성
+            byte[] qrImage = generateQRCode(randomStr);
 
-            memberMeetingRepository.save(memberMeeting);
+            // Redis에 QR 이미지 저장
+            String redisKey = "QR_" + memberMeeting.getId();
+            redisTemplate.opsForValue().set(redisKey, randomStr);
 
-            return randomStr;
+            // MemberMeeting에 URL 저장
+            QrLink qrlink = QrLink.createQrLink(memberMeeting, redisKey);
+            qrLinkRepository.save(qrlink);
+
+            return qrImage;
         }
     }
 
@@ -59,9 +78,11 @@ public class QrService {
 
         try {
             for(MemberMeeting memberMeeting : memberMeetingList) {
-                String savedKey = memberMeeting.getIdentityVerificationKey();
+                String redisKey = memberMeeting.getQrLink().getQrKey();
 
-                if(savedKey.equals(key)) {
+                String savedImage = redisTemplate.opsForValue().get(redisKey);
+
+                if(Objects.equals(savedImage, key)) {
                     return true;
                 }
             }
@@ -70,5 +91,17 @@ public class QrService {
             throw new BadRequestException("QR 코드 비교 중 오류가 발생했습니다.");
         }
     }
-}
 
+    // QR 코드 생성 메서드
+    @Transactional
+    public byte[] generateQRCode(String randomStr) throws BadRequestException {
+        try {
+            BitMatrix encode = new MultiFormatWriter().encode(randomStr, BarcodeFormat.QR_CODE, 200, 200);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            MatrixToImageWriter.writeToStream(encode, "PNG", out);
+            return out.toByteArray();
+        } catch (Exception e) {
+            throw new BadRequestException("QR 코드 생성에 실패하였습니다.");
+        }
+    }
+}

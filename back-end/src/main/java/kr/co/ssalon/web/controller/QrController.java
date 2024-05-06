@@ -34,7 +34,7 @@ public class QrController {
     public ResponseEntity<?> getQrLink(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
         try {
             String username = customOAuth2Member.getUsername();
-            return ResponseEntity.ok().body(qrService.getQrLink(username, moimId));
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(qrService.getQrLink(username, moimId));
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
