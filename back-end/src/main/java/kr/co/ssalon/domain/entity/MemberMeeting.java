@@ -32,7 +32,9 @@ public class MemberMeeting {
     @JoinColumn(name = "diary_id")
     private Diary diary;
 
-    private String identityVerificationKey;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "qr_link_id")
+    private QrLink qrLink;
 
     @OneToMany(mappedBy = "memberMeeting")
     private final List<Message> messages = new ArrayList<>();
@@ -56,8 +58,9 @@ public class MemberMeeting {
         diary.settingMemberMeeting(this);
     }
 
-    public void settingIdentityVerificationKey(String identityVerificationKey) {
-        this.identityVerificationKey = identityVerificationKey;
+    public void settingQrLink(QrLink qrLink) {
+        this.qrLink = qrLink;
+        // qrLink.settingMemberMeeting(this);
     }
 
     public static MemberMeeting createMemberMeeting(Member member, Meeting meeting) {
