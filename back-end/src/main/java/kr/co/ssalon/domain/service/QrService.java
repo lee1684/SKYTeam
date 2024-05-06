@@ -44,20 +44,20 @@ public class QrService {
     private final QrLinkRepository qrLinkRepository;
 
     @Transactional
-    public byte[] getQrLink(String username, Long moimId) throws BadRequestException {
+    public String getQrLink(String username, Long moimId) throws BadRequestException {
         Meeting meeting = meetingService.findMeeting(moimId);
         Member member = memberService.findMember(username);
         MemberMeeting memberMeeting = memberMeetingService.findByMemberAndMeeting(member, meeting);
 
         try {
-
-            return generateQRCode(redisTemplate.opsForValue().get(memberMeeting.getQrLink().getQrKey()));
+            return redisTemplate.opsForValue().get(memberMeeting.getQrLink().getQrKey());
+            // return generateQRCode(redisTemplate.opsForValue().get(memberMeeting.getQrLink().getQrKey()));
 
         } catch (NullPointerException e) {
             String randomStr = RandomStringUtils.random(200, true, true);
 
             // QR 이미지 생성
-            byte[] qrImage = generateQRCode(randomStr);
+            // byte[] qrImage = generateQRCode(randomStr);
 
             // Redis에 QR 이미지 저장
             String redisKey = "QR_" + memberMeeting.getId();
@@ -67,7 +67,7 @@ public class QrService {
             QrLink qrlink = QrLink.createQrLink(memberMeeting, redisKey);
             qrLinkRepository.save(qrlink);
 
-            return qrImage;
+            return randomStr;
         }
     }
 
