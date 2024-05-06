@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.ssalon.domain.service.QrService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
+import kr.co.ssalon.web.dto.QrLinkDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
@@ -45,9 +46,9 @@ public class QrController {
             @ApiResponse(responseCode =  "200", description = "QR 검증 성공"),
     })
     @PostMapping("/api/tickets/{moimId}/link")
-    public ResponseEntity<?> checkQrLink(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @RequestBody String key) {
+    public ResponseEntity<?> checkQrLink(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @RequestBody QrLinkDTO qrLinkDTO) {
         try {
-            return ResponseEntity.ok().body(qrService.checkQrLink(moimId, key));
+            return ResponseEntity.ok().body(qrService.checkQrLink(moimId, qrLinkDTO.getQrKey()));
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
