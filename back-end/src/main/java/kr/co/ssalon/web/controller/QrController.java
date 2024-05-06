@@ -45,7 +45,7 @@ public class QrController {
             @ApiResponse(responseCode =  "200", description = "QR 검증 성공"),
     })
     @PostMapping("/api/tickets/{moimId}/link")
-    public ResponseEntity<?> checkQrLink(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @RequestBody byte[] key) {
+    public ResponseEntity<?> checkQrLink(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @RequestBody String key) {
         try {
             return ResponseEntity.ok().body(qrService.checkQrLink(moimId, key));
         } catch (BadRequestException e) {
