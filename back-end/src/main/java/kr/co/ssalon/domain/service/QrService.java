@@ -54,7 +54,7 @@ public class QrService {
             // return generateQRCode(redisTemplate.opsForValue().get(memberMeeting.getQrLink().getQrKey()));
 
         } catch (NullPointerException e) {
-            String randomStr = RandomStringUtils.random(200, true, true);
+            String randomStr = RandomStringUtils.random(50, true, true);
 
             // QR 이미지 생성
             // byte[] qrImage = generateQRCode(randomStr);
