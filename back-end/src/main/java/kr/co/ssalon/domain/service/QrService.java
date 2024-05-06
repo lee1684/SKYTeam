@@ -39,12 +39,12 @@ public class QrService {
         MemberMeeting memberMeeting = memberMeetingService.findByMemberAndMeeting(member, meeting);
 
         try {
-            return memberMeeting.getKey();
+            return memberMeeting.getIdentityVerificationKey();
 
         } catch (NullPointerException e) {
             String randomStr = RandomStringUtils.random(200, true, true);
 
-            memberMeeting.settingKey(randomStr);
+            memberMeeting.settingIdentityVerificationKey(randomStr);
 
             memberMeetingRepository.save(memberMeeting);
 
@@ -59,7 +59,7 @@ public class QrService {
 
         try {
             for(MemberMeeting memberMeeting : memberMeetingList) {
-                String savedKey = memberMeeting.getKey();
+                String savedKey = memberMeeting.getIdentityVerificationKey();
 
                 if(savedKey.equals(key)) {
                     return true;
