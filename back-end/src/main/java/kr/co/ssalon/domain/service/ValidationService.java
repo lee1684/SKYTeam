@@ -49,4 +49,10 @@ public class ValidationService {
         } else
             throw new BadRequestException("해당 결제를 찾을 수 없습니다");
     }
+
+    public void validationAdmin(String role) throws BadRequestException {
+        if (!role.equals("ROLE_ADMIN")) {
+            throw new BadRequestException("관리자가 아닙니다.");
+        }
+    }
 }
