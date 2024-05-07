@@ -81,7 +81,7 @@ public class TicketService {
                 .build();
 
         for (MultipartFile multipartFile : multipartFiles) {
-            String oldFileURI = multipartFile.getName();
+            String oldFileURI = multipartFile.getOriginalFilename();
             String extOldFile = oldFileURI.substring(oldFileURI.lastIndexOf('.') + 1);
             String newFileURI = moimId.toString() + "/" + generateRandomUUID() + "." + extOldFile;
 
