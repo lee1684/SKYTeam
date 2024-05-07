@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.apache.coyote.BadRequestException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ public class MemberMeeting {
         member.addMemberMeeting(this);
     }
 
-    public void joinMeeting(Meeting meeting) {
+    public void joinMeeting(Meeting meeting) throws BadRequestException {
         this.meeting = meeting;
         meeting.addParticipants(this);
     }
@@ -63,7 +64,7 @@ public class MemberMeeting {
         // qrLink.settingMemberMeeting(this);
     }
 
-    public static MemberMeeting createMemberMeeting(Member member, Meeting meeting) {
+    public static MemberMeeting createMemberMeeting(Member member, Meeting meeting) throws BadRequestException {
         Diary diary = Diary.createDiary("제목을 작성해보세요.", null, "일기를 작성해보세요.");
         MemberMeeting memberMeeting = MemberMeeting.builder().build();
         memberMeeting.joinMember(member);
