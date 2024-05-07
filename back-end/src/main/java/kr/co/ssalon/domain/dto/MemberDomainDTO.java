@@ -1,5 +1,6 @@
 package kr.co.ssalon.domain.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.MemberDates;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ public class MemberDomainDTO {
     private String address;
     private String introduction;
     private List<String> interests;
+    @Schema(hidden = true)
     private MemberDates memberDates;
 
     public MemberDomainDTO(Member member) {
