@@ -36,7 +36,7 @@ public class Meeting {
     @JoinColumn(name = "ticket_id")
     private Ticket ticket;
 
-    @OneToMany(mappedBy = "meeting")
+    @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<MemberMeeting> participants = new ArrayList<>();
 
     @ElementCollection
