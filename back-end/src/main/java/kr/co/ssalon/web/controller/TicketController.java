@@ -27,9 +27,12 @@ public class TicketController {
         return ResponseEntity.ok(ticketService.loadTicket(moimId));
     }
 
-    @PutMapping("/{moimId}") // 모임 증표 편집에 의한 신규 파일 업로드
+    @PutMapping("/{moimId}") // 모임 증표 편집에 의한 JSON 업로드
     public ResponseEntity<TicketEditResponseDTO> uploadJSON(@PathVariable("moimId") Long moimId, @RequestPart String json) {
-        return ResponseEntity.ok(ticketService.editTicketJSON(moimId, json));
+
+        TicketEditResponseDTO ticketEditResponseDTO = ticketService.editTicketJSON(moimId, json);
+        if (ticketEditResponseDTO.getResultJson().equals("200 OK")) return ResponseEntity.ok(ticketEditResponseDTO);
+        else return ResponseEntity.badRequest().body(ticketEditResponseDTO);
     }
 
     @DeleteMapping("/{moimId}") // 모임 삭제에 의한 S3 등록 데이터 삭제
