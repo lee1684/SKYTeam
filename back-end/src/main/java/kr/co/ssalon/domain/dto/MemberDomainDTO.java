@@ -18,6 +18,7 @@ public class MemberDomainDTO {
 
     private String nickname;
     private String profilePictureUrl;
+    @Schema(example = "'M', 'F', 'G'")
     private Character gender;
     private String address;
     private String introduction;
