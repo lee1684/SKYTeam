@@ -7,7 +7,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import kr.co.ssalon.domain.dto.MeetingFilter;
+import kr.co.ssalon.domain.dto.MeetingOrder;
 import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.web.dto.MeetingSearchCondition;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
                 .selectFrom(meeting)
                 .where(
                         categoryNameEq(meetingSearchCondition.getCategory()))
-                .orderBy(orderEq(meetingSearchCondition.getMeetingFilter()))
+                .orderBy(orderEq(meetingSearchCondition.getOrder()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -61,16 +61,16 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
     }
 
     // 정렬 필터링
-    private OrderSpecifier<?> orderEq(MeetingFilter meetingFilter) {
+    private OrderSpecifier<?> orderEq(MeetingOrder meetingOrder) {
         Order desc = Order.DESC;
         Order asc = Order.ASC;
-        if (meetingFilter == MeetingFilter.CAPACITY) {
+        if (meetingOrder == MeetingOrder.CAPACITY) {
             return new OrderSpecifier<>(desc, meeting.capacity);
         }
-        if (meetingFilter == MeetingFilter.NUMBER) {
+        if (meetingOrder == MeetingOrder.NUMBER) {
             return new OrderSpecifier<>(asc, meeting.id);
         }
-        if (meetingFilter == MeetingFilter.RECENT) {
+        if (meetingOrder == MeetingOrder.RECENT) {
             return new OrderSpecifier<>(desc, meeting.meetingDate);
         }
         return new OrderSpecifier(asc, NullExpression.DEFAULT, OrderSpecifier.NullHandling.Default);
