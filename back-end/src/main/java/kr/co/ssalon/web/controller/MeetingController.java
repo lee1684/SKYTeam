@@ -7,9 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.ssalon.domain.dto.MeetingDomainDTO;
 import kr.co.ssalon.domain.service.MeetingService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
-import kr.co.ssalon.web.dto.JsonResult;
-import kr.co.ssalon.web.dto.MeetingDTO;
-import kr.co.ssalon.web.dto.MeetingListSearchDTO;
+import kr.co.ssalon.web.dto.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
@@ -19,7 +17,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import kr.co.ssalon.domain.entity.Meeting;
-import kr.co.ssalon.web.dto.MeetingSearchCondition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,11 +57,11 @@ public class MeetingController {
             @ApiResponse(responseCode = "200", description = "모임 목록 조회 성공"),
     })
     @GetMapping("/api/moims")
-    public ResponseEntity<List<MeetingListSearchDTO>> getMoims(MeetingSearchCondition meetingSearchCondition, Pageable pageable) {
+    public ResponseEntity<MeetingListSearchPageDTO> getMoims(MeetingSearchCondition meetingSearchCondition, Pageable pageable) {
         Page<Meeting> moims = meetingService.getMoims(meetingSearchCondition, pageable);
         Page<MeetingListSearchDTO> moimsDto = moims.map(meeting -> new MeetingListSearchDTO(meeting));
-        List<MeetingListSearchDTO> content = moimsDto.getContent();
-        return ResponseEntity.ok().body(new JsonResult<>(content).getData());
+        MeetingListSearchPageDTO meetingListSearchPageDTO = new MeetingListSearchPageDTO(moimsDto);
+        return ResponseEntity.ok().body(new JsonResult<>(meetingListSearchPageDTO).getData());
     }
 
     // 모임 개설
