@@ -78,6 +78,6 @@ public class MeetingControllerTest {
 
         // then
         resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)));
+                .andExpect(jsonPath("$.content[0].categoryName",is("운동")));
     }
 }
