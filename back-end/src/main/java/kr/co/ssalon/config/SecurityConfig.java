@@ -1,6 +1,7 @@
 package kr.co.ssalon.config;
 
 import jakarta.servlet.http.HttpServletRequest;
+import kr.co.ssalon.filer.LoginDefaultFilter;
 import kr.co.ssalon.jwt.JWTFilter;
 import kr.co.ssalon.jwt.JWTUtil;
 import kr.co.ssalon.jwt.RedisRefreshTokenRepository;
@@ -15,7 +16,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -77,6 +80,7 @@ public class SecurityConfig {
                 .httpBasic((auth) -> auth.disable());
 
         // JWT 필터 추가
+
         http
                 .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
 
@@ -84,6 +88,9 @@ public class SecurityConfig {
         // 로그아웃 필터 추가
          http.addFilterBefore(new CustomLogoutFilter(jwtUtil, redisRefreshTokenRepository), LogoutFilter.class);
 
+
+         // accesstoken 없을 떄 작동하는 필터 추가
+        http.addFilterAfter(new LoginDefaultFilter(), UsernamePasswordAuthenticationFilter.class);
 
         // oauth2
         http
