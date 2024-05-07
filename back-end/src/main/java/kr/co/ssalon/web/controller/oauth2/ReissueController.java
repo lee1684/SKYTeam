@@ -2,6 +2,8 @@ package kr.co.ssalon.web.controller.oauth2;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,6 +39,7 @@ public class ReissueController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Access Token 재발급 성공"),
     })
+    @Parameter(name = "Refresh", description = "Refresh Header에 refresh token 추가", in = ParameterIn.HEADER, required = true)
     @PostMapping("/api/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
