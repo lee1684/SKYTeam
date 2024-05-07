@@ -13,6 +13,7 @@ import kr.co.ssalon.web.dto.MemberSignDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -71,5 +72,16 @@ public class UserController {
     @DeleteMapping("/api/auth/logout")
     public void logout() {
         // swagger logout API 작성용으로 만든 빈 메소드
+    }
+
+    @Operation(summary = "회원 탈퇴")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공"),
+    })
+    @DeleteMapping("/api/users/me")
+    public ResponseEntity<String> withdraw(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) throws BadRequestException {
+        String username = customOAuth2Member.getUsername();
+        memberService.withdraw(username);
+        return ResponseEntity.ok("회원 탈퇴 성공");
     }
 }

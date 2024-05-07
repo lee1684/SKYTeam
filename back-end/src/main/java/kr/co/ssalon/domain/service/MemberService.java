@@ -1,15 +1,17 @@
 package kr.co.ssalon.domain.service;
 
 import kr.co.ssalon.domain.dto.MemberDomainDTO;
+import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Member;
+import kr.co.ssalon.domain.entity.MemberMeeting;
+import kr.co.ssalon.domain.repository.MeetingRepository;
 import kr.co.ssalon.domain.repository.MemberRepository;
-import kr.co.ssalon.web.dto.MemberDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,6 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final MeetingRepository meetingRepository;
 
     @Transactional
     public Member register(String username, String email, String role) throws Exception {
@@ -73,5 +76,23 @@ public class MemberService {
             currentUser.initMemberDates();
         }
         return currentUser;
+    }
+
+    @Transactional
+    public void withdraw(String username) throws BadRequestException {
+        // 멤버 찾기
+        Member currentUser = findMember(username);
+
+        // 개설한 모임 제거
+        List<MemberMeeting> joinedMeetings = currentUser.getJoinedMeetings();
+        for (MemberMeeting memberMeeting : joinedMeetings) {
+            Meeting joinedMeeting = memberMeeting.getMeeting();
+            if (joinedMeeting.getCreator().equals(currentUser)) {
+                meetingRepository.delete(joinedMeeting);
+            }
+        }
+
+        // 멤버 제거
+        memberRepository.delete(currentUser);
     }
 }
