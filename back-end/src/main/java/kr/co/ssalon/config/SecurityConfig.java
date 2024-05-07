@@ -99,6 +99,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/api/tickets/**").permitAll()
                         .requestMatchers("/api/reissue").permitAll()
+                        .requestMatchers("/web/ticket/**").permitAll() // 개발 완료 후 삭제 필수
                         .requestMatchers("/api/**").authenticated()
                         .requestMatchers("/**").permitAll());
 
