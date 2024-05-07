@@ -153,7 +153,7 @@ public class MeetingServiceTest {
         Meeting meeting = mock(Meeting.class);
         when(meeting.getId()).thenReturn(1L);
         when(meetingRepository.findById(meeting.getId())).thenReturn(Optional.of(meeting));
-        when(memberMeetingRepository.existsByMemberId(member.getId())).thenReturn(false);
+        when(memberMeetingRepository.existsByMemberIdAndMeetingId(member.getId(),meeting.getId())).thenReturn(false);
 
         MemberMeeting memberMeeting = mock(MemberMeeting.class);
         when(memberMeeting.getId()).thenReturn(1L);
