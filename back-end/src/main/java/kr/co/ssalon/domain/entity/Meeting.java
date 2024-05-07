@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.apache.coyote.BadRequestException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -105,7 +106,10 @@ public class Meeting {
         this.category = category;
     }
 
-    public void addParticipants(MemberMeeting memberMeeting) {
+    public void addParticipants(MemberMeeting memberMeeting) throws BadRequestException {
+        if(capacity == getParticipants().size()){
+            throw new BadRequestException("인원이 다 찼습니다.");
+        }
         getParticipants().add(memberMeeting);
     }
 
