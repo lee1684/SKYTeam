@@ -1,6 +1,15 @@
 package kr.co.ssalon.web.dto;
 
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public record TicketEditResponseDTO(String resultJson, String jsonElement, List<String> resultSrc) {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class TicketEditResponseDTO {
+    private String resultJson;
+    private String jsonElement;
 }
