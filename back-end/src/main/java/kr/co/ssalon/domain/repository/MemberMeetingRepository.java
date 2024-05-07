@@ -16,6 +16,6 @@ public interface MemberMeetingRepository extends JpaRepository<MemberMeeting,Lon
     void deleteByMeetingId(Long meetingId);
 
 
-    boolean existsByMemberId(Long memberId);
+    boolean existsByMemberIdAndMeetingId(Long memberId,Long meetingId);
 
 }
