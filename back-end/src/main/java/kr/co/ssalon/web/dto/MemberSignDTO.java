@@ -32,6 +32,6 @@ public class MemberSignDTO {
         this.role = member.getRole();
         this.introduction = member.getIntroduction();
         this.interests = member.getInterests();
-        this.joinDate = member.getMemberDates().getJoinDate();
+        this.joinDate = member.getMemberDates() != null ? member.getMemberDates().getJoinDate() : null;
     }
 }
