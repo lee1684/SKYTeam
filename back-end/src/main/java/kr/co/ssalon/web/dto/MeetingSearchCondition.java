@@ -1,6 +1,7 @@
 package kr.co.ssalon.web.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import kr.co.ssalon.domain.dto.MeetingFilter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,4 +15,7 @@ import lombok.NoArgsConstructor;
 public class MeetingSearchCondition {
     @Schema(description = "카테고리 이름",example = "운동, 공부, ... 등")
     private String category;
+
+    @Schema(description = "정렬",example = "인원수, 모임 번호, .... 등")
+    private MeetingFilter meetingFilter;
 }
