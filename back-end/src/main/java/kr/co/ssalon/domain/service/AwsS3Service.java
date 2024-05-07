@@ -63,30 +63,23 @@ public class AwsS3Service {
         } catch (Exception e) {
             // 임시 에러 로깅 처리
             e.printStackTrace();
-            return "Failed to Upload JSON";
+            return "502 Bad Gateway";
         }
 
-        return "Success";
+        return "200 OK";
     }
 
-    public List<String> uploadMultiFilesViaMultipart(List<MultipartFile> multipartFiles, Map<String, String> imageKeyMap) {
-        List<String> fileUrlList = new ArrayList<>();
+    public int uploadMultiFilesViaMultipart(List<MultipartFile> multipartFiles, Map<String, String> imageKeyMap) {
+        int successfulUpload = 0;
 
-        multipartFiles.forEach(multipartFile -> {
+        for (MultipartFile multipartFile : multipartFiles) {
+            String oldFileURI = getFileName(multipartFile);
+            String newFileURI = imageKeyMap.get(oldFileURI);
+
             if (multipartFile.isEmpty()) {
-                // log.info("image is null");
-                fileUrlList.add("Failed to upload - null image: " + getFileName(multipartFile));
-            }
-
-            String oldfileName = getFileName(multipartFile);
-            String newFileURI = "";
-            for (String fileURI : imageKeyMap.keySet()) {
-                String regexName = "\\S*" + oldfileName;
-
-                if (fileURI.matches(regexName)) {
-                    newFileURI = imageKeyMap.get(fileURI);
-                    break;
-                }
+                log.info("ERROR in AWS S3 Service: Provided image is null");
+                imageKeyMap.replace(oldFileURI, "");
+                continue;
             }
 
             try {
@@ -97,20 +90,24 @@ public class AwsS3Service {
                         .key(newFileURI)
                         .build();
                 RequestBody requestBody = RequestBody.fromBytes(multipartFile.getBytes());
+
                 s3Client.putObject(putObjectRequest, requestBody);
             } catch (IOException e) {
-                // log.error("cannot upload image",e);
+                log.error("ERROR in AWS S3 Service: IO exception during upload");
+                imageKeyMap.replace(oldFileURI, "");
                 throw new RuntimeException(e);
             }
+
             GetUrlRequest getUrlRequest = GetUrlRequest.builder()
                     .bucket(bucketStaticName)
                     .key(newFileURI)
                     .build();
+            imageKeyMap.replace(oldFileURI, s3Client.utilities().getUrl(getUrlRequest).toString());
 
-            fileUrlList.add(s3Client.utilities().getUrl(getUrlRequest).toString());
-        });
+            successfulUpload++;
+        }
 
-        return fileUrlList;
+        return successfulUpload;
     }
 
     public String uploadSingleFileViaMultipart(Long moimId, MultipartFile multipartFile, Map<String, String> imageSrcMap) {

@@ -3,8 +3,10 @@ package kr.co.ssalon.web.controller;
 import kr.co.ssalon.web.dto.TicketEditResponseDTO;
 import kr.co.ssalon.domain.service.AwsS3Service;
 import kr.co.ssalon.domain.service.TicketService;
+import kr.co.ssalon.web.dto.TicketImageResponseDTO;
 import kr.co.ssalon.web.dto.TicketInitResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,9 +27,12 @@ public class TicketController {
         return ResponseEntity.ok(ticketService.loadTicket(moimId));
     }
 
-    @PutMapping("/{moimId}") // 모임 증표 편집에 의한 신규 파일 업로드
-    public ResponseEntity<TicketEditResponseDTO> uploadFiles(@PathVariable("moimId") Long moimId, @RequestPart String json, @RequestPart List<MultipartFile> files) {
-        return ResponseEntity.ok(ticketService.editTicket(moimId, json, files));
+    @PutMapping("/{moimId}") // 모임 증표 편집에 의한 JSON 업로드
+    public ResponseEntity<TicketEditResponseDTO> uploadJSON(@PathVariable("moimId") Long moimId, @RequestPart String json) {
+
+        TicketEditResponseDTO ticketEditResponseDTO = ticketService.editTicketJSON(moimId, json);
+        if (ticketEditResponseDTO.getResultJson().equals("200 OK")) return ResponseEntity.ok(ticketEditResponseDTO);
+        else return ResponseEntity.badRequest().body(ticketEditResponseDTO);
     }
 
     @DeleteMapping("/{moimId}") // 모임 삭제에 의한 S3 등록 데이터 삭제
@@ -38,5 +43,18 @@ public class TicketController {
     @PostMapping("/{moimId}") // 모임 생성 요청에 의한 템플릿 기반 신규 증표 생성
     public ResponseEntity<TicketInitResponseDTO> postFile(@PathVariable("moimId") Long moimId) {
         return ResponseEntity.ok(ticketService.initTicket(moimId));
+    }
+
+    @PostMapping(value = "/{moimId}/image") // 모임 증표 편집 시 이미지 업로드
+    public ResponseEntity<TicketImageResponseDTO> uploadFiles(@PathVariable("moimId") Long moimId, @RequestPart List<MultipartFile> files) {
+
+        TicketImageResponseDTO ticketImageResponseDTO = ticketService.uploadImages(moimId, files);
+
+        return switch (ticketImageResponseDTO.getResultCode()) {
+            case "201 Created" -> ResponseEntity.status(HttpStatus.CREATED).body(ticketImageResponseDTO);
+            case "206 Partial Content" -> ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(ticketImageResponseDTO);
+            case "502 Bad Gateway" -> ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(ticketImageResponseDTO);
+            default -> ResponseEntity.badRequest().body(ticketImageResponseDTO); // 400 Bad Request
+        };
     }
 }

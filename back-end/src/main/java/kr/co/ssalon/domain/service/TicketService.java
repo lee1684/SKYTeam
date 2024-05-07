@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import kr.co.ssalon.domain.entity.Ticket;
 import kr.co.ssalon.domain.repository.TicketRepository;
 import kr.co.ssalon.web.dto.TicketEditResponseDTO;
+import kr.co.ssalon.web.dto.TicketImageResponseDTO;
 import kr.co.ssalon.web.dto.TicketInitResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
@@ -66,7 +67,51 @@ public class TicketService {
     }
 
     @Transactional
-    public TicketEditResponseDTO editTicket(Long moimId, String json, List<MultipartFile> multipartFiles) {
+    public TicketImageResponseDTO uploadImages(Long moimId, List<MultipartFile> multipartFiles) {
+
+        Map<String, String> imageSrcMap = new HashMap<>();
+
+        int requestSize = multipartFiles.size();
+
+        if (requestSize == 0) return TicketImageResponseDTO.builder()
+                .resultCode("400 Bad Request")
+                .numRequest(requestSize)
+                .numResult(0)
+                .mapURI(null)
+                .build();
+
+        for (MultipartFile multipartFile : multipartFiles) {
+            String oldFileURI = multipartFile.getOriginalFilename();
+            String extOldFile = oldFileURI.substring(oldFileURI.lastIndexOf('.') + 1);
+            String newFileURI = moimId.toString() + "/" + generateRandomUUID() + "." + extOldFile;
+
+            imageSrcMap.put(oldFileURI, newFileURI);
+        }
+
+        int resultSize = awsS3Service.uploadMultiFilesViaMultipart(multipartFiles, imageSrcMap);
+
+        if (requestSize == resultSize) return TicketImageResponseDTO.builder()
+                .resultCode("201 Created")
+                .numRequest(requestSize)
+                .numResult(resultSize)
+                .mapURI(imageSrcMap)
+                .build();
+        else if (resultSize > 0) return TicketImageResponseDTO.builder()
+                .resultCode("206 Partial Content")
+                .numRequest(requestSize)
+                .numResult(resultSize)
+                .mapURI(imageSrcMap)
+                .build();
+        else return TicketImageResponseDTO.builder()
+                    .resultCode("502 Bad Gateway")
+                    .numRequest(requestSize)
+                    .numResult(resultSize)
+                    .mapURI(imageSrcMap)
+                    .build();
+    }
+
+    @Transactional
+    public TicketEditResponseDTO editTicketJSON(Long moimId, String json) {
         // 주어진 모임ID 바탕으로 티켓 업로드 내용 수정
         // 현재(240424)는 기존 내용 삭제 후 새로 업로드
         // 추후 : 이전 티켓 수정 기록 보존을 고려할 것
@@ -79,12 +124,8 @@ public class TicketService {
         JsonElement jsonElement = editTicketJsonSrc(moimId.toString(), moimId.toString(), json, imageSrcMap);
         String resultJson = awsS3Service.uploadFileViaStream(moimId, jsonElement.toString());
 
-        // 파일 업로드 진행
-        List<String> resultSrc = awsS3Service.uploadMultiFilesViaMultipart(multipartFiles, imageSrcMap);
-        // resultSrc.add(awsS3Service.uploadSingleFileViaMultipart(moimId, thumbnail, imageSrcMap));
-
         // 결과 반환
-        return new TicketEditResponseDTO(resultJson, jsonElement.toString(), resultSrc);
+        return new TicketEditResponseDTO(resultJson, jsonElement.toString());
     }
 
     @Transactional
