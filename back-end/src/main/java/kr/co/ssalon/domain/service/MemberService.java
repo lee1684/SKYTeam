@@ -54,6 +54,10 @@ public class MemberService {
         return member;
     }
 
+    public List<Member> findAllMember() {
+        return memberRepository.findAll();
+    }
+
 
     public void validationUsername(String username) throws Exception {
         Optional<Member> findMember = memberRepository.findByUsername(username);
@@ -76,6 +80,18 @@ public class MemberService {
             currentUser.initMemberDates();
         }
         return currentUser;
+    }
+
+    @Transactional
+    public Member updateUserInfoForAdmin(Long userId, MemberDomainDTO additionalInfo) throws BadRequestException {
+        Member updateUser = findMember(userId);
+
+        updateUser.initDetailSignInfo(
+                additionalInfo.getNickname(), additionalInfo.getProfilePictureUrl(),
+                additionalInfo.getGender(), additionalInfo.getAddress(), additionalInfo.getIntroduction(),
+                additionalInfo.getInterests()
+        );
+        return updateUser;
     }
 
     @Transactional
