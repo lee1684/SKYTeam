@@ -16,13 +16,14 @@ export const setToken = function (
 export class ApiExecutorService {
   public apiExecutor: AxiosInstance | null = null;
   public apiExecutorJson: AxiosInstance | null = null;
-  //public apiURL: string = 'http://3.34.0.190:8080/api';
-  public apiURL: string = 'http://localhost:8080/api';
+  public apiURL: string = 'http://3.34.0.190:8080/api';
+  //public apiURL: string = 'https://477d-2001-2d8-2099-5ce4-d106-27ec-4586-b5f0.ngrok-free.app/api';
+  //public apiURL: string = 'http://localhost:8080/api';
   public tokens = {
     access:
-      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTUwNzc0MzcsImV4cCI6MTcxNTE2MzgzN30.TurCJ_OEBy3kuNGcZFfBrtQb2ejySywncC0vrFipRkQ',
+      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTUxNzgyMjAsImV4cCI6MTcxNTI2NDYyMH0.ceFBQpGN4R6eXOq8Y89CigETJd2YTlM4fEOnssw42bE',
     refresh:
-      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6InJlZnJlc2giLCJ1c2VybmFtZSI6Im5hdmVyIGx6YVdfaFJqa3NZM2V6NTVLSXJKV3RPZjJNak4tRmcySW1BeUlwTzhTZXMiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzE1MDc3NDM3LCJleHAiOjE3MTUxNjM4Mzd9.UnuTh9J9kcUKn1FnO_VEnzG25gBkRoqL4ZWwqhT07dU',
+      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6InJlZnJlc2giLCJ1c2VybmFtZSI6Im5hdmVyIGx6YVdfaFJqa3NZM2V6NTVLSXJKV3RPZjJNak4tRmcySW1BeUlwTzhTZXMiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzE1MTc4MjIwLCJleHAiOjE3MTUyNjQ2MjB9.iaVFRSHyu5EIsRiv7f1SeLYbhPvztFRaaofscW2lXuw',
   };
   private _token: string = this.tokens.access;
   public refreshToken: string = this.tokens.refresh;
@@ -110,7 +111,7 @@ export class ApiExecutorService {
       console.log(typeof response!.data);
       return response!.data;
     } catch (error) {
-      console.log(error);
+      return 'asdfo7a809sd7fwae9089iafa';
     }
   }
 
@@ -120,6 +121,15 @@ export class ApiExecutorService {
       let response = await this.apiExecutorJson?.post(
         `/tickets/${this._ssalonConfigService.MOIM_ID}/link`,
         body
+      );
+      return response!.data;
+    } catch {}
+  }
+
+  public async getJoiningUsers() {
+    try {
+      let response = await this.apiExecutorJson?.get(
+        `/moims/${this._ssalonConfigService.MOIM_ID}/users`
       );
       return response!.data;
     } catch {}

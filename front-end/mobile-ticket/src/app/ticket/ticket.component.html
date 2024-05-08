@@ -4,31 +4,12 @@
     <div><app-simple-button class="back-button" [buttonElement]="this.goBackButtonElement" [heightSize]="36"
         (onClickEvent)="this.onClickBackButton()"></app-simple-button></div>
 
-    <div class="horizontal-container">
-      <app-simple-button class="back-button" [buttonElement]="this.goBackButtonElement" [heightSize]="36"
-        (onClickEvent)="this.onClickQRCodeButton()"></app-simple-button>
-      <img id='qrcode-container' [src]="this.qrCodeSrc" alt="이미지" />
-
-    </div>
   </div>
 
-  <div [style.height]="'100%'" *ngIf="!this.isDetectingQRCode">
+  <div [style.height]="'100%'">
     <app-mobile-ticket-viewer></app-mobile-ticket-viewer>
   </div>
-  <div *ngIf="this.isDetectingQRCode">
-    <div id="qr-detector">
-      <video #qrVideo [style.width]="'100%'" [style.height]="'100%'" autoplay playsInline
-        [style.object-fit]="'cover'"></video>
-      <canvas id="qr-canvas" #qrCanvas [style.display]="'none'"></canvas>
-      <div id="qr-guide">
-        <!--
-        <img src="assets/qr-guide.png" height="300px" />
-        -->
-      </div>
-    </div>
 
-    {{this.people}}
-  </div>
 </div>
 
 <!-- APPEDITVIEW: 앱에서 보는 꾸미기 화면의 경우 -->
@@ -54,4 +35,62 @@
   <div>
     <app-simple-button [buttonElement]="this.joinButtonElement"></app-simple-button>
   </div>
+</div>
+
+<!-- QRCHECKVIEW: QRCODE 확인하는 화면의 경우 -->
+<div class="container" *ngIf="this.mode === this.mobileTicketViewMode.QRCHECKVIEW" #qrCheckView>
+  <div class="horizontal-container" [style.justify-content]="'space-between'">
+    <div><app-simple-button class="back-button" [buttonElement]="this.goBackButtonElement" [heightSize]="36"
+        (onClickEvent)="this.onClickBackButton()"></app-simple-button></div>
+  </div>
+
+  <div id="qr-detector">
+    <video #qrVideo [style.width]="'100%'" [style.height]="'100%'" autoplay playsInline
+      [style.object-fit]="'cover'"></video>
+    <canvas id="qr-canvas" #qrCanvas [style.display]="'none'"></canvas>
+    <div id="qr-guide-container">
+      <img id="qr-guide" src="assets/qr-guide.png" height="300px" />
+    </div>
+  </div>
+
+  <div id="join-user-container" [style.margin-top]="'30px'">
+    <div class="horizontal-container" [style.justify-content]="'center'">
+      <div id="qr-checking-user-container">
+        <div id="qr-checking-user-profile-img">
+          <img
+            [src]="this.checkStatus.checkingUser?this.checkStatus.checkingUser.profilePictureUrl:'assets/data_error.png'"
+            height="50px" />
+        </div>
+        <div id="qr-check-info-container">
+          <div class="qr-check-info" [style.font-size]="'20px'">
+            {{this.checkStatus.checkingUser?this.checkStatus.checkingUser.nickname:'알수없음'}}</div>
+          <div class="qr-check-info" [style.color]="this.checkStatus.color">{{this.checkStatus.text}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="join-user-list">
+      <app-circle-toggle-button-group [elements]="this.joiningUsers"
+        [isLabelVisible]="true"></app-circle-toggle-button-group>
+    </div>
+  </div>
+</div>
+
+<!-- QRSHOWVIEW: QRCODE 보여주는 화면의 경우 -->
+<div class="container" *ngIf="this.mode === this.mobileTicketViewMode.QRSHOWVIEW" #qrShowView>
+  <div class="horizontal-container" [style.justify-content]="'space-between'">
+    <div><app-simple-button class="back-button" [buttonElement]="this.goBackButtonElement" [heightSize]="36"
+        (onClickEvent)="this.onClickBackButton()"></app-simple-button></div>
+
+  </div>
+  <div [style.height]="'100%'">
+    <app-mobile-ticket-viewer></app-mobile-ticket-viewer>
+  </div>
+  <div id="qrcode-overay">
+    <div id="qrcode-container">
+      <img id='qrcode' [src]="this.qrCodeSrc" alt="이미지" />
+    </div>
+  </div>
+
+
 </div>

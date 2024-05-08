@@ -20,7 +20,6 @@ export class AppComponent {
     this._ssalonConfigService.MOIM_ID = resolvedData.moimId;
     this._ssalonConfigService.VIEW_TYPE = resolvedData.viewType;
     this._ssalonConfigService.FACE_TYPE = resolvedData.faceType;
-    this._ssalonConfigService.QR = resolvedData.qr;
   }
   public ngAfterViewInit(): void {
     console.log(this._ssalonConfigService);
