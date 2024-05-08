@@ -16,10 +16,19 @@
     <app-mobile-ticket-viewer></app-mobile-ticket-viewer>
   </div>
   <div *ngIf="this.isDetectingQRCode">
-    <video [style.height]="'100%'" #qrVideo autoplay></video>
-    <canvas [style.height]="'100%'" #qrCanvas></canvas>
-  </div>
+    <div id="qr-detector">
+      <video #qrVideo [style.width]="'100%'" [style.height]="'100%'" autoplay playsInline
+        [style.object-fit]="'cover'"></video>
+      <canvas id="qr-canvas" #qrCanvas [style.display]="'none'"></canvas>
+      <div id="qr-guide">
+        <!--
+        <img src="assets/qr-guide.png" height="300px" />
+        -->
+      </div>
+    </div>
 
+    {{this.people}}
+  </div>
 </div>
 
 <!-- APPEDITVIEW: 앱에서 보는 꾸미기 화면의 경우 -->
@@ -41,5 +50,8 @@
 <div class="container" *ngIf="this.mode === this.mobileTicketViewMode.WEBVIEW" #webView>
   <div [style.height]="'100%'">
     <app-mobile-ticket-viewer></app-mobile-ticket-viewer>
+  </div>
+  <div>
+    <app-simple-button [buttonElement]="this.joinButtonElement"></app-simple-button>
   </div>
 </div>

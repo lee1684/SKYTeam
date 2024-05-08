@@ -1,13 +1,24 @@
-import { Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
+import { ResolverService } from './service/resolver.service';
+import { NgModule } from '@angular/core';
 
 export const routes: Routes = [
   {
-    path: 'info?moim=:moimId&page=:viewType&face=:faceType',
+    path: '?moimId=:moimId&viewType=:viewType&faceType=:faceType&qr=:qr',
     component: AppComponent,
   },
+  {
+    path: '',
+    component: AppComponent,
+    resolve: {
+      data: ResolverService,
+    },
+  },
 ];
-// 페이지타입: enum { view=0, edit=1, share=2}
-// 앞또는뒤: enum { front=0, back=1, null=2 } null은 페이지타입 share에서 사용
-// /info?moim={모임아이디}&page={페이지타입}&face={앞또는뒤}
-// ex) /info?moim=11111111&page=1&face=0
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}

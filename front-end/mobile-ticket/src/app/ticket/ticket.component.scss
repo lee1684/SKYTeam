@@ -11,8 +11,21 @@
     align-items: center;
 }
 
+#qr-detector {
+    width: 100%;
+    height: 300px;
+}
+
 #qrcode-container {
     width: 50px;
     height: 50px;
     margin-right: 5px;
+}
+
+#qr-guide {
+    width: 100%;
+    height: 300px;
+    position: absolute;
+    top: 55px;
+    left: 0;
 }

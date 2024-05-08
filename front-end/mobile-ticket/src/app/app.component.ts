@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { TicketComponent } from './ticket/ticket.component';
+import { SsalonConfigService } from './service/ssalon-config.service';
 
 @Component({
   selector: 'app-root',
@@ -10,16 +11,18 @@ import { TicketComponent } from './ticket/ticket.component';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  public moimId: number = -1;
-  private readonly _token =
-    'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTQzODMxOTQsImV4cCI6MTcxNDM4Mzc5NH0.h6YWas--xg78ySTZ4Vwku6Kvkye2Z3lnAvm8iXJGXGs';
-  constructor() {
-    //this.setCookie('Cookie', `access=${this._token}`, 14);
+  constructor(
+    private _route: ActivatedRoute,
+    private _ssalonConfigService: SsalonConfigService
+  ) {}
+  public ngOnInit(): void {
+    const resolvedData = this._route.snapshot.data['data'];
+    this._ssalonConfigService.MOIM_ID = resolvedData.moimId;
+    this._ssalonConfigService.VIEW_TYPE = resolvedData.viewType;
+    this._ssalonConfigService.FACE_TYPE = resolvedData.faceType;
+    this._ssalonConfigService.QR = resolvedData.qr;
   }
-  private setCookie(name: string, value: string, exp: number) {
-    var date = new Date();
-    date.setTime(date.getTime() + exp * 24 * 60 * 60 * 1000);
-    document.cookie =
-      name + '=' + value + ';expires=' + date.toUTCString() + ';path=/';
+  public ngAfterViewInit(): void {
+    console.log(this._ssalonConfigService);
   }
 }

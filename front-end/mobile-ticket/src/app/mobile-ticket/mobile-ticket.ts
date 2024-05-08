@@ -11,7 +11,11 @@ import {
 } from 'three';
 import { ScenegraphService } from '../service/scenegraph.service';
 import { ApiExecutorService } from '../service/api-executor.service';
-import { DecorationInfo } from '../service/ssalon-config.service';
+import {
+  DecorationInfo,
+  SsalonConfigService,
+} from '../service/ssalon-config.service';
+import { ActivatedRoute } from '@angular/router';
 
 export class MobileTicket {
   public mobileTicket: Object3D | null = null;
