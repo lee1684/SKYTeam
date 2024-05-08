@@ -174,4 +174,19 @@ public class MeetingController {
         }
     }
 
+
+    @Operation(summary = "모임 개최자 검증")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "모임 개최자 검증 성공"),
+    })
+    @GetMapping("/api/moims/{moimId}/creator")
+    public ResponseEntity<?> isCreator(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
+        try {
+            String username = customOAuth2Member.getUsername();
+            return ResponseEntity.ok().body(meetingService.isCreator(username, moimId));
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
