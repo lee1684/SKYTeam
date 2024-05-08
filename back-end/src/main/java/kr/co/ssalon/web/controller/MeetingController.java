@@ -1,6 +1,8 @@
 package kr.co.ssalon.web.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -142,7 +144,9 @@ public class MeetingController {
     // 성공/실패 여부, 모임 참가자 목록
     @Operation(summary = "모임 참가자 목록 조회")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "모임 참가자 목록 조회"),
+            @ApiResponse(responseCode = "200", description = "모임 참가자 목록 조회", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ParticipantDTO.class))
+            }),
     })
     @GetMapping("/api/moims/{moimId}/users")
     public ResponseEntity<?> getUsers(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {

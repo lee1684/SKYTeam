@@ -4,6 +4,7 @@ import kr.co.ssalon.domain.dto.MeetingDomainDTO;
 import kr.co.ssalon.domain.entity.*;
 import kr.co.ssalon.domain.repository.*;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
+import kr.co.ssalon.web.dto.ParticipantDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import kr.co.ssalon.web.dto.MeetingSearchCondition;
@@ -146,11 +147,11 @@ public class MeetingService {
     }
 
     // 모임에 참여한 유저 조회
-    public List<Long> getUsers(Long moimId) throws BadRequestException {
+    public List<ParticipantDTO> getUsers(Long moimId) throws BadRequestException {
         Meeting meeting = findMeeting(moimId);
         List<MemberMeeting> participants = meeting.getParticipants();
-        List<Long> participantsId = participants.stream().map(MemberMeeting::getId).collect(Collectors.toList());
-        return participantsId;
+        List<ParticipantDTO> participantsDTO = participants.stream().map(ParticipantDTO::new).collect(Collectors.toList());
+        return participantsDTO;
     }
 
 
