@@ -7,9 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.ssalon.domain.dto.MeetingDomainDTO;
 import kr.co.ssalon.domain.service.MeetingService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
-import kr.co.ssalon.web.dto.JsonResult;
-import kr.co.ssalon.web.dto.MeetingDTO;
-import kr.co.ssalon.web.dto.MeetingListSearchDTO;
+import kr.co.ssalon.web.dto.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
@@ -19,7 +17,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import kr.co.ssalon.domain.entity.Meeting;
-import kr.co.ssalon.web.dto.MeetingSearchCondition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -151,6 +148,23 @@ public class MeetingController {
     public ResponseEntity<?> getUsers(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
         try {
             return ResponseEntity.ok().body(meetingService.getUsers(moimId));
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    // 모임 강퇴 및 탈퇴
+    // 사용자 JWT, 탈퇴 및 강퇴 사유
+    // 성공/실패 여부
+    @Operation(summary = "모임 강퇴 및 탈퇴")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "모임 강퇴 및 탈퇴 성공")
+    })
+    @DeleteMapping("/api/moims/{moimId}/users/{userId}")
+    public ResponseEntity<?> deleteUserFromMoim(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @PathVariable Long userId, @RequestBody MeetingOutReasonDTO meetingOutReasonDTO) {
+        try{
+            String username = customOAuth2Member.getUsername();
+            return ResponseEntity.ok().body(meetingService.deleteUserFromMoim(username, moimId, userId, meetingOutReasonDTO.getReason()));
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

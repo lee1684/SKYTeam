@@ -7,6 +7,7 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -126,5 +127,9 @@ public class Meeting {
 
     public void setParticipants(List<MemberMeeting> participants) {
         this.participants.addAll(participants);
+    }
+
+    public void deleteMemberMeeting(MemberMeeting... memberMeeting) {
+        getParticipants().removeAll(Arrays.asList(memberMeeting));
     }
 }
