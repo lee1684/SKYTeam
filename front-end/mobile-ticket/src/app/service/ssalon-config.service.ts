@@ -18,6 +18,5 @@ export class SsalonConfigService {
   public DIARY_ID: string = '';
   public FACE_TYPE: string = '';
   public VIEW_TYPE: string = '';
-  public QR: string = '';
   constructor() {}
 }

@@ -19,6 +19,7 @@ export class ScenegraphService {
   private arcballControls: ArcballControls | null = null;
 
   public mobileTicket: MobileTicket | null = null;
+  public mobileTicketAutoRotate: boolean = false;
   constructor(
     private _route: ActivatedRoute,
     private _apiExecutorService: ApiExecutorService,
@@ -26,16 +27,13 @@ export class ScenegraphService {
   ) {
     /**
      * moimId: string;
-     * viewType: string; enum { view=0, edit=1, share=2}
-     * faceType: string; enum { front=0, back=1, null=2 } null은 페이지타입 share에서 사용
-     * qrType: string; 'false' | 'true'
-     * ex) /?moimId=1&viewtype='view'&faceType='front'&qr='false'
+     * viewType: string; edit, view, share, qrcheck, qrshow
+     * faceType: string; front, back
      */
     this._route.queryParams.subscribe((params) => {
       this._ssalonConfigService.MOIM_ID = params['moimId'];
       this._ssalonConfigService.VIEW_TYPE = params['viewType'];
       this._ssalonConfigService.FACE_TYPE = params['faceType'];
-      this._ssalonConfigService.QR = params['qr'];
     });
   }
   public initThree(): void {
@@ -142,7 +140,9 @@ export class ScenegraphService {
 const startAnimation = function (sceneSetting: ScenegraphService) {
   const clock = new THREE.Clock();
   const animationFrame = function () {
-    //sceneSetting.rotateCard();
+    if (sceneSetting.mobileTicketAutoRotate) {
+      sceneSetting.rotateCard();
+    }
     sceneSetting.onRender();
     requestAnimationFrame(animationFrame);
   };

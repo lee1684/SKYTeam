@@ -11,21 +11,85 @@
     align-items: center;
 }
 
-#qr-detector {
-    width: 100%;
-    height: 300px;
-}
 
-#qrcode-container {
-    width: 50px;
-    height: 50px;
-    margin-right: 5px;
-}
 
-#qr-guide {
+#qrcode-overay {
     width: 100%;
-    height: 300px;
+    height: 100%;
     position: absolute;
     top: 55px;
     left: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#qrcode-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    height: 150px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 10px;
+}
+
+#qrcode {
+    width: 130px;
+    height: 130px;
+}
+
+#qr-detector {
+    width: 100%;
+    height: 300px;
+    position: relative;
+}
+
+#qr-guide-container {
+    position: absolute;
+    top: 0px;
+    width: 100%;
+}
+
+#qr-guide {
+    position: absolute;
+    top: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#qr-checking-user-container {
+    display: flex;
+    align-items: center;
+}
+
+#qr-checking-user-profile-img {
+    margin: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#qr-check-info-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-left: 20px;
+}
+
+.qr-check-info {
+    font-family: 'Pretendard';
+    font-size: 17px;
+    margin: 5px;
+}
+
+#join-user-list {
+    margin-top: 50px;
 }

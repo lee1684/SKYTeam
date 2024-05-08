@@ -14,7 +14,7 @@
 
 .toggle-button {
     border-radius: 50%;
-    background-color: transparent;
+    background-color: #efefef;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -28,4 +28,11 @@
 
 .selected {
     background-color: #000000 !important;
+}
+
+.color-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-bottom: 10px;
 }

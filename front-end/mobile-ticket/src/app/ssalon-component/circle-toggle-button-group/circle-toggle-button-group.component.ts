@@ -32,10 +32,20 @@ export class CircleToggleButtonGroupComponent {
   @Input() public outerSize: string = '40px';
   @Input() public innerSize: number = 20;
   @Input() public enableMultipleSelection: boolean = false;
+  @Input() public columnNum: number = 10;
+  @Input() public isLabelVisible: boolean = true;
   @Output() public readonly onClickToggleButtonEvent = new EventEmitter();
 
+  public modifiedElements: ButtonElement[][] = [];
+
   constructor() {}
-  public ngOnInit(): void {}
+  public ngOnInit(): void {
+    let result = [];
+    for (let i = 0; i < this.elements.length; i += this.columnNum) {
+      result.push(this.elements.slice(i, i + this.columnNum));
+    }
+    this.modifiedElements = result;
+  }
   public ngAfterViewInit(): void {
     const buttonsArray = this.buttons!.toArray();
     for (let selectedValue of this.selectedValues) {
