@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class QrValidationResponseDTO {
-    private String username;
+    private String nickname;
     private String profilePictureUrl;
 
-    public QrValidationResponseDTO(String username, String profilePictureUrl) {
-        this.username = username;
+    public QrValidationResponseDTO(String nickname, String profilePictureUrl) {
+        this.nickname = nickname;
         this.profilePictureUrl = profilePictureUrl;
     }
 }
