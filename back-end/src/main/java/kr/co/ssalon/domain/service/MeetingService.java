@@ -29,6 +29,7 @@ public class MeetingService {
     private final TicketService ticketService;
     private final CategoryRepository categoryRepository;
     private final MeetingOutRepository meetingOutRepository;
+    private final MemberService memberService;
 
     // 모임 개설
     @Transactional
@@ -84,6 +85,16 @@ public class MeetingService {
         return false;
     }
 
+    public Boolean isCreator(String username, Long moimId) throws BadRequestException {
+        Member member = findMember(username);
+        Meeting meeting = findMeeting(moimId);
+
+        if(!isParticipant(moimId, member)) {
+            throw new BadRequestException("모임의 참여자가 아닙니다.");
+        }
+
+        return member.equals(meeting.getCreator());
+    }
     // 모임 목록 조회
     public Page<Meeting> getMoims(MeetingSearchCondition meetingSearchCondition, Pageable pageable) {
         Page<Meeting> meetings = meetingRepository.searchMoims(meetingSearchCondition, pageable);
