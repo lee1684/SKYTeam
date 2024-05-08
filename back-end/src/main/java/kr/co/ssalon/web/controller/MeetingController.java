@@ -157,4 +157,21 @@ public class MeetingController {
         }
     }
 
+    // 모임 강퇴 및 탈퇴
+    // 사용자 JWT, 탈퇴 및 강퇴 사유
+    // 성공/실패 여부
+    @Operation(summary = "모임 강퇴 및 탈퇴")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "모임 강퇴 및 탈퇴 성공")
+    })
+    @DeleteMapping("/api/moims/{moimId}/users/{userId}")
+    public ResponseEntity<?> deleteUserFromMoim(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @PathVariable Long userId, @RequestBody MeetingOutReasonDTO meetingOutReasonDTO) {
+        try{
+            String username = customOAuth2Member.getUsername();
+            return ResponseEntity.ok().body(meetingService.deleteUserFromMoim(username, moimId, userId, meetingOutReasonDTO.getReason()));
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
