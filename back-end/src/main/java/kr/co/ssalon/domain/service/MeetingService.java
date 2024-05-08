@@ -27,7 +27,7 @@ public class MeetingService {
     private final MemberRepository memberRepository;
     private final TicketService ticketService;
     private final CategoryRepository categoryRepository;
-
+    private final MeetingOutRepository meetingOutRepository;
 
     // 모임 개설
     @Transactional
@@ -152,9 +152,52 @@ public class MeetingService {
         return participantsId;
     }
 
+    @Transactional
+    public MeetingOut deleteUserFromMoim(String username, Long moimId, Long userId, String reason) throws BadRequestException {
+        Meeting meeting = findMeeting(moimId);
+        Member currentUser = findMember(username);
+        Member targetUser = findMember(userId);
+        MemberMeeting targetMemberMeeting = findMemberMeeting(currentUser, meeting);
+
+        // 요청자가 모임에 포함되어 있는지 검증
+        if(!isParticipant(moimId, currentUser)) {throw new BadRequestException("요청자가 모임에 참여자 목록에 존재하지 않습니다.");}
+
+        targetUser.deleteMemberMeeting(targetMemberMeeting);
+        meeting.deleteMemberMeeting(targetMemberMeeting);
+
+        memberMeetingRepository.delete(targetMemberMeeting);
+
+        // 요청자가 모임 개최자인 경우 -> 강퇴
+        if(currentUser.equals(meeting.getCreator()) || !currentUser.equals(targetUser)) {
+
+            MeetingOut meetingOut = MeetingOut.createMeetingOutReason(targetUser, meeting, "강퇴", reason);
+            meetingOutRepository.save(meetingOut);
+
+            return meetingOut;
+        }
+
+        // 요청자가 모임 개최자가 아닌 경우 -> 탈퇴
+        else if (!currentUser.equals(meeting.getCreator()) || currentUser.equals(targetUser)) {
+
+            MeetingOut meetingOut = MeetingOut.createMeetingOutReason(targetUser, meeting, "탈퇴", reason);
+            meetingOutRepository.save(meetingOut);
+
+            return meetingOut;
+        }
+
+        else {
+            throw new BadRequestException("요청자와 타겟의 관계가 잘못 설정되었습니다.");
+        }
+    }
 
     private Member findMember(String username) throws BadRequestException {
         Optional<Member> findMember = memberRepository.findByUsername(username);
+        Member member = ValidationService.validationMember(findMember);
+        return member;
+    }
+
+    private Member findMember(Long userId) throws BadRequestException {
+        Optional<Member> findMember = memberRepository.findById(userId);
         Member member = ValidationService.validationMember(findMember);
         return member;
     }
@@ -169,5 +212,11 @@ public class MeetingService {
         Optional<Category> findCategory = categoryRepository.findByName(categoryName);
         Category category = ValidationService.validationCategory(findCategory);
         return category;
+    }
+
+    private MemberMeeting findMemberMeeting(Member member, Meeting meeting) throws BadRequestException {
+        Optional<MemberMeeting> findMemberMeeting = memberMeetingRepository.findByMemberAndMeeting(member, meeting);
+        MemberMeeting memberMeeting = ValidationService.validationMemberMeeting(findMemberMeeting);
+        return memberMeeting;
     }
 }
