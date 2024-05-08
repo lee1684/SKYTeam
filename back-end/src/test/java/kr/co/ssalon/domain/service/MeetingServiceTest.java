@@ -6,6 +6,7 @@ import kr.co.ssalon.domain.repository.*;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import kr.co.ssalon.web.controller.annotation.WithCustomMockUser;
 import kr.co.ssalon.web.dto.MeetingSearchCondition;
+import kr.co.ssalon.web.dto.ParticipantDTO;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -289,26 +290,35 @@ public class MeetingServiceTest {
         MemberMeeting createMemberMeeting1 = mock(MemberMeeting.class);
         MemberMeeting createMemberMeeting2 = mock(MemberMeeting.class);
         MemberMeeting createMemberMeeting3 = mock(MemberMeeting.class);
+        Member createMember1 = mock(Member.class);
+        Member createMember2 = mock(Member.class);
+        Member createMember3 = mock(Member.class);
 
-        when(createMemberMeeting1.getId()).thenReturn(1L);
+        when(createMemberMeeting1.getMember()).thenReturn(createMember1);
+        when(createMemberMeeting2.getMember()).thenReturn(createMember2);
+        when(createMemberMeeting3.getMember()).thenReturn(createMember3);
+
+        when(createMemberMeeting1.getMember().getNickname()).thenReturn("nickname1");
         when(createMemberMeeting1.getMeeting()).thenReturn(meeting);
 
 
-        when(createMemberMeeting2.getMeeting()).thenReturn(meeting);
+        when(createMemberMeeting2.getMember().getNickname()).thenReturn("nickname2");
         when(createMemberMeeting2.getId()).thenReturn(2L);
 
 
-        when(createMemberMeeting3.getMeeting()).thenReturn(meeting);
+        when(createMemberMeeting3.getMember().getNickname()).thenReturn("nickname3");
         when(createMemberMeeting3.getId()).thenReturn(3L);
 
         when(meeting.getId()).thenReturn(1L);
         when(meeting.getParticipants()).thenReturn(new ArrayList<>(Arrays.asList(createMemberMeeting1, createMemberMeeting2, createMemberMeeting3)));
         when(meetingRepository.findById(meeting.getId())).thenReturn(Optional.of(meeting));
         //when
-        List<Long> participantUsers = meetingService.getUsers(meeting.getId());
+        List<ParticipantDTO> participantUsers = meetingService.getUsers(meeting.getId());
         //then
         assertThat(participantUsers.size()).isEqualTo(3);
-        assertThat(participantUsers).containsExactly(createMemberMeeting1.getId(), createMemberMeeting2.getId(), createMemberMeeting3.getId());
+        assertThat(participantUsers.get(0).getNickname()).isEqualTo(createMemberMeeting1.getMember().getNickname());
+        assertThat(participantUsers.get(1).getNickname()).isEqualTo(createMemberMeeting2.getMember().getNickname());
+        assertThat(participantUsers.get(2).getNickname()).isEqualTo(createMemberMeeting3.getMember().getNickname());
 
     }
 
