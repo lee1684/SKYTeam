@@ -13,6 +13,7 @@ import kr.co.ssalon.domain.repository.MemberMeetingRepository;
 import kr.co.ssalon.domain.repository.MemberRepository;
 import kr.co.ssalon.domain.repository.QrLinkRepository;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
+import kr.co.ssalon.web.dto.QrValidationResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -72,24 +73,23 @@ public class QrService {
     }
 
     @Transactional
-    public boolean checkQrLink(Long moimId, String key) throws BadRequestException {
+    public QrValidationResponseDTO checkQrLink(Long moimId, String key) throws BadRequestException {
         Meeting meeting = meetingService.findMeeting(moimId);
         List<MemberMeeting> memberMeetingList = meeting.getParticipants();
 
-        try {
-            for(MemberMeeting memberMeeting : memberMeetingList) {
-                String redisKey = memberMeeting.getQrLink().getQrKey();
 
-                String savedImage = redisTemplate.opsForValue().get(redisKey);
+        for(MemberMeeting memberMeeting : memberMeetingList) {
+            String redisKey = memberMeeting.getQrLink().getQrKey();
 
-                if(Objects.equals(savedImage, key)) {
-                    return true;
-                }
+            String savedImage = redisTemplate.opsForValue().get(redisKey);
+
+            if(Objects.equals(savedImage, key)) {
+                return new QrValidationResponseDTO(memberMeeting.getMember().getUsername(), memberMeeting.getMember().getProfilePictureUrl());
             }
-            return false;
-        } catch (Exception e) {
-            throw new BadRequestException("QR 코드 비교 중 오류가 발생했습니다.");
         }
+
+        throw new BadRequestException("모임에 참여한 회원이 아닙니다");
+
     }
 
     // QR 코드 생성 메서드
