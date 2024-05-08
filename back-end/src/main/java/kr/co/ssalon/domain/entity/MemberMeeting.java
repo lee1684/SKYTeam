@@ -40,6 +40,8 @@ public class MemberMeeting {
     @OneToMany(mappedBy = "memberMeeting")
     private final List<Message> messages = new ArrayList<>();
 
+    private boolean attendance;
+
     protected MemberMeeting() {
     }
 
@@ -64,12 +66,21 @@ public class MemberMeeting {
         // qrLink.settingMemberMeeting(this);
     }
 
+    public void changeAttendanceTrue() {
+        this.attendance = true;
+    }
+
+    public void changeAttendanceFalse() {
+        this.attendance = false;
+    }
+
     public static MemberMeeting createMemberMeeting(Member member, Meeting meeting) throws BadRequestException {
         Diary diary = Diary.createDiary("제목을 작성해보세요.", null, "일기를 작성해보세요.");
         MemberMeeting memberMeeting = MemberMeeting.builder().build();
         memberMeeting.joinMember(member);
         memberMeeting.joinMeeting(meeting);
         memberMeeting.settingDiary(diary);
+        memberMeeting.changeAttendanceTrue();
         return memberMeeting;
     }
 }
