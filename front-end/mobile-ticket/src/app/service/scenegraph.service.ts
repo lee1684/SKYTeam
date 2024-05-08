@@ -5,6 +5,7 @@ import { MobileTicket } from '../mobile-ticket/mobile-ticket';
 import { SsalonConfigService } from './ssalon-config.service';
 import { ApiExecutorService } from './api-executor.service';
 import { Injectable } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 @Injectable({
   providedIn: 'root',
 })
@@ -19,9 +20,24 @@ export class ScenegraphService {
 
   public mobileTicket: MobileTicket | null = null;
   constructor(
+    private _route: ActivatedRoute,
     private _apiExecutorService: ApiExecutorService,
-    private _ssalonConfig: SsalonConfigService
-  ) {}
+    private _ssalonConfigService: SsalonConfigService
+  ) {
+    /**
+     * moimId: string;
+     * viewType: string; enum { view=0, edit=1, share=2}
+     * faceType: string; enum { front=0, back=1, null=2 } null은 페이지타입 share에서 사용
+     * qrType: string; 'false' | 'true'
+     * ex) /?moimId=1&viewtype='view'&faceType='front'&qr='false'
+     */
+    this._route.queryParams.subscribe((params) => {
+      this._ssalonConfigService.MOIM_ID = params['moimId'];
+      this._ssalonConfigService.VIEW_TYPE = params['viewType'];
+      this._ssalonConfigService.FACE_TYPE = params['faceType'];
+      this._ssalonConfigService.QR = params['qr'];
+    });
+  }
   public initThree(): void {
     const width = this.nativeElement!.clientWidth;
     const height = this.nativeElement!.clientHeight;

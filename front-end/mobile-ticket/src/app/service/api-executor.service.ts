@@ -1,24 +1,38 @@
 import axios, { AxiosInstance } from 'axios';
 import { DecorationInfo, SsalonConfigService } from './ssalon-config.service';
 import { Injectable } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+export const setToken = function (
+  token: string,
+  apiExecutorService: ApiExecutorService
+) {
+  apiExecutorService.setToken(token);
+};
+
 @Injectable({
   providedIn: 'root',
 })
 export class ApiExecutorService {
   public apiExecutor: AxiosInstance | null = null;
   public apiExecutorJson: AxiosInstance | null = null;
-  public apiURL: string = 'http://3.34.0.190:8080/api';
+  //public apiURL: string = 'http://3.34.0.190:8080/api';
+  public apiURL: string = 'http://localhost:8080/api';
   public tokens = {
     access:
-      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTQ5ODkyOTEsImV4cCI6MTcxNTA3NTY5MX0.xZOLg9DVmh50yW8N1amf43Zm8SkbOHDzXDveBZ77MCU',
+      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTUwNzc0MzcsImV4cCI6MTcxNTE2MzgzN30.TurCJ_OEBy3kuNGcZFfBrtQb2ejySywncC0vrFipRkQ',
     refresh:
-      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6InJlZnJlc2giLCJ1c2VybmFtZSI6Im5hdmVyIGx6YVdfaFJqa3NZM2V6NTVLSXJKV3RPZjJNak4tRmcySW1BeUlwTzhTZXMiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzE0OTg5MjkxLCJleHAiOjE3MTUwNzU2OTF9._SeCIN5ThEbPu6F3TbEdTZq_hLrZY1ZEf4PJB3Aa4vg',
+      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6InJlZnJlc2giLCJ1c2VybmFtZSI6Im5hdmVyIGx6YVdfaFJqa3NZM2V6NTVLSXJKV3RPZjJNak4tRmcySW1BeUlwTzhTZXMiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzE1MDc3NDM3LCJleHAiOjE3MTUxNjM4Mzd9.UnuTh9J9kcUKn1FnO_VEnzG25gBkRoqL4ZWwqhT07dU',
   };
-  public token: string = this.tokens.access;
+  private _token: string = this.tokens.access;
   public refreshToken: string = this.tokens.refresh;
 
   constructor(private _ssalonConfigService: SsalonConfigService) {
     this.initApiExecutor();
+  }
+
+  public setToken(token: string) {
+    this._token = token;
   }
 
   private initApiExecutor() {
@@ -34,7 +48,7 @@ export class ApiExecutorService {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
-        Authorization: `Bearer ${this.token}`,
+        Authorization: `Bearer ${this._token}`,
         Refresh: this.refreshToken,
       },
     });
@@ -65,7 +79,8 @@ export class ApiExecutorService {
         body
       );
       return response!.data;
-    } catch {
+    } catch (error) {
+      console.log(error);
       /** dummy data */
       let tempJson = await axios.get('assets/decoration.json');
       return tempJson.data;
@@ -94,7 +109,9 @@ export class ApiExecutorService {
       );
       console.log(typeof response!.data);
       return response!.data;
-    } catch {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   public async checkQR(qrString: string) {

@@ -11,7 +11,10 @@ import {
   ButtonElement,
   CircleToggleButtonGroupComponent,
 } from '../ssalon-component/circle-toggle-button-group/circle-toggle-button-group.component';
-import { DecorationInfo } from '../service/ssalon-config.service';
+import {
+  DecorationInfo,
+  SsalonConfigService,
+} from '../service/ssalon-config.service';
 import { ApiExecutorService } from '../service/api-executor.service';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FabricImage, FabricText, Path } from 'fabric';
@@ -62,14 +65,38 @@ export class TicketComponent {
     value: 0,
   };
 
+  public joinButtonElement: ButtonElement = {
+    imgSrc: 'assets/icons/view.png',
+    label: '참여하기',
+    value: 0,
+  };
+
   public isDetectingQRCode: boolean = false;
   public isCameraLoaded: boolean = false;
   public qrStream: MediaStream | null = null;
   public qrCodeSrc: string = '';
+  public people: string = '';
 
-  constructor(private _apiExecutorService: ApiExecutorService) {}
+  constructor(
+    private _apiExecutorService: ApiExecutorService,
+    private _ssalonConfigService: SsalonConfigService
+  ) {}
+  public ngOnInit(): void {}
+  public ngAfterViewInit(): void {
+    this.setFirstPage();
+  }
   public ngAfterViewChecked(): void {
     this.startQRCodeDetection();
+  }
+
+  public setFirstPage() {
+    if (this._ssalonConfigService.VIEW_TYPE === 'edit') {
+      this.changeViewMode(MobileTicketViewMode.APPEDITVIEW);
+    } else if (this._ssalonConfigService.VIEW_TYPE === 'view') {
+      this.onClickPreviewButton();
+    } else {
+      this.changeViewMode(MobileTicketViewMode.WEBVIEW);
+    }
   }
 
   public async startQRCodeDetection() {
@@ -80,11 +107,14 @@ export class TicketComponent {
         this.qrStream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: 'environment' },
         });
+        console.log('1');
         this.qrVideo.nativeElement.srcObject = this.qrStream;
+        console.log('2');
         this.qrVideo.nativeElement.play();
+        console.log('3');
         this.detectQRCode();
-      } catch {
-        console.error('Failed to load camera');
+      } catch (error) {
+        console.error(error);
       }
     }
   }
@@ -96,6 +126,10 @@ export class TicketComponent {
           this.qrVideo.nativeElement.HAVE_ENOUGH_DATA
         ) {
           const canvasContext = this.qrCanvas.nativeElement.getContext('2d');
+          this.qrCanvas.nativeElement.height =
+            this.qrVideo.nativeElement.videoHeight;
+          this.qrCanvas.nativeElement.width =
+            this.qrVideo.nativeElement.videoWidth;
           canvasContext?.drawImage(
             this.qrVideo?.nativeElement,
             0,
@@ -116,9 +150,9 @@ export class TicketComponent {
           );
           if (code) {
             let a = await this._apiExecutorService.checkQR(code.data);
-            console.log(a);
-            this.stopDetectQRCode();
-            break;
+            //let a = { data: true };
+            this.people = a.data === true ? '참가자' : '마피아';
+            //this.stopDetectQRCode();
           }
         }
         await new Promise((resolve) => setTimeout(resolve, 100)); // 100ms 대기
@@ -131,11 +165,15 @@ export class TicketComponent {
         track.stop();
       });
       this.isDetectingQRCode = false;
+      this.isCameraLoaded = false;
     }
   }
 
   public onClickQRCodeButton() {
     this.isDetectingQRCode = !this.isDetectingQRCode;
+    if (!this.isDetectingQRCode) {
+      this.stopDetectQRCode();
+    }
   }
   public changeEditMode(mode: MobileTicketEditMode) {
     this.editMode = mode;
@@ -169,9 +207,9 @@ export class TicketComponent {
 
   public async onClickPreviewButton() {
     await this.updateServer();
-
     let a = qrcode(0, 'L');
     a.addData(await this._apiExecutorService.getBarcode());
+    //a.addData('https://www.naver.com');
     a.make();
     this.qrCodeSrc = a.createDataURL(2, 0);
     this.changeViewMode(MobileTicketViewMode.APPVIEW);
@@ -215,7 +253,5 @@ export class TicketComponent {
     this.mobileTicketEditor!.onClickChangeEditMode(MobileTicketEditMode.TEXT);
   }
 
-  public async generateQRCode() {
-    console.log(await this._apiExecutorService.getBarcode());
-  }
+  public async generateQRCode() {}
 }

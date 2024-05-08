@@ -38,7 +38,6 @@ export class CircleToggleButtonGroupComponent {
   public ngOnInit(): void {}
   public ngAfterViewInit(): void {
     const buttonsArray = this.buttons!.toArray();
-    console.log(this.selectedValues);
     for (let selectedValue of this.selectedValues) {
       buttonsArray[selectedValue].nativeElement.classList.add('selected');
     }
