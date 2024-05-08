@@ -84,7 +84,7 @@ public class QrService {
             String savedImage = redisTemplate.opsForValue().get(redisKey);
 
             if(Objects.equals(savedImage, key)) {
-                return new QrValidationResponseDTO(memberMeeting.getMember().getUsername(), memberMeeting.getMember().getProfilePictureUrl());
+                return new QrValidationResponseDTO(memberMeeting.getMember().getNickname(), memberMeeting.getMember().getProfilePictureUrl());
             }
         }
 
