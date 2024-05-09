@@ -1,6 +1,8 @@
 package kr.co.ssalon.web.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,13 +11,17 @@ import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.service.MemberService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import kr.co.ssalon.web.dto.JsonResult;
+import kr.co.ssalon.web.dto.MeetingListSearchDTO;
 import kr.co.ssalon.web.dto.MemberSignDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @Tag(name = "회원")
@@ -63,6 +69,39 @@ public class UserController {
         Member currentUser = memberService.signup(username, additionalInfo);
         MemberSignDTO memberSignDTO = new MemberSignDTO(currentUser);
         return new JsonResult<>(memberSignDTO).getData();
+    }
+
+    @Operation(summary = "참여한 모임 목록 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "참여한 모임 목록 조회 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = MeetingListSearchDTO.class))
+            }),
+    })
+    @GetMapping("/api/users/moims/join")
+    public ResponseEntity<?> getJoinedMeetingList(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
+        try {
+            String username = customOAuth2Member.getUsername();
+            List<MeetingListSearchDTO> joinedMeetingList = memberService.getJoinedMeetingList(username);
+            return ResponseEntity.ok().body(joinedMeetingList);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Operation(summary = "개최한 모임 목록 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "개최한 모임 목록 조회 성공", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = MeetingListSearchDTO.class))
+            }),
+    })
+    @GetMapping("/api/users/moims/create")
+    public ResponseEntity<?> getCreatedMeetingList(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
+        try {
+            String username = customOAuth2Member.getUsername();
+            return ResponseEntity.ok().body(memberService.getCreatedMeetingLIst(username));
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Operation(summary = "로그아웃")
