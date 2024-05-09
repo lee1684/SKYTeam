@@ -149,7 +149,7 @@ public class TicketService {
         // thumbnail 이미지 파일 이름 수정
         String urlThumb = topLevelObject.get("thumbnailUrl").getAsString();
         String extFile = urlThumb.substring(urlThumb.lastIndexOf('.') + 1);
-        String newThumbURI = "Thumbnails/" + toMoimId + "/" + generateRandomUUID() + "." + extFile;
+        String newThumbURI = "Thumbnails/" + toMoimId + "/Thumb-" + toMoimId + "." + extFile;
         String oldThumbURI = "Thumbnails/" + fromMoimId + "/" + urlThumb.substring(urlThumb.lastIndexOf('/') + 1);
 
         imageSrcMap.put(oldThumbURI, newThumbURI);
