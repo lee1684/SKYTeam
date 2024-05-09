@@ -14,9 +14,11 @@ public class ParticipantDTO {
 
     private String nickname;
     private String profilePictureUrl;
+    private Boolean attendance;
 
     public ParticipantDTO(MemberMeeting memberMeeting) {
         this.nickname = memberMeeting.getMember().getNickname();
         this.profilePictureUrl = memberMeeting.getMember().getProfilePictureUrl();
+        this.attendance = memberMeeting.isAttendance();
     }
 }
