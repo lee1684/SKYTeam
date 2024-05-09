@@ -1,4 +1,4 @@
-package kr.co.ssalon.web.controller;
+package kr.co.ssalon.web.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,11 +23,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Tag(name = "관리자")
+@Tag(name = "관리자 유저")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class AdminController {
+public class AdminMemberController {
 
     private final MemberService memberService;
     private final ValidationService validationService;

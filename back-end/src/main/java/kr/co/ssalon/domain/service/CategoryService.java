@@ -1,7 +1,11 @@
 package kr.co.ssalon.domain.service;
 
+import kr.co.ssalon.domain.dto.MeetingDomainDTO;
 import kr.co.ssalon.domain.entity.Category;
+import kr.co.ssalon.domain.entity.Meeting;
+import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.repository.CategoryRepository;
+import kr.co.ssalon.web.dto.CategoryDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
@@ -22,5 +26,10 @@ public class CategoryService {
         return category;
     }
 
-
+    @Transactional
+    public Category editCategory(Long categoryId, CategoryDTO categoryDTO) throws BadRequestException {
+        Category category = findCategory(categoryId);
+        category.updateCategory(categoryDTO);
+        return category;
+    }
 }
