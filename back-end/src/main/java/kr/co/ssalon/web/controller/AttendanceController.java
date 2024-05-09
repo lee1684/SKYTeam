@@ -26,14 +26,14 @@ public class AttendanceController {
 
     private final AttendanceService attendanceService;
 
-    @Operation(summary = "모임 참가자 출석 목록 조회")
+    @Operation(summary = "모임 출석자 목록 조회")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "모임 참가자 출석 목록 조회 성공"),
+            @ApiResponse(responseCode = "200", description = "모임 출석자 목록 조회 성공"),
     })
     @GetMapping("/api/moims/{moimId}/attendance")
-    public ResponseEntity<?> getAttendances(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
+    public ResponseEntity<?> getAttendancesTrue(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
         try {
-            return ResponseEntity.ok().body(attendanceService.getAttendances(moimId));
+            return ResponseEntity.ok().body(attendanceService.getAttendancesTrue(moimId));
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -43,10 +43,10 @@ public class AttendanceController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "출석 상태 변경 성공"),
     })
-    @PostMapping("/api/moims/{moimId}/attendance/{userId}")
-    public ResponseEntity<?> changeAttendance(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @PathVariable Long userId) {
+    @PostMapping("/api/moims/{moimId}/attendance/{userId}/{attendance}")
+    public ResponseEntity<?> changeAttendance(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @PathVariable Long userId, @PathVariable boolean attendance) {
         try {
-            return ResponseEntity.ok().body(attendanceService.changeAttendance(moimId, userId));
+            return ResponseEntity.ok().body(attendanceService.changeAttendance(moimId, userId, attendance));
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
