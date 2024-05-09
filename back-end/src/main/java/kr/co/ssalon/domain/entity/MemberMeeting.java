@@ -80,7 +80,7 @@ public class MemberMeeting {
         memberMeeting.joinMember(member);
         memberMeeting.joinMeeting(meeting);
         memberMeeting.settingDiary(diary);
-        memberMeeting.changeAttendanceTrue();
+        memberMeeting.changeAttendanceFalse();
         return memberMeeting;
     }
 }
