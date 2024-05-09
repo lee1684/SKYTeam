@@ -4,8 +4,11 @@ import kr.co.ssalon.domain.entity.*;
 import kr.co.ssalon.domain.repository.ReportRepository;
 import kr.co.ssalon.web.dto.CategoryDTO;
 import kr.co.ssalon.web.dto.ReportDTO;
+import kr.co.ssalon.web.dto.ReportSearchCondition;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,8 +46,10 @@ public class ReportService {
 
         if(report.getIsSolved()) {
             report.changeIsSolvedFalse();
+            report.changeSolvedDate();
         } else {
             report.changeIsSolvedTrue();
+            report.deleteSolvedDate();
         }
         return report.getIsSolved();
     }
@@ -53,5 +58,9 @@ public class ReportService {
         Optional<Report> findReport = reportRepository.findById(reportId);
         Report report = ValidationService.validationReport(findReport);
         return report;
+    }
+
+    public Page<Report> getReports(ReportSearchCondition reportSearchCondition, Pageable pageable) {
+        return null;
     }
 }
