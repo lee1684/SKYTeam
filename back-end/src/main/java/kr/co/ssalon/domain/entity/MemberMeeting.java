@@ -74,6 +74,8 @@ public class MemberMeeting {
         this.attendance = false;
     }
 
+    public void changeAttendance(boolean attendance) { this.attendance = attendance; }
+
     public static MemberMeeting createMemberMeeting(Member member, Meeting meeting) throws BadRequestException {
         Diary diary = Diary.createDiary("제목을 작성해보세요.", null, "일기를 작성해보세요.");
         MemberMeeting memberMeeting = MemberMeeting.builder().build();

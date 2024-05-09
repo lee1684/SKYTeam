@@ -39,7 +39,7 @@ public class AdminCategoryController {
     public ResponseEntity<?> createCategory(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody CategoryDTO categoryDTO) {
         try {
             String username = customOAuth2Member.getUsername();
-            validationAdmin(username);
+            // validationAdmin(username);
             categoryService.isCategoryNameExists(categoryDTO.getName());
             return ResponseEntity.ok().body(categoryRepository.save(Category.createCategory(categoryDTO)));
         } catch (Exception e) {
