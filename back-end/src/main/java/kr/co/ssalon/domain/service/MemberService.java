@@ -159,4 +159,11 @@ public class MemberService {
     }
 
 
+
+    @Transactional
+    public String changeBlackReason(Long userId, String reason) throws BadRequestException {
+        Member currentUser = findMember(userId);
+        currentUser.changeBlackReason(reason);
+        return reason;
+    }
 }
