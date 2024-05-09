@@ -98,8 +98,8 @@ public class MeetingController {
     public ResponseEntity<?> getMoim(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
         try {
             Meeting moim = meetingService.findMeeting(moimId);
-            MeetingDTO sendMeetingDTO = new MeetingDTO(moim);
-            return ResponseEntity.ok().body(new JsonResult<>(sendMeetingDTO).getData());
+            MeetingInfoDTO sendMeetingInfoDTO = new MeetingInfoDTO(moim);
+            return ResponseEntity.ok().body(new JsonResult<>(sendMeetingInfoDTO).getData());
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
