@@ -127,6 +127,7 @@ public class Meeting {
                 .location(location)
                 .capacity(capacity)
                 .meetingDate(meetingDate)
+                .isFinished(false)
                 .build();
 
         meeting.ownerMember(creator);
