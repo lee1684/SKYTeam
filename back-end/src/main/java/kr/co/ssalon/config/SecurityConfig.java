@@ -22,7 +22,9 @@ import org.springframework.security.web.authentication.ui.DefaultLoginPageGenera
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -47,7 +49,8 @@ public class SecurityConfig {
                         CorsConfiguration configuration = new CorsConfiguration();
 
                         // ssalon 어플의 모든 요청 허용
-                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                        List<String> allowedOrigins = Arrays.asList("http://localhost:3000", "https://ssalon.co.kr");
+                        configuration.setAllowedOrigins(allowedOrigins);
                         // get, post, put 모든 요청 허용
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         // 클라이언트로부터 쿠키 및 토큰 전송 허용
