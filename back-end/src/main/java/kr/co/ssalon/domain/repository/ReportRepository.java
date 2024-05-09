@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ReportRepository extends CrudRepository<Report, Long> {
-    @Query("SELECT r FROM Report r WHERE r.id = :reportId")
-    List<Report> findByReportId(@Param("reportId") Long reportId);
+    @Query("SELECT r FROM Report r WHERE r.reporter.id = :reporterId")
+    List<Report> findByReporterId(@Param("reporterId") Long reporterId);
 }
