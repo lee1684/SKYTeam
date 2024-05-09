@@ -1,7 +1,6 @@
 package kr.co.ssalon.domain.service;
 
-import kr.co.ssalon.domain.entity.Category;
-import kr.co.ssalon.domain.entity.Report;
+import kr.co.ssalon.domain.entity.*;
 import kr.co.ssalon.domain.repository.ReportRepository;
 import kr.co.ssalon.web.dto.CategoryDTO;
 import kr.co.ssalon.web.dto.ReportDTO;
@@ -36,6 +35,18 @@ public class ReportService {
 
     public List<Report> getMyReports(Long userId) throws BadRequestException {
         return reportRepository.findByReportId(userId);
+    }
+
+    @Transactional
+    public Boolean changeState(Long reportId) throws BadRequestException {
+        Report report = findReport(reportId);
+
+        if(report.getIsSolved()) {
+            report.changeIsSolvedFalse();
+        } else {
+            report.changeIsSolvedTrue();
+        }
+        return report.getIsSolved();
     }
 
     public Report findReport(Long reportId) throws BadRequestException {
