@@ -32,4 +32,11 @@ public class CategoryService {
         category.updateCategory(categoryDTO);
         return category;
     }
+
+    public void isCategoryNameExists(String categoryName) throws BadRequestException {
+        Optional<Category> existingCategory = categoryRepository.findByName(categoryName);
+        if (existingCategory.isPresent()) {
+            throw new BadRequestException("이미 존재하는 카테고리 이름입니다: " + categoryName);
+        }
+    }
 }
