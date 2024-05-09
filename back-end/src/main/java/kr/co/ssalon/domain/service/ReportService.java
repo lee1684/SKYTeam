@@ -34,7 +34,7 @@ public class ReportService {
     }
 
     public List<Report> getMyReports(Long userId) throws BadRequestException {
-        return reportRepository.findByReportId(userId);
+        return reportRepository.findByReporterId(userId);
     }
 
     @Transactional
