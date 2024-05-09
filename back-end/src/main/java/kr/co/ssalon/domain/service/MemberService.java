@@ -135,4 +135,28 @@ public class MemberService {
 
         return meetingListSearchList;
     }
+
+    public List<MeetingListSearchDTO> getUnfinishedMeetingList(String username) throws BadRequestException {
+        Member currentUser = findMember(username);
+
+        List<MeetingListSearchDTO> meetingListSearchList = currentUser.getJoinedMeetings().stream()
+                .map(MemberMeeting::getMeeting)
+                .filter(meeting -> !meeting.getIsFinished())
+                .map(MeetingListSearchDTO::new)
+                .collect(Collectors.toList());
+        return meetingListSearchList;
+    }
+
+    public List<MeetingListSearchDTO> getFinishedMeetingList(String username) throws BadRequestException {
+        Member currentUser = findMember(username);
+
+        List<MeetingListSearchDTO> meetingListSearchList = currentUser.getJoinedMeetings().stream()
+                .map(MemberMeeting::getMeeting)
+                .filter(Meeting::getIsFinished)
+                .map(MeetingListSearchDTO::new)
+                .collect(Collectors.toList());
+        return meetingListSearchList;
+    }
+
+
 }
