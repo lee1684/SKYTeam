@@ -6,6 +6,7 @@ import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.MemberMeeting;
 import kr.co.ssalon.domain.repository.MeetingRepository;
 import kr.co.ssalon.domain.repository.MemberRepository;
+import kr.co.ssalon.web.dto.MeetingListSearchDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -110,5 +112,27 @@ public class MemberService {
 
         // 멤버 제거
         memberRepository.delete(currentUser);
+    }
+
+    public List<MeetingListSearchDTO> getJoinedMeetingList(String username) throws BadRequestException {
+        Member currentUser = findMember(username);
+
+        // 참여한 모임 목록 조회
+        List<Meeting> joinedMeetingList = currentUser.getJoinedMeetings().stream().map(MemberMeeting::getMeeting).toList();
+        List<MeetingListSearchDTO> meetingListSearchList = joinedMeetingList.stream().map(MeetingListSearchDTO::new).toList();
+        return meetingListSearchList;
+    }
+
+    public List<MeetingListSearchDTO> getCreatedMeetingLIst(String username) throws BadRequestException {
+        Member currentUser = findMember(username);
+
+        // 참여한 모임 중 내가 개최자인 모임 조회
+        List<MeetingListSearchDTO> meetingListSearchList = currentUser.getJoinedMeetings().stream()
+                .map(MemberMeeting::getMeeting)
+                .filter(meeting -> meeting.getCreator().getId().equals(currentUser.getId()))
+                .map(MeetingListSearchDTO::new)
+                .collect(Collectors.toList());
+
+        return meetingListSearchList;
     }
 }
