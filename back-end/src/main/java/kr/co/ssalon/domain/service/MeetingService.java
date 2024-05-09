@@ -125,6 +125,14 @@ public class MeetingService {
         return currentMeeting.getId();
     }
 
+    // 모임 정보 업데이트
+    @Transactional
+    public Long editMoim(Long moimId, MeetingDomainDTO meetingDomainDTO) throws BadRequestException {
+        Meeting currentMeeting = findMeeting(moimId);
+        Category category = findCategory(meetingDomainDTO.getCategory());
+        currentMeeting.updateMeeting(category, meetingDomainDTO.getMeetingPictureUrls(), meetingDomainDTO.getTitle(), meetingDomainDTO.getDescription(), meetingDomainDTO.getLocation(), meetingDomainDTO.getCapacity(), meetingDomainDTO.getMeetingDate());
+        return currentMeeting.getId();
+    }
 
     // 모임 삭제
     @Transactional
@@ -154,6 +162,16 @@ public class MeetingService {
         // 해당 모임 삭제
         meetingRepository.deleteById(moimId);
 
+        return moimId;
+    }
+
+    @Transactional
+    public Long deleteMoim(Long moimId) throws BadRequestException {
+        Meeting currentMeeting = findMeeting(moimId);
+        List<MemberMeeting> participants = currentMeeting.getParticipants();
+        participants.forEach(participant -> participant.getMember().deleteMemberMeeting(participant));
+        memberMeetingRepository.deleteByMeetingId(moimId);
+        meetingRepository.deleteById(moimId);
         return moimId;
     }
 
