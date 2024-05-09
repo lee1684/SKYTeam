@@ -28,6 +28,21 @@ public class AdminBlackListController {
     private final MemberService memberService;
     private final ValidationService validationService;
 
+    @Operation(summary = "블랙리스트 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "블랙리스트 조회 성공"),
+    })
+    @GetMapping("/api/admin/blacklists/users")
+    public ResponseEntity<?> getBlackList(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
+        try {
+            String username = customOAuth2Member.getUsername();
+            validationAdmin(username);
+            return ResponseEntity.ok().body(memberService.getBlackList());
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
     @Operation(summary = "블랙리스트 설정")
     @ApiResponses(value = {

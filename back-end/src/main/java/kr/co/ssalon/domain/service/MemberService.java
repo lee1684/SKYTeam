@@ -166,4 +166,8 @@ public class MemberService {
         currentUser.changeBlackReason(reason);
         return reason;
     }
+
+    public List<Member> getBlackList() throws BadRequestException {
+        return memberRepository.findByBlackReasonIsNotNull();
+    }
 }

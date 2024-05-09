@@ -29,7 +29,7 @@ public class Report {
 
     private String reason;
 
-    private Boolean isSolved = false;
+    private Boolean isSolved;
 
     private LocalDateTime reportDate;
     private LocalDateTime solvedDate;
