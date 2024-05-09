@@ -86,7 +86,7 @@ public class QrService {
             if(Objects.equals(savedImage, key)) {
                 memberMeeting.changeAttendanceTrue();
                 memberMeetingRepository.save(memberMeeting);
-                return new QrValidationResponseDTO(memberMeeting.getMember().getNickname(), memberMeeting.getMember().getProfilePictureUrl());
+                return new QrValidationResponseDTO(memberMeeting.getMember().getId(), memberMeeting.getMember().getNickname(), memberMeeting.getMember().getProfilePictureUrl());
             }
         }
 
