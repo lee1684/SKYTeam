@@ -12,11 +12,13 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ParticipantDTO {
 
+    private Long userId;
     private String nickname;
     private String profilePictureUrl;
     private Boolean attendance;
 
     public ParticipantDTO(MemberMeeting memberMeeting) {
+        this.userId = memberMeeting.getMember().getId();
         this.nickname = memberMeeting.getMember().getNickname();
         this.profilePictureUrl = memberMeeting.getMember().getProfilePictureUrl();
         this.attendance = memberMeeting.isAttendance();
