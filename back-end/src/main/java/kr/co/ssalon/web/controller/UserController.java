@@ -104,6 +104,38 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "진행 중인 내가 참여한 모임 목록 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "진행 중인 내가 참여한 모임 목록 조회", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = MeetingListSearchDTO.class))
+            }),
+    })
+    @GetMapping("/api/users/moims/unfinished")
+    public ResponseEntity<?> getUnfinishedMeetingList(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
+        try {
+            String username = customOAuth2Member.getUsername();
+            return ResponseEntity.ok().body(memberService.getUnfinishedMeetingList(username));
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Operation(summary = "완료된 내가 참여한 모임 목록 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "완료된 내가 참여한 모임 목록 조회", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = MeetingListSearchDTO.class))
+            }),
+    })
+    @GetMapping("/api/users/moims/finished")
+    public ResponseEntity<?> getFinishedMeetingList(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
+        try {
+            String username = customOAuth2Member.getUsername();
+            return ResponseEntity.ok().body(memberService.getFinishedMeetingList(username));
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @Operation(summary = "로그아웃")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "로그아웃 성공"),

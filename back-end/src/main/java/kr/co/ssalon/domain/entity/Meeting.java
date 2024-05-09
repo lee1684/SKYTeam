@@ -52,8 +52,11 @@ public class Meeting {
     private Integer capacity;
     private LocalDateTime meetingDate;
 
+    private Boolean isFinished = false;
+
     protected Meeting() {
     }
+
 
     // ***** 필드 메서드 *****
     public void changeTitle(String title) {
@@ -75,6 +78,9 @@ public class Meeting {
     public void changeLocalDateTime(LocalDateTime meetingDate) {
         this.meetingDate = meetingDate != null ? meetingDate : this.meetingDate;
     }
+
+    public void changeIsFinished() { this.isFinished = true; }
+
 
     public void addMeetingPictureUrls(List<String> meetingPictureUrls) {
         for (String meetingPictureUrl : meetingPictureUrls) {
@@ -121,6 +127,7 @@ public class Meeting {
                 .location(location)
                 .capacity(capacity)
                 .meetingDate(meetingDate)
+                .isFinished(false)
                 .build();
 
         meeting.ownerMember(creator);
