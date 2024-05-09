@@ -40,8 +40,7 @@ public class AttendanceService {
         return attendances;
     }
 
-
-
+    @Transactional
     public boolean changeAttendance(Long moimId, Long userId) throws BadRequestException {
         Meeting currentMeeting = meetingService.findMeeting(moimId);
         Member currentMember = memberService.findMember(userId);
@@ -52,7 +51,6 @@ public class AttendanceService {
         } else {
             currentMemberMeeting.changeAttendanceTrue();
         }
-        memberMeetingRepository.save(currentMemberMeeting);
         return currentMemberMeeting.isAttendance();
     }
 }
