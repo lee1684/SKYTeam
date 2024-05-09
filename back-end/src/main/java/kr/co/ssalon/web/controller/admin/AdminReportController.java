@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.Report;
 import kr.co.ssalon.domain.repository.ReportRepository;
@@ -62,8 +63,36 @@ public class AdminReportController {
         }
     }
 
+    @Operation(summary = "신고 상태 처리하기")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "신고 상태 처리하기 성공"),
+    })
+    @PostMapping("/api/admin/report/{reportId}/state")
+    public ResponseEntity<?> changeReportState(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long reportId) {
+        try {
+            String username = customOAuth2Member.getUsername();
+            validationAdmin(username);
+            return ResponseEntity.ok().body(reportService.changeState(reportId));
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
-
+    @Operation(summary = "신고 삭제하기")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "신고 삭제하기 성공"),
+    })
+    @DeleteMapping("/api/admin/report/{reportId}")
+    public ResponseEntity<?> deleteReport(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long reportId) {
+        try {
+            String username = customOAuth2Member.getUsername();
+            validationAdmin(username);
+            reportRepository.deleteById(reportId);
+            return ResponseEntity.ok().body(reportId);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
     private void validationAdmin(String username) throws BadRequestException {
         Member member = memberService.findMember(username);

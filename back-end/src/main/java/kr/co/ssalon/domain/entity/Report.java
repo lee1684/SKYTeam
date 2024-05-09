@@ -29,10 +29,12 @@ public class Report {
 
     private String reason;
 
-    private String state = "대기 중";
+    private Boolean isSolved = false;
 
     protected Report() {}
 
+    public void changeIsSolvedTrue() { this.isSolved = true;}
+    public void changeIsSolvedFalse() {this.isSolved = false;}
     public void changeReason(String reason) { this.reason = reason; }
 
     public static Report createReport (Member reporter, Member reportedMember, String reason) throws BadRequestException {

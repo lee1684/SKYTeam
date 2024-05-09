@@ -15,13 +15,13 @@ public class ReportDTO {
     private Long reporterId;
     private Long reportedUserId;
     private String reason;
-    private String state;
+    private Boolean isSolved;
 
     public ReportDTO(Report report) {
         this.id = report.getId();
         this.reporterId = report.getReporter().getId();
         this.reportedUserId = report.getReporter().getId();
         this.reason = report.getReason();
-        this.state = report.getState();
+        this.isSolved = report.getIsSolved();
     }
 }
