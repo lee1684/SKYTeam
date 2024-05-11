@@ -2,7 +2,9 @@ package kr.co.ssalon.domain.service;
 
 import kr.co.ssalon.domain.entity.*;
 import kr.co.ssalon.domain.repository.ReportRepository;
+import kr.co.ssalon.web.dto.MeetingSearchCondition;
 import kr.co.ssalon.web.dto.ReportDTO;
+import kr.co.ssalon.web.dto.ReportSearchCondition;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
@@ -35,6 +37,11 @@ public class ReportService {
 
     public List<Report> getMyReports(Long userId) throws BadRequestException {
         return reportRepository.findByReporterId(userId);
+    }
+
+    public Page<Report> getMyReports(Long userId, ReportSearchCondition reportSearchCondition, Pageable pageable) {
+        Page<Report> reports = reportRepository.searchMyReports(userId, reportSearchCondition, pageable);
+        return reports;
     }
 
     @Transactional

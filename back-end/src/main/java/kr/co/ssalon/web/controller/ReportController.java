@@ -13,15 +13,18 @@ import kr.co.ssalon.domain.service.MeetingService;
 import kr.co.ssalon.domain.service.MemberService;
 import kr.co.ssalon.domain.service.ReportService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
-import kr.co.ssalon.web.dto.CategoryDTO;
-import kr.co.ssalon.web.dto.ReportDTO;
+import kr.co.ssalon.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "신고")
 @Slf4j
@@ -39,11 +42,14 @@ public class ReportController {
             @ApiResponse(responseCode = "200", description = "자신의 신고한 목록 조회하기"),
     })
     @GetMapping("/api/report")
-    public ResponseEntity<?> getMyReports(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
+    public ResponseEntity<?> getMyReports(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, ReportSearchCondition reportSearchCondition, Pageable pageable) {
         try {
             String username = customOAuth2Member.getUsername();
             Member member = memberService.findMember(username);
-            return ResponseEntity.ok().body(reportService.getMyReports(member.getId()));
+            Page<Report> reports = reportService.getMyReports(member.getId(), reportSearchCondition, pageable);
+            Page<ReportListSearchDTO> reportsDto = reports.map(report ->new ReportListSearchDTO(report));
+            ReportListSearchPageDTO reportListSearchPageDTO = new ReportListSearchPageDTO(reportsDto);
+            return ResponseEntity.ok().body(new JsonResult<>(reportListSearchPageDTO).getData());
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -58,7 +64,9 @@ public class ReportController {
         try {
             String username = customOAuth2Member.getUsername();
             validationReporter(reportId, username);
-            return ResponseEntity.ok().body(reportService.findReport(reportId));
+            Report report = reportService.findReport(reportId);
+            ReportDTO reportDTO = new ReportDTO(report);
+            return ResponseEntity.ok().body(new JsonResult<>(reportDTO).getData());
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -74,7 +82,8 @@ public class ReportController {
             Member reportMember = memberService.findMember(customOAuth2Member.getUsername());
             Member reportedMember = memberService.findMember(reportDTO.getReportedUserId());
             Report report = Report.createReport(reportMember, reportedMember, reportDTO.getReason());
-            return ResponseEntity.ok().body(reportService.createReport(report));
+            ReportDTO responseReportDTO = new ReportDTO(reportService.createReport(report));
+            return ResponseEntity.ok().body(new JsonResult<>(responseReportDTO).getData());
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -89,7 +98,9 @@ public class ReportController {
         try {
             String username = customOAuth2Member.getUsername();
             validationReporter(reportId, username);
-            return ResponseEntity.ok().body(reportService.editReport(reportId, reportDTO));
+            Report report = reportService.editReport(reportId, reportDTO);
+            ReportDTO responseReportDTO = new ReportDTO(report);
+            return ResponseEntity.ok().body(new JsonResult<>(responseReportDTO).getData());
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -100,7 +111,7 @@ public class ReportController {
             @ApiResponse(responseCode = "200", description = "신고 삭제하기 성공"),
     })
     @DeleteMapping("/api/report/{reportId}")
-    public ResponseEntity<?> deleteReport(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long reportId, @RequestBody ReportDTO reportDTO) {
+    public ResponseEntity<?> deleteReport(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long reportId) {
         try {
             String username = customOAuth2Member.getUsername();
             validationReporter(reportId, username);
