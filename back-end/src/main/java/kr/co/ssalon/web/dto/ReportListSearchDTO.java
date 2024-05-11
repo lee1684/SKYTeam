@@ -1,5 +1,6 @@
 package kr.co.ssalon.web.dto;
 
+import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Report;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,25 +10,29 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class ReportDTO {
+public class ReportListSearchDTO {
+
     private Long id;
-    private Long reporterId;
-    private Long reportedUserId;
-    private String reason;
+
     private Boolean isSolved;
+
+    private Long reporterId;
+    private Long reportedId;
+    private String reason;
     private LocalDateTime reportDate;
     private LocalDateTime solvedDate;
 
-    public ReportDTO(Report report) {
+
+    public ReportListSearchDTO(Report report) {
         this.id = report.getId();
-        this.reporterId = report.getReporter().getId();
-        this.reportedUserId = report.getReportedMember().getId();
-        this.reason = report.getReason();
         this.isSolved = report.getIsSolved();
+        this.reporterId = report.getReporter().getId();
+        this.reportedId = report.getReporter().getId();
+        this.reason = report.getReason();
         this.reportDate = report.getReportDate();
         this.solvedDate = report.getSolvedDate();
-    }
+   }
 }

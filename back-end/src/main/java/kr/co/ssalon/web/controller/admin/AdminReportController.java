@@ -42,11 +42,15 @@ public class AdminReportController {
             @ApiResponse(responseCode = "200", description = "신고 내용 모두 조회하기 성공"),
     })
     @GetMapping("/api/admin/reports")
-    public ResponseEntity<?> getReports(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
+    public ResponseEntity<?> getReports(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, ReportSearchCondition reportSearchCondition, Pageable pageable) {
         try {
             String username = customOAuth2Member.getUsername();
             validationAdmin(username);
-            return ResponseEntity.ok().body(reportRepository.findAll());
+
+            Page<Report> reports = reportService.getMyReports(null, reportSearchCondition, pageable);
+            Page<ReportListSearchDTO> reportsDto = reports.map(report ->new ReportListSearchDTO(report));
+            ReportListSearchPageDTO reportListSearchPageDTO = new ReportListSearchPageDTO(reportsDto);
+            return ResponseEntity.ok().body(new JsonResult<>(reportListSearchPageDTO).getData());
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -61,7 +65,9 @@ public class AdminReportController {
         try {
             String username = customOAuth2Member.getUsername();
             validationAdmin(username);
-            return ResponseEntity.ok().body(reportService.findReport(reportId));
+            Report report = reportService.findReport(reportId);
+            ReportDTO reportDTO = new ReportDTO(report);
+            return ResponseEntity.ok().body(new JsonResult<>(reportDTO).getData());
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
