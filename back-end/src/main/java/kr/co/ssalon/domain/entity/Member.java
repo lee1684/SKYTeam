@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,6 +39,7 @@ public class Member {
     @CollectionTable(name = "member_interests", joinColumns = @JoinColumn(name = "member_id"))
     private List<String> interests = new ArrayList<>();
     private String blackReason;
+    private LocalDateTime blackTime;
 
     @Embedded
     private MemberDates memberDates;
@@ -90,6 +92,7 @@ public class Member {
 
     public void changeBlackReason(String blackReason) {
         this.blackReason = blackReason != null ? blackReason : this.blackReason;
+        this.blackTime = blackReason != null ? LocalDateTime.now() : null;
     }
 
     public void initDetailSignInfo(String nickname, String profilePictureUrl, Character gender, String address, String introduction, List<String> interests) {
