@@ -40,7 +40,7 @@ public class MemberMeeting {
     @OneToMany(mappedBy = "memberMeeting")
     private final List<Message> messages = new ArrayList<>();
 
-    private boolean attendance = false;
+    private boolean attendance;
 
     protected MemberMeeting() {
     }

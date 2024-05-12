@@ -50,6 +50,13 @@ public class ValidationService {
             throw new BadRequestException("해당 결제를 찾을 수 없습니다");
     }
 
+    public static Report validationReport(Optional<Report> report) throws BadRequestException {
+        if (report.isPresent()) {
+            return report.get();
+        } else
+            throw new BadRequestException("해당 신고를 찾을 수 없습니다");
+    }
+
     public void validationAdmin(String role) throws BadRequestException {
         if (!role.equals("ROLE_ADMIN")) {
             throw new BadRequestException("관리자가 아닙니다.");
