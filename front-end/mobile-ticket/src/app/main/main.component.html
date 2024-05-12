@@ -1,0 +1,39 @@
+<div class="container">
+    <div id="logo-container">
+        <img src="assets/ssalon_logo_hand.svg" height="30px" />
+    </div>
+    <div id="category-container">
+        <app-simple-toggle [buttonElements]="this.categorySelectionButtons" [columnNum]="-1" [buttonWidth]="50"
+            [buttonHeight]="30" [componentWidth]="430" [fontSize]="14"></app-simple-toggle>
+    </div>
+    <div id="ticket-container">
+        <app-image-row-container [label]="'좋아할 만한 모임'"
+            (onClickImageEvent)="this.onClickTicket()"></app-image-row-container>
+        <app-image-row-container [label]="'좋아할 만한 모임'"
+            (onClickImageEvent)="this.onClickTicket()"></app-image-row-container>
+        <app-image-row-container [label]="'좋아할 만한 모임'"
+            (onClickImageEvent)="this.onClickTicket()"></app-image-row-container>
+        <app-image-row-container [label]="'좋아할 만한 모임'"
+            (onClickImageEvent)="this.onClickTicket()"></app-image-row-container>
+    </div>
+    <div id="navigator-container">
+        <div id="navigator-button-container">
+            <div (click)="this.onClickNavigatorButton(0)">
+                <object class="navigator-button-selected" data="assets/navigator_icons/main.svg"></object>
+            </div>
+            <div (click)="this.onClickNavigatorButton(1)">
+                <object data="assets/navigator_icons/search.svg" height="24px"></object>
+            </div>
+            <div (click)="this.onClickNavigatorButton(2)">
+                <object data="assets/navigator_icons/make.svg" height="24px"></object>
+            </div>
+            <div (click)="this.onClickNavigatorButton(3)">
+                <object data="assets/navigator_icons/ticket.svg" height="24px"></object>
+            </div>
+            <div (click)="this.onClickNavigatorButton(4)">
+                <object data="assets/navigator_icons/profile.svg" height="24px"></object>
+            </div>
+        </div>
+    </div>
+
+</div>

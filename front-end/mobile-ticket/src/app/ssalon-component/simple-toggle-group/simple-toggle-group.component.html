@@ -1,0 +1,25 @@
+<div class="container">
+    <div id="label-container" *ngIf="this.label !== ''">
+        {{this.label}}
+        <span id="extra-label-container" [style.color]="this.extraLabelColor"
+            *ngIf="this.extraLabel !== ''">{{this.extraLabel}}</span>
+    </div>
+    <div id="row-container">
+        <ng-container *ngFor="let row of this.modifiedButtonElements">
+            <div class="toggle-group-row-container"
+                [style.margin-bottom.px]="(this.modifiedButtonElements.length > 1)?16:0"
+                [style.width.px]="row.length*this.buttonWidth+(row.length-1)*10">
+                <ng-container *ngFor="let buttonElement of row, index as i">
+                    <div [ngClass]="this.getClass(buttonElement.selected)" [style.justify-content]="this.align"
+                        [style.width.px]="this.buttonWidth" [style.height.px]="this.buttonHeight"
+                        [style.margin-right.px]="(i!==row.length-1)? 10 : 0" #toggleButton
+                        (click)="this.onClickToggleButton(buttonElement.value)">
+                        <img class="img" *ngIf="buttonElement.imgSrc !== undefined" [src]="buttonElement.imgSrc"
+                            height="24px" />
+                        <span class="label" [style.font-size.px]="this.fontSize">{{buttonElement.label}}</span>
+                    </div>
+                </ng-container>
+            </div>
+        </ng-container>
+    </div>
+</div>

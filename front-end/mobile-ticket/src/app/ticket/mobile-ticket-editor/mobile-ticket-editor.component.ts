@@ -331,17 +331,17 @@ export class MobileTicketEditorComponent {
 
   public getStickers() {
     let array = [
-      'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/sticker/image+1.png',
-      'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/sticker/image+2.png',
-      'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/sticker/image+3.png',
-      'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/sticker/image+4.png',
-      'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/sticker/image+5.png',
-      'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/sticker/image+6.png',
-      'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/sticker/image+8.png',
+      'https://dokcohci6rkid.cloudfront.net/sticker/image+1.png?v=0',
+      'https://dokcohci6rkid.cloudfront.net/sticker/image+2.png?v=0',
+      'https://dokcohci6rkid.cloudfront.net/sticker/image+3.png?v=0',
+      'https://dokcohci6rkid.cloudfront.net/sticker/image+4.png?v=0',
+      'https://dokcohci6rkid.cloudfront.net/sticker/image+5.png?v=0',
+      'https://dokcohci6rkid.cloudfront.net/sticker/image+6.png?v=0',
+      'https://dokcohci6rkid.cloudfront.net/sticker/image+8.png?v=0',
     ];
     array.forEach((url, index) => {
       this.stickers.push({
-        imgSrc: url,
+        imgSrc: url + '?timestamp=' + new Date().getTime(),
         label: `${index}`,
         value: index,
       });
@@ -440,7 +440,9 @@ export class MobileTicketEditorComponent {
         : (this.ssalonStickerAttribute.src = []);
       this.lastUsedFeature = MobileTicketEditMode.NONE;
     } else {
-      let tempImg = await FabricImage.fromURL(array.src[index]);
+      let tempImg = await FabricImage.fromURL(array.src[index], {
+        crossOrigin: 'anonymous',
+      });
       (this.fabricObjects as FabricImage[]).push(tempImg);
       this.loadImageRecursive(index + 1);
     }

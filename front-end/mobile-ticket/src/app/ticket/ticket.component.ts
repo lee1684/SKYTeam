@@ -21,6 +21,10 @@ import { FabricImage, FabricText, Path } from 'fabric';
 import jsQR from 'jsqr';
 import qrcode from 'qrcode-generator';
 import { ScenegraphService } from '../service/scenegraph.service';
+import {
+  CircleToggleStatusGroupComponent,
+  StatusElement,
+} from '../ssalon-component/circle-toggle-status-group/circle-toggle-status-group.component';
 
 export enum MobileTicketViewMode {
   APPVIEW,
@@ -33,6 +37,8 @@ export enum MobileTicketViewMode {
 export interface User {
   profilePictureUrl: string;
   nickname: string;
+  attendance: boolean;
+  userId: number;
 }
 
 @Component({
@@ -44,6 +50,7 @@ export interface User {
     MobileTicketEditViewerComponent,
     SimpleToggleButtonGroupComponent,
     CircleToggleButtonGroupComponent,
+    CircleToggleStatusGroupComponent,
     SimpleButtonComponent,
     NgIf,
   ],
@@ -61,6 +68,8 @@ export class TicketComponent {
   qrVideo: ElementRef<HTMLVideoElement> | null = null;
   @ViewChild('qrCanvas', { static: false })
   qrCanvas: ElementRef<HTMLCanvasElement> | null = null;
+  @ViewChild('joiningUsersComponent', { static: false })
+  joiningUsersComponent: CircleToggleStatusGroupComponent | null = null;
 
   public mobileTicketViewMode = MobileTicketViewMode;
   public mode: MobileTicketViewMode = MobileTicketViewMode.APPEDITVIEW;
@@ -83,7 +92,7 @@ export class TicketComponent {
   public isCameraLoaded: boolean = false;
   public qrStream: MediaStream | null = null;
   public qrCodeSrc: string = '';
-  public joiningUsers: ButtonElement[] = [];
+  public joiningUsers: StatusElement[] = [];
   public checkStatus: {
     checkStatus: boolean | null;
     checkingUser?: User;
@@ -97,10 +106,10 @@ export class TicketComponent {
     private _sceneGraphService: ScenegraphService
   ) {}
   public ngOnInit(): void {}
-  public ngAfterViewInit(): void {
+  public async ngAfterViewInit() {
     this.setFirstPage();
   }
-  public ngAfterViewChecked(): void {
+  public async ngAfterViewChecked() {
     this.startQRCodeDetection();
   }
 
@@ -175,15 +184,24 @@ export class TicketComponent {
                 code.data
               );
               this.checkStatus = {
-                checkStatus: true,
+                checkStatus: joinUserInfo.attendance,
                 checkingUser: {
                   nickname: joinUserInfo.nickname,
                   profilePictureUrl: joinUserInfo.profilePictureUrl,
+                  attendance: joinUserInfo.attendance,
+                  userId: joinUserInfo.userId,
                 },
                 color: '#4DAF50',
                 text: '환영합니다.',
               };
-            } catch {
+              //현재 QR코드 찍은 참가자가 출석체크가 되어있지 않다면 출석체크로 변경
+              if (this.checkStatus.checkingUser!.attendance) {
+                this.joiningUsersComponent?.changeStatus(
+                  this.checkStatus.checkingUser!.userId,
+                  true
+                );
+              }
+            } catch (e) {
               this.checkStatus = {
                 checkStatus: false,
                 color: '#F44336',
@@ -238,7 +256,8 @@ export class TicketComponent {
         this.joiningUsers.push({
           imgSrc: userInfo.profilePictureUrl,
           label: userInfo.nickname,
-          value: index,
+          value: userInfo.userId,
+          status: userInfo.attendance,
         });
       });
     }
@@ -302,6 +321,7 @@ export class TicketComponent {
       };
       body.append('json', JSON.stringify(json));
       body.append('files', dataURItoBlob(imageDataURL), 'image.png');
+      console.log(dataURItoBlob(imageDataURL));
       /* 서버에 저장 API 연결해야함. */
       await this._apiExecutorService.editTicket(body);
     }

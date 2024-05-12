@@ -1,0 +1,74 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+#logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    margin-top: 14px;
+    width: 350px;
+}
+
+#category-container {
+    display: flex;
+    align-items: center;
+    width: 350px;
+    height: 50px;
+    margin-top: 20px;
+    overflow-x: scroll;
+}
+
+#ticket-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    overflow-y: scroll;
+    width: 100%;
+    position: relative;
+    height: calc(100% - 50px);
+    background-color: white;
+    margin-top: 20px;
+}
+
+#ticket-container::-webkit-scrollbar {
+    display: none;
+}
+
+
+#navigator-button-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 50px;
+    width: 350px;
+    background-color: white;
+}
+
+.navigator-button {
+    height: 20px;
+}
+
+.navigator-button svg {
+    fill: #BCBCBC;
+}
+
+.navigator-button-selected {
+    height: 20px;
+    fill: black;
+    stroke: rgba(0, 0, 0, 0);
+}
+
+.navigator-button-selected svg {
+    fill: #2c2c2c;
+}
