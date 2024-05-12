@@ -45,6 +45,22 @@ public class AwsS3Service {
         }
     }
 
+    public String getFileAsJsonString(String moimId, String userEmail) {
+        // moimId를 바탕으로 S3에서 JSON 파일을 읽어와 String 형태로 반환합니다
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(bucketJsonName)
+                .key(moimId + "/" + userEmail + ".json")
+                .build();
+
+        try {
+            ResponseBytes<GetObjectResponse> s3Object = s3Client.getObjectAsBytes(getObjectRequest);
+            return s3Object.asString(StandardCharsets.UTF_8);
+        } catch (S3Exception e) {
+            log.error("Error occurred while load JSON from S3", e);
+            return "Error occurred while load JSON from S3";
+        }
+    }
+
     public String uploadFileViaStream(Long moimId, String uploadFile) {
         try {
             // String -> Byte -> InputStream 변환
@@ -56,6 +72,30 @@ public class AwsS3Service {
                     .contentType("application/json")
                     .contentLength((long) uploadFile.getBytes().length)
                     .key(moimId + "/" + moimId + ".json")
+                    .build();
+
+            // 업로드 실행
+            s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(inputStream, uploadFile.getBytes().length));
+        } catch (Exception e) {
+            // 임시 에러 로깅 처리
+            e.printStackTrace();
+            return "502 Bad Gateway";
+        }
+
+        return "200 OK";
+    }
+
+    public String uploadFileViaStream(Long moimId, String userEmail, String uploadFile) {
+        try {
+            // String -> Byte -> InputStream 변환
+            InputStream inputStream = new ByteArrayInputStream(uploadFile.getBytes());
+
+            // PutObjectRequest 설정
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucketJsonName)
+                    .contentType("application/json")
+                    .contentLength((long) uploadFile.getBytes().length)
+                    .key(moimId + "/" + userEmail + ".json")
                     .build();
 
             // 업로드 실행
