@@ -39,11 +39,6 @@
 
 <!-- QRCHECKVIEW: QRCODE 확인하는 화면의 경우 -->
 <div class="container" *ngIf="this.mode === this.mobileTicketViewMode.QRCHECKVIEW" #qrCheckView>
-  <div class="horizontal-container" [style.justify-content]="'space-between'">
-    <div><app-simple-button class="back-button" [buttonElement]="this.goBackButtonElement" [heightSize]="36"
-        (onClickEvent)="this.onClickBackButton()"></app-simple-button></div>
-  </div>
-
   <div id="qr-detector">
     <video #qrVideo [style.width]="'100%'" [style.height]="'100%'" autoplay playsInline
       [style.object-fit]="'cover'"></video>
@@ -56,11 +51,12 @@
   <div id="join-user-container" [style.margin-top]="'30px'">
     <div class="horizontal-container" [style.justify-content]="'center'">
       <div id="qr-checking-user-container">
-        <div id="qr-checking-user-profile-img">
-          <img
+        <div id="qr-checking-user-profile-container" [style.width.px]="52" [style.height.px]="52">
+          <img id="qr-checking-user-profile-img"
             [src]="this.checkStatus.checkingUser?this.checkStatus.checkingUser.profilePictureUrl:'assets/data_error.png'"
             height="50px" />
         </div>
+
         <div id="qr-check-info-container">
           <div class="qr-check-info" [style.font-size]="'20px'">
             {{this.checkStatus.checkingUser?this.checkStatus.checkingUser.nickname:'알수없음'}}</div>
@@ -70,19 +66,14 @@
     </div>
 
     <div id="join-user-list">
-      <app-circle-toggle-button-group [elements]="this.joiningUsers"
-        [isLabelVisible]="true"></app-circle-toggle-button-group>
+      <app-circle-toggle-status-group [elements]="this.joiningUsers"
+        #joiningUsersComponent></app-circle-toggle-status-group>
     </div>
   </div>
 </div>
 
 <!-- QRSHOWVIEW: QRCODE 보여주는 화면의 경우 -->
 <div class="container" *ngIf="this.mode === this.mobileTicketViewMode.QRSHOWVIEW" #qrShowView>
-  <div class="horizontal-container" [style.justify-content]="'space-between'">
-    <div><app-simple-button class="back-button" [buttonElement]="this.goBackButtonElement" [heightSize]="36"
-        (onClickEvent)="this.onClickBackButton()"></app-simple-button></div>
-
-  </div>
   <div [style.height]="'100%'">
     <app-mobile-ticket-viewer></app-mobile-ticket-viewer>
   </div>

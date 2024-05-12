@@ -1,7 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
-import { DecorationInfo, SsalonConfigService } from './ssalon-config.service';
+import { SsalonConfigService } from './ssalon-config.service';
 import { Injectable } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 
 export const setToken = function (
   token: string,
@@ -16,16 +15,14 @@ export const setToken = function (
 export class ApiExecutorService {
   public apiExecutor: AxiosInstance | null = null;
   public apiExecutorJson: AxiosInstance | null = null;
-  public apiURL: string = 'http://3.34.0.190:8080/api';
-  //public apiURL: string = 'https://477d-2001-2d8-2099-5ce4-d106-27ec-4586-b5f0.ngrok-free.app/api';
-  //public apiURL: string = 'http://localhost:8080/api';
+  public apiURL: string = 'https://ssalon.co.kr/api';
   public tokens = {
     access:
-      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTUxNzgyMjAsImV4cCI6MTcxNTI2NDYyMH0.ceFBQpGN4R6eXOq8Y89CigETJd2YTlM4fEOnssw42bE',
+      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTUyNDA4NjUsImV4cCI6MTcxNTMyNzI2NX0.PL-LWei2pL-NBhpxDFGkyCjLAgXYYhb4hWk7wNCJY24',
     refresh:
-      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6InJlZnJlc2giLCJ1c2VybmFtZSI6Im5hdmVyIGx6YVdfaFJqa3NZM2V6NTVLSXJKV3RPZjJNak4tRmcySW1BeUlwTzhTZXMiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzE1MTc4MjIwLCJleHAiOjE3MTUyNjQ2MjB9.iaVFRSHyu5EIsRiv7f1SeLYbhPvztFRaaofscW2lXuw',
+      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6InJlZnJlc2giLCJ1c2VybmFtZSI6Im5hdmVyIGx6YVdfaFJqa3NZM2V6NTVLSXJKV3RPZjJNak4tRmcySW1BeUlwTzhTZXMiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzE1MjQwODY1LCJleHAiOjE3MTUzMjcyNjV9.Ow5FwPpGzlumSzO2ELoCuYRqqg3bu73K-jt9aqf3nb4',
   };
-  private _token: string = this.tokens.access;
+  public _token: string = this.tokens.access;
   public refreshToken: string = this.tokens.refresh;
 
   constructor(private _ssalonConfigService: SsalonConfigService) {
@@ -64,7 +61,6 @@ export class ApiExecutorService {
       let response = await this.apiExecutor?.get(
         `/tickets/${this._ssalonConfigService.MOIM_ID}`
       );
-      console.log('As');
       return response!.data;
     } catch {
       /** dummy data */
@@ -108,7 +104,6 @@ export class ApiExecutorService {
       let response = await this.apiExecutorJson?.get(
         `/tickets/${this._ssalonConfigService.MOIM_ID}/link`
       );
-      console.log(typeof response!.data);
       return response!.data;
     } catch (error) {
       return 'asdfo7a809sd7fwae9089iafa';
@@ -121,6 +116,15 @@ export class ApiExecutorService {
       let response = await this.apiExecutorJson?.post(
         `/tickets/${this._ssalonConfigService.MOIM_ID}/link`,
         body
+      );
+      return response!.data;
+    } catch {}
+  }
+
+  public async changeAttendanceStatus(userId: number, status: boolean = false) {
+    try {
+      let response = await this.apiExecutorJson?.post(
+        `/moims/${this._ssalonConfigService.MOIM_ID}/attendance/${userId}`
       );
       return response!.data;
     } catch {}

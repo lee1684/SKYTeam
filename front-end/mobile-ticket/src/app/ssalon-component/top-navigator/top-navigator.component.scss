@@ -1,0 +1,23 @@
+.container {
+    width: 100%;
+    height: 56px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+}
+
+#back-container {
+    margin-left: 10px;
+}
+
+#title-container {
+    font-size: 18px;
+    font-weight: 600;
+    font-family: 'Pretendard';
+}
+
+#share-container {
+    margin-right: 10px;
+}

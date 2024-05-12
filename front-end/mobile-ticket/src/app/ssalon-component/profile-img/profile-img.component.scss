@@ -1,0 +1,27 @@
+#profile-img-container {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    position: relative;
+}
+
+#profile-img {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+}
+
+#edit-icon {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+}
+
+#edit-icon:hover {
+    cursor: pointer;
+}

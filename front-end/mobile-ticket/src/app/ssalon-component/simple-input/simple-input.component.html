@@ -1,0 +1,10 @@
+<div id="simple-input-component-container">
+    <div id="label-container" *ngIf="this.label !== ''">
+        {{this.label}}
+        <span id="extra-label-container" [style.color]="this.extraLabelColor"
+            *ngIf="this.extraLabel !== ''">{{this.extraLabel}}</span>
+    </div>
+    <div id="input-container">
+        <input id="input" [placeholder]="this.placeholder" autocomplete />
+    </div>
+</div>

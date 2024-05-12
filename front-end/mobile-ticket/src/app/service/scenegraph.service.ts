@@ -34,6 +34,9 @@ export class ScenegraphService {
       this._ssalonConfigService.MOIM_ID = params['moimId'];
       this._ssalonConfigService.VIEW_TYPE = params['viewType'];
       this._ssalonConfigService.FACE_TYPE = params['faceType'];
+      if (params['token'] !== undefined) {
+        this._apiExecutorService._token = params['token'];
+      }
     });
   }
   public initThree(): void {

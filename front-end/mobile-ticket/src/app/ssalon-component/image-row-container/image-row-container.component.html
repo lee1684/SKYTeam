@@ -1,0 +1,13 @@
+<div>
+    <div id="label-container" *ngIf="this.label !== ''">
+        {{this.label}}
+        <span id="extra-label-container" [style.color]="this.extraLabelColor"
+            *ngIf="this.extraLabel !== ''">{{this.extraLabel}}</span>
+    </div>
+    <div id="image-row-container">
+        <ng-container *ngFor="let ticket of tickets">
+            <img class="image-container" src="assets/ticket.png" [height]="this.imageHeight"
+                (click)="this.onClickImage(0)" />
+        </ng-container>
+    </div>
+</div>
