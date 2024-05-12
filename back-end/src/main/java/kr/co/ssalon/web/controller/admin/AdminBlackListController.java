@@ -50,9 +50,9 @@ public class AdminBlackListController {
         }
     }
 
-    @Operation(summary = "블랙리스트 설정")
+    @Operation(summary = "블랙리스트 설정 및 해제")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "블랙리스트 설정 성공"),
+            @ApiResponse(responseCode = "200", description = "블랙리스트 설정 및 해제 성공"),
     })
     @PostMapping("/api/admin/blacklists/users/{userId}")
     public ResponseEntity<?> setBlackReason(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long userId, @RequestBody BlackReasonDTO blackReasonDTO) {
@@ -60,21 +60,6 @@ public class AdminBlackListController {
             String username = customOAuth2Member.getUsername();
             validationAdmin(username);
             return ResponseEntity.ok().body(memberService.changeBlackReason(userId, blackReasonDTO.getBlackReason()));
-        } catch (BadRequestException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @Operation(summary = "블랙리스트 해제")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "블랙리스트 해제 성공"),
-    })
-    @DeleteMapping("/api/admin/blacklists/users/{userId}")
-    public ResponseEntity<?> deleteBlackReason(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long userId) {
-        try {
-            String username = customOAuth2Member.getUsername();
-            validationAdmin(username);
-            return ResponseEntity.ok().body(memberService.changeBlackReason(userId, null));
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
