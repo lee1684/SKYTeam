@@ -46,10 +46,8 @@ public class ReportService {
 
         if(report.getIsSolved()) {
             report.changeIsSolvedFalse();
-            report.changeSolvedDate();
         } else {
             report.changeIsSolvedTrue();
-            report.deleteSolvedDate();
         }
         return report.getIsSolved();
     }

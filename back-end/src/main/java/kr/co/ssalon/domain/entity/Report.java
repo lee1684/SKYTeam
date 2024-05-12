@@ -36,11 +36,15 @@ public class Report {
 
     protected Report() {}
 
-    public void changeIsSolvedTrue() { this.isSolved = true;}
-    public void changeIsSolvedFalse() {this.isSolved = false;}
+    public void changeIsSolvedTrue() {
+        this.isSolved = true;
+        this.solvedDate = LocalDateTime.now();
+    }
+    public void changeIsSolvedFalse() {
+        this.isSolved = false;
+        this.solvedDate = null;
+    }
     public void changeReason(String reason) { this.reason = reason; }
-    public void changeSolvedDate() { this.solvedDate = LocalDateTime.now(); }
-    public void deleteSolvedDate() { this.solvedDate = null; }
 
     public static Report createReport (Member reporter, Member reportedMember, String reason) throws BadRequestException {
             Report report = Report.builder()
