@@ -92,6 +92,10 @@ public class Member {
 
     public void changeBlackReason(String blackReason) {
         this.blackReason = blackReason != null ? blackReason : this.blackReason;
+    }
+
+    public void changeBlackReasonState(String blackReason) {
+        this.blackReason = blackReason;
         this.blackTime = blackReason != null ? LocalDateTime.now() : null;
     }
 
