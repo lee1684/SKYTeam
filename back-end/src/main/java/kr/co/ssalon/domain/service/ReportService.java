@@ -35,11 +35,7 @@ public class ReportService {
         return report;
     }
 
-    public List<Report> getMyReports(Long userId) throws BadRequestException {
-        return reportRepository.findByReporterId(userId);
-    }
-
-    public Page<Report> getMyReports(Long userId, ReportSearchCondition reportSearchCondition, Pageable pageable) {
+    public Page<Report> getMyReports(Long userId, ReportSearchCondition reportSearchCondition, Pageable pageable) throws BadRequestException{
         Page<Report> reports = reportRepository.searchMyReports(userId, reportSearchCondition, pageable);
         return reports;
     }

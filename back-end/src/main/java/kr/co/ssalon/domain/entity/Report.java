@@ -48,6 +48,7 @@ public class Report {
                     .reportedMember(reportedMember)
                     .reason(reason)
                     .reportDate(LocalDateTime.now())
+                    .isSolved(false)
                     .build();
             return report;
     }
