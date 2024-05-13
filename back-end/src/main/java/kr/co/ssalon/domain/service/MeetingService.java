@@ -188,7 +188,7 @@ public class MeetingService {
         Meeting meeting = findMeeting(moimId);
         Member currentUser = findMember(username);
         Member targetUser = findMember(userId);
-        MemberMeeting targetMemberMeeting = findMemberMeeting(currentUser, meeting);
+        MemberMeeting targetMemberMeeting = findMemberMeeting(targetUser, meeting);
 
         // 요청자가 모임에 포함되어 있는지 검증
         if(!isParticipant(moimId, currentUser)) {throw new BadRequestException("요청자가 모임에 참여자 목록에 존재하지 않습니다.");}
@@ -196,14 +196,12 @@ public class MeetingService {
         targetUser.deleteMemberMeeting(targetMemberMeeting);
         meeting.deleteMemberMeeting(targetMemberMeeting);
 
-        memberMeetingRepository.delete(targetMemberMeeting);
-
         // 요청자가 모임 개최자인 경우 -> 강퇴
         if(currentUser.equals(meeting.getCreator()) || !currentUser.equals(targetUser)) {
 
             MeetingOut meetingOut = MeetingOut.createMeetingOutReason(targetUser, meeting, "강퇴", reason);
             meetingOutRepository.save(meetingOut);
-
+            memberMeetingRepository.delete(targetMemberMeeting);
             return meetingOut;
         }
 
@@ -212,7 +210,7 @@ public class MeetingService {
 
             MeetingOut meetingOut = MeetingOut.createMeetingOutReason(targetUser, meeting, "탈퇴", reason);
             meetingOutRepository.save(meetingOut);
-
+            memberMeetingRepository.delete(targetMemberMeeting);
             return meetingOut;
         }
 
