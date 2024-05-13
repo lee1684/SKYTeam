@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -21,6 +22,7 @@ public class ReportListSearchDTO {
 
     private Long reporterId;
     private Long reportedId;
+    private List<String> reportPictureUrls;
     private String reason;
     private LocalDateTime reportDate;
     private LocalDateTime solvedDate;
@@ -31,6 +33,7 @@ public class ReportListSearchDTO {
         this.isSolved = report.getIsSolved();
         this.reporterId = report.getReporter().getId();
         this.reportedId = report.getReporter().getId();
+        this.reportPictureUrls = report.getReportPictureUrls();
         this.reason = report.getReason();
         this.reportDate = report.getReportDate();
         this.solvedDate = report.getSolvedDate();
