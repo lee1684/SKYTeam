@@ -7,7 +7,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.ssalon.domain.dto.MeetingDomainDTO;
+import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.service.MeetingService;
+import kr.co.ssalon.domain.service.MemberService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import kr.co.ssalon.web.dto.*;
 import lombok.*;
@@ -33,6 +35,7 @@ import java.util.List;
 public class MeetingController {
 
     private final MeetingService meetingService;
+    private final MemberService memberService;
 
     @Operation(summary = "모임 참가")
     @ApiResponses(value = {
@@ -184,6 +187,21 @@ public class MeetingController {
         try {
             String username = customOAuth2Member.getUsername();
             return ResponseEntity.ok().body(meetingService.isCreator(username, moimId));
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Operation(summary = "모임 참여자 여부 검증")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "모임 참여자 여부 검증 성공"),
+    })
+    @GetMapping("/api/moims/{moimId}/participant")
+    public ResponseEntity<?> isParticipant(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
+        try {
+            String username = customOAuth2Member.getUsername();
+            Member member = memberService.findMember(username);
+            return ResponseEntity.ok().body(meetingService.isParticipant(moimId, member));
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
