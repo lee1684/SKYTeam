@@ -10,6 +10,9 @@ import kr.co.ssalon.domain.dto.MeetingDomainDTO;
 import kr.co.ssalon.domain.entity.MeetingOut;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.MeetingOut;
+import kr.co.ssalon.domain.repository.CategoryRepository;
+import kr.co.ssalon.domain.repository.MeetingRepository;
+import kr.co.ssalon.domain.service.CategoryService;
 import kr.co.ssalon.domain.service.MeetingService;
 import kr.co.ssalon.domain.service.MemberService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
@@ -28,7 +31,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Tag(name = "모임")
 @Slf4j
@@ -38,6 +43,9 @@ public class MeetingController {
 
     private final MeetingService meetingService;
     private final MemberService memberService;
+    private final MeetingRepository meetingRepository;
+    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
     @Operation(summary = "모임 참가")
     @ApiResponses(value = {
@@ -69,6 +77,34 @@ public class MeetingController {
         Page<MeetingListSearchDTO> moimsDto = moims.map(meeting -> new MeetingListSearchDTO(meeting));
         MeetingListSearchPageDTO meetingListSearchPageDTO = new MeetingListSearchPageDTO(moimsDto);
         return ResponseEntity.ok().body(new JsonResult<>(meetingListSearchPageDTO).getData());
+    }
+
+    // 홈 화면 조회
+    // 모임 목록 필터 설정, 목록에 표시될 모임의 숫자 등
+    // 현재 개설된 모임 목록
+    @Operation(summary = "홈 화면 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "홈 화면 조회 성공"),
+    })
+    @GetMapping("/api/moims/home")
+    public ResponseEntity<?> getHomeMoims(HomeMeetingSearchCondition homeMeetingSearchCondition) {
+        try {
+            List<MeetingHomeDTO> categorizedMeetings = new ArrayList<>();
+
+            for (int i = 1; i <= homeMeetingSearchCondition.getCategoryLen(); i++) {
+                String categoryName = categoryService.findCategory(Long.valueOf(i)).getName();
+                List<Meeting> meetings = meetingRepository.findMeetingsByCategoryId(Long.valueOf(i));
+                MeetingHomeDTO meetingHomeDTO = new MeetingHomeDTO(categoryName, meetings.stream()
+                        .map(MeetingHomeSearchDTO::new)
+                        .collect(Collectors.toList()));
+                categorizedMeetings.add(meetingHomeDTO);
+            }
+
+            return ResponseEntity.ok().body(new JsonResult<>(categorizedMeetings).getData());
+
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     // 모임 개설

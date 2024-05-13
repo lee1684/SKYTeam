@@ -26,6 +26,12 @@ public class CategoryService {
         return category;
     }
 
+    public Category findCategory(String categoryName) throws BadRequestException {
+        Optional<Category> findCategory = categoryRepository.findByName(categoryName);
+        Category category = ValidationService.validationCategory(findCategory);
+        return category;
+    }
+
     @Transactional
     public Category editCategory(Long categoryId, CategoryDTO categoryDTO) throws BadRequestException {
         Category category = findCategory(categoryId);

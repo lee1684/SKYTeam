@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface MeetingRepositoryCustom {
 
@@ -13,6 +15,7 @@ public interface MeetingRepositoryCustom {
     // 모임 목록 필터 설정
     Page<Meeting> searchMoims(MeetingSearchCondition meetingSearchCondition, Pageable pageable);
 
+    List<Meeting> findMeetingsByCategoryId(Long categoryId);
 
 
 
