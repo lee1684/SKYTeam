@@ -52,6 +52,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.addCookie(accessCookie);
         response.addCookie(refreshCookie);
 
+        // redirect 경로 설정
+        response.sendRedirect("https://ssalon.co.kr/web/onboarding");
+
         // JSON 객체 생성
         JSONObject jsonResponse = new JSONObject();
         jsonResponse.put("access", access);
