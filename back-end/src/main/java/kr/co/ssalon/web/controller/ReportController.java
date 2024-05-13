@@ -81,7 +81,7 @@ public class ReportController {
         try {
             Member reportMember = memberService.findMember(customOAuth2Member.getUsername());
             Member reportedMember = memberService.findMember(reportDTO.getReportedUserId());
-            Report report = Report.createReport(reportMember, reportedMember, reportDTO.getReason());
+            Report report = Report.createReport(reportMember, reportedMember, reportDTO.getReason(), reportDTO.getReportPictureUrls());
             ReportDTO responseReportDTO = new ReportDTO(reportService.createReport(report));
             return ResponseEntity.ok().body(new JsonResult<>(responseReportDTO).getData());
         } catch (BadRequestException e) {
