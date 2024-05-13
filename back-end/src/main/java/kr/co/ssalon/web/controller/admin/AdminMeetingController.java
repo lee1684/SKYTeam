@@ -90,7 +90,7 @@ public class AdminMeetingController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "모임 정보 수정 성공"),
     })
-    @PatchMapping("/api/moims/admin/{moimId}")
+    @PatchMapping("/api/admin/moims/{moimId}")
     public ResponseEntity<?> updateMoim(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MeetingDomainDTO meetingDomainDTO) {
         try {
             String username = customOAuth2Member.getUsername();
@@ -105,7 +105,7 @@ public class AdminMeetingController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "모임 해산 성공"),
     })
-    @DeleteMapping("/api/moims/admin/{moimId}")
+    @DeleteMapping("/api/admin/moims/{moimId}")
     public ResponseEntity<?> deleteMoim(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
         try {
             String username = customOAuth2Member.getUsername();
