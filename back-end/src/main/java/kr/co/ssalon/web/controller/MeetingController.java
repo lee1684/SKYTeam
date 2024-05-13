@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.ssalon.domain.dto.MeetingDomainDTO;
+import kr.co.ssalon.domain.entity.MeetingOut;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.MeetingOut;
 import kr.co.ssalon.domain.service.MeetingService;
