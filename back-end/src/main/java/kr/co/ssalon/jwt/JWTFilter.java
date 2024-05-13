@@ -32,6 +32,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         log.info("JWTFilter");
         String accessToken = null;
+        String accessTokenCookie = null;
 
         // 'Authorization' 헤더 추출
         String authorizationHeader = request.getHeader("Authorization");
@@ -39,16 +40,30 @@ public class JWTFilter extends OncePerRequestFilter {
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             // Bearer 토큰에서 실제 토큰 값만 추출
             accessToken = authorizationHeader.substring(7);
+        } else {
+            // 쿠키 토큰 사용
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("access".equals(cookie.getName())) {
+                        accessTokenCookie = cookie.getValue();
+                        break;
+                    }
+                }
+            }
         }
 
-        if (accessToken == null) {
+        if (accessToken == null && accessTokenCookie == null) {
             filterChain.doFilter(request, response);
             return ;
         }
 
         try {
-            jwtUtil.isExpired(accessToken);
-
+            if (accessToken != null) {
+                jwtUtil.isExpired(accessToken);
+            } else {
+                jwtUtil.isExpired(accessTokenCookie);
+            }
         } catch (ExpiredJwtException e) {
 
             PrintWriter writer = response.getWriter();
@@ -59,7 +74,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         }
 
-        String category = jwtUtil.getCategory(accessToken);
+        String category = accessToken != null ? jwtUtil.getCategory(accessToken) : jwtUtil.getCategory(accessTokenCookie);
         if (!category.equals("access")) {
 
             //response body
@@ -71,7 +86,7 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         // 스프링 시큐리티 세션에 유저 정보 강제 저장
-        String token = accessToken;
+        String token = accessToken != null ? accessToken : accessTokenCookie;
         String username = jwtUtil.getUsername(token);
         String role = jwtUtil.getRole(token);
         Oauth2MemberDto oauth2MemberDto = Oauth2MemberDto.builder().username(username).role(role).build();
