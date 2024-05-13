@@ -8,6 +8,8 @@ import lombok.Getter;
 import org.apache.coyote.BadRequestException;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,6 +29,10 @@ public class Report {
     @JoinColumn(name = "reported_member_id")
     private Member reportedMember;
 
+    @ElementCollection
+    @CollectionTable(name = "report_picture", joinColumns = @JoinColumn(name = "report_id"))
+    private final List<String> reportPictureUrls = new ArrayList<>();
+
     private String reason;
 
     private Boolean isSolved;
@@ -44,9 +50,28 @@ public class Report {
         this.isSolved = false;
         this.solvedDate = null;
     }
-    public void changeReason(String reason) { this.reason = reason; }
 
-    public static Report createReport (Member reporter, Member reportedMember, String reason) throws BadRequestException {
+    public void addReportPictureUrls(List<String> reportPictureUrls) {
+        if(reportPictureUrls != null) {
+            for (String reportPictureUrl : reportPictureUrls) {
+                getReportPictureUrls().add(reportPictureUrl);
+            }
+        }
+    }
+
+    public void changeReason(String reason) {
+        this.reason = reason != null ? reason : this.reason;
+    }
+
+    public void changeReportPictureUrls(List<String> reportPictureUrls) {
+        if(reportPictureUrls != null) {
+            this.reportPictureUrls.clear();
+            this.reportPictureUrls.addAll(reportPictureUrls);
+        }
+    }
+
+
+    public static Report createReport (Member reporter, Member reportedMember, String reason, List<String> reportPictureUrls) throws BadRequestException {
             Report report = Report.builder()
                     .reporter(reporter)
                     .reportedMember(reportedMember)
@@ -54,6 +79,8 @@ public class Report {
                     .reportDate(LocalDateTime.now())
                     .isSolved(false)
                     .build();
+
+            report.addReportPictureUrls(reportPictureUrls);
             return report;
     }
 }

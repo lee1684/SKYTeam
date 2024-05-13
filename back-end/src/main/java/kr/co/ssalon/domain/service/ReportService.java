@@ -32,6 +32,7 @@ public class ReportService {
     public Report editReport(Long reportId, ReportDTO reportDTO) throws BadRequestException {
         Report report = findReport(reportId);
         report.changeReason(reportDTO.getReason());
+        report.changeReportPictureUrls(reportDTO.getReportPictureUrls());
         return report;
     }
 
