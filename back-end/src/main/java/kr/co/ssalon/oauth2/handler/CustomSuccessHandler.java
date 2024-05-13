@@ -45,6 +45,13 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         addRedisRefreshEntity(username, refresh);
 
+        // response에 쿠키 추가
+        Cookie accessCookie = createCookieAccess("access", access);
+        Cookie refreshCookie = createCookieRefresh("refresh", refresh);
+
+        response.addCookie(accessCookie);
+        response.addCookie(refreshCookie);
+
         // JSON 객체 생성
         JSONObject jsonResponse = new JSONObject();
         jsonResponse.put("access", access);
@@ -53,7 +60,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // response body의 MIME 타입 설정
         response.setContentType("application/json");
 
-        // JSON response body 전송
+        // JSON response body로 쿠키 추가해서 전송
         PrintWriter out = response.getWriter();
         out.print(jsonResponse.toString());
         out.flush();
@@ -64,17 +71,17 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private Cookie createCookieAccess(String key, String value) {
 
         Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(60 * 10);
-        //cookie.setSecure(true);
+        cookie.setMaxAge(86400000);
+        cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         return cookie;
     }
 
-    private Cookie createCookie(String key, String value) {
+    private Cookie createCookieRefresh(String key, String value) {
         Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24 * 60 * 60);
-        //cookie.setSecure(true);
+        cookie.setMaxAge(86400000);
+        cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         return cookie;
