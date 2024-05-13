@@ -7,7 +7,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.ssalon.domain.dto.MeetingDomainDTO;
+import kr.co.ssalon.domain.entity.MeetingOut;
 import kr.co.ssalon.domain.entity.Member;
+import kr.co.ssalon.domain.entity.MeetingOut;
 import kr.co.ssalon.domain.service.MeetingService;
 import kr.co.ssalon.domain.service.MemberService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
@@ -171,7 +173,9 @@ public class MeetingController {
     public ResponseEntity<?> deleteUserFromMoim(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @PathVariable Long userId, @RequestBody MeetingOutReasonDTO meetingOutReasonDTO) {
         try{
             String username = customOAuth2Member.getUsername();
-            return ResponseEntity.ok().body(meetingService.deleteUserFromMoim(username, moimId, userId, meetingOutReasonDTO.getReason()));
+            MeetingOut meetingOut = meetingService.deleteUserFromMoim(username, moimId, userId, meetingOutReasonDTO.getReason());
+            MeetingOutDTO meetingOutDTO = new MeetingOutDTO(meetingOut);
+            return ResponseEntity.ok().body(new JsonResult<>(meetingOutDTO).getData());
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
