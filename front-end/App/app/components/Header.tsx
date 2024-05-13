@@ -43,7 +43,7 @@ export interface HeaderProps {
   /**
    * Title text to display if not using `tx` or nested components.
    */
-  title?: TextProps["text"]
+  title?: TextProps["text"] | ReactElement
   /**
    * Title text which is looked up via i18n.
    */

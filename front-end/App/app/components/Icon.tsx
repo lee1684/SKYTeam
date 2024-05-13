@@ -110,6 +110,7 @@ export const iconRegistry = {
   x: require("../../assets/icons/x.png"),
 
   // Custom icons
+  salonLogo: require("../../assets/icons/salon-logo.png"),
   home: require("../../assets/icons/home.png"),
   search: require("../../assets/icons/search.png"),
   squarePlus: require("../../assets/icons/square-plus.png"),

@@ -139,7 +139,7 @@ export function Card(props: CardProps) {
     FooterComponent,
     LeftComponent,
     RightComponent,
-    verticalAlignment = "top",
+    verticalAlignment = "center",
     style: $containerStyleOverride,
     contentStyle: $contentStyleOverride,
     headingStyle: $headingStyleOverride,
@@ -214,7 +214,7 @@ export function Card(props: CardProps) {
           {ContentComponent ||
             (isContentPresent && (
               <Text
-                weight="normal"
+                weight="regular"
                 text={content}
                 tx={contentTx}
                 txOptions={contentTxOptions}
@@ -227,7 +227,7 @@ export function Card(props: CardProps) {
         {FooterComponent ||
           (isFooterPresent && (
             <Text
-              weight="normal"
+              weight="regular"
               size="xs"
               text={footer}
               tx={footerTx}
@@ -252,7 +252,6 @@ const $containerBase: ViewStyle = {
   shadowOpacity: 0.08,
   shadowRadius: 12.81,
   elevation: 16,
-  minHeight: 96,
   flexDirection: "row",
 }
 

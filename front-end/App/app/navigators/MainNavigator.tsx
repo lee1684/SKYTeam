@@ -4,22 +4,18 @@ import React from "react"
 import { ViewStyle } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Icon } from "../components"
-import {
-  CreateTicketScreen,
-  HomeScreen,
-  ProfileScreen,
-  SearchScreen,
-  TicketScreen,
-} from "../screens"
+import { CreateTicketScreen, HomeScreen, SearchScreen } from "../screens"
 import { colors, spacing } from "../theme"
 import { AppStackParamList, AppStackScreenProps } from "./AppNavigator"
+import { ProfileNavigator } from "./ProfileNavigator"
+import { TicketNavigator } from "./TicketNavigator"
 
 export type MainTabParamList = {
   Home: undefined
   Search: undefined
   CreateTicket: undefined
   Ticket: undefined
-  Profile: undefined
+  ProfileNavigator: undefined
 }
 
 export type MainTabScreenProps<T extends keyof MainTabParamList> = CompositeScreenProps<
@@ -27,7 +23,7 @@ export type MainTabScreenProps<T extends keyof MainTabParamList> = CompositeScre
   AppStackScreenProps<keyof AppStackParamList>
 >
 
-const Tab = createBottomTabNavigator<MainTabParamList>()
+export const Tab = createBottomTabNavigator<MainTabParamList>()
 
 export function MainNavigator() {
   const { bottom } = useSafeAreaInsets()
@@ -64,6 +60,7 @@ export function MainNavigator() {
         name="CreateTicket"
         component={CreateTicketScreen}
         options={{
+          tabBarStyle: { display: "none" },
           tabBarIcon: ({ focused }) => (
             <Icon icon="squarePlus" color={focused ? colors.black : undefined} size={24} />
           ),
@@ -71,7 +68,7 @@ export function MainNavigator() {
       />
       <Tab.Screen
         name="Ticket"
-        component={TicketScreen}
+        component={TicketNavigator}
         options={{
           tabBarIcon: ({ focused }) => (
             <Icon icon="ticket" color={focused ? colors.black : undefined} size={24} />
@@ -79,8 +76,8 @@ export function MainNavigator() {
         }}
       />
       <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
+        name="ProfileNavigator"
+        component={ProfileNavigator}
         options={{
           tabBarIcon: ({ focused }) => (
             <Icon icon="person" color={focused ? colors.black : undefined} size={24} />

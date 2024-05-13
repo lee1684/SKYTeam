@@ -48,3 +48,34 @@ export interface ApiConfig {
    */
   timeout: number
 }
+
+export interface PostMoimRequestBody {
+  category: string
+  meetingPictureUrls: string[]
+  title: string
+  description: string
+  location: string
+  capacity: number
+  meetingDate: Date
+  payment: number
+  isSharable: boolean
+}
+
+export interface UserInfo {
+  address?: string | null
+  gender?: string | null
+  interest?: string[]
+  introduction?: string | null
+  memberDates?: Date[] | null
+  nickname?: string | null
+  profilePictureUrl?: string | null
+}
+
+export interface PostSignUpRequestBody {
+  nickname: string
+  profilePictureUrl: string
+  gender: string
+  address: string
+  introduction: string
+  interests: string[]
+}

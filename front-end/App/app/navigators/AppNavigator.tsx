@@ -15,11 +15,13 @@ import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { colors } from "app/theme"
 import { WelcomeNavigator, WelcomeParamList } from "./WelcomeNavigator"
 import { LoginNavigator, LoginParamList } from "./LoginNavigator"
+import { TicketInfoNavigator, TicketInfoTabParamList } from "./TicketInfoNavigator"
 
 export type AppStackParamList = {
   Auth: NavigatorScreenParams<LoginParamList>
   Welcome: NavigatorScreenParams<WelcomeParamList>
   Main: NavigatorScreenParams<MainTabParamList>
+  TicketView: NavigatorScreenParams<TicketInfoTabParamList>
 }
 
 /**
@@ -50,6 +52,8 @@ const AppStack = observer(function AppStack() {
           <Stack.Screen name="Welcome" component={WelcomeNavigator} />
 
           <Stack.Screen name="Main" component={MainNavigator} />
+
+          <Stack.Screen name="TicketView" component={TicketInfoNavigator} />
         </>
       ) : (
         <>

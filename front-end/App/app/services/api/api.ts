@@ -8,7 +8,13 @@
 import { ApiResponse, ApisauceInstance, create } from "apisauce"
 import Config from "../../config"
 import { GeneralApiProblem, getGeneralApiProblem } from "./apiProblem"
-import type { ApiConfig, ApiFeedResponse } from "./api.types"
+import type {
+  ApiConfig,
+  ApiFeedResponse,
+  PostMoimRequestBody,
+  PostSignUpRequestBody,
+  UserInfo,
+} from "./api.types"
 import type { EpisodeSnapshotIn } from "../../models/Episode"
 
 /**
@@ -16,7 +22,7 @@ import type { EpisodeSnapshotIn } from "../../models/Episode"
  */
 export const DEFAULT_API_CONFIG: ApiConfig = {
   url: Config.API_URL,
-  timeout: 10000,
+  timeout: 1000,
 }
 
 /**
@@ -39,6 +45,152 @@ export class Api {
         Accept: "application/json",
       },
     })
+  }
+
+  async getMoim(RequestQuery: string) {
+    const response = await this.apisauce.get(`api/moims?${RequestQuery}`)
+
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    return { kind: "ok", data: response.data }
+  }
+
+  async postMoim(requestBody: PostMoimRequestBody) {
+    const response = await this.apisauce.post("/api/moims", requestBody)
+
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    return { kind: "ok", data: response.data }
+  }
+
+  async postSignUp(requestBody: PostSignUpRequestBody) {
+    const response = await this.apisauce.post("/api/auth/signup", requestBody)
+
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    return { kind: "ok" }
+  }
+
+  async deleteWithdrawal() {
+    const response = await this.apisauce.delete("/api/users/me")
+
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    return { kind: "ok" }
+  }
+
+  async getMoimDetail(id: string) {
+    const response = await this.apisauce.get(`/api/moims/${id}`)
+
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    return { kind: "ok", data: response.data }
+  }
+
+  async postMoimUser(id: string) {
+    const response = await this.apisauce.post(`/api/moims/${id}/users`)
+
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    return { kind: "ok" }
+  }
+
+  async getUserInfo(): Promise<{ kind: "ok"; user: UserInfo } | GeneralApiProblem> {
+    const response: ApiResponse<UserInfo> = await this.apisauce.get("/api/users/me/profile")
+
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    const rawData = response.data
+
+    try {
+      const user: UserInfo =
+        {
+          ...rawData,
+        } ?? {}
+
+      return { kind: "ok", user }
+    } catch (e) {
+      if (__DEV__ && e instanceof Error) {
+        console.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      }
+      return { kind: "bad-data" }
+    }
+  }
+
+  async patchUserInfo(requestBody: UserInfo) {
+    const response = await this.apisauce.patch("/api/users/me/profile", requestBody)
+
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    return { kind: "ok" }
+  }
+
+  async deleteLogout() {
+    const response = await this.apisauce.delete("/api/auth/logout")
+
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    return { kind: "ok" }
+  }
+
+  async getMoimJoin() {
+    const response = await this.apisauce.get("/api/users/moims/join")
+
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    return { kind: "ok", data: response.data }
+  }
+
+  async getMoimCreate() {
+    const response = await this.apisauce.get("api/users/moims/create")
+
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    return { kind: "ok", data: response.data }
+  }
+
+  async getMoimIsCreator(moimId: string) {
+    const response = await this.apisauce.get(`api/moims/${moimId}/creator`)
+
+    if (!response.ok) {
+      const problem = getGeneralApiProblem(response)
+      if (problem) return problem
+    }
+
+    return { kind: "ok", data: response.data }
   }
 
   /**

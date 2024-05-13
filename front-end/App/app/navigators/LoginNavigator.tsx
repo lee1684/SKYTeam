@@ -5,6 +5,7 @@ import { NativeStackScreenProps, createNativeStackNavigator } from "@react-navig
 import { NaverScreen } from "app/screens/LoginScreen/NaverScreen"
 import { LoginScreen } from "app/screens/LoginScreen/LoginScreen"
 import { KakaoScreen } from "app/screens/LoginScreen/KakaoScreen"
+import { GoogleScreen } from "app/screens/LoginScreen/GoogleScreen"
 
 export type LoginParamList = {
   Login: undefined
@@ -28,6 +29,7 @@ export function LoginNavigator() {
       }}
     >
       <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Google" component={GoogleScreen} />
       <Stack.Screen name="Kakao" component={KakaoScreen} />
       <Stack.Screen name="Naver" component={NaverScreen} />
     </Stack.Navigator>

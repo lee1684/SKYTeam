@@ -8,10 +8,11 @@ import { TextToggle } from "app/components/TextToggle"
 import { useHeader } from "app/utils/useHeader"
 import { colors } from "app/theme"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { api } from "app/services/api"
 
 export const SettingHobbyScreen: FC<WelcomeScreenProps<"SettingHobby">> =
   function SettingHobbyScreen(_props) {
-    const { navigation } = _props
+    const { navigation, route } = _props
     const { bottom } = useSafeAreaInsets()
 
     const serviceCategories = ["운동", "게임", "음악", "음식", "독서", "영화"]
@@ -23,7 +24,25 @@ export const SettingHobbyScreen: FC<WelcomeScreenProps<"SettingHobby">> =
     }
 
     function goNext() {
-      navigation.navigate("Main", { screen: "Home" })
+      api
+        .postSignUp({
+          ...(route.params as unknown as {
+            nickname: string
+            profilePictureUrl: string
+            gender: string
+            address: string
+            introduction: string
+            interests: string[]
+          }),
+          interests: Array.from(categories),
+        })
+        .then((response) => {
+          if (response.kind === "ok") {
+            navigation.navigate("Main", { screen: "Home" })
+          } else {
+            alert("회원가입에 실패했습니다.")
+          }
+        })
     }
 
     useHeader({

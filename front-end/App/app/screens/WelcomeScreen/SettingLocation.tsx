@@ -11,7 +11,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 export const SettingLocationScreen: FC<WelcomeScreenProps<"SettingLocation">> =
   function SettingLocationScreen(_props) {
-    const { navigation } = _props
+    const { navigation, route } = _props
+
     const { bottom } = useSafeAreaInsets()
 
     const serviceLocations = [
@@ -32,7 +33,14 @@ export const SettingLocationScreen: FC<WelcomeScreenProps<"SettingLocation">> =
     }
 
     function goNext() {
-      navigation.navigate("Welcome", { screen: "SettingHobby" })
+      navigation.navigate("SettingHobby", {
+        ...(route.params as unknown as {
+          nickname: string
+          gender: string
+          introduction: string
+        }),
+        address: Array.from(locations)[0],
+      } as unknown as WelcomeScreenProps<"SettingHobby">["route"]["params"])
     }
 
     useHeader({

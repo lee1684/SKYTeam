@@ -16,11 +16,18 @@ import { TextToggle } from "app/components/TextToggle"
 import { BottomStepBar } from "app/components/BottomStepBar"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { useHeader } from "app/utils/useHeader"
+import { useStores } from "app/models"
 
 export const SettingProfileScreen: FC<WelcomeScreenProps<"SettingProfile">> =
   function SettingProfileScreen(_props) {
+    const {
+      authenticationStore: { setUserInfo },
+    } = useStores()
     const { bottom } = useSafeAreaInsets()
     const [isKeyboardVisible, setKeyboardVisible] = useState(false)
+    const [nickname, setNickname] = useState<string>("")
+    const [gender, setGender] = useState<string>("")
+    const [introduction, setIntroduction] = useState<string>("")
 
     useEffect(() => {
       const keyboardDidShowListener = Keyboard.addListener("keyboardWillShow", () => {
@@ -36,11 +43,20 @@ export const SettingProfileScreen: FC<WelcomeScreenProps<"SettingProfile">> =
       }
     }, [])
 
-    const [gender, setGender] = useState<string>("")
     const { navigation } = _props
 
     function goNext() {
-      navigation.navigate("Welcome", { screen: "SettingLocation" })
+      setUserInfo({
+        nickname,
+        gender,
+        introduction,
+      })
+      navigation.navigate("SettingLocation", {
+        profilePictureUrl: "",
+        nickname,
+        gender,
+        introduction,
+      } as unknown as WelcomeScreenProps<"SettingLocation">["route"]["params"])
     }
 
     useHeader({
@@ -86,6 +102,8 @@ export const SettingProfileScreen: FC<WelcomeScreenProps<"SettingProfile">> =
                   </Text>
                 </Text>
               }
+              value={nickname}
+              onChangeText={setNickname}
               placeholder="닉네임을 입력해주세요"
             />
 
@@ -95,20 +113,20 @@ export const SettingProfileScreen: FC<WelcomeScreenProps<"SettingProfile">> =
                 <TextToggle
                   divide
                   label="남자"
-                  pressed={gender === "남자"}
-                  onPress={() => setGender("남자")}
+                  pressed={gender === "M"}
+                  onPress={() => setGender("M")}
                 />
                 <TextToggle
                   divide
                   label="여자"
-                  pressed={gender === "여자"}
-                  onPress={() => setGender("여자")}
+                  pressed={gender === "F"}
+                  onPress={() => setGender("F")}
                 />
                 <TextToggle
                   divide
                   label="기타"
-                  pressed={gender === "기타"}
-                  onPress={() => setGender("기타")}
+                  pressed={gender === "G"}
+                  onPress={() => setGender("G")}
                 />
               </View>
             </View>
@@ -119,6 +137,8 @@ export const SettingProfileScreen: FC<WelcomeScreenProps<"SettingProfile">> =
                   소개
                 </Text>
               }
+              value={introduction}
+              onChangeText={setIntroduction}
               placeholder="간단한 소개를 입력해주세요"
             />
           </View>

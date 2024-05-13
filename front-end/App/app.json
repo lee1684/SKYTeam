@@ -1,9 +1,9 @@
 {
-  "name": "App",
-  "displayName": "App",
+  "name": "살롱",
+  "displayName": "살롱",
   "expo": {
-    "name": "App",
-    "slug": "App",
+    "name": "살롱",
+    "slug": "SSALON",
     "scheme": "app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -20,7 +20,7 @@
     "assetBundlePatterns": ["**/*"],
     "android": {
       "icon": "./assets/images/app-icon-android-legacy.png",
-      "package": "com.app",
+      "package": "kr.co.ssalon",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/app-icon-android-adaptive-foreground.png",
         "backgroundImage": "./assets/images/app-icon-android-adaptive-background.png"
@@ -34,7 +34,7 @@
     "ios": {
       "icon": "./assets/images/app-icon-ios.png",
       "supportsTablet": true,
-      "bundleIdentifier": "com.app",
+      "bundleIdentifier": "kr.co.ssalon",
       "splash": {
         "image": "./assets/images/splash-logo-ios-mobile.png",
         "tabletImage": "./assets/images/splash-logo-ios-tablet.png",

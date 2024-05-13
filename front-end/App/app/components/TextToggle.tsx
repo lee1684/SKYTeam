@@ -6,7 +6,7 @@ import { colors } from "app/theme"
 export interface TextToggleProps {
   label: string
   pressed: boolean
-  onPress: () => void
+  onPress?: () => void
   divide?: boolean
   location?: "left" | "right"
 }

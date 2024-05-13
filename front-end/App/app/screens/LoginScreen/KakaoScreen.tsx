@@ -5,7 +5,9 @@ import { WebViewScreen } from "app/components/WebViewScreen"
 import WebView from "react-native-webview"
 import { LoginScreenProps } from "app/navigators/LoginNavigator"
 import { useHeader } from "app/utils/useHeader"
-import AsyncStorage from "@react-native-async-storage/async-storage"
+import { api } from "app/services/api"
+import { saveString } from "app/utils/storage"
+import Config from "app/config"
 
 export const KakaoScreen: FC<LoginScreenProps<"Kakao">> = function KakaoScreen(_props) {
   const { navigation } = _props
@@ -32,12 +34,16 @@ export const KakaoScreen: FC<LoginScreenProps<"Kakao">> = function KakaoScreen(_
             window.ReactNativeWebView.postMessage(document.querySelector("pre").innerText);
           }
         `}
-        source={{ uri: "http://3.34.0.190:8080/oauth2/authorization/kakao" }}
+        source={{ uri: `${Config.API_URL}oauth2/authorization/kakao` }}
         onMessage={(event) => {
           const { access, refresh } = JSON.parse(event.nativeEvent.data)
           setAuthToken(access)
-          AsyncStorage.setItem("access", access)
-          AsyncStorage.setItem("refresh", refresh)
+          api.apisauce.setHeader("Authorization", `Bearer ${access}`)
+
+          console.log("access", access)
+
+          saveString("access", access)
+          saveString("refresh", refresh)
         }}
       />
     </WebViewScreen>

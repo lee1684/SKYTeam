@@ -9,7 +9,7 @@ import { api } from "app/services/api"
 import { saveString } from "app/utils/storage"
 import Config from "app/config"
 
-export const NaverScreen: FC<LoginScreenProps<"Naver">> = function NaverScreen(_props) {
+export const GoogleScreen: FC<LoginScreenProps<"Google">> = function GoogleScreen(_props) {
   const { navigation } = _props
 
   const {
@@ -20,7 +20,7 @@ export const NaverScreen: FC<LoginScreenProps<"Naver">> = function NaverScreen(_
     safeAreaEdges: ["top"],
     leftIcon: "back",
     onLeftPress: () => navigation.goBack(),
-    title: "네이버 로그인 테스트",
+    title: "구글 로그인 테스트",
   })
 
   return (
@@ -30,17 +30,15 @@ export const NaverScreen: FC<LoginScreenProps<"Naver">> = function NaverScreen(_
         javaScriptEnabled
         mixedContentMode="compatibility"
         injectedJavaScript={`
-          if(document.location.href.includes("/login/oauth2/code/naver?code=")) {
+          if(document.location.href.includes("/login/oauth2/code/google?code=")) {
             window.ReactNativeWebView.postMessage(document.querySelector("pre").innerText);
           }
         `}
-        source={{ uri: `${Config.API_URL}oauth2/authorization/naver` }}
+        source={{ uri: `${Config.API_URL}oauth2/authorization/google` }}
         onMessage={(event) => {
           const { access, refresh } = JSON.parse(event.nativeEvent.data)
           setAuthToken(access)
           api.apisauce.setHeader("Authorization", `Bearer ${access}`)
-
-          console.log("access", access)
 
           saveString("access", access)
           saveString("refresh", refresh)

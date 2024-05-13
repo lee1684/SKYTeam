@@ -141,8 +141,8 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
     isFocused ? { ...$inputWrapperStyle, borderColor: colors.palette.gray800 } : $inputWrapperStyle,
     status === "error" && { borderColor: colors.error },
     TextInputProps.multiline && { minHeight: 112 },
-    LeftAccessory && { paddingStart: 0 },
-    RightAccessory && { paddingEnd: 0 },
+    LeftAccessory && { paddingStart: 20 },
+    RightAccessory && { paddingEnd: 20 },
     $inputWrapperStyleOverride,
   ]
 
@@ -202,7 +202,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
         <TextInput
           ref={input}
           underlineColorAndroid={colors.transparent}
-          textAlignVertical="top"
+          textAlignVertical="center"
           placeholder={placeholderContent}
           placeholderTextColor={colors.palette.gray200}
           {...TextInputProps}
@@ -243,7 +243,7 @@ const $labelStyle: TextStyle = {
 
 const $inputWrapperStyle: ViewStyle = {
   flexDirection: "row",
-  alignItems: "flex-start",
+  alignItems: "center",
   borderWidth: 1.5,
   height: 48,
   borderRadius: 4,

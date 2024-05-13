@@ -5,19 +5,14 @@ import { KakaoLoginButton } from "app/components/KakaoLoginButton"
 import { NaverLoginButton } from "app/components/NaverLoginButton"
 import { GoogleLoginButton } from "app/components/GoogleLoginButton"
 import { LoginScreenProps } from "app/navigators/LoginNavigator"
-import { useStores } from "app/models"
 
 export const LoginScreen: FC<LoginScreenProps<"Login">> = function LoginScreen(_props) {
   const { navigation } = _props
 
-  const {
-    authenticationStore: { setAuthToken },
-  } = useStores()
-
   function onSuccessfulLogin(social: string) {
     switch (social) {
       case "google":
-        setAuthToken("google")
+        navigation.navigate("Auth", { screen: "Google" })
         break
       case "kakao":
         navigation.navigate("Auth", { screen: "Kakao" })
