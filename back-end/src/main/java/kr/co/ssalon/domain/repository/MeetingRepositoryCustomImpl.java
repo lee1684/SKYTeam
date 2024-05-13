@@ -76,4 +76,12 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
         return new OrderSpecifier(asc, NullExpression.DEFAULT, OrderSpecifier.NullHandling.Default);
     }
 
+    @Override
+    public List<Meeting> findMeetingsByCategoryId(Long categoryId) {
+        return em.createQuery(
+                        "SELECT m FROM Meeting m WHERE m.category.id = :categoryId", Meeting.class)
+                .setParameter("categoryId", categoryId)
+                .getResultList();
+    }
+
 }
