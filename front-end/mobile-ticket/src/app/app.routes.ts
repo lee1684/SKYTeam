@@ -6,6 +6,7 @@ import { TicketComponent } from './ticket/ticket.component';
 import { MeetingInfoComponent } from './meeting-info/meeting-info.component';
 import { SsalonLoginComponent } from './ssalon-login/ssalon-login.component';
 import { SsalonLoginRedirectComponent } from './ssalon-login-redirect/ssalon-login-redirect.component';
+import { MeetingCreateComponent } from './meeting-create/meeting-create.component';
 
 export const routes: Routes = [
   { path: 'web/ssalon-login', component: SsalonLoginComponent },
@@ -27,6 +28,10 @@ export const routes: Routes = [
   {
     path: 'web/meeting-info',
     component: MeetingInfoComponent,
+  },
+  {
+    path: 'web/meeting-create',
+    component: MeetingCreateComponent,
   },
   {
     path: 'web/ticket',

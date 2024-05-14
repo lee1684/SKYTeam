@@ -1,0 +1,17 @@
+#navigator-button-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 50px;
+    width: 100%;
+    background-color: white;
+}
+
+.selected-navigator-button {
+    fill: #000000;
+}
+
+.unselected-navigator-icon {
+    fill: #BCBCBC;
+}

@@ -1,10 +1,17 @@
-<div id="simple-input-component-container">
+<div id="simple-input-component-container" [style.height.px]="(this.type === 'longText')?148:77">
     <div id="label-container" *ngIf="this.label !== ''">
         {{this.label}}
         <span id="extra-label-container" [style.color]="this.extraLabelColor"
             *ngIf="this.extraLabel !== ''">{{this.extraLabel}}</span>
     </div>
     <div id="input-container">
-        <input id="input" [placeholder]="this.placeholder" autocomplete />
+        <div *ngIf="this.type !== 'longText'">
+            <input id="input" [type]="this.type" [placeholder]="this.placeholder" autocomplete="off"
+                (click)="this.onClickInput()" (input)="this.onChangeInput($event)" />
+        </div>
+        <div *ngIf="this.type === 'longText'">
+            <textarea id="text"></textarea>
+        </div>
+
     </div>
 </div>

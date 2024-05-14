@@ -12,9 +12,11 @@ export interface NewButtonElement {
   imgSrc?: string;
   imgHeight?: number;
   fontFamily?: string;
-  fontColor?: string;
-  backgroundColor?: string;
   solid?: boolean;
+  unselectedFontColor?: string;
+  unselectedBackgroundColor?: string;
+  selectedFontColor?: string;
+  selectedBackgroundColor?: string;
   value: number;
   label: string;
   selected: boolean;
