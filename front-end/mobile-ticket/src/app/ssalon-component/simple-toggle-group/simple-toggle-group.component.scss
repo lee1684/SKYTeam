@@ -3,8 +3,6 @@
     flex-direction: column;
     align-items: center;
     width: 350px;
-    margin-top: 6px;
-    margin-bottom: 6px;
 
 }
 
@@ -24,7 +22,6 @@
 
 #row-container {
     width: 350px;
-    overflow: scroll;
 }
 
 #row-container::-webkit-scrollbar {
