@@ -15,4 +15,8 @@ import lombok.NoArgsConstructor;
 public class HomeMeetingSearchCondition {
     @Schema(description = "조회할 상위 카테고리 숫자", example = "1, 2, 3, 4, ... ")
     private Long categoryLen;
+
+    @Schema(description = "각 카테고리당 모임 개수")
+    private Long meetingLen;
+
 }
