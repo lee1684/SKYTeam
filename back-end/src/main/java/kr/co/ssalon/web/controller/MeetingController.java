@@ -94,19 +94,24 @@ public class MeetingController {
             List<MeetingHomeDTO> categorizedMeetings = new ArrayList<>();
 
             for (int i = 1; i <= homeMeetingSearchCondition.getCategoryLen(); i++) {
-                String categoryName = categoryService.findCategory(Long.valueOf(i)).getName();
-                List<Meeting> meetings = meetingRepository.findMeetingsByCategoryId(Long.valueOf(i)).stream()
-                        .limit(homeMeetingSearchCondition.getMeetingLen()) // 각 카테고리당 모임 최대 개수 설정
-                        .collect(Collectors.toList());
-                MeetingHomeDTO meetingHomeDTO = new MeetingHomeDTO(categoryName, meetings.stream()
-                        .map(MeetingHomeSearchDTO::new)
-                        .collect(Collectors.toList()));
-                categorizedMeetings.add(meetingHomeDTO);
+                try {
+                    String categoryName = categoryService.findCategory(Long.valueOf(i)).getName();
+                    List<Meeting> meetings = meetingRepository.findMeetingsByCategoryId(Long.valueOf(i)).stream()
+                            .limit(homeMeetingSearchCondition.getMeetingLen()) // 각 카테고리당 모임 최대 개수 설정
+                            .collect(Collectors.toList());
+                    MeetingHomeDTO meetingHomeDTO = new MeetingHomeDTO(categoryName, meetings.stream()
+                            .map(MeetingHomeSearchDTO::new)
+                            .collect(Collectors.toList()));
+                    categorizedMeetings.add(meetingHomeDTO);
+                } catch (BadRequestException e) {
+                    // 카테고리가 없는 경우 해당 카테고리를 무시하고 다음 카테고리를 조회
+                    continue;
+                }
             }
 
             return ResponseEntity.ok().body(new JsonResult<>(categorizedMeetings).getData());
 
-        } catch (BadRequestException e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
