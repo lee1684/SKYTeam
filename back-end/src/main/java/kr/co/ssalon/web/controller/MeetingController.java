@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import kr.co.ssalon.domain.dto.MeetingDomainDTO;
 import kr.co.ssalon.domain.entity.MeetingOut;
 import kr.co.ssalon.domain.entity.Member;
@@ -86,14 +87,17 @@ public class MeetingController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "홈 화면 조회 성공"),
     })
+    // 추후 추천 알고리즘에 따라 customAuth2Member를 보고 카테고리 순위가 결정되어야함
     @GetMapping("/api/moims/home")
-    public ResponseEntity<?> getHomeMoims(HomeMeetingSearchCondition homeMeetingSearchCondition) {
+    public ResponseEntity<?> getHomeMoims(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @Valid HomeMeetingSearchCondition homeMeetingSearchCondition) {
         try {
             List<MeetingHomeDTO> categorizedMeetings = new ArrayList<>();
 
             for (int i = 1; i <= homeMeetingSearchCondition.getCategoryLen(); i++) {
                 String categoryName = categoryService.findCategory(Long.valueOf(i)).getName();
-                List<Meeting> meetings = meetingRepository.findMeetingsByCategoryId(Long.valueOf(i));
+                List<Meeting> meetings = meetingRepository.findMeetingsByCategoryId(Long.valueOf(i)).stream()
+                        .limit(homeMeetingSearchCondition.getMeetingLen()) // 각 카테고리당 모임 최대 개수 설정
+                        .collect(Collectors.toList());
                 MeetingHomeDTO meetingHomeDTO = new MeetingHomeDTO(categoryName, meetings.stream()
                         .map(MeetingHomeSearchDTO::new)
                         .collect(Collectors.toList()));
