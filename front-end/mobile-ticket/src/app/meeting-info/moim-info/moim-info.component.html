@@ -1,0 +1,7 @@
+<div class="container">
+    <app-simple-content [title]="'개최자'" [content]="this.moimInfo.creator"></app-simple-content>
+    <app-simple-content [title]="'모임 날짜'" [content]="this.getDate()"></app-simple-content>
+    <app-simple-content [title]="'모임 장소'" [content]="this.moimInfo.location"></app-simple-content>
+    <app-simple-content [title]="'모임소개'" [content]="this.moimInfo.description"></app-simple-content>
+    <app-simple-content [title]="'참가비'" [content]="this.getBill()"></app-simple-content>
+</div>

@@ -5,6 +5,7 @@
     overflow-y: scroll;
     height: 100%;
     width: 100%;
+    position: relative;
 }
 
 #progress-bar {
@@ -36,4 +37,8 @@
 
 #profile-img {
     margin-bottom: 24px;
+}
+
+#next-button-container {
+    margin-bottom: 20px;
 }

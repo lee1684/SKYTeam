@@ -7,10 +7,9 @@
         <app-profile-img id="profile-img" [imgSrc]="'assets/default_profile.png'"></app-profile-img>
         <app-simple-input [label]="'닉네임'" [extraLabel]="'(필수)'" [extraLabelColor]="'#0090f2'"
             [placeholder]="'닉네임을 입력해주세요'"></app-simple-input>
-        <app-simple-toggle [label]="'성별'" [buttonElements]="this.genderSelectionButtons"
-            [buttonWidth]="110"></app-simple-toggle>
+        <app-simple-toggle [label]="'성별'" [extraLabel]="'(필수)'" [extraLabelColor]="'#0090f2'"
+            [buttonElements]="this.genderSelectionButtons" [buttonWidth]="110"></app-simple-toggle>
         <app-simple-input [label]="'소개'" [placeholder]="'간단한 소개를 해주세요'"></app-simple-input>
-
     </div>
 
     <div class="container" *ngIf="this.nowOnboardingStep.value === 1">
@@ -23,6 +22,8 @@
             [align]="'left'" [multiSelection]="true"></app-simple-toggle>
     </div>
 
-    <app-simple-button [buttonElement]="this.nextButtonElement"
-        (onClickEvent)="this.onClickNextButton()"></app-simple-button>
+    <div id="next-button-container">
+        <app-square-button (onClickEvent)="this.onClickNextButton($event)" #nextButton></app-square-button>
+    </div>
+
 </div>

@@ -1,27 +1,35 @@
 import { RouterModule, Routes } from '@angular/router';
-import { AppComponent } from './app.component';
-import { ResolverService } from './service/resolver.service';
 import { NgModule } from '@angular/core';
 import { OnboardingComponent } from './onboarding/onboarding.component';
 import { MainComponent } from './main/main.component';
 import { TicketComponent } from './ticket/ticket.component';
 import { MeetingInfoComponent } from './meeting-info/meeting-info.component';
+import { SsalonLoginComponent } from './ssalon-login/ssalon-login.component';
+import { SsalonLoginRedirectComponent } from './ssalon-login-redirect/ssalon-login-redirect.component';
 
 export const routes: Routes = [
+  { path: 'web/ssalon-login', component: SsalonLoginComponent },
+  { path: 'login/oauth2/code/google', component: SsalonLoginRedirectComponent },
+  { path: 'login/oauth2/code/kakao', component: SsalonLoginRedirectComponent },
+  { path: 'login/oauth2/code/naver', component: SsalonLoginRedirectComponent },
   {
-    path: 'onboarding',
+    path: 'web/ssalon-login-redirect',
+    component: SsalonLoginRedirectComponent,
+  },
+  {
+    path: 'web/onboarding',
     component: OnboardingComponent,
   },
   {
-    path: 'main',
+    path: 'web/main',
     component: MainComponent,
   },
   {
-    path: 'meeting-info',
+    path: 'web/meeting-info',
     component: MeetingInfoComponent,
   },
   {
-    path: 'ticket',
+    path: 'web/ticket',
     component: TicketComponent,
   },
 ];

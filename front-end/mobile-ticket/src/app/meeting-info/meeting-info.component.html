@@ -1,1 +1,20 @@
-<app-top-navigator [title]="'바보'" [shareButton]="true"></app-top-navigator>
+<div class="container">
+    <app-top-navigator [title]="this.moimInfo.title" [shareButton]="true"></app-top-navigator>
+    <app-tab-group [tabs]="this.tabs" (onClickTabEvent)="this.nowTab = $event"></app-tab-group>
+    <div id="tab-container">
+        <div *ngIf="this.nowTab === this.meetingInfoTabEnum.TICKET">
+            <img class="image-container" src="assets/ticket.png" [height]="550" (click)="this.onClickTicket()" />
+
+        </div>
+        <div *ngIf="this.nowTab === this.meetingInfoTabEnum.INFO">
+            <app-moim-info [moimId]="this.moimId" [moimInfo]="this.moimInfo"></app-moim-info>
+        </div>
+        <div *ngIf="this.nowTab === this.meetingInfoTabEnum.CHATTING">
+            <app-chatting></app-chatting>
+        </div>
+    </div>
+    <div>
+        <app-square-button [buttonElements]="this.joinButtonElements"></app-square-button>
+    </div>
+
+</div>
