@@ -12,6 +12,9 @@ export interface NewButtonElement {
   imgSrc?: string;
   imgHeight?: number;
   fontFamily?: string;
+  fontColor?: string;
+  backgroundColor?: string;
+  solid?: boolean;
   value: number;
   label: string;
   selected: boolean;
@@ -55,13 +58,19 @@ export class SimpleToggleGroupComponent {
     }
   }
 
-  public getClass(selected: boolean) {
-    return selected ? 'selected-button' : 'unselected-button';
+  public getClass(element: NewButtonElement) {
+    if (element.solid) {
+      return element.selected
+        ? 'selected-button-solid'
+        : 'unselected-button-solid';
+    } else {
+      return element.selected ? 'selected-button' : 'unselected-button';
+    }
   }
 
   public onClickToggleButton(value: number): void {
     if (!this.multiSelection) {
-      this.buttonElements.find((element) => element.selected)!.selected = false;
+      this.buttonElements.forEach((element) => (element.selected = false));
       this.buttonElements.find((element) => element.value === value)!.selected =
         true;
     } else {

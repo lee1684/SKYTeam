@@ -1,4 +1,4 @@
-#image-row-container {
+.image-row-container {
     display: flex;
     flex-direction: row;
     width: 350px;
@@ -7,12 +7,19 @@
     overflow: scroll;
 }
 
-#image-row-container::-webkit-scrollbar {
+.image-row-container::-webkit-scrollbar {
     display: none;
 }
 
 .image-container {
     margin-right: 10px;
+    position: relative;
+}
+
+.deco-container {
+    position: absolute;
+    left: 0px;
+    top: 0px;
 }
 
 #extra-label-container {

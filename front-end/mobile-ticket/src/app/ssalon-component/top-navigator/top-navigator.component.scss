@@ -1,6 +1,6 @@
 .container {
-    width: 100%;
-    height: 56px;
+    width: 350px;
+    height: 60px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -15,7 +15,7 @@
 #title-container {
     font-size: 18px;
     font-weight: 600;
-    font-family: 'Pretendard';
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
 
 #share-container {

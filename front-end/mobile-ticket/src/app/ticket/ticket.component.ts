@@ -4,7 +4,7 @@ import {
   MobileTicketEditorComponent,
 } from './mobile-ticket-editor/mobile-ticket-editor.component';
 import { MobileTicketEditViewerComponent } from './mobile-ticket-edit-viewer/mobile-ticket-edit-viewer.component';
-import { NgIf } from '@angular/common';
+import { NgIf, Location } from '@angular/common';
 import { SimpleToggleButtonGroupComponent } from '../ssalon-component/simple-toggle-button-group/simple-toggle-button-group.component';
 import { SimpleButtonComponent } from '../ssalon-component/simple-button/simple-button.component';
 import {
@@ -25,6 +25,7 @@ import {
   CircleToggleStatusGroupComponent,
   StatusElement,
 } from '../ssalon-component/circle-toggle-status-group/circle-toggle-status-group.component';
+import { ActivatedRoute } from '@angular/router';
 
 export enum MobileTicketViewMode {
   APPVIEW,
@@ -100,11 +101,20 @@ export class TicketComponent {
     text: string;
   } = { checkStatus: null, color: '#006BFF', text: 'QR코드를 인식해주세요.' };
 
+  public moimId: string = '';
+  public viewType: string = '';
   constructor(
     private _apiExecutorService: ApiExecutorService,
     private _ssalonConfigService: SsalonConfigService,
-    private _sceneGraphService: ScenegraphService
-  ) {}
+    private _sceneGraphService: ScenegraphService,
+    private _route: ActivatedRoute,
+    private _location: Location
+  ) {
+    this._route.queryParams.subscribe((params) => {
+      this.moimId = params['moimId'];
+      this.viewType = params['viewType'];
+    });
+  }
   public ngOnInit(): void {}
   public async ngAfterViewInit() {
     this.setFirstPage();
@@ -137,11 +147,8 @@ export class TicketComponent {
         this.qrStream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: 'environment' },
         });
-        console.log('1');
         this.qrVideo.nativeElement.srcObject = this.qrStream;
-        console.log('2');
         this.qrVideo.nativeElement.play();
-        console.log('3');
         this.detectQRCode();
       } catch (error) {
         console.error(error);
@@ -269,6 +276,9 @@ export class TicketComponent {
   public addFabricObject(object: any) {}
 
   public onClickBackButton() {
+    if (this.mode === MobileTicketViewMode.APPVIEW) {
+      this._location.back();
+    }
     this.changeViewMode(MobileTicketViewMode.APPEDITVIEW);
   }
 

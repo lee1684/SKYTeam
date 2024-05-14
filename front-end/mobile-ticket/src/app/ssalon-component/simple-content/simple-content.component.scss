@@ -1,0 +1,24 @@
+.container {
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+}
+
+#title-container {
+    width: 100%;
+
+    font-size: 18px;
+    font-weight: 600;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+}
+
+#content-container {
+    width: 100%;
+    height: auto;
+    word-wrap: break-word;
+    margin-top: 16px;
+    font-size: 16px;
+    font-weight: 400;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    margin-bottom: 16px;
+}

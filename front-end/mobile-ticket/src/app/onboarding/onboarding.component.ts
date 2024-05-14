@@ -9,6 +9,7 @@ import { SimpleButtonComponent } from '../ssalon-component/simple-button/simple-
 import { ButtonElement } from '../ssalon-component/circle-toggle-button-group/circle-toggle-button-group.component';
 import { NgIf } from '@angular/common';
 import { Router } from '@angular/router';
+import { SquareButtonComponent } from '../ssalon-component/square-button/square-button.component';
 
 export interface OnboardingStep {
   label: string;
@@ -23,6 +24,7 @@ export interface OnboardingStep {
     SimpleInputComponent,
     ProfileImgComponent,
     SimpleToggleGroupComponent,
+    SquareButtonComponent,
   ],
   templateUrl: './onboarding.component.html',
   styleUrl: './onboarding.component.scss',
@@ -30,17 +32,14 @@ export interface OnboardingStep {
 export class OnboardingComponent {
   @ViewChild('progressBar', { static: true })
   progressBar: ElementRef | null = null;
+  @ViewChild('nextButton', { static: true })
+  nextButton: SquareButtonComponent | null = null;
   public onBoardingStep: OnboardingStep[] = [
     { label: '프로필을 작성해주세요', value: 0 },
     { label: '모임을 할 장소를 선택해주세요', value: 1 },
     { label: '관심 있는 카테고리를 선택해주세요', value: 2 },
   ];
   public nowOnboardingStep: OnboardingStep = this.onBoardingStep[0];
-  public nextButtonElement: ButtonElement = {
-    label: '다음',
-    value: 0,
-    imgSrc: 'assets/next.png',
-  };
   /** 첫번째 화면 */
   public genderSelectionButtons = [
     {
@@ -97,11 +96,16 @@ export class OnboardingComponent {
       imgSrc: 'assets/interest-icons/book.png',
     },
   ];
-  constructor(private _router: Router) {}
-  public onClickNextButton(): void {
+  constructor(private _router: Router) {
+    let value = '; ' + document.cookie;
+    let parts = value.split('; ' + 'token' + '=');
+    console.log(document.cookie, parts);
+    console.log('ASDFASDFASFDSa');
+  }
+  public onClickNextButton(value: number): void {
     const nextStep = this.nowOnboardingStep.value + 1;
     if (nextStep >= this.onBoardingStep.length) {
-      this._router.navigate(['/main']);
+      this._router.navigate(['/web/main']);
     } else {
       this.nowOnboardingStep = this.onBoardingStep[nextStep];
     }
