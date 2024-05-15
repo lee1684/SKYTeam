@@ -1,5 +1,9 @@
 package kr.co.ssalon.web.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.ssalon.domain.service.DiaryService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import kr.co.ssalon.web.dto.DiaryFetchResponseDTO;
@@ -18,6 +22,7 @@ import java.net.URI;
 import java.util.List;
 
 // DiaryController : 증표 뒷면(일기) 관련 API
+@Tag(name = "다이어리")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/diary")
@@ -26,6 +31,10 @@ public class DiaryController {
     @Autowired
     private DiaryService diaryService;
 
+    @Operation(summary = "다이어리 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "다이어리 조회 성공")
+    })
     @GetMapping("/{moimId}") // R of CRUD : 다이어리 조회
     public ResponseEntity<DiaryFetchResponseDTO> fetchDiary(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
 
@@ -36,6 +45,10 @@ public class DiaryController {
         else return ResponseEntity.badRequest().build();
     }
 
+    @Operation(summary = "다이어리 생성")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "다이어리 생성 성공")
+    })
     @PostMapping("/{moimId}") // C of CRUD : 다이어리 생성
     public ResponseEntity<String> createDiary(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
 
@@ -46,6 +59,10 @@ public class DiaryController {
         else return ResponseEntity.badRequest().build();
     }
 
+    @Operation(summary = "다이어리 편집")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "다이어리 편집 성공")
+    })
     @PutMapping("/{moimId}") // U of CRUD : 다이어리 편집
     public ResponseEntity<TicketEditResponseDTO> editDiary(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @RequestPart String json) {
 
@@ -56,6 +73,10 @@ public class DiaryController {
         else return ResponseEntity.badRequest().body(ticketEditResponseDTO);
     }
 
+    @Operation(summary = "다이어리 편집을 위한 이미지 업로드")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "다이어리 편집을 위한 이미지 업로드 성공")
+    })
     @PostMapping("/{moimId}/image") // U of CRUD : 다이어리 편집을 위한 이미지 업로드
     public ResponseEntity<TicketImageResponseDTO> uploadDiaryImage(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @RequestPart List<MultipartFile> files) {
 
@@ -70,6 +91,10 @@ public class DiaryController {
         };
     }
 
+    @Operation(summary = "다이어리 삭제")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "다이어리 삭제 성공")
+    })
     @DeleteMapping("/{moimId}") // D of CRUD : 다이어리 삭제
     public ResponseEntity<String> deleteDiary(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
         return null;

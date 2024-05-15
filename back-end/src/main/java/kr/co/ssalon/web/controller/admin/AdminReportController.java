@@ -1,6 +1,8 @@
 package kr.co.ssalon.web.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,9 +39,9 @@ public class AdminReportController {
 
 
     // 필터링에 따라 조회하는거 필요
-    @Operation(summary = "신고 내용 모두 조회하기")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "신고 내용 모두 조회하기 성공"),
+    @Operation(summary = "신고 내용 모두 조회")
+    @ApiResponse(responseCode = "200", description = "신고 내용 모두 조회 성공", content = {
+            @Content(schema = @Schema(implementation = ReportListSearchPageDTO.class))
     })
     @GetMapping("/api/admin/reports")
     public ResponseEntity<?> getReports(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, ReportSearchCondition reportSearchCondition, Pageable pageable) {
@@ -56,9 +58,9 @@ public class AdminReportController {
         }
     }
 
-    @Operation(summary = "신고 내용 조회하기")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "신고 내용 조회하기 성공"),
+    @Operation(summary = "신고 내용 조회")
+    @ApiResponse(responseCode = "200", description = "신고 내용 조회 성공", content = {
+            @Content(schema = @Schema(implementation = ReportDTO.class))
     })
     @GetMapping("/api/admin/report/{reportId}")
     public ResponseEntity<?> getReport(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long reportId) {
@@ -73,9 +75,9 @@ public class AdminReportController {
         }
     }
 
-    @Operation(summary = "신고 상태 처리하기")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "신고 상태 처리하기 성공"),
+    @Operation(summary = "신고 상태 처리")
+    @ApiResponse(responseCode = "200", description = "신고 상태 처리 성공", content = {
+            @Content(schema = @Schema(implementation = Boolean.class))
     })
     @PostMapping("/api/admin/report/{reportId}/state")
     public ResponseEntity<?> changeReportState(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long reportId) {
@@ -88,9 +90,9 @@ public class AdminReportController {
         }
     }
 
-    @Operation(summary = "신고 삭제하기")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "신고 삭제하기 성공"),
+    @Operation(summary = "신고 삭제")
+    @ApiResponse(responseCode = "200", description = "신고 삭제 성공", content = {
+            @Content(schema = @Schema(implementation = Long.class))
     })
     @DeleteMapping("/api/admin/report/{reportId}")
     public ResponseEntity<?> deleteReport(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long reportId) {
