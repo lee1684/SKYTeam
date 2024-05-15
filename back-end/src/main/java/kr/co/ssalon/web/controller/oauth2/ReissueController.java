@@ -4,6 +4,9 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,9 +39,9 @@ public class ReissueController {
 
     
     @Operation(summary = "Access Token 재발급")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Access Token 재발급 성공"),
-    })
+    @ApiResponse(responseCode = "200", description = "Access Token 재발급 성공", content = @Content(examples = {
+            @ExampleObject(value = "{\"access\": \"eyJhbGciOiJIUzI1Ni~~~\", \"refresh\":\"eyJhbGciOiJIUzI1Ni~~~\"}")
+    }))
     @Parameter(name = "Refresh", description = "Refresh Header에 refresh token 추가", in = ParameterIn.HEADER, required = true)
     @PostMapping("/api/reissue")
     public ResponseEntity<?> reissue(HttpServletRequest request, HttpServletResponse response) throws IOException {

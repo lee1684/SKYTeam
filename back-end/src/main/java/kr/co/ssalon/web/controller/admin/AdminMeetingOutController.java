@@ -1,6 +1,8 @@
 package kr.co.ssalon.web.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,9 +39,9 @@ public class AdminMeetingOutController {
     private final ValidationService validationService;
     private final MemberService memberService;
 
-    @Operation(summary = "")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "강퇴 및 탈퇴 사유 전체 조회"),
+    @Operation(summary = "관리자 강퇴 및 탈퇴 사유 조회")
+    @ApiResponse(responseCode = "200", description = "관리자 강퇴 및 탈퇴 사유 조회 성공", content = {
+            @Content(schema = @Schema(implementation = MeetingOutDTO.class))
     })
     @GetMapping("/api/admin/moims/meetingout")
     public ResponseEntity<?> getMeetingOuts(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
