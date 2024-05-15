@@ -1,0 +1,44 @@
+import { Component, Input } from '@angular/core';
+import { MobileTicketViewerComponent } from '../../ticket/mobile-ticket-viewer/mobile-ticket-viewer.component';
+import { NgIf } from '@angular/common';
+import { ScenegraphService } from '../../service/scenegraph.service';
+import { ApiExecutorService } from '../../service/api-executor.service';
+import qrcode from 'qrcode-generator';
+import {
+  DomSanitizer,
+  SafeResourceUrl,
+  SafeUrl,
+} from '@angular/platform-browser';
+
+@Component({
+  selector: 'app-qr-show',
+  standalone: true,
+  imports: [NgIf, MobileTicketViewerComponent],
+  templateUrl: './qr-show.component.html',
+  styleUrl: './qr-show.component.scss',
+})
+export class QrShowComponent {
+  @Input() moimId: string = '';
+  public qrCodeSrc: string = '';
+  public ticketViewerSrc: SafeResourceUrl = '';
+
+  constructor(
+    private _sceneGraphService: ScenegraphService,
+    private _apiExecutorService: ApiExecutorService,
+    public sanitizer: DomSanitizer
+  ) {}
+  public async ngOnInit() {
+    console.log(this.moimId);
+    let url = `http://localhost:3000/web/ticket?moimId=${this.moimId}&viewType=view`;
+    this.ticketViewerSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    await this.setQrCodeImgSrc();
+    this._sceneGraphService.mobileTicketAutoRotate = true;
+  }
+  public async setQrCodeImgSrc() {
+    let a = qrcode(0, 'L');
+    a.addData(await this._apiExecutorService.getBarcode());
+    //a.addData('https://www.naver.com');
+    a.make();
+    this.qrCodeSrc = a.createDataURL(5, 0);
+  }
+}

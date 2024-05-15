@@ -1,10 +1,15 @@
 <div class="container">
     <app-top-navigator [style.width]="'100%'" [title]="this.moimInfo.title" [shareButton]="true"></app-top-navigator>
-    <app-tab-group [tabs]="this.tabs" (onClickTabEvent)="this.nowTab = $event"></app-tab-group>
+    <app-tab-group [tabs]="this.tabs" (onClickTabEvent)="this.onClickTab($event)"></app-tab-group>
     <div id="tab-container">
+        <div *ngIf="this.nowTab === this.meetingInfoTabEnum.QRCHECK">
+            <app-qr-check [moimId]="this.moimId" [joiningUsers]="this.joiningUsers"></app-qr-check>
+        </div>
+        <div *ngIf="this.nowTab === this.meetingInfoTabEnum.QRSHOW">
+            <app-qr-show [moimId]="this.moimId"></app-qr-show>
+        </div>
         <div *ngIf="this.nowTab === this.meetingInfoTabEnum.TICKET">
             <img class="image-container" src="assets/ticket.png" [height]="550" (click)="this.onClickTicket()" />
-
         </div>
         <div *ngIf="this.nowTab === this.meetingInfoTabEnum.INFO">
             <app-moim-info [moimId]="this.moimId" [moimInfo]="this.moimInfo"></app-moim-info>
@@ -13,7 +18,8 @@
             <app-chatting></app-chatting>
         </div>
     </div>
-    <div>
-        <app-square-button [buttonElements]="this.joinButtonElements"></app-square-button>
+    <div *ngIf="this.nowTab === this.meetingInfoTabEnum.INFO">
+        <app-square-button [buttonElements]="this.buttonElementsService.joinButtonElements"
+            (onClickEvent)="this.onClickJoinButton()"></app-square-button>
     </div>
 </div>

@@ -188,6 +188,7 @@ export class TicketComponent {
           if (code) {
             try {
               let joinUserInfo: User = await this._apiExecutorService.checkQR(
+                this._ssalonConfigService.MOIM_ID,
                 code.data
               );
               this.checkStatus = {
@@ -258,7 +259,9 @@ export class TicketComponent {
       await this.setQrCodeImgSrc();
       this._sceneGraphService.mobileTicketAutoRotate = true;
     } else if (mode === MobileTicketViewMode.QRCHECKVIEW) {
-      let userInfos = await this._apiExecutorService.getJoiningUsers();
+      let userInfos = await this._apiExecutorService.getJoiningUsers(
+        this._ssalonConfigService.MOIM_ID
+      );
       userInfos.forEach((userInfo: any, index: number) => {
         this.joiningUsers.push({
           imgSrc: userInfo.profilePictureUrl,

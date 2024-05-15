@@ -7,7 +7,7 @@
     <div id="row-container">
         <ng-container *ngFor="let row of this.modifiedButtonElements">
             <div class="toggle-group-row-container"
-                [style.margin-bottom.px]="(this.modifiedButtonElements.length > 2)?16:0"
+                [style.margin-bottom.px]="(this.modifiedButtonElements.length > 1)?16:0"
                 [style.width.px]="row.length*this.buttonWidth+(row.length-1)*10">
                 <ng-container *ngFor="let buttonElement of row, index as i">
                     <div [ngClass]="this.getClass(buttonElement)" [style.justify-content]="this.align"

@@ -1,5 +1,12 @@
 import { NgIf } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 
 @Component({
   selector: 'app-simple-input',
@@ -9,6 +16,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrl: './simple-input.component.scss',
 })
 export class SimpleInputComponent {
+  @ViewChild('textDiv', { static: false }) textDiv: ElementRef | null = null;
   @Input() label: string = '';
   @Input() extraLabel: string = '';
   @Input() extraLabelColor: string = '';
@@ -20,13 +28,25 @@ export class SimpleInputComponent {
     | 'datetime-local'
     | 'number'
     | 'category' = 'text';
+  @Input() innerText: string | number = '';
+  @Input() enableCheckbox: boolean = false;
+  @Input() checkBoxLabel: string = '';
 
   @Output() public readonly onChangeEvent = new EventEmitter();
+  @Output() public readonly onClickEvent = new EventEmitter();
+  @Output() public readonly onClickCheckboxEvent = new EventEmitter();
+
+  public isChecked: boolean = false;
   constructor() {}
   public onClickInput(): void {
-    console.log('click');
+    this.onClickEvent.emit(this.textDiv?.nativeElement.value);
   }
   public onChangeInput(event: any): void {
-    console.log(event.target.value);
+    this.onChangeEvent.emit(this.textDiv?.nativeElement.value);
+    console.log(this.textDiv?.nativeElement.value);
+  }
+  public onClickCheckbox(event: any): void {
+    this.isChecked = event.target.checked;
+    this.onClickCheckboxEvent.emit(this.isChecked);
   }
 }

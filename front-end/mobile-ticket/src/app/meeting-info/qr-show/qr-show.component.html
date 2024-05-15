@@ -1,0 +1,13 @@
+<!-- QRSHOWVIEW: QRCODE 보여주는 화면의 경우 -->
+<div class="container" #qrShowView>
+    <div id="qr-show-container">
+        <iframe id="qr-show" [src]="this.ticketViewerSrc" frameborder="0"></iframe>
+    </div>
+    <div id="qrcode-overay">
+        <div id="qrcode-container">
+            <img id='qrcode' [src]="this.qrCodeSrc" alt="이미지" />
+        </div>
+    </div>
+
+
+</div>

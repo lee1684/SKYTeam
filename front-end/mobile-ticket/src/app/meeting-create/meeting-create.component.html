@@ -1,15 +1,18 @@
 <div class="container">
-    <app-top-navigator [style.width]="'100%'" [title]="'모임만들기'" [shareButton]="false"></app-top-navigator>
-    <div id="meeting-info-conatiner">
-        <app-simple-input [label]="'모임 카테고리'" [placeholder]="'모임 카테고리를 설정해주세요'"></app-simple-input>
-        <app-simple-input [label]="'모임 이름'" [placeholder]="'모임명을 입력해주세요'"></app-simple-input>
-        <app-simple-input [type]="'datetime-local'" [label]="'날짜'"
-            [placeholder]="'모임이 진행될 날짜를 선택해주세요'"></app-simple-input>
-        <app-simple-input [label]="'장소'" [placeholder]="'모임이 진행될 자세한 장소를 입력해주세요'"></app-simple-input>
-        <app-simple-input [type]="'longText'" [label]="'모임 소개'"
-            [placeholder]="'어떤 활동을 하는지 모임에 대해 소개해주세요'"></app-simple-input>
-        <app-simple-input [label]="'최대 인원수'" [placeholder]="'원하는 최대 인원 수를 입력해주세요'"></app-simple-input>
-        <app-simple-input [label]="'참가비'" [placeholder]="'참가비를 입력해주세요'"></app-simple-input>
+    <app-top-navigator [style.width]="'100%'" [title]="'모임만들기'" [shareButton]="false" [defaultBack]="false"
+        (backButtonClickEvent)="this.onClickBackButton()"></app-top-navigator>
+    <div class="content-container">
+        <div *ngIf="this.nowStep === createMeetingStep.INFO">
+            <app-create-meeting-info (onCreateButtonReadyEvent)="this.changeCreateTicketButtonState($event)"
+                [meetingInfo]="this.meetingInfo" #createMeetingInfoComponent></app-create-meeting-info>
+        </div>
+        <div *ngIf="this.nowStep === createMeetingStep.TICKET">
+            <app-create-ticket></app-create-ticket>
+        </div>
     </div>
-
+    <div class="bottom-button">
+        <app-square-button
+            [buttonElements]="(this.nowStep===this.createMeetingStep.INFO)?this.buttonElementsService.nextButtons: this.buttonElementsService.createTicketButtons"
+            (onClickEvent)="(this.nowStep===this.createMeetingStep.INFO)?this.onClickNextButton(): this.onClickCreateTicketButton()"></app-square-button>
+    </div>
 </div>

@@ -1,11 +1,11 @@
 <div id="category-container">
-    <app-simple-toggle [buttonElements]="this.categorySelectionButtons" [columnNum]="-1" [buttonWidth]="50"
-        [buttonHeight]="30" [componentWidth]="430" [fontSize]="14"
+    <app-simple-toggle [buttonElements]="this.buttonElementsService.categorySelectionButtons" [columnNum]="-1"
+        [buttonWidth]="50" [buttonHeight]="30" [componentWidth]="430" [fontSize]="14"
         (onClickToggleButtonEvent)="this.onClickCategoryButton($event)"></app-simple-toggle>
 </div>
 <div id="ticket-container" #ticketContainer>
-    <ng-container *ngFor="let categoryElement of this.categorySelectionButtons">
-        <app-image-row-container [label]="categoryElement.label"
-            (onClickImageEvent)="this.onClickTicket($event)"></app-image-row-container>
+    <ng-container *ngFor="let categoryElement of this.buttonElementsService.categorySelectionButtons">
+        <app-image-row-container [tickets]="this.ticketThumbnails" [isTicketContainer]="true"
+            [label]="categoryElement.label" (onClickImageEvent)="this.onClickTicket($event)"></app-image-row-container>
     </ng-container>
 </div>

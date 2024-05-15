@@ -1,17 +1,26 @@
 <div id="simple-input-component-container" [style.height.px]="(this.type === 'longText')?148:77">
     <div id="label-container" *ngIf="this.label !== ''">
-        {{this.label}}
-        <span id="extra-label-container" [style.color]="this.extraLabelColor"
-            *ngIf="this.extraLabel !== ''">{{this.extraLabel}}</span>
+        <div [style.display]="'flex'">
+            <div>{{this.label}}</div>
+            <div id="extra-label-container" [style.color]="this.extraLabelColor" *ngIf="this.extraLabel !== ''">
+                {{this.extraLabel}}</div>
+        </div>
+
+        <div id="checkbox-container">
+            <div id="checkbox-label-container" *ngIf="this.enableCheckbox === true">{{this.checkBoxLabel}}</div>
+            <div *ngIf="this.enableCheckbox === true"><input type="checkbox" id="check"
+                    (click)="this.onClickCheckbox($event)" /></div>
+        </div>
+
     </div>
     <div id="input-container">
         <div *ngIf="this.type !== 'longText'">
             <input id="input" [type]="this.type" [placeholder]="this.placeholder" autocomplete="off"
-                (click)="this.onClickInput()" (input)="this.onChangeInput($event)" />
+                (click)="this.onClickInput()" (input)="this.onChangeInput($event)" [value]="this.innerText" #textDiv />
         </div>
         <div *ngIf="this.type === 'longText'">
-            <textarea id="text"></textarea>
+            <textarea id="text" [placeholder]="this.placeholder" (click)="this.onClickInput()"
+                (input)="this.onChangeInput($event)" [value]="this.innerText" #textDiv></textarea>
         </div>
-
     </div>
 </div>

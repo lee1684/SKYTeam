@@ -14,11 +14,16 @@ export class SsalonLoginRedirectComponent {
     private _apiExecutorService: ApiExecutorService,
     private _router: Router
   ) {}
-  public ngOnInit() {
+  public async ngOnInit() {
     let value = '; ' + document.cookie;
     let parts = value.split('; ' + 'token' + '=');
     console.log(document.cookie, parts);
     console.log('ASDFASDFASFDSa');
-    this._router.navigate(['/onboarding']);
+    let response = await this._apiExecutorService.getProfile();
+    if (response !== false) {
+      this._router.navigate(['/web/main']);
+    } else {
+      this._router.navigate(['/web/onboarding']);
+    }
   }
 }

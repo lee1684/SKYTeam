@@ -10,6 +10,7 @@ import { ButtonElement } from '../ssalon-component/circle-toggle-button-group/ci
 import { NgIf } from '@angular/common';
 import { Router } from '@angular/router';
 import { SquareButtonComponent } from '../ssalon-component/square-button/square-button.component';
+import { ButtonElementsService } from '../service/button-elements.service';
 
 export interface OnboardingStep {
   label: string;
@@ -40,63 +41,11 @@ export class OnboardingComponent {
     { label: '관심 있는 카테고리를 선택해주세요', value: 2 },
   ];
   public nowOnboardingStep: OnboardingStep = this.onBoardingStep[0];
-  /** 첫번째 화면 */
-  public genderSelectionButtons = [
-    {
-      selected: true,
-      value: 0,
-      label: '남자',
-    },
-    { selected: false, value: 1, label: '여자' },
-    { selected: false, value: 2, label: '기타' },
-  ];
-  /** 두번째 화면 */
-  public locationSelectionButtons = [
-    { selected: true, value: 0, label: '서울특별시' },
-    { selected: false, value: 1, label: '경기도' },
-    { selected: false, value: 2, label: '강원도' },
-    { selected: false, value: 3, label: '충청북도' },
-    { selected: false, value: 4, label: '충청남도' },
-    { selected: false, value: 5, label: '전라남도' },
-    { selected: false, value: 6, label: '전라북도' },
-    { selected: false, value: 7, label: '경상북도' },
-    { selected: false, value: 8, label: '경상남도' },
-    { selected: false, value: 9, label: '인천광역시' },
-  ];
-  /** 세번째 화면 */
-  public interestSelectionButtons = [
-    {
-      selected: true,
-      value: 0,
-      label: '운동',
-      imgSrc: 'assets/interest-icons/excersize.png',
-    },
-    {
-      selected: false,
-      value: 1,
-      label: '게임',
-      imgSrc: 'assets/interest-icons/game.png',
-    },
-    {
-      selected: false,
-      value: 2,
-      label: '음악',
-      imgSrc: 'assets/interest-icons/music.png',
-    },
-    {
-      selected: false,
-      value: 3,
-      label: '음식',
-      imgSrc: 'assets/interest-icons/food.png',
-    },
-    {
-      selected: false,
-      value: 4,
-      label: '독서',
-      imgSrc: 'assets/interest-icons/book.png',
-    },
-  ];
-  constructor(private _router: Router) {
+
+  constructor(
+    private _router: Router,
+    public buttonElementsService: ButtonElementsService
+  ) {
     let value = '; ' + document.cookie;
     let parts = value.split('; ' + 'token' + '=');
     console.log(document.cookie, parts);
