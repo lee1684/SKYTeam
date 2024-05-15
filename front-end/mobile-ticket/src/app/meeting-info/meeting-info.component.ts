@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { TopNavigatorComponent } from '../ssalon-component/top-navigator/top-navigator.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TabGroupComponent } from '../ssalon-component/tab-group/tab-group.component';
@@ -9,12 +9,23 @@ import { MoimInfoComponent } from './moim-info/moim-info.component';
 import { ChattingComponent } from './chatting/chatting.component';
 import { ApiExecutorService } from '../service/api-executor.service';
 import { SquareButtonComponent } from '../ssalon-component/square-button/square-button.component';
+import { ButtonElementsService } from '../service/button-elements.service';
+import {
+  MobileTicketViewMode,
+  TicketComponent,
+} from '../ticket/ticket.component';
+import { SsalonConfigService } from '../service/ssalon-config.service';
+import { QrCheckComponent } from './qr-check/qr-check.component';
+import { StatusElement } from '../ssalon-component/circle-toggle-status-group/circle-toggle-status-group.component';
+import { QrShowComponent } from './qr-show/qr-show.component';
 
 export enum MeetingInfoTabEnum {
   TICKET,
   INFO,
   CHATTING,
-  REVIEW,
+  DIARY,
+  QRCHECK,
+  QRSHOW,
 }
 @Component({
   selector: 'app-meeting-info',
@@ -27,28 +38,29 @@ export enum MeetingInfoTabEnum {
     MoimInfoComponent,
     ChattingComponent,
     SquareButtonComponent,
+    QrCheckComponent,
+    QrShowComponent,
   ],
   templateUrl: './meeting-info.component.html',
   styleUrl: './meeting-info.component.scss',
 })
 export class MeetingInfoComponent {
+  @ViewChild('ticket', { static: false }) ticket: TicketComponent | null = null;
+
   public moimId: string = '';
   public moimInfo: any = {};
   public joined: boolean = false;
   public meetingInfoTabEnum = MeetingInfoTabEnum;
-  public tabs: NewButtonElement[] = this.getTabs();
-  public nowTab: number = this.tabs.find((tab) => tab.selected)!.value;
-  public joinButtonElements: NewButtonElement[] = [
-    {
-      selected: true,
-      value: 0,
-      label: '참가하기',
-    },
-  ];
+  public tabs: NewButtonElement[] = [];
+  public nowTab: MeetingInfoTabEnum = MeetingInfoTabEnum.INFO;
+  public isCreator: boolean = false;
+  public isParticipant: boolean = false;
+  public joiningUsers: StatusElement[] = [];
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
-    private _apiExecutorService: ApiExecutorService
+    private _apiExecutorService: ApiExecutorService,
+    public buttonElementsService: ButtonElementsService
   ) {
     this._route.queryParams.subscribe((params) => {
       this.moimId = params['moimId'];
@@ -57,22 +69,104 @@ export class MeetingInfoComponent {
 
   public async ngOnInit() {
     this.moimInfo = await this._apiExecutorService.getMoimInfo(this.moimId);
-    if (await this._apiExecutorService.checkParticipant(this.moimId)) {
-      this.joinButtonElements[0].selected = false;
-      this.joinButtonElements[0].label = '참가자입니다.';
+    this.tabs = await this.getTabs();
+    this.nowTab = this.tabs.find((tab) => tab.selected)!.value;
+    if (this.isParticipant) {
+      this.buttonElementsService.joinButtonElements[0].selected = false;
+      this.buttonElementsService.joinButtonElements[0].label = this.isCreator
+        ? '개최자입니다'
+        : '참가자입니다.';
+    } else {
+      this.buttonElementsService.joinButtonElements[0].selected = true;
+      this.buttonElementsService.joinButtonElements[0].label = '참가하기';
     }
+    let userInfos = await this._apiExecutorService.getJoiningUsers(this.moimId);
+    userInfos.forEach((userInfo: any, index: number) => {
+      this.joiningUsers.push({
+        imgSrc: userInfo.profilePictureUrl,
+        label: userInfo.nickname,
+        value: userInfo.userId,
+        status: userInfo.attendance,
+      });
+    });
   }
 
-  public getTabs(): NewButtonElement[] {
-    return [
-      { selected: true, value: 0, label: '증표 보기' },
-      { selected: false, value: 1, label: '모임 정보' },
-    ];
+  public onClickTab(tab: MeetingInfoTabEnum) {
+    this.nowTab = tab;
+  }
+
+  public async getTabs(): Promise<NewButtonElement[]> {
+    this.isCreator = await this._apiExecutorService.checkCreator(this.moimId);
+    this.isParticipant = await this._apiExecutorService.checkParticipant(
+      this.moimId
+    );
+    if (this.isCreator) {
+      return [
+        {
+          selected: false,
+          value: MeetingInfoTabEnum.QRCHECK,
+          label: 'QR검증',
+        },
+        {
+          selected: false,
+          value: MeetingInfoTabEnum.TICKET,
+          label: '증표 보기',
+        },
+        { selected: true, value: MeetingInfoTabEnum.INFO, label: '모임 정보' },
+        {
+          selected: false,
+          value: MeetingInfoTabEnum.CHATTING,
+          label: '채팅',
+        },
+        {
+          selected: false,
+          value: MeetingInfoTabEnum.DIARY,
+          label: '모임 후기',
+        },
+      ];
+    } else if (this.isParticipant) {
+      return [
+        {
+          selected: false,
+          value: MeetingInfoTabEnum.QRSHOW,
+          label: 'QR',
+        },
+        {
+          selected: false,
+          value: MeetingInfoTabEnum.TICKET,
+          label: '증표 보기',
+        },
+        { selected: true, value: MeetingInfoTabEnum.INFO, label: '모임 정보' },
+        {
+          selected: false,
+          value: MeetingInfoTabEnum.CHATTING,
+          label: '채팅',
+        },
+        {
+          selected: false,
+          value: MeetingInfoTabEnum.DIARY,
+          label: '모임 후기',
+        },
+      ];
+    } else {
+      return [
+        {
+          selected: false,
+          value: MeetingInfoTabEnum.TICKET,
+          label: '증표 보기',
+        },
+        { selected: true, value: MeetingInfoTabEnum.INFO, label: '모임 정보' },
+      ];
+    }
   }
 
   public onClickTicket() {
     this._router.navigate(['/web/ticket'], {
       queryParams: { moimId: this.moimId, viewType: 'view' },
     });
+  }
+
+  public onClickJoinButton() {
+    this._apiExecutorService.joinMoim(this.moimId);
   }
 }

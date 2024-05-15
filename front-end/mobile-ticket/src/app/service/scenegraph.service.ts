@@ -24,21 +24,7 @@ export class ScenegraphService {
     private _route: ActivatedRoute,
     private _apiExecutorService: ApiExecutorService,
     private _ssalonConfigService: SsalonConfigService
-  ) {
-    /**
-     * moimId: string;
-     * viewType: string; edit, view, share, qrcheck, qrshow
-     * faceType: string; front, back
-     */
-    this._route.queryParams.subscribe((params) => {
-      this._ssalonConfigService.MOIM_ID = params['moimId'];
-      this._ssalonConfigService.VIEW_TYPE = params['viewType'];
-      this._ssalonConfigService.FACE_TYPE = params['faceType'];
-      if (params['token'] !== undefined) {
-        this._apiExecutorService._token = params['token'];
-      }
-    });
-  }
+  ) {}
   public initThree(): void {
     const width = this.nativeElement!.clientWidth;
     const height = this.nativeElement!.clientHeight;

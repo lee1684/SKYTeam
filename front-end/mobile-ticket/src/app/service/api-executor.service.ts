@@ -18,7 +18,7 @@ export class ApiExecutorService {
   public apiURL: string = 'https://ssalon.co.kr/api';
   public tokens = {
     access:
-      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTU3MDEwODgsImV4cCI6MTcxNTc4NzQ4OH0.xN65oqus7XddSFuuB2SEtl021Z5iqbqSo0udUZYlPvg',
+      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTU3ODg1MjgsImV4cCI6MTcxNTg3NDkyOH0.yXGQSZ1giOFU2nRtvKKaaV_Dul-BB85aISPccCqk9Zw',
     refresh:
       'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6InJlZnJlc2giLCJ1c2VybmFtZSI6Im5hdmVyIGx6YVdfaFJqa3NZM2V6NTVLSXJKV3RPZjJNak4tRmcySW1BeUlwTzhTZXMiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzE1NTkxOTQ5LCJleHAiOjE3MTU2NzgzNDl9.BbsDE1762RDKxKmFGOyry46-wpkrcVv1SkYjBAy553U',
   };
@@ -110,31 +110,33 @@ export class ApiExecutorService {
     }
   }
 
-  public async checkQR(qrString: string) {
+  public async checkQR(moimId: string, qrString: string) {
     try {
       let body = { qrKey: qrString };
       let response = await this.apiExecutorJson?.post(
-        `/tickets/${this._ssalonConfigService.MOIM_ID}/link`,
+        `/tickets/${moimId}/link`,
         body
       );
       return response!.data;
     } catch {}
   }
 
-  public async changeAttendanceStatus(userId: number, status: boolean = false) {
+  public async changeAttendanceStatus(
+    moimId: string,
+    userId: number,
+    status: boolean = false
+  ) {
     try {
       let response = await this.apiExecutorJson?.post(
-        `/moims/${this._ssalonConfigService.MOIM_ID}/attendance/${userId}`
+        `/moims/${moimId}/attendance/${userId}`
       );
       return response!.data;
     } catch {}
   }
 
-  public async getJoiningUsers() {
+  public async getJoiningUsers(moimId: string) {
     try {
-      let response = await this.apiExecutorJson?.get(
-        `/moims/${this._ssalonConfigService.MOIM_ID}/users`
-      );
+      let response = await this.apiExecutorJson?.get(`/moims/${moimId}/users`);
       return response!.data;
     } catch {}
   }
@@ -142,15 +144,6 @@ export class ApiExecutorService {
   public async getMoimInfo(moimId: string) {
     try {
       let response = await this.apiExecutorJson?.get(`/moims/${moimId}`);
-      return response!.data;
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  public async makeMoim(body: any) {
-    try {
-      let response = await this.apiExecutorJson?.post(`/moims`, body);
       return response!.data;
     } catch (e) {
       console.log(e);
@@ -166,11 +159,47 @@ export class ApiExecutorService {
     }
   }
 
+  public async joinMoim(moimId: string) {
+    try {
+      let response = await this.apiExecutorJson?.post(`moims/${moimId}/users`);
+      return response?.data;
+    } catch (e) {
+      return false;
+    }
+  }
+
   public async checkParticipant(moimId: string) {
     try {
       let response = await this.apiExecutorJson?.get(
         `moims/${moimId}/participant`
       );
+      return response!.data;
+    } catch (e: any) {
+      return false;
+    }
+  }
+
+  public async checkCreator(moimId: string) {
+    try {
+      let response = await this.apiExecutorJson?.get(`moims/${moimId}/creator`);
+      return response!.data;
+    } catch (e: any) {
+      return false;
+    }
+  }
+
+  public async getProfile() {
+    try {
+      let response = await this.apiExecutorJson?.get(`/users/me/profile`);
+      return response!.data;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  public async createMeeting(body: any) {
+    try {
+      let response = await this.apiExecutorJson?.post(`/moims`, body);
       return response!.data;
     } catch (e) {
       console.log(e);

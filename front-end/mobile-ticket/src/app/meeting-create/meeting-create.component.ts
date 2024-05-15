@@ -1,12 +1,95 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { TopNavigatorComponent } from '../ssalon-component/top-navigator/top-navigator.component';
 import { SimpleInputComponent } from '../ssalon-component/simple-input/simple-input.component';
+import { BottomDialogComponent } from '../ssalon-component/bottom-dialog/bottom-dialog.component';
+import { SimpleToggleGroupComponent } from '../ssalon-component/simple-toggle-group/simple-toggle-group.component';
+import { NgIf, Location } from '@angular/common';
+import { ButtonElementsService } from '../service/button-elements.service';
+import { SquareButtonComponent } from '../ssalon-component/square-button/square-button.component';
+import { CreateMeetingInfoComponent } from './create-meeting-info/create-meeting-info.component';
+import { CreateTicketComponent } from './create-ticket/create-ticket.component';
+import { Router } from '@angular/router';
+import { ApiExecutorService } from '../service/api-executor.service';
 
+export enum CreateMeetingStep {
+  INFO,
+  TICKET,
+}
 @Component({
   selector: 'app-meeting-create',
   standalone: true,
-  imports: [TopNavigatorComponent, SimpleInputComponent],
+  imports: [
+    NgIf,
+    TopNavigatorComponent,
+    SimpleInputComponent,
+    BottomDialogComponent,
+    SimpleToggleGroupComponent,
+    SquareButtonComponent,
+    CreateMeetingInfoComponent,
+    CreateTicketComponent,
+  ],
   templateUrl: './meeting-create.component.html',
   styleUrl: './meeting-create.component.scss',
+  animations: [],
 })
-export class MeetingCreateComponent {}
+export class MeetingCreateComponent {
+  @ViewChild('createMeetingInfoComponent', { static: false })
+  createMeetingInfoComponent: CreateMeetingInfoComponent | null = null;
+  public createMeetingStep = CreateMeetingStep;
+  public nowStep: CreateMeetingStep = CreateMeetingStep.INFO;
+  public meetingInfo: any = {
+    title: '',
+    description: '',
+    category: '',
+    capacity: 0,
+    location: '',
+    meetingDate: '',
+    payment: -1,
+    meetingPictureUrls: [''],
+    isSharable: true,
+  };
+  public resultMeetingInfo: any = {};
+  constructor(
+    private _apiExecutorService: ApiExecutorService,
+    public buttonElementsService: ButtonElementsService,
+    private _location: Location,
+    private _router: Router
+  ) {}
+  public onClickBackButton() {
+    if (this.nowStep === CreateMeetingStep.TICKET) {
+      this.nowStep = CreateMeetingStep.INFO;
+    } else {
+      this.meetingInfo = {
+        title: '',
+        description: '',
+        category: '',
+        capacity: 0,
+        location: '',
+        meetingDate: '',
+        payment: -1,
+        meetingPictureUrls: [''],
+        isSharable: true,
+      };
+      this._location.back();
+    }
+  }
+  public changeCreateTicketButtonState(value: boolean) {
+    this.buttonElementsService.nextButtons[0].selected = value;
+  }
+  public onClickCreateTicketButton() {
+    this._router.navigate([`/web/ticket`], {
+      queryParams: { moimId: this.resultMeetingInfo.id, viewType: 'edit' },
+    });
+  }
+  public async onClickNextButton() {
+    this.meetingInfo = this.createMeetingInfoComponent!.meetingInfo;
+    if (this.buttonElementsService.nextButtons[0].selected) {
+      console.log(this.meetingInfo);
+      this.resultMeetingInfo = await this._apiExecutorService.createMeeting(
+        this.meetingInfo
+      );
+      console.log(this.resultMeetingInfo);
+      this.nowStep = CreateMeetingStep.TICKET;
+    }
+  }
+}

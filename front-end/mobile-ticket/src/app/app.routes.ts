@@ -10,9 +10,6 @@ import { MeetingCreateComponent } from './meeting-create/meeting-create.componen
 
 export const routes: Routes = [
   { path: 'web/ssalon-login', component: SsalonLoginComponent },
-  { path: 'login/oauth2/code/google', component: SsalonLoginRedirectComponent },
-  { path: 'login/oauth2/code/kakao', component: SsalonLoginRedirectComponent },
-  { path: 'login/oauth2/code/naver', component: SsalonLoginRedirectComponent },
   {
     path: 'web/ssalon-login-redirect',
     component: SsalonLoginRedirectComponent,

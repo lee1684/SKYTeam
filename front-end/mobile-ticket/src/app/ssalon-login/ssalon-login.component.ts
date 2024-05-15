@@ -5,6 +5,7 @@ import {
   SimpleToggleGroupComponent,
 } from '../ssalon-component/simple-toggle-group/simple-toggle-group.component';
 import { Router } from '@angular/router';
+import { ButtonElementsService } from '../service/button-elements.service';
 
 @Component({
   selector: 'app-ssalon-login',
@@ -14,38 +15,10 @@ import { Router } from '@angular/router';
   styleUrl: './ssalon-login.component.scss',
 })
 export class SsalonLoginComponent {
-  public loginButtonElements: NewButtonElement[] = [
-    {
-      selected: false,
-      value: 0,
-      label: 'Google로 시작하기',
-      solid: false,
-      imgSrc: 'assets/login-icons/google.png',
-    },
-    {
-      selected: false,
-      value: 1,
-      label: 'Kakao로 시작하기',
-      solid: true,
-      unselectedBackgroundColor: '#FEE500',
-      unselectedFontColor: '#000000',
-      selectedBackgroundColor: '#FEE500',
-      selectedFontColor: '#000000',
-      imgSrc: 'assets/login-icons/kakao.png',
-    },
-    {
-      selected: false,
-      value: 2,
-      label: 'Naver로 시작하기',
-      solid: true,
-      unselectedBackgroundColor: '#03C75A',
-      unselectedFontColor: '#ffffff',
-      selectedBackgroundColor: '#03C75A',
-      selectedFontColor: '#ffffff',
-      imgSrc: 'assets/login-icons/naver.png',
-    },
-  ];
-  constructor(private _router: Router) {}
+  constructor(
+    private _router: Router,
+    public buttonElementsService: ButtonElementsService
+  ) {}
   public onClickLoginButton(value: number) {
     let redirectUrl: string;
     if (value === 0) {

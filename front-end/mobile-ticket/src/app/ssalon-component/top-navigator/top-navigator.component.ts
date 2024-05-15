@@ -12,16 +12,18 @@ import { Router } from '@angular/router';
 export class TopNavigatorComponent {
   @Input() title: string = '';
   @Input() shareButton: boolean = false;
+  @Input() defaultBack: boolean = true;
 
-  @Output() backButtonClick = new EventEmitter();
-  @Output() shareButtonClick = new EventEmitter();
+  @Output() backButtonClickEvent = new EventEmitter();
+  @Output() shareButtonClickEvent = new EventEmitter();
   public comeFrom: string = '';
 
   constructor(private _location: Location) {}
   public onClickBackButton(): void {
-    this._location.back();
+    if (this.defaultBack === true) this._location.back();
+    else this.backButtonClickEvent.emit();
   }
   public onClickShareButton(): void {
-    this.shareButtonClick.emit();
+    this.shareButtonClickEvent.emit();
   }
 }

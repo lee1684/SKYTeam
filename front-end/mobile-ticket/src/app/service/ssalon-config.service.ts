@@ -18,5 +18,8 @@ export class SsalonConfigService {
   public DIARY_ID: string = '';
   public FACE_TYPE: string = '';
   public VIEW_TYPE: string = '';
+
+  public TOP_NAVIGATOR_HEIGHT: number = 60;
+  public BOTTOM_BUTTON_HEIGHT: number = 80;
   constructor() {}
 }
