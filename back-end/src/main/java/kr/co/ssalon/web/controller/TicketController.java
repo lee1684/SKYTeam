@@ -28,9 +28,9 @@ public class TicketController {
     }
 
     @PutMapping("/{moimId}") // 모임 증표 편집에 의한 JSON 업로드
-    public ResponseEntity<TicketEditResponseDTO> uploadJSON(@PathVariable("moimId") Long moimId, @RequestPart String json) {
+    public ResponseEntity<TicketEditResponseDTO> uploadJSON(@PathVariable("moimId") Long moimId, @RequestPart String json, @RequestPart List<MultipartFile> files) {
 
-        TicketEditResponseDTO ticketEditResponseDTO = ticketService.editTicketJSON(moimId, json);
+        TicketEditResponseDTO ticketEditResponseDTO = ticketService.editTicketJSON(moimId, json, files);
         if (ticketEditResponseDTO.getResultJson().equals("200 OK")) return ResponseEntity.ok(ticketEditResponseDTO);
         else return ResponseEntity.badRequest().body(ticketEditResponseDTO);
     }

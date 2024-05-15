@@ -111,7 +111,7 @@ public class TicketService {
     }
 
     @Transactional
-    public TicketEditResponseDTO editTicketJSON(Long moimId, String json) {
+    public TicketEditResponseDTO editTicketJSON(Long moimId, String json, List<MultipartFile> files) {
         // 주어진 모임ID 바탕으로 티켓 업로드 내용 수정
         // 현재(240424)는 기존 내용 삭제 후 새로 업로드
         // 추후 : 이전 티켓 수정 기록 보존을 고려할 것
@@ -122,6 +122,7 @@ public class TicketService {
         // JSON src 수정 후 업로드 진행
         Map<String, String> imageSrcMap = new HashMap<>();
         JsonElement jsonElement = editTicketJsonSrc(moimId.toString(), moimId.toString(), json, imageSrcMap);
+        awsS3Service.uploadMultiFilesViaMultipart(files, imageSrcMap);
         String resultJson = awsS3Service.uploadFileViaStream(moimId, jsonElement.toString());
 
         // 결과 반환
