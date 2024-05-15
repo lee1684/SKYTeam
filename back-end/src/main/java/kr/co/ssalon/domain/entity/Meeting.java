@@ -54,6 +54,8 @@ public class Meeting {
 
     private Boolean isFinished = false;
 
+    private String backgroundColor;
+
     protected Meeting() {
     }
 
@@ -128,6 +130,7 @@ public class Meeting {
                 .capacity(capacity)
                 .meetingDate(meetingDate)
                 .isFinished(false)
+                .backgroundColor("#808080")
                 .build();
 
         meeting.ownerMember(creator);
