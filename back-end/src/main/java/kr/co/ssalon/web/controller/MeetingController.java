@@ -8,8 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.co.ssalon.domain.dto.MeetingDomainDTO;
-import kr.co.ssalon.domain.entity.MeetingOut;
-import kr.co.ssalon.domain.entity.Member;
+import kr.co.ssalon.domain.entity.*;
 import kr.co.ssalon.domain.entity.MeetingOut;
 import kr.co.ssalon.domain.repository.CategoryRepository;
 import kr.co.ssalon.domain.repository.MeetingRepository;
@@ -26,7 +25,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import kr.co.ssalon.domain.entity.Meeting;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,8 +47,8 @@ public class MeetingController {
     private final CategoryService categoryService;
 
     @Operation(summary = "모임 참가")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "모임 참가 성공"),
+    @ApiResponse(responseCode = "200", description = "모임 참가 성공", content = {
+            @Content(schema = @Schema(implementation = MeetingDTO.class))
     })
     @PostMapping("/api/moims/{moimId}/users")
     public ResponseEntity<?> joinMoim(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
@@ -69,8 +67,8 @@ public class MeetingController {
     // 모임 목록 필터 설정, 목록에 표시될 모임의 숫자 등
     // 현재 개설된 모임 목록
     @Operation(summary = "모임 목록 조회")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "모임 목록 조회 성공"),
+    @ApiResponse(responseCode = "200", description = "모임 목록 조회 성공", content = {
+            @Content(schema = @Schema(implementation = MeetingListSearchPageDTO.class))
     })
     @GetMapping("/api/moims")
     public ResponseEntity<MeetingListSearchPageDTO> getMoims(MeetingSearchCondition meetingSearchCondition, Pageable pageable) {
@@ -84,8 +82,8 @@ public class MeetingController {
     // 모임 목록 필터 설정, 목록에 표시될 모임의 숫자 등
     // 현재 개설된 모임 목록
     @Operation(summary = "홈 화면 조회")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "홈 화면 조회 성공"),
+    @ApiResponse(responseCode = "200", description = "홈 화면 조회 성공", content = {
+            @Content(schema = @Schema(implementation = MeetingHomeDTO.class))
     })
     // 추후 추천 알고리즘에 따라 customAuth2Member를 보고 카테고리 순위가 결정되어야함
     @GetMapping("/api/moims/home")
@@ -120,8 +118,8 @@ public class MeetingController {
     // 사용자 JWT, 개설할 모임의 정보
     // 성공/실패 여부, 개설된 모임의 ID
     @Operation(summary = "모임 개설")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "모임 개설 성공"),
+    @ApiResponse(responseCode = "200", description = "모임 개설 성공", content = {
+            @Content(schema = @Schema(implementation = MeetingDTO.class))
     })
     @PostMapping("/api/moims")
     public ResponseEntity<?> createMoim(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MeetingDomainDTO meetingDomainDTO) {
@@ -141,8 +139,8 @@ public class MeetingController {
     // 성공/실패 여부, 모임 관련 정보 데이터
     // (소속 여부에 따라 변동) -> ?
     @Operation(summary = "모임 정보 조회")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "모임 정보 조회 성공"),
+    @ApiResponse(responseCode = "200", description = "모임 정보 조회 성공", content = {
+            @Content(schema = @Schema(implementation = MeetingInfoDTO.class))
     })
     @GetMapping("/api/moims/{moimId}")
     public ResponseEntity<?> getMoim(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
@@ -159,8 +157,8 @@ public class MeetingController {
     // 사용자 JWT, 수정할 모임의 정보
     // 성공/실패 여부
     @Operation(summary = "모임 정보 수정")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "모임 정보 수정 성공"),
+    @ApiResponse(responseCode = "200", description = "모임 정보 수정 성공", content = {
+            @Content(schema = @Schema(implementation = Long.class))
     })
     @PatchMapping("/api/moims/{moimId}")
     public ResponseEntity<?> updateMoim(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MeetingDomainDTO meetingDomainDTO) {
@@ -176,8 +174,8 @@ public class MeetingController {
     // 사용자 JWT
     // 성공/실패 여부
     @Operation(summary = "모임 해산")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "모임 해산 성공"),
+    @ApiResponse(responseCode = "200", description = "모임 해산 성공", content = {
+            @Content(schema = @Schema(implementation = Long.class))
     })
     @DeleteMapping("/api/moims/{moimId}")
     public ResponseEntity<?> deleteMoim(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
@@ -193,10 +191,8 @@ public class MeetingController {
     // 사용자 JWT
     // 성공/실패 여부, 모임 참가자 목록
     @Operation(summary = "모임 참가자 목록 조회")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "모임 참가자 목록 조회", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = ParticipantDTO.class))
-            }),
+    @ApiResponse(responseCode = "200", description = "모임 참가자 목록 조회 성공", content = {
+            @Content(schema = @Schema(implementation = ParticipantDTO.class))
     })
     @GetMapping("/api/moims/{moimId}/users")
     public ResponseEntity<?> getUsers(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
@@ -211,8 +207,8 @@ public class MeetingController {
     // 사용자 JWT, 탈퇴 및 강퇴 사유
     // 성공/실패 여부
     @Operation(summary = "모임 강퇴 및 탈퇴")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "모임 강퇴 및 탈퇴 성공")
+    @ApiResponse(responseCode = "200", description = "모임 강퇴 및 탈퇴 성공", content = {
+            @Content(schema = @Schema(implementation = MeetingOutDTO.class))
     })
     @DeleteMapping("/api/moims/{moimId}/users/{userId}")
     public ResponseEntity<?> deleteUserFromMoim(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @PathVariable Long userId, @RequestBody MeetingOutReasonDTO meetingOutReasonDTO) {
@@ -228,8 +224,8 @@ public class MeetingController {
 
 
     @Operation(summary = "모임 개최자 검증")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "모임 개최자 검증 성공"),
+    @ApiResponse(responseCode = "200", description = "모임 개최자 검증 성공", content = {
+            @Content(schema = @Schema(implementation = Boolean.class))
     })
     @GetMapping("/api/moims/{moimId}/creator")
     public ResponseEntity<?> isCreator(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
@@ -242,8 +238,8 @@ public class MeetingController {
     }
 
     @Operation(summary = "모임 참여자 여부 검증")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "모임 참여자 여부 검증 성공"),
+    @ApiResponse(responseCode = "200", description = "모임 참여자 여부 검증 성공", content = {
+            @Content(schema = @Schema(implementation = Boolean.class))
     })
     @GetMapping("/api/moims/{moimId}/participant")
     public ResponseEntity<?> isParticipant(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {

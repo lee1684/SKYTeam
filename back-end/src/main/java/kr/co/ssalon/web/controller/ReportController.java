@@ -1,6 +1,8 @@
 package kr.co.ssalon.web.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,9 +39,9 @@ public class ReportController {
     private final ReportService reportService;
     private final MeetingService meetingService;
 
-    @Operation(summary = "자신의 신고한 목록 조회하기")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "자신의 신고한 목록 조회하기"),
+    @Operation(summary = "신고 목록 조회")
+    @ApiResponse(responseCode = "200", description = "신고 목록 조회 성공", content = {
+            @Content(schema = @Schema(implementation = ReportListSearchPageDTO.class))
     })
     @GetMapping("/api/report")
     public ResponseEntity<?> getMyReports(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, ReportSearchCondition reportSearchCondition, Pageable pageable) {
@@ -55,9 +57,9 @@ public class ReportController {
         }
     }
 
-    @Operation(summary = "자신의 신고 내용 조회하기")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "자신의 신고 내용 조회하기"),
+    @Operation(summary = "신고 내용 조회")
+    @ApiResponse(responseCode = "200", description = "신고 내용 조회 성공", content = {
+            @Content(schema = @Schema(implementation = ReportDTO.class))
     })
     @GetMapping("/api/report/{reportId}")
     public ResponseEntity<?> getMyReports(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long reportId) {
@@ -72,9 +74,9 @@ public class ReportController {
         }
     }
 
-    @Operation(summary = "유저 신고하기")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "유저 신고하기 성공"),
+    @Operation(summary = "유저 신고")
+    @ApiResponse(responseCode = "200", description = "유저 신고 성공", content = {
+            @Content(schema = @Schema(implementation = ReportDTO.class))
     })
     @PostMapping("/api/report")
     public ResponseEntity<?> createReport(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody ReportDTO reportDTO) {
@@ -89,9 +91,9 @@ public class ReportController {
         }
     }
 
-    @Operation(summary = "유저 신고 수정하기")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "유저 신고 수정하기 성공"),
+    @Operation(summary = "유저 신고 수정")
+    @ApiResponse(responseCode = "200", description = "유저 신고 수정 성공", content = {
+            @Content(schema = @Schema(implementation = ReportDTO.class))
     })
     @PatchMapping("/api/report/{reportId}")
     public ResponseEntity<?> editReport(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long reportId, @RequestBody ReportDTO reportDTO) {
@@ -106,9 +108,9 @@ public class ReportController {
         }
     }
 
-    @Operation(summary = "신고 삭제하기")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "신고 삭제하기 성공"),
+    @Operation(summary = "유저 신고 삭제")
+    @ApiResponse(responseCode = "200", description = "유저 신고 삭제 성공", content = {
+            @Content(schema = @Schema(implementation = Long.class))
     })
     @DeleteMapping("/api/report/{reportId}")
     public ResponseEntity<?> deleteReport(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long reportId) {

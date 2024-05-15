@@ -1,6 +1,8 @@
 package kr.co.ssalon.web.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,8 +34,8 @@ public class AdminCategoryController {
     private final MemberService memberService;
 
     @Operation(summary = "카테고리 생성")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "카테고리 생성 성공"),
+    @ApiResponse(responseCode = "200", description = "카테고리 생성 성공", content = {
+            @Content(schema = @Schema(implementation = Category.class))
     })
     @PostMapping("/api/admin/category")
     public ResponseEntity<?> createCategory(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody CategoryDTO categoryDTO) {
@@ -48,8 +50,8 @@ public class AdminCategoryController {
     }
 
     @Operation(summary = "카테고리 전체 조회")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "카테고리 전체 조회 성공"),
+    @ApiResponse(responseCode = "200", description = "카테고리 전체 조회 성공", content = {
+            @Content(schema = @Schema(implementation = Category.class))
     })
     @GetMapping("/api/admin/category")
     public ResponseEntity<?> getCategories(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
@@ -63,8 +65,8 @@ public class AdminCategoryController {
     }
 
     @Operation(summary = "카테고리 조회")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "카테고리 조회 성공"),
+    @ApiResponse(responseCode = "200", description = "카테고리 조회 성공", content = {
+            @Content(schema = @Schema(implementation = Category.class))
     })
     @GetMapping("/api/admin/category/{categoryId}")
     public ResponseEntity<?> getCategory(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long categoryId) {
@@ -78,8 +80,8 @@ public class AdminCategoryController {
     }
 
     @Operation(summary = "카테고리 내용 수정")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "카테고리 내용 수정 성공"),
+    @ApiResponse(responseCode = "200", description = "카테고리 내용 수정 성공", content = {
+            @Content(schema = @Schema(implementation = Category.class))
     })
     @PatchMapping("/api/admin/category/{categoryId}")
     public ResponseEntity<?> editCategory(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long categoryId, @RequestBody CategoryDTO categoryDTO) {
