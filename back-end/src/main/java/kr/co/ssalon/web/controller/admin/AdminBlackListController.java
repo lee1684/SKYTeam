@@ -1,6 +1,8 @@
 package kr.co.ssalon.web.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,8 +34,8 @@ public class AdminBlackListController {
     private final ValidationService validationService;
 
     @Operation(summary = "블랙리스트 조회")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "블랙리스트 조회 성공"),
+    @ApiResponse(responseCode = "200", description = "블랙리스트 조회 성공", content = {
+            @Content(schema = @Schema(implementation = BlackListSearchPageDTO.class))
     })
     @GetMapping("/api/admin/blacklists/users")
     public ResponseEntity<?> getBlackList(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, BlackListSearchCondition blackListSearchCondition, Pageable pageable) {
@@ -51,8 +53,8 @@ public class AdminBlackListController {
     }
 
     @Operation(summary = "블랙리스트 설정 및 해제")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "블랙리스트 설정 및 해제 성공"),
+    @ApiResponse(responseCode = "200", description = "블랙리스트 설정 및 해제 성공", content = {
+            @Content(schema = @Schema(implementation = String.class))
     })
     @PostMapping("/api/admin/blacklists/users/{userId}")
     public ResponseEntity<?> setBlackReason(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long userId, @RequestBody BlackReasonDTO blackReasonDTO) {
