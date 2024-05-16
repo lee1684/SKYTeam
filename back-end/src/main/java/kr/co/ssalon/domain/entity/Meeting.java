@@ -53,6 +53,7 @@ public class Meeting {
     private Boolean isFinished = false;
 
     private String backgroundColor;
+    private String thumbnail;
 
     protected Meeting() {
     }
@@ -83,6 +84,10 @@ public class Meeting {
 
     public void changeBackgroundColor(String backgroundColor) {
         this.backgroundColor = backgroundColor != null ? backgroundColor : this.backgroundColor;
+    }
+
+    public void changeThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail != null ? thumbnail : this.thumbnail;
     }
 
 
@@ -146,6 +151,7 @@ public class Meeting {
                 .isSharable(isSharable)
                 .isFinished(false)
                 .backgroundColor("#808080")
+                .thumbnail("https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/Thumbnails/Template-240424/Placeholder_1.png")
                 .build();
 
         meeting.ownerMember(creator);
