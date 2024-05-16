@@ -114,12 +114,21 @@ public class AwsS3Service {
 
         for (MultipartFile multipartFile : multipartFiles) {
             String oldFileURI = getFileName(multipartFile);
-            String newFileURI = imageKeyMap.get(oldFileURI);
+            String newFileURI = "";
 
             if (multipartFile.isEmpty()) {
                 log.info("ERROR in AWS S3 Service: Provided image is null");
                 imageKeyMap.replace(oldFileURI, "");
                 continue;
+            }
+
+            for (String fileURI : imageKeyMap.keySet()) {
+                String regexName = "\\S*" + oldFileURI;
+
+                if (fileURI.matches(regexName)) {
+                    newFileURI = imageKeyMap.get(fileURI);
+                    break;
+                }
             }
 
             try {
