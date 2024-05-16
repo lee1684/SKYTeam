@@ -79,14 +79,18 @@ public class QrService {
 
 
         for(MemberMeeting memberMeeting : memberMeetingList) {
-            String redisKey = memberMeeting.getQrLink().getQrKey();
+            try {
+                String redisKey = memberMeeting.getQrLink().getQrKey();
 
-            String savedImage = redisTemplate.opsForValue().get(redisKey);
+                String savedImage = redisTemplate.opsForValue().get(redisKey);
 
-            if(Objects.equals(savedImage, key)) {
-                memberMeeting.changeAttendanceTrue();
-                memberMeetingRepository.save(memberMeeting);
-                return new QrValidationResponseDTO(memberMeeting.getMember().getId(), memberMeeting.getMember().getNickname(), memberMeeting.getMember().getProfilePictureUrl(), memberMeeting.isAttendance());
+                if(Objects.equals(savedImage, key)) {
+                    memberMeeting.changeAttendanceTrue();
+                    memberMeetingRepository.save(memberMeeting);
+                    return new QrValidationResponseDTO(memberMeeting.getMember().getId(), memberMeeting.getMember().getNickname(), memberMeeting.getMember().getProfilePictureUrl(), memberMeeting.isAttendance());
+                }
+            } catch (NullPointerException e) {
+                continue;
             }
         }
 
