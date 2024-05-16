@@ -5,9 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-
 @Entity
 @Getter
 @Builder
@@ -27,14 +24,23 @@ public class Payment {
     @OneToOne(fetch = FetchType.LAZY)
     private Meeting meeting;
 
-    private BigDecimal amount;
+    private Integer amount;
 
     private String purpose;
 
     protected Payment() {}
 
-    public static Payment createPayment() {
-        Payment payment = Payment.builder().build();
+    public void changeMember(Member member) {
+        this.member = member;
+    }
+
+    public static Payment createPayment(Member member, Integer amount) {
+        Payment payment = Payment.builder()
+                .amount(amount)
+                .build();
+
+        payment.changeMember(member);
+
         return payment;
     }
 }

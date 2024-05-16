@@ -52,6 +52,7 @@ public class Meeting {
     private Integer capacity;
     private LocalDateTime meetingDate;
 
+    private Boolean isSharable;
     private Boolean isFinished = false;
 
     private String backgroundColor;
@@ -115,6 +116,10 @@ public class Meeting {
         this.category = category;
     }
 
+    public void changePayment(Payment payment) {
+        this.payment = payment;
+    }
+
     public void addParticipants(MemberMeeting memberMeeting) throws BadRequestException {
         if(capacity == getParticipants().size()){
             throw new BadRequestException("인원이 다 찼습니다.");
@@ -122,13 +127,25 @@ public class Meeting {
         getParticipants().add(memberMeeting);
     }
 
-    public static Meeting createMeeting(Category category, Member creator, List<String> meetingPictureUrls, String title, String description, String location, Integer capacity, LocalDateTime meetingDate) {
+    public static Meeting createMeeting(
+            Category category,
+            Payment payment,
+            Member creator,
+            List<String> meetingPictureUrls,
+            String title,
+            String description,
+            String location,
+            Integer capacity,
+            LocalDateTime meetingDate,
+            Boolean isSharable
+    ) {
         Meeting meeting = Meeting.builder()
                 .title(title)
                 .description(description)
                 .location(location)
                 .capacity(capacity)
                 .meetingDate(meetingDate)
+                .isSharable(isSharable)
                 .isFinished(false)
                 .backgroundColor("#808080")
                 .build();
@@ -136,6 +153,7 @@ public class Meeting {
         meeting.ownerMember(creator);
         meeting.addMeetingPictureUrls(meetingPictureUrls);
         meeting.changeCategory(category);
+        meeting.changePayment(payment);
         return meeting;
     }
 

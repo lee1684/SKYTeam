@@ -29,6 +29,7 @@ public class MeetingService {
     private final TicketService ticketService;
     private final CategoryRepository categoryRepository;
     private final MeetingOutRepository meetingOutRepository;
+    private final PaymentRepository paymentRepository;
     private final MemberService memberService;
 
     // 모임 개설
@@ -39,8 +40,29 @@ public class MeetingService {
         Member currentUser = findMember(username);
         // 카테고리 찾기
         Category category = findCategory(meetingDomainDTO.getCategory());
-        // 모임 생성 { 카테고리, 회원, 모임 이미지, 모임 제목, 모임 설명, 모임 장소, 모임 수용인원, 모임 날짜 }
-        Meeting meeting = Meeting.createMeeting(category, currentUser, meetingDomainDTO.getMeetingPictureUrls(), meetingDomainDTO.getTitle(), meetingDomainDTO.getDescription(), meetingDomainDTO.getLocation(), meetingDomainDTO.getCapacity(), meetingDomainDTO.getMeetingDate());
+        // 참가비 여부 확인
+        Payment payment = null;
+        if (meetingDomainDTO.getPayment() > 0) {
+            payment = Payment.createPayment(currentUser, meetingDomainDTO.getPayment());
+        }
+        // 모임 생성 { 카테고리, 회원, 모임 이미지, 모임 제목, 모임 설명, 모임 장소, 모임 수용인원, 모임 날짜, 공유 여부 }
+        Meeting meeting = Meeting.createMeeting(
+                category,
+                payment,
+                currentUser,
+                meetingDomainDTO.getMeetingPictureUrls(),
+                meetingDomainDTO.getTitle(),
+                meetingDomainDTO.getDescription(),
+                meetingDomainDTO.getLocation(),
+                meetingDomainDTO.getCapacity(),
+                meetingDomainDTO.getMeetingDate(),
+                meetingDomainDTO.getIsSharable()
+        );
+
+        // Payment 객체 저장
+        if (payment != null) {
+            paymentRepository.save(payment);
+        }
 
         // 모임 참가 생성 및 나의 가입된 모임에 추가
         MemberMeeting memberMeeting = MemberMeeting.createMemberMeeting(currentUser, meeting);
