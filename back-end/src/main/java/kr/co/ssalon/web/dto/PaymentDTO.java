@@ -20,7 +20,7 @@ public class PaymentDTO {
     @NotBlank
     private Long meetingId;
     @NotBlank
-    private BigDecimal amount;
+    private Integer amount;
     @NotBlank
     private String purpose;
 
