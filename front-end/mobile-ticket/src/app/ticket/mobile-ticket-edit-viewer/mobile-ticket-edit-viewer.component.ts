@@ -13,6 +13,7 @@ import {
   ElementRef,
   Output,
   EventEmitter,
+  Input,
 } from '@angular/core';
 import { degToRad } from 'three/src/math/MathUtils.js';
 @Component({
@@ -27,6 +28,9 @@ export class MobileTicketEditViewerComponent {
   backgroundPath: ElementRef | null = null;
   @ViewChild('editCanvas', { static: false })
   editCanvas: ElementRef | null = null;
+
+  @Input() moimId: string = '';
+
   @Output() public readonly onClickText = new EventEmitter();
   public canvas: Canvas | null = null;
   public isCursorDown: boolean = false;
@@ -103,7 +107,7 @@ export class MobileTicketEditViewerComponent {
   }
 
   public async loadDecorationInfo() {
-    let decorationInfo = await this._apiExecutorService.getTicket();
+    let decorationInfo = await this._apiExecutorService.getTicket(this.moimId);
     await this.canvas?.loadFromJSON(decorationInfo.fabric);
     this.canvas?.renderAll();
   }
@@ -123,7 +127,7 @@ export class MobileTicketEditViewerComponent {
   public getCanvasCapture(): any {
     const dataURL = this.canvas?.toDataURL({
       format: 'png',
-      multiplier: 2,
+      multiplier: 1,
       enableRetinaScaling: true,
     });
     return dataURL;

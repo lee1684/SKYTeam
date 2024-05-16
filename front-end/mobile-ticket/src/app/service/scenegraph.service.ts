@@ -25,7 +25,7 @@ export class ScenegraphService {
     private _apiExecutorService: ApiExecutorService,
     private _ssalonConfigService: SsalonConfigService
   ) {}
-  public initThree(): void {
+  public initThree(moimId: string): void {
     const width = this.nativeElement!.clientWidth;
     const height = this.nativeElement!.clientHeight;
 
@@ -52,7 +52,7 @@ export class ScenegraphService {
     /** create ArcballControl */
     this.createArcballControls();
     this.mobileTicket = new MobileTicket(this._apiExecutorService, this);
-    this.mobileTicket!.initMobileTicket();
+    this.mobileTicket!.initMobileTicket(moimId);
     startAnimation(this);
   }
 

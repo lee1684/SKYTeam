@@ -43,7 +43,6 @@ export class SimpleInputComponent {
   }
   public onChangeInput(event: any): void {
     this.onChangeEvent.emit(this.textDiv?.nativeElement.value);
-    console.log(this.textDiv?.nativeElement.value);
   }
   public onClickCheckbox(event: any): void {
     this.isChecked = event.target.checked;

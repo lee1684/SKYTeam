@@ -60,7 +60,7 @@ export class ButtonElementsService {
   /** 첫번째 화면 */
   public genderSelectionButtons = [
     {
-      selected: true,
+      selected: false,
       value: 0,
       label: '남자',
     },
@@ -69,7 +69,7 @@ export class ButtonElementsService {
   ];
   /** 두번째 화면 */
   public locationSelectionButtons: NewButtonElement[] = [
-    { selected: true, value: 0, label: '서울특별시' },
+    { selected: false, value: 0, label: '서울특별시' },
     { selected: false, value: 1, label: '경기도' },
     { selected: false, value: 2, label: '강원도' },
     { selected: false, value: 3, label: '충청북도' },
@@ -83,7 +83,7 @@ export class ButtonElementsService {
   /** 세번째 화면 */
   public interestSelectionButtons = [
     {
-      selected: true,
+      selected: false,
       value: 0,
       label: '운동',
       imgSrc: 'assets/interest-icons/excersize.png',
@@ -103,7 +103,7 @@ export class ButtonElementsService {
     {
       selected: false,
       value: 3,
-      label: '음식',
+      label: '요리',
       imgSrc: 'assets/interest-icons/food.png',
     },
     {

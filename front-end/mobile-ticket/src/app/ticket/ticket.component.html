@@ -7,7 +7,7 @@
   </div>
 
   <div [style.height]="'100%'">
-    <app-mobile-ticket-viewer></app-mobile-ticket-viewer>
+    <app-mobile-ticket-viewer [moimId]="this.moimId"></app-mobile-ticket-viewer>
   </div>
 
 </div>
@@ -16,11 +16,11 @@
 <div class="container" *ngIf="this.mode === this.mobileTicketViewMode.APPEDITVIEW" #appEditView>
   <div [style.height]="'100%'" [style.width]="'100%'" [style.position]="'absolute'" [style.top]="'60px'"
     [style.left]="'0px'">
-    <app-mobile-ticket-edit-viewer #mobileTicketEditViewer
+    <app-mobile-ticket-edit-viewer [moimId]="this.moimId" #mobileTicketEditViewer
       (onClickText)="this.openTextEditor($event)"></app-mobile-ticket-edit-viewer>
   </div>
-  <app-mobile-ticket-editor #mobileTicketEditor [style.position]="'absolute'" [style.top]="'0px'" [style.left]="'0px'"
-    [style.width]="'100%'" [style.height]="
+  <app-mobile-ticket-editor [moimId]="this.moimId" #mobileTicketEditor [style.position]="'absolute'" [style.top]="'0px'"
+    [style.left]="'0px'" [style.width]="'100%'" [style.height]="
       this.editMode === this.mobileTicketEditMode.NONE ? '60px' : '100%'
     " (onChangeViewer)="this.changeEditMode($event)" (onClickPreview)="this.onClickPreviewButton()"
     (onObjectEditEnded)="this.applyEdit($event)"
@@ -30,7 +30,7 @@
 <!-- WEBVIEW: 웹에서 보는 화면의 경우 -->
 <div class="container" *ngIf="this.mode === this.mobileTicketViewMode.WEBVIEW" #webView>
   <div [style.height]="'100%'">
-    <app-mobile-ticket-viewer></app-mobile-ticket-viewer>
+    <app-mobile-ticket-viewer [moimId]="this.moimId"></app-mobile-ticket-viewer>
   </div>
   <div>
     <app-simple-button [buttonElement]="this.joinButtonElement"></app-simple-button>

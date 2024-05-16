@@ -8,6 +8,10 @@
     position: relative;
 }
 
+.container::-webkit-scrollbar {
+    display: none;
+}
+
 #progress-bar {
     width: 350px;
     height: 10px;

@@ -8,6 +8,10 @@
     position: relative;
 }
 
+.container::-webkit-scrollbar {
+    display: none;
+}
+
 #tab-container {
     margin-top: 24px;
     height: 100%;
@@ -20,4 +24,16 @@
 
 #tab-container::-webkit-scrollbar {
     display: none;
+}
+
+.image-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.deco-container {
+    position: absolute;
+    left: 0px;
+    top: 0px;
 }

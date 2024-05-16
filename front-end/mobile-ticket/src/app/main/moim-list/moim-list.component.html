@@ -4,8 +4,8 @@
         (onClickToggleButtonEvent)="this.onClickCategoryButton($event)"></app-simple-toggle>
 </div>
 <div id="ticket-container" #ticketContainer>
-    <ng-container *ngFor="let categoryElement of this.buttonElementsService.categorySelectionButtons">
-        <app-image-row-container [tickets]="this.ticketThumbnails" [isTicketContainer]="true"
+    <ng-container *ngFor="let categoryElement of this.buttonElementsService.categorySelectionButtons; index as i">
+        <app-image-row-container [tickets]="this.ticketThumbnails[i]" [isTicketContainer]="true"
             [label]="categoryElement.label" (onClickImageEvent)="this.onClickTicket($event)"></app-image-row-container>
     </ng-container>
 </div>

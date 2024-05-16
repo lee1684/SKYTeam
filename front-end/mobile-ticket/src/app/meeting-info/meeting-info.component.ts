@@ -49,6 +49,7 @@ export class MeetingInfoComponent {
 
   public moimId: string = '';
   public moimInfo: any = {};
+  public ticketInfo: any = {};
   public joined: boolean = false;
   public meetingInfoTabEnum = MeetingInfoTabEnum;
   public tabs: NewButtonElement[] = [];
@@ -69,6 +70,8 @@ export class MeetingInfoComponent {
 
   public async ngOnInit() {
     this.moimInfo = await this._apiExecutorService.getMoimInfo(this.moimId);
+    this.ticketInfo = await this._apiExecutorService.getTicket(this.moimId);
+    console.log(this.ticketInfo);
     this.tabs = await this.getTabs();
     this.nowTab = this.tabs.find((tab) => tab.selected)!.value;
     if (this.isParticipant) {
@@ -166,7 +169,19 @@ export class MeetingInfoComponent {
     });
   }
 
-  public onClickJoinButton() {
-    this._apiExecutorService.joinMoim(this.moimId);
+  public async onClickJoinButton() {
+    if (this.buttonElementsService.joinButtonElements[0].selected) {
+      await this._apiExecutorService.joinMoim(this.moimId);
+    }
+  }
+
+  public getThumbSrc(moimId: string): string {
+    return (
+      'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/Thumbnails/' +
+      moimId +
+      '/Thumb-' +
+      moimId +
+      '.png'
+    );
   }
 }
