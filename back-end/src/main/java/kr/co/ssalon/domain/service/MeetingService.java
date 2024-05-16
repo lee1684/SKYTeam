@@ -53,6 +53,7 @@ public class MeetingService {
 
         // 모임 참가 생성 및 나의 가입된 모임에 추가
         MemberMeeting memberMeeting = MemberMeeting.createMemberMeeting(currentUser, meeting);
+        memberMeeting.changeAttendanceTrue();
         memberMeetingRepository.save(memberMeeting);
         Meeting savedMeeting = meetingRepository.save(meeting);
 
