@@ -10,10 +10,7 @@ import kr.co.ssalon.domain.dto.MemberDomainDTO;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.service.MemberService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
-import kr.co.ssalon.web.dto.JsonResult;
-import kr.co.ssalon.web.dto.MeetingListSearchDTO;
-import kr.co.ssalon.web.dto.MeetingOutDTO;
-import kr.co.ssalon.web.dto.MemberSignDTO;
+import kr.co.ssalon.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
@@ -44,6 +41,19 @@ public class UserController {
         Member currentUser = memberService.signup(username, additionalInfo);
         MemberSignDTO memberSignDTO = new MemberSignDTO(currentUser);
         return new JsonResult<>(memberSignDTO).getData();
+    }
+
+    @Operation(summary = "회원가입 여부 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원가입 여부 조회 성공"),
+    })
+    @GetMapping("/api/users/me/signup-verify")
+    public MemberSignupVerificationDTO verifySignup(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) throws BadRequestException {
+        String username = customOAuth2Member.getUsername();
+
+        Member currentUser = memberService.findMember(username);
+        Boolean isRegistered = currentUser.getNickname() != null;
+        return new MemberSignupVerificationDTO(isRegistered);
     }
 
     @Operation(summary = "회원 정보 조회")
