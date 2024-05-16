@@ -3,7 +3,9 @@ package kr.co.ssalon.domain.service;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Ticket;
+import kr.co.ssalon.domain.repository.MeetingRepository;
 import kr.co.ssalon.domain.repository.TicketRepository;
 import kr.co.ssalon.web.dto.TicketEditResponseDTO;
 import kr.co.ssalon.web.dto.TicketImageResponseDTO;
@@ -23,7 +25,10 @@ import java.util.*;
 @RequiredArgsConstructor
 public class TicketService {
 
+    @Autowired
     private final TicketRepository ticketRepository;
+    @Autowired
+    private final MeetingRepository meetingRepository;
 
     @Value("${spring.cloud.aws.s3.endpoint}")
     private String AWS_S3_ASSET_URI;
@@ -155,6 +160,12 @@ public class TicketService {
 
         imageSrcMap.put(oldThumbURI, newThumbURI);
         topLevelObject.addProperty("thumbnailUrl", AWS_S3_ASSET_URI + newThumbURI);
+
+        // Background Color 변경 작업
+        String backColor = topLevelObject.get("backgroundColor").getAsString();
+        Meeting meeting = meetingRepository.findById(Long.valueOf(toMoimId)).get();
+        meeting.changeBackgroundColor(backColor);
+        meetingRepository.save(meeting);
 
 //        JsonObject fabricObject = topLevelObject.get("fabric").getAsJsonObject();
 //        JsonArray objectsArray = fabricObject.get("objects").getAsJsonArray();
