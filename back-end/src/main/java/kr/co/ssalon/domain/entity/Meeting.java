@@ -84,6 +84,10 @@ public class Meeting {
 
     public void changeIsFinished() { this.isFinished = true; }
 
+    public void changeBackgroundColor(String backgroundColor) {
+        this.backgroundColor = backgroundColor != null ? backgroundColor : this.backgroundColor;
+    }
+
 
     public void addMeetingPictureUrls(List<String> meetingPictureUrls) {
         for (String meetingPictureUrl : meetingPictureUrls) {
