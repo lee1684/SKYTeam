@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, Input } from '@angular/core';
 import { ScenegraphService } from '../../service/scenegraph.service';
 import { NgIf } from '@angular/common';
 
@@ -12,6 +12,8 @@ import { NgIf } from '@angular/common';
 export class MobileTicketViewerComponent {
   @ViewChild('rendererContainer', { static: false })
   rendererContainer: ElementRef | null = null;
+
+  @Input() moimId: string = '';
   public majorFace: string = 'front';
   public isEditing: boolean = false;
   constructor(private _sceneGraphService: ScenegraphService) {}
@@ -19,7 +21,7 @@ export class MobileTicketViewerComponent {
   public ngAfterViewInit(): void {
     this._sceneGraphService.nativeElement =
       this.rendererContainer!.nativeElement;
-    this._sceneGraphService.initThree();
+    this._sceneGraphService.initThree(this.moimId);
   }
 
   public ngOnDestroy(): void {

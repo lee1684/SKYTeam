@@ -29,10 +29,10 @@ export class MobileTicket {
   ) {}
 
   /** get front, back decoration info */
-  public async initMobileTicket(): Promise<any> {
+  public async initMobileTicket(moimId: string): Promise<any> {
     /** 앞의 정보가 있다면 받아오기(앞면 정보는 항상 있을듯) */
-    this.frontDecorationInfo = await this._apiExecutorService.getTicket();
-    this.backDecorationinfo = await this._apiExecutorService.getTicket();
+    this.frontDecorationInfo = await this._apiExecutorService.getTicket(moimId);
+    this.backDecorationinfo = await this._apiExecutorService.getTicket(moimId);
     this.loadMaterial();
   }
 

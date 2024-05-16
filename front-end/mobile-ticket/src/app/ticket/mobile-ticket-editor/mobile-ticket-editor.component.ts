@@ -20,6 +20,7 @@ import {
   Output,
   EventEmitter,
   Component,
+  Input,
 } from '@angular/core';
 import { Canvas, FabricImage, FabricText, Path } from 'fabric';
 
@@ -79,6 +80,8 @@ export class MobileTicketEditorComponent {
   drawCanvas: ElementRef | null = null;
   @ViewChild('selectedPhotoContainer', { static: false })
   selectedPhotoContainer: ElementRef | null = null;
+
+  @Input() moimId: string = '';
 
   @Output() public readonly onChangeViewer = new EventEmitter();
   @Output() public readonly onObjectEditEnded = new EventEmitter();
@@ -254,7 +257,7 @@ export class MobileTicketEditorComponent {
    * fabric canvas를 건드는 것은 아니기 때문.
    */
   public async loadDecorationInfo() {
-    let decorationInfo = await this._apiExecutorService.getTicket();
+    let decorationInfo = await this._apiExecutorService.getTicket(this.moimId);
     this.backgroundColor = this.ssalonColor.getSsalonColorObjectByColor(
       decorationInfo.backgroundColor
     );
@@ -330,22 +333,17 @@ export class MobileTicketEditorComponent {
   }
 
   public getStickers() {
-    let array = [
-      'https://dokcohci6rkid.cloudfront.net/sticker/image+1.png?v=0',
-      'https://dokcohci6rkid.cloudfront.net/sticker/image+2.png?v=0',
-      'https://dokcohci6rkid.cloudfront.net/sticker/image+3.png?v=0',
-      'https://dokcohci6rkid.cloudfront.net/sticker/image+4.png?v=0',
-      'https://dokcohci6rkid.cloudfront.net/sticker/image+5.png?v=0',
-      'https://dokcohci6rkid.cloudfront.net/sticker/image+6.png?v=0',
-      'https://dokcohci6rkid.cloudfront.net/sticker/image+8.png?v=0',
-    ];
-    array.forEach((url, index) => {
+    let number = 50;
+    for (let i = 0; i < number; i++) {
       this.stickers.push({
-        imgSrc: url + '?timestamp=' + new Date().getTime(),
-        label: `${index}`,
-        value: index,
+        imgSrc:
+          'https://dokcohci6rkid.cloudfront.net/sticker/ssalon_sticker_' +
+          i +
+          '.png',
+        label: `${i}`,
+        value: i,
       });
-    });
+    }
   }
 
   public getStickerArray(): any[][] {

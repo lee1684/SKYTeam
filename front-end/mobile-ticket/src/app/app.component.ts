@@ -24,13 +24,4 @@ export class AppComponent {
     private _route: ActivatedRoute,
     private _ssalonConfigService: SsalonConfigService
   ) {}
-  public ngOnInit(): void {
-    const resolvedData = this._route.snapshot.data['data'];
-    this._ssalonConfigService.MOIM_ID = resolvedData.moimId;
-    this._ssalonConfigService.VIEW_TYPE = resolvedData.viewType;
-    this._ssalonConfigService.FACE_TYPE = resolvedData.faceType;
-  }
-  public ngAfterViewInit(): void {
-    console.log(this._ssalonConfigService);
-  }
 }

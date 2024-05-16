@@ -109,13 +109,14 @@ export class TicketComponent {
     private _sceneGraphService: ScenegraphService,
     private _route: ActivatedRoute,
     private _location: Location
-  ) {
+  ) {}
+  public ngOnInit(): void {
     this._route.queryParams.subscribe((params) => {
       this.moimId = params['moimId'];
       this.viewType = params['viewType'];
     });
+    console.log(this.moimId, this.viewType);
   }
-  public ngOnInit(): void {}
   public async ngAfterViewInit() {
     this.setFirstPage();
   }
@@ -124,14 +125,14 @@ export class TicketComponent {
   }
 
   public setFirstPage() {
-    if (this._ssalonConfigService.VIEW_TYPE === 'edit') {
+    if (this.viewType === 'edit') {
       this.changeViewMode(MobileTicketViewMode.APPEDITVIEW);
-    } else if (this._ssalonConfigService.VIEW_TYPE === 'view') {
+    } else if (this.viewType === 'view') {
       this.changeViewMode(MobileTicketViewMode.APPVIEW);
-    } else if (this._ssalonConfigService.VIEW_TYPE === 'qrcheck') {
+    } else if (this.viewType === 'qrcheck') {
       // 만약에 본인이 개최자라면
       this.changeViewMode(MobileTicketViewMode.QRCHECKVIEW);
-    } else if (this._ssalonConfigService.VIEW_TYPE === 'qrshow') {
+    } else if (this.viewType === 'qrshow') {
       // 만약에 본인이 참가자라면
       this.changeViewMode(MobileTicketViewMode.QRSHOWVIEW);
     } else {
@@ -188,7 +189,7 @@ export class TicketComponent {
           if (code) {
             try {
               let joinUserInfo: User = await this._apiExecutorService.checkQR(
-                this._ssalonConfigService.MOIM_ID,
+                this.moimId,
                 code.data
               );
               this.checkStatus = {
@@ -254,13 +255,15 @@ export class TicketComponent {
 
   public async changeViewMode(mode: MobileTicketViewMode) {
     if (mode === MobileTicketViewMode.APPVIEW) {
-      this.updateServer();
+      if (this.viewType !== 'view') {
+        this.updateServer();
+      }
     } else if (mode === MobileTicketViewMode.QRSHOWVIEW) {
       await this.setQrCodeImgSrc();
       this._sceneGraphService.mobileTicketAutoRotate = true;
     } else if (mode === MobileTicketViewMode.QRCHECKVIEW) {
       let userInfos = await this._apiExecutorService.getJoiningUsers(
-        this._ssalonConfigService.MOIM_ID
+        this.moimId
       );
       userInfos.forEach((userInfo: any, index: number) => {
         this.joiningUsers.push({
@@ -302,7 +305,7 @@ export class TicketComponent {
 
   public async setQrCodeImgSrc() {
     let a = qrcode(0, 'L');
-    a.addData(await this._apiExecutorService.getBarcode());
+    a.addData(await this._apiExecutorService.getBarcode(this.moimId));
     //a.addData('https://www.naver.com');
     a.make();
     this.qrCodeSrc = a.createDataURL(4, 0);
@@ -336,7 +339,7 @@ export class TicketComponent {
       body.append('files', dataURItoBlob(imageDataURL), 'image.png');
       console.log(dataURItoBlob(imageDataURL));
       /* 서버에 저장 API 연결해야함. */
-      await this._apiExecutorService.editTicket(body);
+      await this._apiExecutorService.editTicket(this.moimId, body);
     }
   }
 

@@ -23,16 +23,27 @@ export class MoimListComponent {
   @ViewChild('ticketContainer')
   ticketContainer: ElementRef<HTMLDivElement> | null = null;
 
-  public ticketThumbnails: Ticket[] = [];
+  public ticketThumbnails: Ticket[][] = [];
   constructor(
     private _apiExecutorService: ApiExecutorService,
     private _router: Router,
     public buttonElementsService: ButtonElementsService
   ) {}
   public async ngOnInit() {
+    /** 전체 */
     let tickets = await this._apiExecutorService.getMoims();
-    this.ticketThumbnails = tickets.content;
-    console.log(this.ticketThumbnails);
+    this.ticketThumbnails.push(tickets.content);
+
+    for (
+      let i = 0;
+      i < this.buttonElementsService.interestSelectionButtons.length;
+      i++
+    ) {
+      let tickets = await this._apiExecutorService.getMoims(
+        this.buttonElementsService.interestSelectionButtons[i].label
+      );
+      this.ticketThumbnails.push(tickets.content);
+    }
   }
   public onClickCategoryButton(value: number): void {
     this.ticketContainer!.nativeElement.scrollTo({

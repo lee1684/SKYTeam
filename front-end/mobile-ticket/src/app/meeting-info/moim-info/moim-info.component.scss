@@ -7,3 +7,7 @@
     width: 100%;
     position: relative;
 }
+
+.container::-webkit-scrollbar {
+    display: none;
+}

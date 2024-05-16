@@ -28,15 +28,16 @@ export class QrShowComponent {
     public sanitizer: DomSanitizer
   ) {}
   public async ngOnInit() {
-    console.log(this.moimId);
-    let url = `http://localhost:3000/web/ticket?moimId=${this.moimId}&viewType=view`;
+    //let url = `http://localhost:3000/web/ticket?moimId=${this.moimId}&viewType=view`;
+    let url = `https://ssalon.co.kr/web/ticket?moimId=${this.moimId}&viewType=view`;
+    //let url = `http://localhost:8080/web/ticket?moimId=${this.moimId}&viewType=view`;
     this.ticketViewerSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     await this.setQrCodeImgSrc();
     this._sceneGraphService.mobileTicketAutoRotate = true;
   }
   public async setQrCodeImgSrc() {
     let a = qrcode(0, 'L');
-    a.addData(await this._apiExecutorService.getBarcode());
+    a.addData(await this._apiExecutorService.getBarcode(this.moimId));
     //a.addData('https://www.naver.com');
     a.make();
     this.qrCodeSrc = a.createDataURL(5, 0);

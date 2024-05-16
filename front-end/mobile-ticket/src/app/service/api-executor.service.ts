@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 import { SsalonConfigService } from './ssalon-config.service';
 import { Injectable } from '@angular/core';
+import { RegisterUserInfo } from '../onboarding/onboarding.component';
 
 export const setToken = function (
   token: string,
@@ -16,14 +17,10 @@ export class ApiExecutorService {
   public apiExecutor: AxiosInstance | null = null;
   public apiExecutorJson: AxiosInstance | null = null;
   public apiURL: string = 'https://ssalon.co.kr/api';
-  public tokens = {
-    access:
-      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTU3ODg1MjgsImV4cCI6MTcxNTg3NDkyOH0.yXGQSZ1giOFU2nRtvKKaaV_Dul-BB85aISPccCqk9Zw',
-    refresh:
-      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6InJlZnJlc2giLCJ1c2VybmFtZSI6Im5hdmVyIGx6YVdfaFJqa3NZM2V6NTVLSXJKV3RPZjJNak4tRmcySW1BeUlwTzhTZXMiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzE1NTkxOTQ5LCJleHAiOjE3MTU2NzgzNDl9.BbsDE1762RDKxKmFGOyry46-wpkrcVv1SkYjBAy553U',
-  };
-  public _token: string = this.tokens.access;
-  public refreshToken: string = this.tokens.refresh;
+  //public apiURL: string = 'http://localhost:8080/api';
+  public tokens = {};
+  private _token: string = '';
+  public refreshToken: string = '';
 
   constructor(private _ssalonConfigService: SsalonConfigService) {
     this.initApiExecutor();
@@ -56,11 +53,9 @@ export class ApiExecutorService {
     */
   }
 
-  public async getTicket() {
+  public async getTicket(moimId: string) {
     try {
-      let response = await this.apiExecutor?.get(
-        `/tickets/${this._ssalonConfigService.MOIM_ID}`
-      );
+      let response = await this.apiExecutor?.get(`/tickets/${moimId}`);
       return response!.data;
     } catch {
       /** dummy data */
@@ -69,12 +64,9 @@ export class ApiExecutorService {
     }
   }
 
-  public async editTicket(body: FormData) {
+  public async editTicket(moimId: string, body: FormData) {
     try {
-      let response = await this.apiExecutor?.put(
-        `/tickets/${this._ssalonConfigService.MOIM_ID}`,
-        body
-      );
+      let response = await this.apiExecutor?.put(`/tickets/${moimId}`, body);
       return response!.data;
     } catch (error) {
       console.log(error);
@@ -99,11 +91,9 @@ export class ApiExecutorService {
 
   public async editDiary(diaryId: string) {}
 
-  public async getBarcode() {
+  public async getBarcode(moimId: string) {
     try {
-      let response = await this.apiExecutorJson?.get(
-        `/tickets/${this._ssalonConfigService.MOIM_ID}/link`
-      );
+      let response = await this.apiExecutorJson?.get(`/tickets/${moimId}/link`);
       return response!.data;
     } catch (error) {
       return 'asdfo7a809sd7fwae9089iafa';
@@ -150,9 +140,11 @@ export class ApiExecutorService {
     }
   }
 
-  public async getMoims() {
+  public async getMoims(params: string = '') {
     try {
-      let response = await this.apiExecutorJson?.get(`/moims`);
+      let url = params === '' ? 'moims' : `moims?category=${params}`;
+      console.log(url);
+      let response = await this.apiExecutorJson?.get(url);
       return response!.data;
     } catch (e) {
       console.log(e);
@@ -197,9 +189,27 @@ export class ApiExecutorService {
     }
   }
 
+  public async getIsRegister() {
+    try {
+      let response = await this.apiExecutorJson?.get(`/users/me/signup-verify`);
+      return response!.data.isRegistered;
+    } catch (e) {
+      return false;
+    }
+  }
+
   public async createMeeting(body: any) {
     try {
       let response = await this.apiExecutorJson?.post(`/moims`, body);
+      return response!.data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  public async registerUser(body: RegisterUserInfo) {
+    try {
+      let response = await this.apiExecutorJson?.post('/auth/signup', body);
       return response!.data;
     } catch (e) {
       console.log(e);

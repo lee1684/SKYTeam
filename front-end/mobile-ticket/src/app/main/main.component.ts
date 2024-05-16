@@ -53,9 +53,7 @@ export class MainComponent {
     private _router: Router,
     public thumbnailMakerService: ThumbnailMakerService
   ) {}
-  public ngOnInit(): void {
-    //document.getElementById('a')!.innerHTML =this.thumbnailMakerService.getThumbnail('#0090f2', 1, '1');
-  }
+  public ngOnInit(): void {}
 
   public onClickNavigatorButton(value: MainTabEnum): void {
     this.nowTab = value;

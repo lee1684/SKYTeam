@@ -9,7 +9,14 @@
             <app-qr-show [moimId]="this.moimId"></app-qr-show>
         </div>
         <div *ngIf="this.nowTab === this.meetingInfoTabEnum.TICKET">
-            <img class="image-container" src="assets/ticket.png" [height]="550" (click)="this.onClickTicket()" />
+            <div class="image-container" (click)="this.onClickTicket()">
+                <svg width="321" height="550" viewBox="0 0 321 550" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M0 9.99999C0 4.47714 4.47715 0 10 0H310.833C316.356 0 320.833 4.47715 320.833 10V385.015C306.07 385.499 294.25 397.619 294.25 412.5C294.25 427.381 306.07 439.501 320.833 439.985V540C320.833 545.523 316.356 550 310.833 550H10C4.47717 550 0 545.523 0 540V440C15.1878 440 27.5 427.688 27.5 412.5C27.5 397.312 15.1878 385 0 385V9.99999Z"
+                        [attr.fill]="this.ticketInfo.backgroundColor" />
+                </svg>
+                <img class="deco-container" [src]="this.getThumbSrc(this.moimId)" height="550" />
+            </div>
         </div>
         <div *ngIf="this.nowTab === this.meetingInfoTabEnum.INFO">
             <app-moim-info [moimId]="this.moimId" [moimInfo]="this.moimInfo"></app-moim-info>
