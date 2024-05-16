@@ -19,7 +19,6 @@ public class MeetingInfoDTO {
     private String category;
     private Integer payment;
     private String creator;
-    private Long ticketId;
     private List<MemberSignDTO> participants;
     private List<String> meetingPictureUrls;
     private String title;
@@ -28,13 +27,14 @@ public class MeetingInfoDTO {
     private Integer capacity;
     private LocalDateTime meetingDate;
     private Boolean isSharable;
+    private String backgroundColor;
 
     public MeetingInfoDTO(Meeting meeting) {
         this.id = meeting.getId();
         this.category = meeting.getCategory().getName();
-        this.payment = meeting.getPayment() == null ? 0 : meeting.getPayment().getAmount();
+        this.payment = meeting.getPayment();
+        this.backgroundColor = meeting.getBackgroundColor();
         this.creator = meeting.getCreator().getNickname();
-        this.ticketId = meeting.getTicket() == null ? null : meeting.getTicket().getId();
         this.participants = meeting.getParticipants().stream().map(memberMeeting -> new MemberSignDTO(memberMeeting.getMember())).collect(Collectors.toList());
         this.meetingPictureUrls = meeting.getMeetingPictureUrls();
         this.title = meeting.getTitle();
