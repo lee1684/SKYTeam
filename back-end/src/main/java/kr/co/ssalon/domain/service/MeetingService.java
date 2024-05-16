@@ -3,7 +3,6 @@ package kr.co.ssalon.domain.service;
 import kr.co.ssalon.domain.dto.MeetingDomainDTO;
 import kr.co.ssalon.domain.entity.*;
 import kr.co.ssalon.domain.repository.*;
-import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import kr.co.ssalon.web.dto.ParticipantDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,8 +27,6 @@ public class MeetingService {
     private final TicketService ticketService;
     private final CategoryRepository categoryRepository;
     private final MeetingOutRepository meetingOutRepository;
-    private final PaymentRepository paymentRepository;
-    private final MemberService memberService;
 
     // 모임 개설
     @Transactional
@@ -40,29 +36,20 @@ public class MeetingService {
         Member currentUser = findMember(username);
         // 카테고리 찾기
         Category category = findCategory(meetingDomainDTO.getCategory());
-        // 참가비 여부 확인
-        Payment payment = null;
-        if (meetingDomainDTO.getPayment() > 0) {
-            payment = Payment.createPayment(currentUser, meetingDomainDTO.getPayment());
-        }
+
         // 모임 생성 { 카테고리, 회원, 모임 이미지, 모임 제목, 모임 설명, 모임 장소, 모임 수용인원, 모임 날짜, 공유 여부 }
         Meeting meeting = Meeting.createMeeting(
                 category,
-                payment,
                 currentUser,
                 meetingDomainDTO.getMeetingPictureUrls(),
                 meetingDomainDTO.getTitle(),
                 meetingDomainDTO.getDescription(),
                 meetingDomainDTO.getLocation(),
                 meetingDomainDTO.getCapacity(),
+                meetingDomainDTO.getPayment(),
                 meetingDomainDTO.getMeetingDate(),
                 meetingDomainDTO.getIsSharable()
         );
-
-        // Payment 객체 저장
-        if (payment != null) {
-            paymentRepository.save(payment);
-        }
 
         // 모임 참가 생성 및 나의 가입된 모임에 추가
         MemberMeeting memberMeeting = MemberMeeting.createMemberMeeting(currentUser, meeting);

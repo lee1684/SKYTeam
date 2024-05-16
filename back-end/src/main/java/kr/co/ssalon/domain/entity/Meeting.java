@@ -26,10 +26,6 @@ public class Meeting {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_id")
-    private Payment payment;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id")
     private Member creator;
@@ -50,6 +46,7 @@ public class Meeting {
     private String description;
     private String location;
     private Integer capacity;
+    private Integer payment;
     private LocalDateTime meetingDate;
 
     private Boolean isSharable;
@@ -116,10 +113,6 @@ public class Meeting {
         this.category = category;
     }
 
-    public void changePayment(Payment payment) {
-        this.payment = payment;
-    }
-
     public void addParticipants(MemberMeeting memberMeeting) throws BadRequestException {
         if(capacity == getParticipants().size()){
             throw new BadRequestException("인원이 다 찼습니다.");
@@ -129,18 +122,19 @@ public class Meeting {
 
     public static Meeting createMeeting(
             Category category,
-            Payment payment,
             Member creator,
             List<String> meetingPictureUrls,
             String title,
             String description,
             String location,
             Integer capacity,
+            Integer payment,
             LocalDateTime meetingDate,
             Boolean isSharable
     ) {
         Meeting meeting = Meeting.builder()
                 .title(title)
+                .payment(payment)
                 .description(description)
                 .location(location)
                 .capacity(capacity)
@@ -153,7 +147,6 @@ public class Meeting {
         meeting.ownerMember(creator);
         meeting.addMeetingPictureUrls(meetingPictureUrls);
         meeting.changeCategory(category);
-        meeting.changePayment(payment);
         return meeting;
     }
 
