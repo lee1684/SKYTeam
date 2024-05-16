@@ -24,6 +24,6 @@ public class MeetingHomeSearchDTO {
         this.meetingTitle = meeting.getTitle();
         this.backgroundColor = meeting.getBackgroundColor();
         // this.ticketDTO = meeting.getTicket() == null ? null : new TicketDTO(meeting.getTicket());
-        this.ticketThumb = "https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/Thumbnails/" + this.moimId + "/Thumb-" + this.moimId + ".png";
+        this.ticketThumb = meeting.getThumbnail();
     }
 }

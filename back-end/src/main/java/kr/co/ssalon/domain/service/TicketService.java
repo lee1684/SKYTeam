@@ -147,6 +147,7 @@ public class TicketService {
 
     private JsonElement editTicketJsonSrc(String fromMoimId, String toMoimId, String jsonStr, Map<String, String> imageSrcMap) {
         // 목표 : 키 파싱 설계를 좀더 Portable 하게 수정하기
+        Meeting meeting = meetingRepository.findById(Long.valueOf(toMoimId)).get();
 
         // JSON 파일 이름 대조하여 변경 작업
         JsonElement jsonElement = JsonParser.parseString(jsonStr);
@@ -160,10 +161,10 @@ public class TicketService {
 
         imageSrcMap.put(oldThumbURI, newThumbURI);
         topLevelObject.addProperty("thumbnailUrl", AWS_S3_ASSET_URI + newThumbURI);
+        meeting.changeThumbnail(AWS_S3_ASSET_URI + newThumbURI);
 
         // Background Color 변경 작업
         String backColor = topLevelObject.get("backgroundColor").getAsString();
-        Meeting meeting = meetingRepository.findById(Long.valueOf(toMoimId)).get();
         meeting.changeBackgroundColor(backColor);
         meetingRepository.save(meeting);
 
