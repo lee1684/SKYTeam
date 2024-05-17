@@ -66,7 +66,7 @@ public class AdminMeetingController {
             String username = customOAuth2Member.getUsername();
             validationAdmin(username);
             Page<Meeting> moims = meetingService.getMoims(meetingSearchCondition, pageable);
-            Page<MeetingListSearchDTO> moimsDto = moims.map(meeting -> new MeetingListSearchDTO(meeting));
+            Page<MeetingListSearchDTO> moimsDto = moims.map(meeting -> new MeetingListSearchDTO(meeting, username));
             MeetingListSearchPageDTO meetingListSearchPageDTO = new MeetingListSearchPageDTO(moimsDto);
             return ResponseEntity.ok().body(new JsonResult<>(meetingListSearchPageDTO).getData());
         } catch (BadRequestException e) {
