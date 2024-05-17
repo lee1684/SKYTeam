@@ -71,9 +71,10 @@ public class MeetingController {
             @Content(schema = @Schema(implementation = MeetingListSearchPageDTO.class))
     })
     @GetMapping("/api/moims")
-    public ResponseEntity<MeetingListSearchPageDTO> getMoims(MeetingSearchCondition meetingSearchCondition, Pageable pageable) {
+    public ResponseEntity<MeetingListSearchPageDTO> getMoims(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, MeetingSearchCondition meetingSearchCondition, Pageable pageable) {
+        String username = customOAuth2Member.getUsername();
         Page<Meeting> moims = meetingService.getMoims(meetingSearchCondition, pageable);
-        Page<MeetingListSearchDTO> moimsDto = moims.map(meeting -> new MeetingListSearchDTO(meeting));
+        Page<MeetingListSearchDTO> moimsDto = moims.map(meeting -> new MeetingListSearchDTO(meeting, username));
         MeetingListSearchPageDTO meetingListSearchPageDTO = new MeetingListSearchPageDTO(moimsDto);
         return ResponseEntity.ok().body(new JsonResult<>(meetingListSearchPageDTO).getData());
     }
@@ -90,6 +91,7 @@ public class MeetingController {
     public ResponseEntity<?> getHomeMoims(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @Valid HomeMeetingSearchCondition homeMeetingSearchCondition) {
         try {
             List<MeetingHomeDTO> categorizedMeetings = new ArrayList<>();
+            String username = customOAuth2Member.getUsername();
 
             for (int i = 1; i <= homeMeetingSearchCondition.getCategoryLen(); i++) {
                 try {
@@ -98,7 +100,7 @@ public class MeetingController {
                             .limit(homeMeetingSearchCondition.getMeetingLen()) // 각 카테고리당 모임 최대 개수 설정
                             .collect(Collectors.toList());
                     MeetingHomeDTO meetingHomeDTO = new MeetingHomeDTO(categoryName, meetings.stream()
-                            .map(MeetingHomeSearchDTO::new)
+                            .map(meeting -> new MeetingHomeSearchDTO(meeting, username))
                             .collect(Collectors.toList()));
                     categorizedMeetings.add(meetingHomeDTO);
                 } catch (BadRequestException e) {

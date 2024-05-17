@@ -124,7 +124,7 @@ public class MemberService {
 
         // 참여한 모임 목록 조회
         List<Meeting> joinedMeetingList = currentUser.getJoinedMeetings().stream().map(MemberMeeting::getMeeting).toList();
-        List<MeetingListSearchDTO> meetingListSearchList = joinedMeetingList.stream().map(MeetingListSearchDTO::new).toList();
+        List<MeetingListSearchDTO> meetingListSearchList = joinedMeetingList.stream().map(meeting -> new MeetingListSearchDTO(meeting, username)).toList();
         return meetingListSearchList;
     }
 
@@ -135,7 +135,7 @@ public class MemberService {
         List<MeetingListSearchDTO> meetingListSearchList = currentUser.getJoinedMeetings().stream()
                 .map(MemberMeeting::getMeeting)
                 .filter(meeting -> meeting.getCreator().getId().equals(currentUser.getId()))
-                .map(MeetingListSearchDTO::new)
+                .map(meeting -> new MeetingListSearchDTO(meeting, username))
                 .collect(Collectors.toList());
 
         return meetingListSearchList;
@@ -147,7 +147,7 @@ public class MemberService {
         List<MeetingListSearchDTO> meetingListSearchList = currentUser.getJoinedMeetings().stream()
                 .map(MemberMeeting::getMeeting)
                 .filter(meeting -> !meeting.getIsFinished())
-                .map(MeetingListSearchDTO::new)
+                .map(meeting -> new MeetingListSearchDTO(meeting, username))
                 .collect(Collectors.toList());
         return meetingListSearchList;
     }
@@ -158,7 +158,7 @@ public class MemberService {
         List<MeetingListSearchDTO> meetingListSearchList = currentUser.getJoinedMeetings().stream()
                 .map(MemberMeeting::getMeeting)
                 .filter(Meeting::getIsFinished)
-                .map(MeetingListSearchDTO::new)
+                .map(meeting -> new MeetingListSearchDTO(meeting, username))
                 .collect(Collectors.toList());
         return meetingListSearchList;
     }
