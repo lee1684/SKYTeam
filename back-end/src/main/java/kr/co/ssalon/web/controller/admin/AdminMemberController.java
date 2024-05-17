@@ -33,9 +33,9 @@ public class AdminMemberController {
     private final MemberService memberService;
     private final ValidationService validationService;
 
-    @Operation(summary = "사용자 목록 조회")
-    @ApiResponse(responseCode = "200", description = "사용자 목록 조회 성공", content = {
-            @Content(schema = @Schema(implementation = Member.class))
+    @Operation(summary = "회원 목록 조회")
+    @ApiResponse(responseCode = "200", description = "회원 목록 조회 성공", content = {
+            @Content(schema = @Schema(implementation = MemberSignDTO.class))
     })
     @GetMapping("/api/admin/users")
     public List<MemberSignDTO> getUserList(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) throws BadRequestException {
@@ -45,8 +45,8 @@ public class AdminMemberController {
         return memberService.findAllMember().stream().map(MemberSignDTO::new).collect(Collectors.toList());
     }
 
-    @Operation(summary = "특정 사용자 정보 조회")
-    @ApiResponse(responseCode = "200", description = "특정 사용자 정보 조회 성공", content = {
+    @Operation(summary = "특정 회원 정보 조회")
+    @ApiResponse(responseCode = "200", description = "특정 회원 정보 조회 성공", content = {
             @Content(schema = @Schema(implementation = MemberSignDTO.class))
     })
     @GetMapping("/api/admin/users/{userId}")
@@ -62,8 +62,8 @@ public class AdminMemberController {
         }
     }
 
-    @Operation(summary = "특정 사용자 정보 수정")
-    @ApiResponse(responseCode = "200", description = "특정 사용자 정보 수정 성공", content = {
+    @Operation(summary = "특정 회원 정보 수정")
+    @ApiResponse(responseCode = "200", description = "특정 회원 정보 수정 성공", content = {
             @Content(schema = @Schema(implementation = MemberSignDTO.class))
     })
     @PatchMapping("/api/admin/users/{userId}")
@@ -79,8 +79,8 @@ public class AdminMemberController {
         }
     }
 
-    @Operation(summary = "특정 사용자 탈퇴 처리")
-    @ApiResponse(responseCode = "200", description = "특정 사용자 탈퇴 처리 성공", content = {
+    @Operation(summary = "특정 회원 탈퇴 처리")
+    @ApiResponse(responseCode = "200", description = "특정 회원 탈퇴 처리 성공", content = {
             @Content(schema = @Schema(implementation = String.class))
     })
     @DeleteMapping("/api/admin/users/{userId}")
