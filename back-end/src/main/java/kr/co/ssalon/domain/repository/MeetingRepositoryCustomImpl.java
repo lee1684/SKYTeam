@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static com.querydsl.jpa.JPAExpressions.select;
 import static kr.co.ssalon.domain.entity.QMeeting.meeting;
 import static kr.co.ssalon.domain.entity.QMember.member;
 import static kr.co.ssalon.domain.entity.QMemberMeeting.memberMeeting;
@@ -84,12 +85,16 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
         }
         if (isParticipant) {
             return meeting.id.in(
-                    JPAExpressions.select(memberMeeting.meeting.id)
+                    select(memberMeeting.meeting.id)
                             .from(memberMeeting)
                             .where(memberMeeting.member.eq(member))
             );
         } else {
-            return null;
+            return meeting.id.notIn(
+                    select(memberMeeting.meeting.id)
+                            .from(memberMeeting)
+                            .where(memberMeeting.member.eq(member))
+            );
         }
     }
 
