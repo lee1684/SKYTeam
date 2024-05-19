@@ -71,9 +71,10 @@ public class MeetingController {
             @Content(schema = @Schema(implementation = MeetingListSearchPageDTO.class))
     })
     @GetMapping("/api/moims")
-    public ResponseEntity<MeetingListSearchPageDTO> getMoims(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, MeetingSearchCondition meetingSearchCondition, Pageable pageable) {
+    public ResponseEntity<MeetingListSearchPageDTO> getMoims(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, MeetingSearchCondition meetingSearchCondition, Pageable pageable) throws BadRequestException {
         String username = customOAuth2Member.getUsername();
-        Page<Meeting> moims = meetingService.getMoims(meetingSearchCondition, pageable);
+        Member member = memberService.findMember(username);
+        Page<Meeting> moims = meetingService.getMoims(meetingSearchCondition, member, pageable);
         Page<MeetingListSearchDTO> moimsDto = moims.map(meeting -> new MeetingListSearchDTO(meeting, username));
         MeetingListSearchPageDTO meetingListSearchPageDTO = new MeetingListSearchPageDTO(moimsDto);
         return ResponseEntity.ok().body(new JsonResult<>(meetingListSearchPageDTO).getData());
@@ -86,9 +87,8 @@ public class MeetingController {
     @ApiResponse(responseCode = "200", description = "홈 화면 조회 성공", content = {
             @Content(schema = @Schema(implementation = MeetingHomeDTO.class))
     })
-    // 추후 추천 알고리즘에 따라 customAuth2Member를 보고 카테고리 순위가 결정되어야함
     @GetMapping("/api/moims/home")
-    public ResponseEntity<?> getHomeMoims(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @Valid HomeMeetingSearchCondition homeMeetingSearchCondition) {
+    public ResponseEntity<?> getHomeMoims(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, HomeMeetingSearchCondition homeMeetingSearchCondition) {
         try {
             List<MeetingHomeDTO> categorizedMeetings = new ArrayList<>();
             String username = customOAuth2Member.getUsername();
@@ -97,6 +97,12 @@ public class MeetingController {
                 try {
                     String categoryName = categoryService.findCategory(Long.valueOf(i)).getName();
                     List<Meeting> meetings = meetingRepository.findMeetingsByCategoryId(Long.valueOf(i)).stream()
+                            .filter(meeting -> {
+                                if (homeMeetingSearchCondition.getIsEnd() != null) {
+                                    return homeMeetingSearchCondition.getIsEnd().equals(meeting.getIsFinished());
+                                }
+                                return true; // isEnd 필터가 없는 경우 모든 모임 포함
+                            })
                             .limit(homeMeetingSearchCondition.getMeetingLen()) // 각 카테고리당 모임 최대 개수 설정
                             .collect(Collectors.toList());
                     MeetingHomeDTO meetingHomeDTO = new MeetingHomeDTO(categoryName, meetings.stream()

@@ -19,4 +19,6 @@ public class HomeMeetingSearchCondition {
     @Schema(description = "각 카테고리당 모임 개수")
     private Long meetingLen;
 
+    @Schema(description = "isEnd 필터링", example = "true, false")
+    private Boolean isEnd;
 }
