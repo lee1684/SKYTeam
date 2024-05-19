@@ -22,6 +22,8 @@ public class MeetingListSearchDTO {
 
     private Boolean isCreator;
 
+    private Boolean isEnd;
+
     private String backgroundColor;
     // 썸네일(증표)?
     // private TicketDTO ticketDTO;
@@ -32,6 +34,7 @@ public class MeetingListSearchDTO {
         this.categoryName = meeting.getCategory().getName();
         this.meetingTitle = meeting.getTitle();
         this.isCreator = meeting.getCreator().getUsername().equals(username);
+        this.isEnd = meeting.getIsFinished();
         this.backgroundColor = meeting.getBackgroundColor();
         // this.ticketDTO = meeting.getTicket() == null ? null : new TicketDTO(meeting.getTicket());
         // this.ticketThumb = "https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/Thumbnails/" + this.moimId + "/Thumb-" + this.moimId + ".png";

@@ -106,8 +106,8 @@ public class MeetingService {
         return member.equals(meeting.getCreator());
     }
     // 모임 목록 조회
-    public Page<Meeting> getMoims(MeetingSearchCondition meetingSearchCondition, Pageable pageable) {
-        Page<Meeting> meetings = meetingRepository.searchMoims(meetingSearchCondition, pageable);
+    public Page<Meeting> getMoims(MeetingSearchCondition meetingSearchCondition, Member member, Pageable pageable) {
+        Page<Meeting> meetings = meetingRepository.searchMoims(meetingSearchCondition, member, pageable);
         return meetings;
     }
 

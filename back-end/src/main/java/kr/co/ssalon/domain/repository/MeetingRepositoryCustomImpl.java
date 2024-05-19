@@ -4,11 +4,15 @@ import com.querydsl.core.types.NullExpression;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import kr.co.ssalon.domain.dto.MeetingOrder;
 import kr.co.ssalon.domain.entity.Meeting;
+import kr.co.ssalon.domain.entity.Member;
+import kr.co.ssalon.domain.entity.MemberMeeting;
+import kr.co.ssalon.domain.service.MeetingService;
 import kr.co.ssalon.web.dto.MeetingSearchCondition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,10 +23,13 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static kr.co.ssalon.domain.entity.QMeeting.meeting;
+import static kr.co.ssalon.domain.entity.QMember.member;
+import static kr.co.ssalon.domain.entity.QMemberMeeting.memberMeeting;
 
 @Component
 public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
 
+    MeetingService meetingService;
     EntityManager em;
     JPAQueryFactory query;
 
@@ -33,12 +40,15 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
     }
 
     @Override
-    public Page<Meeting> searchMoims(MeetingSearchCondition meetingSearchCondition, Pageable pageable) {
+    public Page<Meeting> searchMoims(MeetingSearchCondition meetingSearchCondition, Member member, Pageable pageable) {
 
         List<Meeting> content = query
                 .selectFrom(meeting)
                 .where(
-                        categoryNameEq(meetingSearchCondition.getCategory()))
+                        categoryNameEq(meetingSearchCondition.getCategory()),
+                        isEndEq(meetingSearchCondition.getIsEnd()),
+                        isParticipantEq(meetingSearchCondition.getIsParticipant(), member)
+                )
                 .orderBy(orderEq(meetingSearchCondition.getOrder()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -48,7 +58,10 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
                 .select(meeting.count())
                 .from(meeting)
                 .where(
-                        categoryNameEq(meetingSearchCondition.getCategory())
+                        categoryNameEq(meetingSearchCondition.getCategory()),
+                        isEndEq(meetingSearchCondition.getIsEnd()),
+                        isParticipantEq(meetingSearchCondition.getIsParticipant(), member)
+
                 );
         return PageableExecutionUtils.getPage(content, pageable, totalCountQuery::fetchOne);
 
@@ -59,6 +72,27 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
     private BooleanExpression categoryNameEq(String category) {
         return category != null ? meeting.category.name.eq(category) : null;
     }
+
+    // 종료 여부 필터링
+    private BooleanExpression isEndEq(Boolean isEnd) {
+        return isEnd != null ? meeting.isFinished.eq(isEnd) : null;
+    }
+
+    private BooleanExpression isParticipantEq(Boolean isParticipant, Member member) {
+        if (isParticipant == null) {
+            return null;
+        }
+        if (isParticipant) {
+            return meeting.id.in(
+                    JPAExpressions.select(memberMeeting.meeting.id)
+                            .from(memberMeeting)
+                            .where(memberMeeting.member.eq(member))
+            );
+        } else {
+            return null;
+        }
+    }
+
 
     // 정렬 필터링
     private OrderSpecifier<?> orderEq(MeetingOrder meetingOrder) {
