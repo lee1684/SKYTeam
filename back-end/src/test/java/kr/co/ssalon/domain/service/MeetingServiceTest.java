@@ -128,7 +128,7 @@ public class MeetingServiceTest {
         when(meetingRepository.save(any())).thenReturn(meeting);
 
         // 티켓 생성 --> 오류
-        when(ticketService.initTicket(meeting.getId())).thenReturn(null);
+        when(ticketService.initTicket(meeting.getId(), "N")).thenReturn(null);
         when(awsS3Service.getFileAsJsonString("json")).thenReturn("12345678");
 
         when(awsS3Service.uploadFileViaStream(meeting.getId(), "json")).thenReturn(null);
