@@ -58,12 +58,20 @@ jobs:
 
       # gradlew 파일 실행권한 설정
       - name: Grant execute permission for gradlew
-        run: chmod +x ./back-end/gradlew
+        run: |
+          cd ./back-end
+
+          ls -al
+          chmod +x ./gradlew
         shell: bash
 
       # Gradle build (Test 제외)
       - name: Build with Gradle
-        run: ./back-end/gradlew clean --stacktrace --info build
+        run: |
+          cd ./back-end
+
+          ls -al
+          ./gradlew clean --stacktrace --info build
         shell: bash
 
       # AWS 인증 (IAM 사용자 Access Key, Secret Key 활용)
