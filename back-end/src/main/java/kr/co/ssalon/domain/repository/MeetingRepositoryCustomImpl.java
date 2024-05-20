@@ -4,6 +4,8 @@ import com.querydsl.core.types.NullExpression;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.ListPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -12,6 +14,7 @@ import kr.co.ssalon.domain.dto.MeetingOrder;
 import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.MemberMeeting;
+import kr.co.ssalon.domain.entity.QMemberMeeting;
 import kr.co.ssalon.domain.service.MeetingService;
 import kr.co.ssalon.web.dto.MeetingSearchCondition;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +27,6 @@ import java.util.List;
 
 import static com.querydsl.jpa.JPAExpressions.select;
 import static kr.co.ssalon.domain.entity.QMeeting.meeting;
-import static kr.co.ssalon.domain.entity.QMember.member;
 import static kr.co.ssalon.domain.entity.QMemberMeeting.memberMeeting;
 
 @Component
@@ -43,12 +45,15 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
     @Override
     public Page<Meeting> searchMoims(MeetingSearchCondition meetingSearchCondition, String username, Pageable pageable) {
 
+        // Find member by username (assuming you have a method to do this)
+        Member member = findMemberByUsername(username);
+
         List<Meeting> content = query
                 .selectFrom(meeting)
                 .where(
                         categoryNameEq(meetingSearchCondition.getCategory()),
                         isEndEq(meetingSearchCondition.getIsEnd()),
-                        isParticipantEq(meetingSearchCondition.getIsParticipant(), username)
+                        isParticipantEq(meetingSearchCondition.getIsParticipant(), member)
                 )
                 .orderBy(orderEq(meetingSearchCondition.getOrder()))
                 .offset(pageable.getOffset())
@@ -61,7 +66,7 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
                 .where(
                         categoryNameEq(meetingSearchCondition.getCategory()),
                         isEndEq(meetingSearchCondition.getIsEnd()),
-                        isParticipantEq(meetingSearchCondition.getIsParticipant(), username)
+                        isParticipantEq(meetingSearchCondition.getIsParticipant(), member)
 
                 );
         return PageableExecutionUtils.getPage(content, pageable, totalCountQuery::fetchOne);
@@ -79,25 +84,24 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
         return isEnd != null ? meeting.isFinished.eq(isEnd) : null;
     }
 
-    private BooleanExpression isParticipantEq(Boolean isParticipant, String username) {
+    private BooleanExpression isParticipantEq(Boolean isParticipant, Member member) {
         if (isParticipant == null) {
             return null;
         }
         if (isParticipant) {
-            return meeting.id.in(
-                    select(memberMeeting.meeting.id)
+            return meeting.in(
+                    select(memberMeeting.meeting)
                             .from(memberMeeting)
-                            .where(memberMeeting.member.nickname.eq(username))
+                            .where(memberMeeting.member.eq(member))
             );
         } else {
-            return meeting.id.notIn(
-                    select(memberMeeting.meeting.id)
+            return meeting.notIn(
+                    select(memberMeeting.meeting)
                             .from(memberMeeting)
-                            .where(memberMeeting.member.nickname.eq(username))
+                            .where(memberMeeting.member.eq(member))
             );
         }
     }
-
 
     // 정렬 필터링
     private OrderSpecifier<?> orderEq(MeetingOrder meetingOrder) {
@@ -121,6 +125,14 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
                         "SELECT m FROM Meeting m WHERE m.category.id = :categoryId", Meeting.class)
                 .setParameter("categoryId", categoryId)
                 .getResultList();
+    }
+
+    private Member findMemberByUsername(String username) {
+        // Implement a method to find a Member entity by username
+        // Example:
+        return em.createQuery("SELECT m FROM Member m WHERE m.username = :username", Member.class)
+                .setParameter("username", username)
+                .getSingleResult();
     }
 
 }
