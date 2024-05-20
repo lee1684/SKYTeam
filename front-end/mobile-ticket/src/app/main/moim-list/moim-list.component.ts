@@ -1,4 +1,4 @@
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import {
   NewButtonElement,
@@ -15,7 +15,12 @@ import { ApiExecutorService } from '../../service/api-executor.service';
 @Component({
   selector: 'app-moim-list',
   standalone: true,
-  imports: [NgFor, SimpleToggleGroupComponent, ImageRowContainerComponent],
+  imports: [
+    NgIf,
+    NgFor,
+    SimpleToggleGroupComponent,
+    ImageRowContainerComponent,
+  ],
   templateUrl: './moim-list.component.html',
   styleUrl: './moim-list.component.scss',
 })
@@ -54,5 +59,14 @@ export class MoimListComponent {
     this._router.navigate(['/web/meeting-info'], {
       queryParams: { moimId: value },
     });
+  }
+  public isLoadedTickets(i: number): boolean {
+    if (this.ticketThumbnails.length > 0) {
+      if (this.ticketThumbnails[i] !== undefined) {
+        if (this.ticketThumbnails[i].length > 0) {
+          return true;
+        } else return false;
+      } else return false;
+    } else return false;
   }
 }

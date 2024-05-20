@@ -33,7 +33,7 @@ export class MeetingCategoryComponent {
     {
       selected: false,
       value: 3,
-      label: '음식',
+      label: '요리',
       imgSrc: 'assets/interest-icons/food.png',
     },
     {

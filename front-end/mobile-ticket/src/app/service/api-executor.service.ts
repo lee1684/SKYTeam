@@ -19,7 +19,8 @@ export class ApiExecutorService {
   public apiURL: string = 'https://ssalon.co.kr/api';
   //public apiURL: string = 'http://localhost:8080/api';
   public tokens = {};
-  private _token: string = '';
+  private _token: string =
+    'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTYxODMwMjEsImV4cCI6MTcxNjI2OTQyMX0.o1DD1nZjJN08Aav5OGVdRGYzdjLuXYAfRQWx0FxJ-6Q';
   public refreshToken: string = '';
 
   constructor(private _ssalonConfigService: SsalonConfigService) {
@@ -150,6 +151,10 @@ export class ApiExecutorService {
       console.log(e);
     }
   }
+
+  public async getJoinedMoims() {}
+
+  public async getCreatedMoims() {}
 
   public async joinMoim(moimId: string) {
     try {

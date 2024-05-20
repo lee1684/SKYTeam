@@ -1,2 +1,2 @@
-<app-simple-toggle [buttonElements]="this.buttonElementsService.createTicketTypeButtons"
-    [columnNum]="1"></app-simple-toggle>
+<app-simple-toggle [buttonElements]="this.buttonElementsService.createTicketTypeButtons" [columnNum]="1"
+    [multiSelection]="false" (onClickToggleButtonEvent)="this.onClickToggleButton()"></app-simple-toggle>
