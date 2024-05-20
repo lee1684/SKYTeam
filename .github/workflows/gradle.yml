@@ -85,6 +85,8 @@ jobs:
       # 빌드 결과물을 S3 버킷에 업로드
       - name: Upload to AWS S3
         run: |
+          cd ./back-end
+          
           aws deploy push \
             --application-name ${{ env.CODE_DEPLOY_APP_NAME }} \
             --ignore-hidden-files \
@@ -94,6 +96,7 @@ jobs:
       # S3 버킷에 있는 파일을 대상으로 CodeDeploy 실행
       - name: Deploy to AWS EC2 from S3
         run: |
+          cd ./back-end
           aws deploy create-deployment \
             --application-name ${{ env.CODE_DEPLOY_APP_NAME }} \
             --deployment-config-name CodeDeployDefault.AllAtOnce \
