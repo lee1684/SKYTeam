@@ -49,7 +49,7 @@ jobs:
           cd ./back-end/src/main/resources
           
           ls -al
-          touch ./back-end/application-aws.yml
+          touch ./application-aws.yml
           
           # GitHub-Actions에서 설정한 값을 application-aws.yml 파일에 쓰기
           echo "copy properties"
