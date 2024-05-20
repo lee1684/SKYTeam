@@ -82,6 +82,8 @@ public class UserController {
         return new JsonResult<>(memberSignDTO).getData();
     }
 
+    /*
+
     @Operation(summary = "참여한 모임 목록 조회")
     @ApiResponse(responseCode = "200", description = "참여한 모임 목록 조회 성공", content = {
             @Content(schema = @Schema(implementation = MeetingListSearchDTO.class))
@@ -111,6 +113,7 @@ public class UserController {
         }
     }
 
+
     @Operation(summary = "진행 중인 내가 참여한 모임 목록 조회")
     @ApiResponse(responseCode = "200", description = "진행 중인 내가 참여한 모임 목록 조회", content = {
             @Content(schema = @Schema(implementation = MeetingListSearchDTO.class))
@@ -138,6 +141,8 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    */
 
     @Operation(summary = "로그아웃")
     @ApiResponse(responseCode = "200", description = "로그아웃 성공", content = {
