@@ -49,11 +49,11 @@ jobs:
           cd ./back-end/src/main/resources
           
           ls -al
-          touch ./application-aws.yml
+          touch ./application.yml
           
           # GitHub-Actions에서 설정한 값을 application-aws.yml 파일에 쓰기
           echo "copy properties"
-          echo "${{ secrets.AWS_PROPERTIES }}" > ./application-aws.yml
+          echo "${{ secrets.AWS_PROPERTIES }}" > ./application.yml
         shell: bash
 
       # gradlew 파일 실행권한 설정
