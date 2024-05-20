@@ -63,6 +63,8 @@ public class MeetingControllerTest {
     public void 모임목록조회API() throws Exception {
         // given
 
+        String username = "test";
+
         // "운동" 카테고리 Mock 객체 생성
         Category category = mock(Category.class);
         when(category.getName()).thenReturn("운동");
@@ -94,7 +96,7 @@ public class MeetingControllerTest {
 
         // "운동", "서울특별시" 모임 Mock 객체에 대한 Page 객체 생성
         Page<Meeting> meetingsPage = new PageImpl<>(Collections.singletonList(meeting));
-        when(meetingService.getMoims(meetingSearchCondition, "test", pageable)).thenReturn(meetingsPage);
+        when(meetingService.getMoims(meetingSearchCondition, username, pageable)).thenReturn(meetingsPage);
         System.out.println(meetingsPage);
 
 

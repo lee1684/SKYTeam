@@ -46,9 +46,7 @@ public class MeetingServiceIntegrationTest {
     CategoryService categoryService;
     List<Category> categorys = new ArrayList<>();
 
-    String username = "";
-    String email = "";
-    String role = "";
+    String role = "ROLE_USER";
 
     @BeforeEach
     public void set() {
@@ -165,13 +163,10 @@ public class MeetingServiceIntegrationTest {
     }
 
     @Test
-    @WithCustomMockUser(username = "username", email = "email@email.com", role = "ROLE_USER")
+    @WithCustomMockUser(username = "test")
     public void 모임목록조회() throws Exception {
         //given
-
-        Member member = Member.createMember(username, email, role);
-        String username = member.getUsername();
-
+        String username = "test";
         String creatorName = "creator";
         memberService.register("creator", "create@test.com", role);
         for (int i = 0; i < 35; i++) {
