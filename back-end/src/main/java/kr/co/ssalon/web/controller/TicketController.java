@@ -65,8 +65,8 @@ public class TicketController {
             @Content(schema = @Schema(implementation = TicketInitResponseDTO.class))
     })
     @PostMapping("/{moimId}") // 모임 생성 요청에 의한 템플릿 기반 신규 증표 생성
-    public ResponseEntity<TicketInitResponseDTO> postFile(@PathVariable("moimId") Long moimId) {
-        return ResponseEntity.ok(ticketService.initTicket(moimId));
+    public ResponseEntity<TicketInitResponseDTO> postFile(@PathVariable("moimId") Long moimId, @RequestParam String template) {
+        return ResponseEntity.ok(ticketService.initTicket(moimId, template));
     }
 
     @Operation(summary = "모임 증표 편집 시 이미지 업로드")

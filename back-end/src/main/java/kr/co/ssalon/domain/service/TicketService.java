@@ -33,30 +33,45 @@ public class TicketService {
     @Value("${spring.cloud.aws.s3.endpoint}")
     private String AWS_S3_ASSET_URI;
     private final static String TEMPLATE_FOLDER = "Template-240424";
+    private static final String TEMPLATE_NONE = "TICKET-TEMPLATE-NONE";
+    private static final String TEMPLATE_A = "TICKET-TEMPLATE-A";
+    private static final String TEMPLATE_B = "TICKET-TEMPLATE-B";
+    private static final String TEMPLATE_C = "TICKET-TEMPLATE-C";
+    private static final String TEMPLATE_D = "TICKET-TEMPLATE-D";
+    private static final String TEMPLATE_AI = "TICKET-TEMPLATE-AI";
+
 
     @Autowired
     AwsS3Service awsS3Service;
 
     @Transactional
-    public TicketInitResponseDTO initTicket(Long moimId) {
+    public TicketInitResponseDTO initTicket(Long moimId, String template) {
         // 템플릿 복제 후 해당 경로 반환
         // JSON 복제 후, 해당 JSON 내 파일명에 맞게 나머지 복제 필요
         // 따라서, JSON 복제 과정에서 신규 파일명 명명 후 해당 파일명 Key-Value 형태로 넘겨줘야 할 것
+        String templateSelection = switch (template) {
+            case "A" -> TEMPLATE_A;
+            case "B" -> TEMPLATE_B;
+            case "C" -> TEMPLATE_C;
+            case "D" -> TEMPLATE_D;
+            case "AI" -> TEMPLATE_AI;
+            default -> TEMPLATE_NONE;
+        };
 
         // 먼저, JSON 복제 및 내부 파일 링크 추출 및 수정
-        String jsonStr = awsS3Service.getFileAsJsonString(TEMPLATE_FOLDER);
+        String jsonStr = awsS3Service.getFileAsJsonString(templateSelection);
 
         // JSON 내 src 구주소:신주소 기록용 Map 생성
         Map<String, String> imageSrcMap = new HashMap<>();
 
         // JSON 파싱 및 수정 작업
-        JsonElement jsonElement = editTicketJsonSrc(TEMPLATE_FOLDER, moimId.toString(), jsonStr, imageSrcMap);
+        JsonElement jsonElement = editTicketJsonSrc(templateSelection, moimId.toString(), jsonStr, imageSrcMap);
 
         // 이제 수정된 JSON 업로드 필요
         // 이후 JSON 내용과 동일하게 이미지 파일 복제 및 이름 변경 작업 진행
         // ** 추후 고려 : 중간에 실패한다면? **
         String resultJson = awsS3Service.uploadFileViaStream(moimId, jsonElement.toString());   // JSON 업로드
-        List<String> resultCopy = awsS3Service.copyFilesFromTemplate(imageSrcMap);                    // JSON 기반 정적 파일 복제
+        List<String> resultCopy = awsS3Service.copyFilesFromTemplate(imageSrcMap);              // JSON 기반 정적 파일 복제
 
         return TicketInitResponseDTO.builder()
                 .resultJsonUpload(resultJson)
