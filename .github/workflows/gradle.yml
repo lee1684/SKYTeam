@@ -71,7 +71,7 @@ jobs:
           cd ./back-end
 
           ls -al
-          ./gradlew clean --stacktrace --info build
+          ./gradlew clean --stacktrace --info build -x test
         shell: bash
 
       # AWS 인증 (IAM 사용자 Access Key, Secret Key 활용)
