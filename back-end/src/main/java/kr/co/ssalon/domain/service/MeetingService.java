@@ -58,7 +58,7 @@ public class MeetingService {
         Meeting savedMeeting = meetingRepository.save(meeting);
 
         // 티켓 초기 정보 설정
-        ticketService.initTicket(savedMeeting.getId());
+        ticketService.initTicket(savedMeeting.getId(), "N");
 
         return savedMeeting.getId();
     }
