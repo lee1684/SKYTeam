@@ -46,10 +46,10 @@ jobs:
         if: contains(github.ref, 'back-end')
         run: |
           # spring의 resources 경로로 이동
-          cd ./src/main/resources
+          cd ./back-end/src/main/resources
           
           ls -al
-          touch ./application-aws.yml
+          touch ./back-end/application-aws.yml
           
           # GitHub-Actions에서 설정한 값을 application-aws.yml 파일에 쓰기
           echo "copy properties"
@@ -58,12 +58,12 @@ jobs:
 
       # gradlew 파일 실행권한 설정
       - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew
+        run: chmod +x ./back-end/gradlew
         shell: bash
 
       # Gradle build (Test 제외)
       - name: Build with Gradle
-        run: ./gradlew clean --stacktrace --info build
+        run: ./back-end/gradlew clean --stacktrace --info build
         shell: bash
 
       # AWS 인증 (IAM 사용자 Access Key, Secret Key 활용)
