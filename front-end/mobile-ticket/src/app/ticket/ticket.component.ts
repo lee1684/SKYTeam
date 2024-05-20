@@ -16,7 +16,7 @@ import {
   SsalonConfigService,
 } from '../service/ssalon-config.service';
 import { ApiExecutorService } from '../service/api-executor.service';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { FabricImage, FabricText, Path } from 'fabric';
 import jsQR from 'jsqr';
 import qrcode from 'qrcode-generator';
@@ -101,8 +101,8 @@ export class TicketComponent {
     text: string;
   } = { checkStatus: null, color: '#006BFF', text: 'QR코드를 인식해주세요.' };
 
-  public moimId: string = '';
-  public viewType: string = '';
+  @Input() public moimId: string = '';
+  @Input() public viewType: string = '';
   constructor(
     private _apiExecutorService: ApiExecutorService,
     private _ssalonConfigService: SsalonConfigService,

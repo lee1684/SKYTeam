@@ -18,6 +18,7 @@ import { SsalonConfigService } from '../service/ssalon-config.service';
 import { QrCheckComponent } from './qr-check/qr-check.component';
 import { StatusElement } from '../ssalon-component/circle-toggle-status-group/circle-toggle-status-group.component';
 import { QrShowComponent } from './qr-show/qr-show.component';
+import { MobileTicketViewerComponent } from '../ticket/mobile-ticket-viewer/mobile-ticket-viewer.component';
 
 export enum MeetingInfoTabEnum {
   TICKET,
@@ -40,6 +41,7 @@ export enum MeetingInfoTabEnum {
     SquareButtonComponent,
     QrCheckComponent,
     QrShowComponent,
+    TicketComponent,
   ],
   templateUrl: './meeting-info.component.html',
   styleUrl: './meeting-info.component.scss',
@@ -71,7 +73,6 @@ export class MeetingInfoComponent {
   public async ngOnInit() {
     this.moimInfo = await this._apiExecutorService.getMoimInfo(this.moimId);
     this.ticketInfo = await this._apiExecutorService.getTicket(this.moimId);
-    console.log(this.ticketInfo);
     this.tabs = await this.getTabs();
     this.nowTab = this.tabs.find((tab) => tab.selected)!.value;
     if (this.isParticipant) {
@@ -172,6 +173,10 @@ export class MeetingInfoComponent {
   public async onClickJoinButton() {
     if (this.buttonElementsService.joinButtonElements[0].selected) {
       await this._apiExecutorService.joinMoim(this.moimId);
+      let currentUrl = this._router.url;
+      this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+        this._router.navigate([currentUrl]);
+      });
     }
   }
 

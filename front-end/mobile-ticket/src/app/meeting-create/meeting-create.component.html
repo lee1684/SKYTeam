@@ -3,11 +3,12 @@
         (backButtonClickEvent)="this.onClickBackButton()"></app-top-navigator>
     <div class="content-container">
         <div *ngIf="this.nowStep === createMeetingStep.INFO">
-            <app-create-meeting-info (onCreateButtonReadyEvent)="this.changeCreateTicketButtonState($event)"
+            <app-create-meeting-info (onCreateButtonReadyEvent)="this.changeCreateTicketTypeButtonState($event)"
                 [meetingInfo]="this.meetingInfo" #createMeetingInfoComponent></app-create-meeting-info>
         </div>
         <div *ngIf="this.nowStep === createMeetingStep.TICKET">
-            <app-create-ticket></app-create-ticket>
+            <app-create-ticket
+                (onClickToggleButtonEvent)="this.changeCreateTicketButtonState($event)"></app-create-ticket>
         </div>
     </div>
     <div class="bottom-button">

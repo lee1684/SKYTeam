@@ -8,7 +8,8 @@
         <div *ngIf="this.nowTab === this.meetingInfoTabEnum.QRSHOW">
             <app-qr-show [moimId]="this.moimId"></app-qr-show>
         </div>
-        <div *ngIf="this.nowTab === this.meetingInfoTabEnum.TICKET">
+        <div *ngIf="this.nowTab === this.meetingInfoTabEnum.TICKET" [style.width]="'100%'">
+            <!--
             <div class="image-container" (click)="this.onClickTicket()">
                 <svg width="321" height="550" viewBox="0 0 321 550" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd"
@@ -16,7 +17,10 @@
                         [attr.fill]="this.ticketInfo.backgroundColor" />
                 </svg>
                 <img class="deco-container" [src]="this.getThumbSrc(this.moimId)" height="550" />
+                
             </div>
+            -->
+            <app-ticket [moimId]="this.moimId" [viewType]="'view'"></app-ticket>
         </div>
         <div *ngIf="this.nowTab === this.meetingInfoTabEnum.INFO">
             <app-moim-info [moimId]="this.moimId" [moimInfo]="this.moimInfo"></app-moim-info>

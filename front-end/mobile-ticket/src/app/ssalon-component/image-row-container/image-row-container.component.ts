@@ -7,6 +7,7 @@ export interface Ticket {
   backgroundColor: string;
   moimId: number;
   categoryName: string;
+  meetingTitle: string;
 }
 @Component({
   selector: 'app-image-row-container',
@@ -26,9 +27,32 @@ export class ImageRowContainerComponent {
     { imgSrc: 'assets/heart.png', value: 0, label: 'heart', selected: false },
   ];
   @Input() tickets: Ticket[] = [];
+  @Input() modifiedTickets: Ticket[][] = [];
+  @Input() columnNum: number = -1;
+  @Input() isTicketsLoaded: Boolean = false;
   public backgroundColor: string = '#000000';
   @Output() public readonly onClickImageEvent = new EventEmitter();
   constructor() {}
+  public ngOnInit(): void {
+    console.log(this.tickets);
+    if (this.isTicketContainer) {
+      this._setLayout();
+    }
+  }
+
+  public ngAfterViewChecked(): void {}
+  private _setLayout() {
+    if (this.columnNum !== -1) {
+      let result = [];
+      for (let i = 0; i < this.tickets.length; i += this.columnNum) {
+        result.push(this.tickets.slice(i, i + this.columnNum));
+      }
+      this.modifiedTickets = result;
+    } else {
+      this.modifiedTickets = [this.tickets];
+    }
+    console.log(this.modifiedTickets);
+  }
   public onClickImage(value: number): void {
     this.onClickImageEvent.emit(value);
   }

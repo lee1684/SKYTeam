@@ -15,6 +15,12 @@ export enum CreateMeetingStep {
   INFO,
   TICKET,
 }
+
+export enum CreateTicketMode {
+  EMPTY,
+  TEMPLATE,
+  AI,
+}
 @Component({
   selector: 'app-meeting-create',
   standalone: true,
@@ -49,6 +55,7 @@ export class MeetingCreateComponent {
     isSharable: true,
   };
   public resultMeetingInfo: any = {};
+  public createTicketMode: CreateTicketMode = CreateTicketMode.EMPTY;
   constructor(
     private _apiExecutorService: ApiExecutorService,
     public buttonElementsService: ButtonElementsService,
@@ -73,8 +80,11 @@ export class MeetingCreateComponent {
       this._location.back();
     }
   }
-  public changeCreateTicketButtonState(value: boolean) {
+  public changeCreateTicketTypeButtonState(value: boolean) {
     this.buttonElementsService.nextButtons[0].selected = value;
+  }
+  public changeCreateTicketButtonState(value: boolean) {
+    this.buttonElementsService.createTicketButtons[0].selected = value;
   }
   public onClickCreateTicketButton() {
     this._router.navigate([`/web/ticket`], {
@@ -84,7 +94,6 @@ export class MeetingCreateComponent {
   public async onClickNextButton() {
     this.meetingInfo = this.createMeetingInfoComponent!.meetingInfo;
     if (this.buttonElementsService.nextButtons[0].selected) {
-      console.log(this.meetingInfo);
       this.resultMeetingInfo = await this._apiExecutorService.createMeeting(
         this.meetingInfo
       );

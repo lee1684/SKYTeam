@@ -6,6 +6,7 @@
     </div>
     <div>
         <div *ngIf="this.isTicketContainer" class="image-row-container">
+            <!--
             <ng-container *ngFor="let ticket of tickets">
                 <div class="image-container" (click)="onClickImage(ticket.moimId)">
                     <svg width="175" height="300" viewBox="0 0 175 300" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -14,6 +15,24 @@
                             [attr.fill]="ticket.backgroundColor" />
                     </svg>
                     <img class="deco-container" [src]="this.getThumbSrc(ticket.moimId)" height="300" />
+                    <div class="title-container"></div>
+                </div>
+            </ng-container>
+            -->
+            <ng-container *ngFor="let row of this.modifiedTickets">
+                <div class="image-row-container" [style.margin-bottom.px]="(this.modifiedTickets.length > 1)?16:0">
+                    <ng-container *ngFor="let ticket of row, index as i">
+                        <div class="image-container" (click)="onClickImage(ticket.moimId)">
+                            <svg width="175" height="300" viewBox="0 0 175 300" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M0 10C0 4.47716 4.47715 0 10 0H165C170.523 0 175 4.47715 175 10V210.008C166.947 210.272 160.5 216.883 160.5 225C160.5 233.117 166.947 239.728 175 239.992V290C175 295.523 170.523 300 165 300H10C4.47715 300 0 295.523 0 290V240C8.28427 240 15 233.284 15 225C15 216.716 8.28427 210 0 210V10Z"
+                                    [attr.fill]="ticket.backgroundColor" />
+                            </svg>
+                            <img class="deco-container" [src]="this.getThumbSrc(ticket.moimId)" height="300" />
+                            <div class="title-container">{{ticket.meetingTitle}}</div>
+                        </div>
+                    </ng-container>
                 </div>
             </ng-container>
         </div>
