@@ -64,9 +64,8 @@ public class AdminMeetingController {
     public ResponseEntity<MeetingListSearchPageDTO> getMoims(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, MeetingSearchCondition meetingSearchCondition, Pageable pageable) {
         try {
             String username = customOAuth2Member.getUsername();
-            Member member = memberService.findMember(username);
             validationAdmin(username);
-            Page<Meeting> moims = meetingService.getMoims(meetingSearchCondition, member, pageable);
+            Page<Meeting> moims = meetingService.getMoims(meetingSearchCondition, username, pageable);
             Page<MeetingListSearchDTO> moimsDto = moims.map(meeting -> new MeetingListSearchDTO(meeting, username));
             MeetingListSearchPageDTO meetingListSearchPageDTO = new MeetingListSearchPageDTO(moimsDto);
             return ResponseEntity.ok().body(new JsonResult<>(meetingListSearchPageDTO).getData());

@@ -41,14 +41,14 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
     }
 
     @Override
-    public Page<Meeting> searchMoims(MeetingSearchCondition meetingSearchCondition, Member member, Pageable pageable) {
+    public Page<Meeting> searchMoims(MeetingSearchCondition meetingSearchCondition, String username, Pageable pageable) {
 
         List<Meeting> content = query
                 .selectFrom(meeting)
                 .where(
                         categoryNameEq(meetingSearchCondition.getCategory()),
                         isEndEq(meetingSearchCondition.getIsEnd()),
-                        isParticipantEq(meetingSearchCondition.getIsParticipant(), member)
+                        isParticipantEq(meetingSearchCondition.getIsParticipant(), username)
                 )
                 .orderBy(orderEq(meetingSearchCondition.getOrder()))
                 .offset(pageable.getOffset())
@@ -61,7 +61,7 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
                 .where(
                         categoryNameEq(meetingSearchCondition.getCategory()),
                         isEndEq(meetingSearchCondition.getIsEnd()),
-                        isParticipantEq(meetingSearchCondition.getIsParticipant(), member)
+                        isParticipantEq(meetingSearchCondition.getIsParticipant(), username)
 
                 );
         return PageableExecutionUtils.getPage(content, pageable, totalCountQuery::fetchOne);
@@ -79,7 +79,7 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
         return isEnd != null ? meeting.isFinished.eq(isEnd) : null;
     }
 
-    private BooleanExpression isParticipantEq(Boolean isParticipant, Member member) {
+    private BooleanExpression isParticipantEq(Boolean isParticipant, String username) {
         if (isParticipant == null) {
             return null;
         }
@@ -87,13 +87,13 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
             return meeting.id.in(
                     select(memberMeeting.meeting.id)
                             .from(memberMeeting)
-                            .where(memberMeeting.member.eq(member))
+                            .where(memberMeeting.member.nickname.eq(username))
             );
         } else {
             return meeting.id.notIn(
                     select(memberMeeting.meeting.id)
                             .from(memberMeeting)
-                            .where(memberMeeting.member.eq(member))
+                            .where(memberMeeting.member.nickname.eq(username))
             );
         }
     }

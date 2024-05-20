@@ -118,6 +118,7 @@ public class MemberService {
         // 멤버 제거
         memberRepository.delete(currentUser);
     }
+    /*
 
     public List<MeetingListSearchDTO> getJoinedMeetingList(String username) throws BadRequestException {
         Member currentUser = findMember(username);
@@ -162,7 +163,7 @@ public class MemberService {
                 .collect(Collectors.toList());
         return meetingListSearchList;
     }
-
+    */
 
 
     @Transactional

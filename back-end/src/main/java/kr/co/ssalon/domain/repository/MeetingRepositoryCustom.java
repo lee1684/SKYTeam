@@ -14,7 +14,7 @@ public interface MeetingRepositoryCustom {
 
     // 모임 목록 조회
     // 모임 목록 필터 설정
-    Page<Meeting> searchMoims(MeetingSearchCondition meetingSearchCondition, Member member, Pageable pageable);
+    Page<Meeting> searchMoims(MeetingSearchCondition meetingSearchCondition, String username, Pageable pageable);
 
     List<Meeting> findMeetingsByCategoryId(Long categoryId);
 
