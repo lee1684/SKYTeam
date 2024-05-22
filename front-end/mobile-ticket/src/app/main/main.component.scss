@@ -1,6 +1,7 @@
 .container {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     overflow-y: scroll;
     height: 100%;
@@ -8,16 +9,21 @@
     position: relative;
 }
 
+.container::-webkit-scrollbar {
+    display: none;
+}
+
 #logo-container {
     display: flex;
     align-items: center;
     justify-content: left;
     margin-top: 14px;
-    width: 350px;
+    width: 95%;
 }
 
 #tab-container {
     height: calc(100% - 80px);
+    width: 95%;
     margin-top: 20px;
     overflow-y: scroll;
     position: relative;

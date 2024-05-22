@@ -75,6 +75,7 @@
 
         <!-- phtoo edit feature -->
         <div id="photo-edit-feature-container" *ngIf="this.editMode === this.mobileTicketEditMode.PHOTO">
+            <div id="upload-photo-num">{{this.uploadPhotoNum}}</div>
             <img id="selected-photo-container" #selectedPhotoContainer />
         </div>
 
@@ -87,6 +88,7 @@
                     <div class="sticker" [style.width]="'100px'" [style.height]="'150px'"
                         (click)="this.selectSticker(sticker.value)">
                         <img [src]="sticker.imgSrc" width="80px" />
+                        <div *ngIf="sticker.selected" class="selected-status"></div>
                     </div>
                 </div>
             </div>

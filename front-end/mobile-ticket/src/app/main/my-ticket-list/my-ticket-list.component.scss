@@ -1,0 +1,30 @@
+.container {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    overflow-y: scroll;
+}
+
+.container::-webkit-scrollbar {
+    display: none;
+}
+
+#tab-container {
+    position: fixed;
+    top: 50px;
+
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background-color: white;
+    z-index: 10;
+
+}
+
+.tab-content-container {
+    height: 100%;
+    width: 100%;
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+}

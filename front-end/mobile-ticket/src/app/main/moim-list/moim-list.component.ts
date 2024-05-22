@@ -55,11 +55,7 @@ export class MoimListComponent {
       top: 200,
     });
   }
-  public onClickTicket(value: number) {
-    this._router.navigate(['/web/meeting-info'], {
-      queryParams: { moimId: value },
-    });
-  }
+
   public isLoadedTickets(i: number): boolean {
     if (this.ticketThumbnails.length > 0) {
       if (this.ticketThumbnails[i] !== undefined) {

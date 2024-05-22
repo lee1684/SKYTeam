@@ -83,12 +83,21 @@ export class MeetingCreateComponent {
   public changeCreateTicketTypeButtonState(value: boolean) {
     this.buttonElementsService.nextButtons[0].selected = value;
   }
-  public changeCreateTicketButtonState(value: boolean) {
-    this.buttonElementsService.createTicketButtons[0].selected = value;
+  public changeCreateTicketButtonState(value: any) {
+    if (value === 0) {
+      this.createTicketMode = CreateTicketMode.EMPTY;
+    } else if (value === 1) {
+      this.createTicketMode = CreateTicketMode.TEMPLATE;
+    }
+    this.buttonElementsService.createTicketButtons[0].selected = true;
   }
   public onClickCreateTicketButton() {
     this._router.navigate([`/web/ticket`], {
-      queryParams: { moimId: this.resultMeetingInfo.id, viewType: 'edit' },
+      queryParams: {
+        moimId: this.resultMeetingInfo.id,
+        viewType: 'edit',
+        createTemplate: this.createTicketMode === 0 ? 'N' : 'A',
+      },
     });
   }
   public async onClickNextButton() {

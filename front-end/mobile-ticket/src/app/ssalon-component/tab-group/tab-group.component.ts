@@ -35,4 +35,7 @@ export class TabGroupComponent {
       ? 'selected-tab'
       : 'unselected-tab';
   }
+  public getButtonWidth(): number {
+    return window.innerWidth / this.tabs.length;
+  }
 }

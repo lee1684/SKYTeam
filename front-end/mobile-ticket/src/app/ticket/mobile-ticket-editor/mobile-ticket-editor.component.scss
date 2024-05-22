@@ -89,6 +89,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
 }
 
 .sticker:hover {
@@ -119,4 +120,27 @@
     transform: translate(-50%, -30%);
     display: flex;
     justify-content: center;
+}
+
+#upload-photo-num {
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    top: calc(40% - 100px);
+    left: calc(50% - 100px);
+    display: flex;
+    justify-content: center;
+    background-color: white;
+    color: black;
+    border-radius: 50%;
+}
+
+.selected-status {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: green;
 }

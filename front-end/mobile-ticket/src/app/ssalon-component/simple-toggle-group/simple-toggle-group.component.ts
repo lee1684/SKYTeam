@@ -63,10 +63,12 @@ export class SimpleToggleGroupComponent {
   public getClass(element: NewButtonElement) {
     if (element.solid) {
       return element.selected
-        ? 'selected-button-solid'
-        : 'unselected-button-solid';
+        ? 'selected-button-solid button-hover'
+        : 'unselected-button-solid button-hover';
     } else {
-      return element.selected ? 'selected-button' : 'unselected-button';
+      return element.selected
+        ? 'selected-button button-hover'
+        : 'unselected-button button-hover';
     }
   }
 
