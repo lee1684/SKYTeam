@@ -13,12 +13,14 @@ export class CreateTicketComponent {
   @Output() public onClickToggleButtonEvent = new EventEmitter();
   constructor(public buttonElementsService: ButtonElementsService) {}
   public onClickToggleButton() {
-    if (
-      this.buttonElementsService.createTicketTypeButtons.find((button) => {
+    let clickedButton = this.buttonElementsService.createTicketTypeButtons.find(
+      (button) => {
         return button.selected === true;
-      })
-    ) {
-      this.onClickToggleButtonEvent.emit(true);
+      }
+    );
+    console.log(clickedButton);
+    if (clickedButton !== undefined) {
+      this.onClickToggleButtonEvent.emit(clickedButton.value);
     } else {
       this.onClickToggleButtonEvent.emit(false);
     }

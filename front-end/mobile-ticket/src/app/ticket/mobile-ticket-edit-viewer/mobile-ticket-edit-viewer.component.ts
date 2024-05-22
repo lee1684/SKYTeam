@@ -16,6 +16,7 @@ import {
   Input,
 } from '@angular/core';
 import { degToRad } from 'three/src/math/MathUtils.js';
+import { create } from 'apisauce';
 @Component({
   selector: 'app-mobile-ticket-edit-viewer',
   standalone: true,
@@ -30,6 +31,7 @@ export class MobileTicketEditViewerComponent {
   editCanvas: ElementRef | null = null;
 
   @Input() moimId: string = '';
+  @Input() createTemplate: string | undefined = undefined;
 
   @Output() public readonly onClickText = new EventEmitter();
   public canvas: Canvas | null = null;
@@ -107,7 +109,14 @@ export class MobileTicketEditViewerComponent {
   }
 
   public async loadDecorationInfo() {
-    let decorationInfo = await this._apiExecutorService.getTicket(this.moimId);
+    let decorationInfo: any = null;
+    if (this.createTemplate !== undefined) {
+      await this._apiExecutorService.createTicket(
+        this.moimId,
+        this.createTemplate!
+      );
+    }
+    decorationInfo = await this._apiExecutorService.getTicket(this.moimId);
     await this.canvas?.loadFromJSON(decorationInfo.fabric);
     this.canvas?.renderAll();
   }

@@ -25,7 +25,7 @@ import {
   CircleToggleStatusGroupComponent,
   StatusElement,
 } from '../ssalon-component/circle-toggle-status-group/circle-toggle-status-group.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 export enum MobileTicketViewMode {
   APPVIEW,
@@ -103,19 +103,23 @@ export class TicketComponent {
 
   @Input() public moimId: string = '';
   @Input() public viewType: string = '';
+  @Input() public createTemplate: string | undefined = undefined;
   constructor(
     private _apiExecutorService: ApiExecutorService,
     private _ssalonConfigService: SsalonConfigService,
     private _sceneGraphService: ScenegraphService,
     private _route: ActivatedRoute,
+    private _router: Router,
     private _location: Location
   ) {}
   public ngOnInit(): void {
-    this._route.queryParams.subscribe((params) => {
-      this.moimId = params['moimId'];
-      this.viewType = params['viewType'];
-    });
-    console.log(this.moimId, this.viewType);
+    if (this.viewType !== 'view') {
+      this._route.queryParams.subscribe((params) => {
+        this.moimId = params['moimId'];
+        this.viewType = params['viewType'];
+        this.createTemplate = params['createTemplate'];
+      });
+    }
   }
   public async ngAfterViewInit() {
     this.setFirstPage();
@@ -255,9 +259,6 @@ export class TicketComponent {
 
   public async changeViewMode(mode: MobileTicketViewMode) {
     if (mode === MobileTicketViewMode.APPVIEW) {
-      if (this.viewType !== 'view') {
-        this.updateServer();
-      }
     } else if (mode === MobileTicketViewMode.QRSHOWVIEW) {
       await this.setQrCodeImgSrc();
       this._sceneGraphService.mobileTicketAutoRotate = true;
@@ -312,6 +313,7 @@ export class TicketComponent {
   }
 
   public async updateServer() {
+    console.log('update');
     if (
       this.mobileTicketEditViewer !== null &&
       this.mobileTicketEditor !== null

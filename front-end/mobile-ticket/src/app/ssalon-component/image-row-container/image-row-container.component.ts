@@ -1,6 +1,13 @@
 import { NgFor, NgIf } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output,
+} from '@angular/core';
 import { NewButtonElement } from '../simple-toggle-group/simple-toggle-group.component';
+import { Router } from '@angular/router';
 
 export interface Ticket {
   ticketThumb: string;
@@ -8,6 +15,8 @@ export interface Ticket {
   moimId: number;
   categoryName: string;
   meetingTitle: string;
+  isCreator: boolean;
+  isEnd: boolean;
 }
 @Component({
   selector: 'app-image-row-container',
@@ -28,15 +37,21 @@ export class ImageRowContainerComponent {
   ];
   @Input() tickets: Ticket[] = [];
   @Input() modifiedTickets: Ticket[][] = [];
+  @Input() columnType: boolean = false;
   @Input() columnNum: number = -1;
   @Input() isTicketsLoaded: Boolean = false;
-  public backgroundColor: string = '#000000';
+  @Input() public filter: string = '';
+  @Input() public ticketRowContainerWidth = 350;
   @Output() public readonly onClickImageEvent = new EventEmitter();
-  constructor() {}
+  constructor(private _router: Router) {}
   public ngOnInit(): void {
-    console.log(this.tickets);
     if (this.isTicketContainer) {
       this._setLayout();
+      if (this.columnType) {
+        this.getColumnNum();
+      }
+
+      this.ticketRowContainerWidth = window.innerWidth * 0.95;
     }
   }
 
@@ -51,7 +66,6 @@ export class ImageRowContainerComponent {
     } else {
       this.modifiedTickets = [this.tickets];
     }
-    console.log(this.modifiedTickets);
   }
   public onClickImage(value: number): void {
     this.onClickImageEvent.emit(value);
@@ -64,5 +78,24 @@ export class ImageRowContainerComponent {
       moimId +
       '.png'
     );
+  }
+
+  public onClickTicket(value: number) {
+    this._router.navigate(['/web/meeting-info'], {
+      queryParams: { moimId: value },
+    });
+  }
+
+  public getColumnNum() {
+    this.columnNum = Math.floor(window.innerWidth / 175);
+    this._setLayout();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.ticketRowContainerWidth = event.target.innerWidth * 0.95;
+    if (this.columnType) {
+      this.getColumnNum();
+    }
   }
 }

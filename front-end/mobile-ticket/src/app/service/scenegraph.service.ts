@@ -113,9 +113,9 @@ export class ScenegraphService {
   }
 
   public rotateCard(): void {
-    this.mobileTicket!.mobileTicket?.rotateX(0.002);
-    this.mobileTicket!.mobileTicket?.rotateY(0.002);
-    this.mobileTicket!.mobileTicket?.rotateZ(0.002);
+    this.mobileTicket!.mobileTicket?.rotateX(0.001);
+    this.mobileTicket!.mobileTicket?.rotateY(0.001);
+    this.mobileTicket!.mobileTicket?.rotateZ(0.001);
     if (
       this.mobileTicket?.frontSide !== null &&
       this.mobileTicket?.backSide !== null

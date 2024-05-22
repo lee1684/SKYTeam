@@ -1,6 +1,6 @@
 .container {
     height: 100%;
-    width: 350px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -51,4 +51,9 @@
     transform: translate(-50%, -50%);
     background-color: white;
     border-radius: 10px;
+}
+
+#ticket-viewer-container {
+    width: 100%;
+    height: calc(100% - 20px);
 }

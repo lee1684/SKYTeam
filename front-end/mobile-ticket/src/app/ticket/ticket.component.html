@@ -16,7 +16,7 @@
 <div class="container" *ngIf="this.mode === this.mobileTicketViewMode.APPEDITVIEW" #appEditView>
   <div [style.height]="'100%'" [style.width]="'100%'" [style.position]="'absolute'" [style.top]="'60px'"
     [style.left]="'0px'">
-    <app-mobile-ticket-edit-viewer [moimId]="this.moimId" #mobileTicketEditViewer
+    <app-mobile-ticket-edit-viewer [moimId]="this.moimId" [createTemplate]="this.createTemplate" #mobileTicketEditViewer
       (onClickText)="this.openTextEditor($event)"></app-mobile-ticket-edit-viewer>
   </div>
   <app-mobile-ticket-editor [moimId]="this.moimId" #mobileTicketEditor [style.position]="'absolute'" [style.top]="'0px'"

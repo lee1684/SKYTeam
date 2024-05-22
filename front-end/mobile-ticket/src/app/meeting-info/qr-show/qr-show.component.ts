@@ -9,11 +9,12 @@ import {
   SafeResourceUrl,
   SafeUrl,
 } from '@angular/platform-browser';
+import { TicketComponent } from '../../ticket/ticket.component';
 
 @Component({
   selector: 'app-qr-show',
   standalone: true,
-  imports: [NgIf, MobileTicketViewerComponent],
+  imports: [NgIf, TicketComponent],
   templateUrl: './qr-show.component.html',
   styleUrl: './qr-show.component.scss',
 })

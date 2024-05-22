@@ -20,7 +20,7 @@ export class ApiExecutorService {
   //public apiURL: string = 'http://localhost:8080/api';
   public tokens = {};
   private _token: string =
-    'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTYxODMwMjEsImV4cCI6MTcxNjI2OTQyMX0.o1DD1nZjJN08Aav5OGVdRGYzdjLuXYAfRQWx0FxJ-6Q';
+    'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTYzOTMyMjksImV4cCI6MTcxNjQ3OTYyOX0.Jev85Xc-uLL3Voe1X2NJgvAXoX1Sbl04Cky-B7Hfjt8';
   public refreshToken: string = '';
 
   constructor(private _ssalonConfigService: SsalonConfigService) {
@@ -65,9 +65,38 @@ export class ApiExecutorService {
     }
   }
 
+  public async createTicket(moimId: string, template: string) {
+    try {
+      let response = await this.apiExecutorJson?.post(
+        `/tickets/${moimId}?template=${template}`
+      );
+      return response!.data;
+    } catch {
+      /** dummy data */
+      let tempJson = await axios.get('assets/decoration.json');
+      return tempJson.data;
+    }
+  }
+
   public async editTicket(moimId: string, body: FormData) {
     try {
+      console.log('EDIT');
       let response = await this.apiExecutor?.put(`/tickets/${moimId}`, body);
+      return response!.data;
+    } catch (error) {
+      console.log(error);
+      /** dummy data */
+      let tempJson = await axios.get('assets/decoration.json');
+      return tempJson.data;
+    }
+  }
+
+  public async uploadImages(moimId: string, body: FormData) {
+    try {
+      let response = await this.apiExecutor?.post(
+        `/tickets/${moimId}/image`,
+        body
+      );
       return response!.data;
     } catch (error) {
       console.log(error);
@@ -143,8 +172,10 @@ export class ApiExecutorService {
 
   public async getMoims(params: string = '') {
     try {
-      let url = params === '' ? 'moims' : `moims?category=${params}`;
-      console.log(url);
+      let url =
+        params === ''
+          ? '/moims?size=1000&isEnd=false'
+          : `/moims?isEnd=false&category=${params}&size=1000`;
       let response = await this.apiExecutorJson?.get(url);
       return response!.data;
     } catch (e) {
@@ -152,9 +183,25 @@ export class ApiExecutorService {
     }
   }
 
-  public async getJoinedMoims() {}
+  public async getRunningMoims() {
+    try {
+      let url = `/moims?isParticipant=true&isEnd=false&size=100`;
+      let response = await this.apiExecutorJson?.get(url);
+      return response!.data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
-  public async getCreatedMoims() {}
+  public async getEndedMoims() {
+    try {
+      let url = `/moims?isParticipant=true&isEnd=true&size=100`;
+      let response = await this.apiExecutorJson?.get(url);
+      return response!.data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   public async joinMoim(moimId: string) {
     try {

@@ -42,6 +42,9 @@ export class QrCheckComponent {
   public async ngAfterViewChecked() {
     this.startQRCodeDetection();
   }
+  public ngOnDestroy() {
+    this.stopDetectQRCode();
+  }
   public async startQRCodeDetection() {
     if (this.qrVideo && this.qrCanvas && !this.isCameraLoaded) {
       try {

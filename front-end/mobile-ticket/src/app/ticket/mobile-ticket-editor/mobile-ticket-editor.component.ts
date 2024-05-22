@@ -23,6 +23,8 @@ import {
   Input,
 } from '@angular/core';
 import { Canvas, FabricImage, FabricText, Path } from 'fabric';
+import { NewButtonElement } from '../../ssalon-component/simple-toggle-group/simple-toggle-group.component';
+import { ButtonElementsService } from '../../service/button-elements.service';
 
 export enum MobileTicketEditMode {
   BACKGROUND_COLOR_CHANGE,
@@ -142,7 +144,8 @@ export class MobileTicketEditorComponent {
 
   private _backgroundColorViewLoaded: boolean = false;
 
-  public stickers: ButtonElement[] = [];
+  public uploadPhotoNum: number = 0;
+  public stickers: NewButtonElement[] = [];
   public editingSticker: FabricImage | null = null;
   public editingStickerSrc: string = '';
 
@@ -216,7 +219,8 @@ export class MobileTicketEditorComponent {
 
   constructor(
     private _apiExecutorService: ApiExecutorService,
-    private _sceneGraphService: ScenegraphService
+    private _sceneGraphService: ScenegraphService,
+    private _buttonElementsService: ButtonElementsService
   ) {}
   public ngAfterViewInit(): void {
     this.loadDecorationInfo();
@@ -265,32 +269,64 @@ export class MobileTicketEditorComponent {
   }
 
   /** 기능 실행 */
-  public onClickChangeEditMode(value: MobileTicketEditMode): void {
+  public async onClickChangeEditMode(value: MobileTicketEditMode) {
     switch (value) {
       case MobileTicketEditMode.BACKGROUND_COLOR_CHANGE:
         break;
       case MobileTicketEditMode.PHOTO:
-        // 파일 선택 대화 상자 열기
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
         fileInput.accept = 'image/*';
+        fileInput.multiple = true;
+        let fileUrls: string[] = [];
 
         // 파일 선택 이벤트 처리
-        fileInput.onchange = function () {
+        fileInput.onchange = async function (
+          this: MobileTicketEditorComponent
+        ) {
+          // 파일 URL 배열 초기화
+          fileUrls = [];
+
           // 파일이 선택되었는지 확인
-          if (fileInput.files && fileInput.files[0]) {
-            const reader = new FileReader();
+          if (fileInput.files && fileInput.files.length > 0) {
+            const files = Array.from(fileInput.files);
+            let loadedFiles = 0;
 
-            reader.onload = function (e: any) {
-              let img = document.getElementById('selected-photo-container');
-              (img! as HTMLImageElement).src = e.target.result;
-              (img! as HTMLImageElement).width = 200; // 이미지 크기 조절
-            }.bind(this);
+            files.forEach((file, index) => {
+              const reader = new FileReader();
 
-            // 파일을 읽어들임
-            reader.readAsDataURL(fileInput.files[0]);
+              reader.onload = async function (
+                this: MobileTicketEditorComponent,
+                e: any
+              ) {
+                // 파일 URL을 배열에 추가
+                fileUrls.push(e.target.result);
+
+                // 첫 번째 파일만 미리보기로 보여주기
+                if (index === 0) {
+                  let img = document.getElementById('selected-photo-container');
+                  if (!img) {
+                    img = document.createElement('img');
+                    img.id = 'selected-photo-container';
+                    document.body.appendChild(img);
+                  }
+                  (img as HTMLImageElement).src = e.target.result;
+                  (img as HTMLImageElement).width = 80; // 이미지 크기 조절
+                }
+
+                // 모든 파일을 다 읽었을 때
+                loadedFiles++;
+                if (loadedFiles === files.length) {
+                  this.uploadPhotoNum = files.length;
+                  await this.getImageUrl(fileUrls);
+                }
+              }.bind(this);
+
+              // 파일을 읽어들임
+              reader.readAsDataURL(file);
+            });
           }
-        };
+        }.bind(this);
 
         // 파일 선택 대화 상자 열기
         fileInput.click();
@@ -342,6 +378,7 @@ export class MobileTicketEditorComponent {
           '.png',
         label: `${i}`,
         value: i,
+        selected: false,
       });
     }
   }
@@ -355,13 +392,17 @@ export class MobileTicketEditorComponent {
   }
 
   public selectSticker(value: number): void {
-    if (this.ssalonStickerAttribute.src.includes(this.stickers[value].imgSrc)) {
+    if (
+      this.ssalonStickerAttribute.src.includes(this.stickers[value].imgSrc!)
+    ) {
       this.ssalonStickerAttribute.src.splice(
-        this.ssalonStickerAttribute.src.indexOf(this.stickers[value].imgSrc),
+        this.ssalonStickerAttribute.src.indexOf(this.stickers[value].imgSrc!),
         1
       );
+      this.stickers[value].selected = false;
     } else {
-      this.ssalonStickerAttribute.src.push(this.stickers[value].imgSrc);
+      this.ssalonStickerAttribute.src.push(this.stickers[value].imgSrc!);
+      this.stickers[value].selected = true;
     }
   }
 
@@ -446,14 +487,50 @@ export class MobileTicketEditorComponent {
     }
   }
 
+  public async getImageUrl(urls: string[]) {
+    let body = new FormData();
+    function dataURItoBlob(dataURI: string) {
+      var byteString = atob(dataURI.split(',')[1]);
+      var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+      var ab = new ArrayBuffer(byteString.length);
+      var ia = new Uint8Array(ab);
+      for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+      return new Blob([ab], { type: mimeString });
+    }
+    urls.forEach((url, index) => {
+      body.append('files', dataURItoBlob(url), `${index}.png`);
+    });
+
+    try {
+      let result = await this._apiExecutorService.uploadImages(
+        this.moimId,
+        body
+      );
+      let keys = Object.keys(result.mapURI);
+      for (var i = 0; i < keys.length; i++) {
+        var key = keys[i];
+        this.ssalonPhotoAttribute.src.push(result.mapURI[key]);
+      }
+      this.ssalonPhotoAttribute.src.forEach((url) => {
+        let substring = url.substring(58);
+        let proxyUrl = 'https://dokcohci6rkid.cloudfront.net' + substring;
+        url = proxyUrl;
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   /** 완료를 눌러야 fabric object를 생성 */
-  public onEndEditObject(): void {
+  public async onEndEditObject() {
     if (this.lastUsedFeature === MobileTicketEditMode.BACKGROUND_COLOR_CHANGE) {
       this.onBackgroundColorEditEnded.emit(this.backgroundColor.color);
     } else {
       switch (this.lastUsedFeature) {
         case MobileTicketEditMode.PHOTO:
-          //this.loadImageRecursive(0);
+          this.loadImageRecursive(0);
           return;
         case MobileTicketEditMode.STICKER:
           this.loadImageRecursive(0);
