@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.data.annotation.CreatedDate;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,10 +22,24 @@ public class Message {
     @JoinColumn(name = "member_meeting_id")
     private MemberMeeting memberMeeting;
 
+    @Column(name = "meeting_id")
+    private Long meetingId;
+
     private String message;
 
+    @CreatedDate
+    @Column(name = "sent_at", updatable = false)
     private LocalDateTime sentAt;
 
 
     protected Message() {}
+
+    public static Message createMessage(MemberMeeting memberMeeting, String message) {
+        return Message.builder()
+                .memberMeeting(memberMeeting)
+                .meetingId(memberMeeting.getMeeting().getId())
+                .message(message)
+                .sentAt(LocalDateTime.now())
+                .build();
+    }
 }
