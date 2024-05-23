@@ -129,9 +129,9 @@ export class OnboardingComponent {
     if (this.buttonElementsService.nextButtons[0]!.selected) {
       const nextStep = this.nowOnboardingStep.value + 1;
       if (nextStep >= this.onBoardingStep.length) {
-        console.log(
-          await this._apiExecutorService.registerUser(this._userInfo!)
-        );
+        this.buttonElementsService.interestSelectionButtons.every((element) => {
+          element.selected = false;
+        });
         await this._router.navigate(['/web/main']);
       } else {
         this.nowOnboardingStep = this.onBoardingStep[nextStep];

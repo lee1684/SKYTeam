@@ -1,30 +1,31 @@
+<div *ngIf="this.getBackButtonVisibility()" class="top-navigator">
+  <app-simple-button (onClickEvent)="this.onClickBackButton()" [buttonElement]="this.topNavigatorButton"
+    [heightSize]="40"></app-simple-button>
+  <app-simple-button (onClickEvent)="this.onClickQuitButton()" [buttonElement]="this.quitFeatureButton"
+    [heightSize]="15" [type]="'text'"></app-simple-button>
+</div>
+
 <!-- APPVIEW: 앱에서 보는 화면의 경우 -->
 <div class="container" *ngIf="this.mode === this.mobileTicketViewMode.APPVIEW" #appView>
-  <div class="horizontal-container" [style.justify-content]="'space-between'">
-    <div><app-simple-button class="back-button" [buttonElement]="this.goBackButtonElement" [heightSize]="36"
-        (onClickEvent)="this.onClickBackButton()"></app-simple-button></div>
-
-  </div>
-
   <div [style.height]="'100%'">
     <app-mobile-ticket-viewer [moimId]="this.moimId"></app-mobile-ticket-viewer>
   </div>
-
 </div>
 
 <!-- APPEDITVIEW: 앱에서 보는 꾸미기 화면의 경우 -->
-<div class="container" *ngIf="this.mode === this.mobileTicketViewMode.APPEDITVIEW" #appEditView>
-  <div [style.height]="'100%'" [style.width]="'100%'" [style.position]="'absolute'" [style.top]="'60px'"
-    [style.left]="'0px'">
+<div class="container" [hidden]="!(this.mode === this.mobileTicketViewMode.APPEDITVIEW)" #appEditView>
+  <div id="editor-viewer-container">
     <app-mobile-ticket-edit-viewer [moimId]="this.moimId" [createTemplate]="this.createTemplate" #mobileTicketEditViewer
       (onClickText)="this.openTextEditor($event)"></app-mobile-ticket-edit-viewer>
   </div>
-  <app-mobile-ticket-editor [moimId]="this.moimId" #mobileTicketEditor [style.position]="'absolute'" [style.top]="'0px'"
-    [style.left]="'0px'" [style.width]="'100%'" [style.height]="
+  <div id="editor-container">
+    <app-mobile-ticket-editor [moimId]="this.moimId" #mobileTicketEditor [style.height]="
       this.editMode === this.mobileTicketEditMode.NONE ? '60px' : '100%'
     " (onChangeViewer)="this.changeEditMode($event)" (onClickPreview)="this.onClickPreviewButton()"
-    (onObjectEditEnded)="this.applyEdit($event)"
-    (onBackgroundColorEditEnded)="this.applyBackgroundColorEdit($event)"></app-mobile-ticket-editor>
+      (onObjectEditEnded)="this.applyEdit($event)"
+      (onBackgroundColorEditEnded)="this.applyBackgroundColorEdit($event)"></app-mobile-ticket-editor>
+  </div>
+
 </div>
 
 <!-- WEBVIEW: 웹에서 보는 화면의 경우 -->
@@ -35,53 +36,4 @@
   <div>
     <app-simple-button [buttonElement]="this.joinButtonElement"></app-simple-button>
   </div>
-</div>
-
-<!-- QRCHECKVIEW: QRCODE 확인하는 화면의 경우 -->
-<div class="container" *ngIf="this.mode === this.mobileTicketViewMode.QRCHECKVIEW" #qrCheckView>
-  <div id="qr-detector">
-    <video #qrVideo [style.width]="'100%'" [style.height]="'100%'" autoplay playsInline
-      [style.object-fit]="'cover'"></video>
-    <canvas id="qr-canvas" #qrCanvas [style.display]="'none'"></canvas>
-    <div id="qr-guide-container">
-      <img id="qr-guide" src="assets/qr-guide.png" height="300px" />
-    </div>
-  </div>
-
-  <div id="join-user-container" [style.margin-top]="'30px'">
-    <div class="horizontal-container" [style.justify-content]="'center'">
-      <div id="qr-checking-user-container">
-        <div id="qr-checking-user-profile-container" [style.width.px]="52" [style.height.px]="52">
-          <img id="qr-checking-user-profile-img"
-            [src]="this.checkStatus.checkingUser?this.checkStatus.checkingUser.profilePictureUrl:'assets/data_error.png'"
-            height="50px" />
-        </div>
-
-        <div id="qr-check-info-container">
-          <div class="qr-check-info" [style.font-size]="'20px'">
-            {{this.checkStatus.checkingUser?this.checkStatus.checkingUser.nickname:'알수없음'}}</div>
-          <div class="qr-check-info" [style.color]="this.checkStatus.color">{{this.checkStatus.text}}</div>
-        </div>
-      </div>
-    </div>
-
-    <div id="join-user-list">
-      <app-circle-toggle-status-group [elements]="this.joiningUsers"
-        #joiningUsersComponent></app-circle-toggle-status-group>
-    </div>
-  </div>
-</div>
-
-<!-- QRSHOWVIEW: QRCODE 보여주는 화면의 경우 -->
-<div class="container" *ngIf="this.mode === this.mobileTicketViewMode.QRSHOWVIEW" #qrShowView>
-  <div [style.height]="'100%'">
-    <app-mobile-ticket-viewer></app-mobile-ticket-viewer>
-  </div>
-  <div id="qrcode-overay">
-    <div id="qrcode-container">
-      <img id='qrcode' [src]="this.qrCodeSrc" alt="이미지" />
-    </div>
-  </div>
-
-
 </div>

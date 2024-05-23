@@ -9,7 +9,6 @@ import {
   ColorBoardComponent,
   SsalonColor,
   SsalonColorElement,
-  SsalonColorEnum,
 } from '../../ssalon-component/color-board/color-board.component';
 import { SimpleToggleButtonGroupComponent } from '../../ssalon-component/simple-toggle-button-group/simple-toggle-button-group.component';
 import { Vector2 } from 'three';
@@ -25,6 +24,7 @@ import {
 import { Canvas, FabricImage, FabricText, Path } from 'fabric';
 import { NewButtonElement } from '../../ssalon-component/simple-toggle-group/simple-toggle-group.component';
 import { ButtonElementsService } from '../../service/button-elements.service';
+import { Router } from '@angular/router';
 
 export enum MobileTicketEditMode {
   BACKGROUND_COLOR_CHANGE,
@@ -93,17 +93,20 @@ export class MobileTicketEditorComponent {
   public ssalonColor: SsalonColor = new SsalonColor();
 
   public mobileTicketEditMode = MobileTicketEditMode;
-  public goBackButtonElement: ButtonElement = {
+  public goBackButtonElement: NewButtonElement = {
+    selected: false,
     imgSrc: 'assets/icons/go-back.png',
     label: '뒤로가기',
     value: 0,
   };
-  public previewButtonElement: ButtonElement = {
+  public previewButtonElement: NewButtonElement = {
+    selected: false,
     imgSrc: 'assets/icons/view.png',
-    label: '미리보기',
+    label: '저장 및 미리보기',
     value: 0,
   };
-  public completeButtonElement: ButtonElement = {
+  public completeButtonElement: NewButtonElement = {
+    selected: false,
     imgSrc: '',
     label: '완료',
     value: 0,
@@ -219,6 +222,7 @@ export class MobileTicketEditorComponent {
 
   constructor(
     private _apiExecutorService: ApiExecutorService,
+    private _router: Router,
     private _sceneGraphService: ScenegraphService,
     private _buttonElementsService: ButtonElementsService
   ) {}
@@ -236,9 +240,6 @@ export class MobileTicketEditorComponent {
       );
       this._backgroundColorViewLoaded = true;
     }
-
-    /** image feature */
-    /** sticker feature */
 
     /* text feature */
     if (this.textEditInput && !this.textFocused) {
@@ -636,5 +637,7 @@ export class MobileTicketEditorComponent {
     this.drawingFabricCanvas!.add(path);
   }
 
-  public endTicketWebView(): void {}
+  public endTicketWebView(): void {
+    this._router.navigate(['/web/main']);
+  }
 }
