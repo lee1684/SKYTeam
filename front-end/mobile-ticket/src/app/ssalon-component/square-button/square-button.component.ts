@@ -25,7 +25,7 @@ export class SquareButtonComponent {
     return this.buttonElements.find((element) => {
       return element.value === value;
     })!.selected
-      ? 'ready-button'
-      : 'wait-button';
+      ? 'ready-button hover-button'
+      : 'wait-button hover-button';
   }
 }

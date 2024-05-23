@@ -1,13 +1,9 @@
 <div class="container">
     <!-- edit buttons & back button-->
-    <div class="horizontal-container">
-        <div>
-            <app-simple-button class="back-button" [buttonElement]="this.goBackButtonElement" [heightSize]="36"
-                (onClickEvent)="this.endTicketWebView()"></app-simple-button>
-        </div>
-        <div>
-            <app-circle-toggle-button-group id="edit-feature-buttons" #editFeatureButtons [elements]="this.editFeatures"
-                [innerSize]="20" [outerSize]="'36px'" [noneStatusValue]="this.mobileTicketEditMode.NONE"
+    <div class="horizontal-container" [style.justify-content]="'right'">
+        <div id="edit-feature-buttons">
+            <app-circle-toggle-button-group #editFeatureButtons [elements]="this.editFeatures" [innerSize]="20"
+                [outerSize]="'36px'" [noneStatusValue]="this.mobileTicketEditMode.NONE"
                 (onClickToggleButtonEvent)="this.onClickChangeEditMode($event)"></app-circle-toggle-button-group>
         </div>
         <div>

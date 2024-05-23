@@ -78,7 +78,7 @@ export class MeetingInfoComponent {
     if (this.isParticipant) {
       this.buttonElementsService.joinButtonElements[0].selected = false;
       this.buttonElementsService.joinButtonElements[0].label = this.isCreator
-        ? '개최자입니다'
+        ? '정보 및 증표 수정하기(개최자입니다)'
         : '참가자입니다.';
     } else {
       this.buttonElementsService.joinButtonElements[0].selected = true;
@@ -173,10 +173,13 @@ export class MeetingInfoComponent {
   public async onClickJoinButton() {
     if (this.buttonElementsService.joinButtonElements[0].selected) {
       await this._apiExecutorService.joinMoim(this.moimId);
-      let currentUrl = this._router.url;
-      this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-        this._router.navigate([currentUrl]);
-      });
+      location.reload();
+      //let currentUrl = this._router.url;
+      //this._router.navigate([`/web/meeting-info`], {
+      //  queryParams: {
+      //    moimId: this.moimId,
+      //  },
+      //});
     }
   }
 

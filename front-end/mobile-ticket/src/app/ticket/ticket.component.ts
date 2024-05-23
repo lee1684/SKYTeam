@@ -26,13 +26,13 @@ import {
   StatusElement,
 } from '../ssalon-component/circle-toggle-status-group/circle-toggle-status-group.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TopNavigatorComponent } from '../ssalon-component/top-navigator/top-navigator.component';
+import { NewButtonElement } from '../ssalon-component/simple-toggle-group/simple-toggle-group.component';
 
 export enum MobileTicketViewMode {
   APPVIEW,
   APPEDITVIEW,
   WEBVIEW,
-  QRCHECKVIEW,
-  QRSHOWVIEW,
 }
 
 export interface User {
@@ -54,6 +54,7 @@ export interface User {
     CircleToggleStatusGroupComponent,
     SimpleButtonComponent,
     NgIf,
+    TopNavigatorComponent,
   ],
   templateUrl: './ticket.component.html',
   styleUrl: './ticket.component.scss',
@@ -72,6 +73,19 @@ export class TicketComponent {
   @ViewChild('joiningUsersComponent', { static: false })
   joiningUsersComponent: CircleToggleStatusGroupComponent | null = null;
 
+  public topNavigatorButton: NewButtonElement = {
+    selected: false,
+    label: '저장 및 미리보기',
+    imgSrc: 'assets/icons/go-back.png',
+    value: 0,
+  };
+
+  public quitFeatureButton: NewButtonElement = {
+    selected: false,
+    label: '생성 완료',
+    value: 0,
+  };
+
   public mobileTicketViewMode = MobileTicketViewMode;
   public mode: MobileTicketViewMode = MobileTicketViewMode.APPEDITVIEW;
 
@@ -83,7 +97,8 @@ export class TicketComponent {
     value: 0,
   };
 
-  public joinButtonElement: ButtonElement = {
+  public joinButtonElement: NewButtonElement = {
+    selected: false,
     imgSrc: 'assets/icons/view.png',
     label: '참여하기',
     value: 0,
@@ -101,9 +116,10 @@ export class TicketComponent {
     text: string;
   } = { checkStatus: null, color: '#006BFF', text: 'QR코드를 인식해주세요.' };
 
-  @Input() public moimId: string = '';
-  @Input() public viewType: string = '';
+  @Input() public moimId: string = undefined as unknown as string;
+  @Input() public viewType: string = undefined as unknown as string;
   @Input() public createTemplate: string | undefined = undefined;
+  public isFromUrl: boolean = false;
   constructor(
     private _apiExecutorService: ApiExecutorService,
     private _ssalonConfigService: SsalonConfigService,
@@ -113,19 +129,18 @@ export class TicketComponent {
     private _location: Location
   ) {}
   public ngOnInit(): void {
-    if (this.viewType !== 'view') {
+    if (this.viewType === undefined) {
       this._route.queryParams.subscribe((params) => {
         this.moimId = params['moimId'];
         this.viewType = params['viewType'];
         this.createTemplate = params['createTemplate'];
+        this.isFromUrl = true;
+        this.setFirstPage();
       });
+    } else {
+      this.isFromUrl = false;
+      this.setFirstPage();
     }
-  }
-  public async ngAfterViewInit() {
-    this.setFirstPage();
-  }
-  public async ngAfterViewChecked() {
-    this.startQRCodeDetection();
   }
 
   public setFirstPage() {
@@ -133,124 +148,9 @@ export class TicketComponent {
       this.changeViewMode(MobileTicketViewMode.APPEDITVIEW);
     } else if (this.viewType === 'view') {
       this.changeViewMode(MobileTicketViewMode.APPVIEW);
-    } else if (this.viewType === 'qrcheck') {
-      // 만약에 본인이 개최자라면
-      this.changeViewMode(MobileTicketViewMode.QRCHECKVIEW);
-    } else if (this.viewType === 'qrshow') {
-      // 만약에 본인이 참가자라면
-      this.changeViewMode(MobileTicketViewMode.QRSHOWVIEW);
     } else {
       this.changeViewMode(MobileTicketViewMode.WEBVIEW);
     }
-  }
-
-  public async startQRCodeDetection() {
-    if (this.qrVideo && this.qrCanvas && !this.isCameraLoaded) {
-      try {
-        this.isCameraLoaded = true;
-        this.qrCanvas.nativeElement.setAttribute('willReadFrequently', 'true');
-        this.qrStream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: 'environment' },
-        });
-        this.qrVideo.nativeElement.srcObject = this.qrStream;
-        this.qrVideo.nativeElement.play();
-        this.detectQRCode();
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  }
-  public async detectQRCode() {
-    if (this.qrVideo && this.qrCanvas) {
-      while (true) {
-        if (
-          this.qrVideo.nativeElement.readyState ===
-          this.qrVideo.nativeElement.HAVE_ENOUGH_DATA
-        ) {
-          const canvasContext = this.qrCanvas.nativeElement.getContext('2d');
-          this.qrCanvas.nativeElement.height =
-            this.qrVideo.nativeElement.videoHeight;
-          this.qrCanvas.nativeElement.width =
-            this.qrVideo.nativeElement.videoWidth;
-          canvasContext?.drawImage(
-            this.qrVideo?.nativeElement,
-            0,
-            0,
-            this.qrCanvas.nativeElement?.width!,
-            this.qrCanvas.nativeElement?.height!
-          );
-          const imageData = canvasContext?.getImageData(
-            0,
-            0,
-            this.qrCanvas.nativeElement?.width!,
-            this.qrCanvas.nativeElement?.height!
-          );
-          const code = jsQR(
-            imageData!.data,
-            imageData!.width,
-            imageData!.height
-          );
-          if (code) {
-            try {
-              let joinUserInfo: User = await this._apiExecutorService.checkQR(
-                this.moimId,
-                code.data
-              );
-              this.checkStatus = {
-                checkStatus: joinUserInfo.attendance,
-                checkingUser: {
-                  nickname: joinUserInfo.nickname,
-                  profilePictureUrl: joinUserInfo.profilePictureUrl,
-                  attendance: joinUserInfo.attendance,
-                  userId: joinUserInfo.userId,
-                },
-                color: '#4DAF50',
-                text: '환영합니다.',
-              };
-              //현재 QR코드 찍은 참가자가 출석체크가 되어있지 않다면 출석체크로 변경
-              if (this.checkStatus.checkingUser!.attendance) {
-                this.joiningUsersComponent?.changeStatus(
-                  this.checkStatus.checkingUser!.userId,
-                  true
-                );
-              }
-            } catch (e) {
-              this.checkStatus = {
-                checkStatus: false,
-                color: '#F44336',
-                text: '참가자가 아닙니다.',
-              };
-            }
-            await new Promise((resolve) => setTimeout(resolve, 1000)); // 100ms 대기
-            this.checkStatus = {
-              checkStatus: null,
-              color: '#006BFF',
-              text: 'QR코드를 인식해주세요.',
-            };
-            //let a = { data: true };
-          }
-        }
-        await new Promise((resolve) => setTimeout(resolve, 100)); // 100ms 대기
-      }
-    }
-  }
-  public stopDetectQRCode() {
-    if (this.qrStream) {
-      this.qrStream.getTracks().forEach((track) => {
-        track.stop();
-      });
-      this.isDetectingQRCode = false;
-      this.isCameraLoaded = false;
-    }
-  }
-
-  public onClickQRCodeButton() {
-    if (!this.isDetectingQRCode) {
-      this.changeViewMode(MobileTicketViewMode.QRCHECKVIEW);
-    } else {
-      this.stopDetectQRCode();
-    }
-    this.isDetectingQRCode = !this.isDetectingQRCode;
   }
 
   public changeEditMode(mode: MobileTicketEditMode) {
@@ -258,35 +158,25 @@ export class TicketComponent {
   }
 
   public async changeViewMode(mode: MobileTicketViewMode) {
-    if (mode === MobileTicketViewMode.APPVIEW) {
-    } else if (mode === MobileTicketViewMode.QRSHOWVIEW) {
-      await this.setQrCodeImgSrc();
-      this._sceneGraphService.mobileTicketAutoRotate = true;
-    } else if (mode === MobileTicketViewMode.QRCHECKVIEW) {
-      let userInfos = await this._apiExecutorService.getJoiningUsers(
-        this.moimId
-      );
-      userInfos.forEach((userInfo: any, index: number) => {
-        this.joiningUsers.push({
-          imgSrc: userInfo.profilePictureUrl,
-          label: userInfo.nickname,
-          value: userInfo.userId,
-          status: userInfo.attendance,
-        });
-      });
-    }
-
-    this.stopDetectQRCode();
+    console.log(mode);
     this.mode = mode;
   }
 
-  public addFabricObject(object: any) {}
-
   public onClickBackButton() {
-    if (this.mode === MobileTicketViewMode.APPVIEW) {
-      this._location.back();
+    /** 뷰 모드이고, 주소로 들어갔을 때 -> 수정모드에서 프리뷰 모드로 간 것. */
+    if (this.mode === MobileTicketViewMode.APPVIEW && this.isFromUrl === true) {
+      this.changeViewMode(MobileTicketViewMode.APPEDITVIEW);
     }
-    this.changeViewMode(MobileTicketViewMode.APPEDITVIEW);
+  }
+
+  public getBackButtonVisibility(): boolean {
+    if (!this.isFromUrl && this.mode === MobileTicketViewMode.APPVIEW) {
+      return false;
+    } else if (this.mode === MobileTicketViewMode.APPEDITVIEW) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   public applyEdit(
@@ -304,16 +194,11 @@ export class TicketComponent {
     this.changeViewMode(MobileTicketViewMode.APPVIEW);
   }
 
-  public async setQrCodeImgSrc() {
-    let a = qrcode(0, 'L');
-    a.addData(await this._apiExecutorService.getBarcode(this.moimId));
-    //a.addData('https://www.naver.com');
-    a.make();
-    this.qrCodeSrc = a.createDataURL(4, 0);
+  public async onClickQuitButton() {
+    this._router.navigate(['/web/main']);
   }
 
   public async updateServer() {
-    console.log('update');
     if (
       this.mobileTicketEditViewer !== null &&
       this.mobileTicketEditor !== null

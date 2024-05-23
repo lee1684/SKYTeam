@@ -20,7 +20,7 @@ export class ApiExecutorService {
   //public apiURL: string = 'http://localhost:8080/api';
   public tokens = {};
   private _token: string =
-    'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTYzOTMyMjksImV4cCI6MTcxNjQ3OTYyOX0.Jev85Xc-uLL3Voe1X2NJgvAXoX1Sbl04Cky-B7Hfjt8';
+    'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTY0ODQxOTYsImV4cCI6MTcxNjU3MDU5Nn0.SicEswnA4oJmg40-lvm-3owU0A67E7n6kd5IAUB9k8o';
   public refreshToken: string = '';
 
   constructor(private _ssalonConfigService: SsalonConfigService) {
@@ -67,6 +67,7 @@ export class ApiExecutorService {
 
   public async createTicket(moimId: string, template: string) {
     try {
+      console.log('post');
       let response = await this.apiExecutorJson?.post(
         `/tickets/${moimId}?template=${template}`
       );

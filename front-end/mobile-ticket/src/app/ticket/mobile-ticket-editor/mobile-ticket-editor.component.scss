@@ -144,3 +144,10 @@
     left: 0px;
     background-color: green;
 }
+
+#edit-feature-buttons {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
