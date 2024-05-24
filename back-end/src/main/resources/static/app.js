@@ -5,6 +5,7 @@ const stompClient = new StompJs.Client({
     brokerURL: 'wss://ssalon.co.kr/ws-stomp',
     connectHeaders: {
         Authorization: accessToken,
+        moimId: 1,
     },
 });
 
@@ -43,6 +44,11 @@ function loadChat(chatList) {
     // GET /api/chat/{moimId} API 호출
 }
 
+// 채팅방에 참여하고 있는 회원 조회
+function loadConnectedMember() {
+    // GET /api/chat/{moimId}/users API 호출
+}
+
 // 소켓 연결 여부에 따른 UI 변경
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
@@ -58,6 +64,12 @@ function setConnected(connected) {
 
 // 소켓 연결 해제
 function disconnect() {
+    stompClient.publish({
+        destination: "/send/disconnect",
+        headers: {
+            "Authorization": accessToken,
+        },
+    })
     stompClient.deactivate();
     setConnected(false);
     console.log("Disconnected");

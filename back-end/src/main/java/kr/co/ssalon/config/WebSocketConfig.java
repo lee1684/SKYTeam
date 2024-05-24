@@ -9,6 +9,8 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
+import java.util.Map;
+
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSocketMessageBroker
@@ -31,5 +33,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(chatPreHandler); // ChatController로 전달 전에 웹소켓 메시지를 인터셉트하여 ChatPreHandler에서 가공 처리 (JWT를 위해)
+    }
+
+    public Map<String, String> getConnectedMembers() {
+        return chatPreHandler.getConnectedMembers();
     }
 }
