@@ -1,11 +1,9 @@
 package kr.co.ssalon.web.controller;
 
+import kr.co.ssalon.domain.repository.MemberRepository;
 import kr.co.ssalon.domain.service.DiaryService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
-import kr.co.ssalon.web.dto.DiaryFetchResponseDTO;
-import kr.co.ssalon.web.dto.DiaryInitResponseDTO;
-import kr.co.ssalon.web.dto.TicketEditResponseDTO;
-import kr.co.ssalon.web.dto.TicketImageResponseDTO;
+import kr.co.ssalon.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -73,6 +71,18 @@ public class DiaryController {
     @DeleteMapping("/{moimId}") // D of CRUD : 다이어리 삭제
     public ResponseEntity<String> deleteDiary(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
         return null;
+    }
+
+    @GetMapping("/{moimId}/info")
+    public ResponseEntity<DiaryInfoDTO> fetchDiaryInfo(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
+        return ResponseEntity.ok(diaryService.fetchDiaryInfo(moimId, customOAuth2Member.getUsername()));
+    }
+
+    @PostMapping("/{moimId}/info")
+    public ResponseEntity<String> updateDiaryInfo(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @ModelAttribute DiaryInfoDTO diaryInfoDTO) {
+
+        String result = diaryService.updateDiaryInfo(moimId, customOAuth2Member.getUsername(), diaryInfoDTO).toString();
+        return ResponseEntity.ok(result);
     }
 
     private String usernameConverter(String originString) {

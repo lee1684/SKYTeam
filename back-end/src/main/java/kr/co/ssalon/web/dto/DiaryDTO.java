@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import kr.co.ssalon.domain.entity.Diary;
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,7 +20,7 @@ public class DiaryDTO {
     @NotBlank
     private String title;
     @NotNull
-    private String imageUrl;
+    private List<String> imageUrl;
     @NotBlank
     private String description;
 
@@ -26,7 +28,7 @@ public class DiaryDTO {
         this.id = diary.getId();
         this.memberMeetingId = diary.getMemberMeeting().getId();
         this.title = diary.getTitle();
-        this.imageUrl = diary.getImage_url();
+        this.imageUrl = diary.getDiaryPictureUrls();
         this.description = diary.getDescription();
     }
 
