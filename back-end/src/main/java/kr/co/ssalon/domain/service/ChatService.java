@@ -34,4 +34,8 @@ public class ChatService {
     public List<MessageDTO> getChatList(Long moimId) {
         return messageRepository.findAllByMeetingId(moimId).stream().map(MessageDTO::new).toList();
     }
+
+    public List<MessageDTO> getMyChatHistory(Long memberId) {
+        return messageRepository.findAllByMemberId(memberId).stream().map(MessageDTO::new).toList();
+    }
 }

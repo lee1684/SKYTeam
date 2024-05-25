@@ -74,6 +74,17 @@ public class ChatController {
         }
 
         return ResponseEntity.ok().body(chatService.getChatList(moimId));
+
+    @Operation(summary = "회원 채팅 기록 조회")
+    @ApiResponse(responseCode = "200", description = "회원 채팅 기록 조회 성공", content = {
+            @Content(schema = @Schema(implementation = MessageDTO.class))
+    })
+    @GetMapping("/api/chat-history/me")
+    public ResponseEntity<?> getMyChatHistory(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) throws BadRequestException {
+        String username = customOAuth2Member.getUsername();
+        Member currentUser = memberService.findMember(username);
+
+        return ResponseEntity.ok().body(chatService.getMyChatHistory(currentUser.getId()));
     }
 
     @Operation(summary = "특정 모임 채팅 실시간 참가 회원 조회")
