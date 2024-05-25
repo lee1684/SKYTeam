@@ -68,7 +68,7 @@ public class ChatController {
         String username = customOAuth2Member.getUsername();
         Member currentUser = memberService.findMember(username);
 
-        if (!meetingService.isParticipant(moimId, currentUser)) {
+        if (currentUser.getRole() == "ROLE_USER" && !meetingService.isParticipant(moimId, currentUser)) {
             return new ResponseEntity<>("회원이 참여한 모임이 아닙니다.", HttpStatus.BAD_REQUEST);
         }
 
