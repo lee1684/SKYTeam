@@ -25,6 +25,9 @@ public class Message {
     @Column(name = "meeting_id")
     private Long meetingId;
 
+    @Column(name = "member_id")
+    private Long memberId;
+
     private String message;
 
     @CreatedDate
@@ -38,6 +41,7 @@ public class Message {
         return Message.builder()
                 .memberMeeting(memberMeeting)
                 .meetingId(memberMeeting.getMeeting().getId())
+                .memberId(memberMeeting.getMember().getId())
                 .message(message)
                 .sentAt(LocalDateTime.now())
                 .build();
