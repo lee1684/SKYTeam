@@ -11,6 +11,7 @@ import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.service.MemberService;
 import kr.co.ssalon.domain.service.ValidationService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
+import kr.co.ssalon.web.dto.MeetingOutDTO;
 import kr.co.ssalon.web.dto.MemberSignDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,9 +33,9 @@ public class AdminMemberController {
     private final MemberService memberService;
     private final ValidationService validationService;
 
-    @Operation(summary = "사용자 목록 조회")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "사용자 목록 조회 성공"),
+    @Operation(summary = "회원 목록 조회")
+    @ApiResponse(responseCode = "200", description = "회원 목록 조회 성공", content = {
+            @Content(schema = @Schema(implementation = MemberSignDTO.class))
     })
     @GetMapping("/api/admin/users")
     public List<MemberSignDTO> getUserList(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) throws BadRequestException {
@@ -44,11 +45,9 @@ public class AdminMemberController {
         return memberService.findAllMember().stream().map(MemberSignDTO::new).collect(Collectors.toList());
     }
 
-    @Operation(summary = "특정 사용자 정보 조회")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "특정 사용자 정보 조회 성공", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = MemberSignDTO.class))
-            }),
+    @Operation(summary = "특정 회원 정보 조회")
+    @ApiResponse(responseCode = "200", description = "특정 회원 정보 조회 성공", content = {
+            @Content(schema = @Schema(implementation = MemberSignDTO.class))
     })
     @GetMapping("/api/admin/users/{userId}")
     public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long userId) {
@@ -63,11 +62,9 @@ public class AdminMemberController {
         }
     }
 
-    @Operation(summary = "특정 사용자 정보 수정")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "특정 사용자 정보 수정 성공", content = {
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = MemberSignDTO.class))
-            }),
+    @Operation(summary = "특정 회원 정보 수정")
+    @ApiResponse(responseCode = "200", description = "특정 회원 정보 수정 성공", content = {
+            @Content(schema = @Schema(implementation = MemberSignDTO.class))
     })
     @PatchMapping("/api/admin/users/{userId}")
     public ResponseEntity<?> updateUserInfo(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long userId, @RequestBody MemberDomainDTO additionalInfo) {
@@ -82,9 +79,9 @@ public class AdminMemberController {
         }
     }
 
-    @Operation(summary = "특정 사용자 탈퇴 처리")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "특정 사용자 탈퇴 처리 성공"),
+    @Operation(summary = "특정 회원 탈퇴 처리")
+    @ApiResponse(responseCode = "200", description = "특정 회원 탈퇴 처리 성공", content = {
+            @Content(schema = @Schema(implementation = String.class))
     })
     @DeleteMapping("/api/admin/users/{userId}")
     public ResponseEntity<?> withdraw(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long userId) {

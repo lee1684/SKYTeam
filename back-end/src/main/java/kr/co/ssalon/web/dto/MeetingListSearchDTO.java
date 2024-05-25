@@ -1,6 +1,7 @@
 package kr.co.ssalon.web.dto;
 
 import kr.co.ssalon.domain.entity.Meeting;
+import kr.co.ssalon.domain.service.MemberService;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,15 +18,27 @@ public class MeetingListSearchDTO {
     // 필터를 위한 타입 카테고리 이름?
     private String categoryName;
 
+    private String meetingTitle;
+
+    private Boolean isCreator;
+
+    private Boolean isEnd;
+
+    private String backgroundColor;
     // 썸네일(증표)?
     // private TicketDTO ticketDTO;
     private String ticketThumb;
 
-    public MeetingListSearchDTO(Meeting meeting) {
+    public MeetingListSearchDTO(Meeting meeting, String username) {
         this.moimId = meeting.getId();
         this.categoryName = meeting.getCategory().getName();
+        this.meetingTitle = meeting.getTitle();
+        this.isCreator = meeting.getCreator().getUsername().equals(username);
+        this.isEnd = meeting.getIsFinished();
+        this.backgroundColor = meeting.getBackgroundColor();
         // this.ticketDTO = meeting.getTicket() == null ? null : new TicketDTO(meeting.getTicket());
-        this.ticketThumb = "https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/Thumbnails/" + this.moimId + "/Thumb-" + this.moimId + ".png";
+        // this.ticketThumb = "https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/Thumbnails/" + this.moimId + "/Thumb-" + this.moimId + ".png";
+        this.ticketThumb = meeting.getThumbnail();
     }
 
 }

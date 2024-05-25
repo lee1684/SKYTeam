@@ -40,7 +40,7 @@ public class MemberMeeting {
     @OneToMany(mappedBy = "memberMeeting")
     private final List<Message> messages = new ArrayList<>();
 
-    private boolean attendance = false;
+    private boolean attendance;
 
     protected MemberMeeting() {
     }
@@ -73,6 +73,8 @@ public class MemberMeeting {
     public void changeAttendanceFalse() {
         this.attendance = false;
     }
+
+    public void changeAttendance(boolean attendance) { this.attendance = attendance; }
 
     public static MemberMeeting createMemberMeeting(Member member, Meeting meeting) throws BadRequestException {
         Diary diary = Diary.createDiary("제목을 작성해보세요.", null, "일기를 작성해보세요.");

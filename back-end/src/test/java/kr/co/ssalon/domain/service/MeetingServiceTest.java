@@ -128,7 +128,7 @@ public class MeetingServiceTest {
         when(meetingRepository.save(any())).thenReturn(meeting);
 
         // 티켓 생성 --> 오류
-        when(ticketService.initTicket(meeting.getId())).thenReturn(null);
+        when(ticketService.initTicket(meeting.getId(), "N")).thenReturn(null);
         when(awsS3Service.getFileAsJsonString("json")).thenReturn("12345678");
 
         when(awsS3Service.uploadFileViaStream(meeting.getId(), "json")).thenReturn(null);
@@ -194,8 +194,12 @@ public class MeetingServiceTest {
 
     @Test
     @DisplayName("MeetingService.getMoims 메소드 테스트")
+    @WithCustomMockUser(username = "username", email = "email@email.com", role = "ROLE_USER")
     public void 모임목록조회() {
         // given
+
+        Member member = Member.createMember(username, email, role);
+        String username = member.getUsername();
 
         // "운동" 카테고리 Mock 객체 생성
         Category category = mock(Category.class);
@@ -215,10 +219,10 @@ public class MeetingServiceTest {
 
         // "운동", "서울특별시" 모임 Mock 객체에 대한 Page 객체 생성
         Page<Meeting> meetingsPage = new PageImpl<>(Collections.singletonList(meeting));
-        when(meetingRepository.searchMoims(meetingSearchCondition, pageable)).thenReturn(meetingsPage);
+        when(meetingRepository.searchMoims(meetingSearchCondition, username, pageable)).thenReturn(meetingsPage);
 
         // when (모임 목록 조회)
-        Page<Meeting> result = meetingService.getMoims(meetingSearchCondition, pageable);
+        Page<Meeting> result = meetingService.getMoims(meetingSearchCondition, username, pageable);
 
         // then (조회한 모임에 대한 검증)
         assertThat(result).isNotNull();

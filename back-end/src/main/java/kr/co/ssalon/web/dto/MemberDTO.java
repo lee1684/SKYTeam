@@ -35,6 +35,7 @@ public class MemberDTO {
     private String introduction;
     private List<String> interests;
     private String blackReason;
+    private LocalDateTime blackTime;
     @NotBlank
     private LocalDateTime joinDate;
     @NotBlank

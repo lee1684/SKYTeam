@@ -4,11 +4,16 @@ import kr.co.ssalon.domain.dto.MemberDomainDTO;
 import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.MemberMeeting;
+import kr.co.ssalon.domain.entity.Report;
 import kr.co.ssalon.domain.repository.MeetingRepository;
 import kr.co.ssalon.domain.repository.MemberRepository;
+import kr.co.ssalon.web.dto.BlackListSearchCondition;
 import kr.co.ssalon.web.dto.MeetingListSearchDTO;
+import kr.co.ssalon.web.dto.ReportSearchCondition;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -113,13 +118,14 @@ public class MemberService {
         // 멤버 제거
         memberRepository.delete(currentUser);
     }
+    /*
 
     public List<MeetingListSearchDTO> getJoinedMeetingList(String username) throws BadRequestException {
         Member currentUser = findMember(username);
 
         // 참여한 모임 목록 조회
         List<Meeting> joinedMeetingList = currentUser.getJoinedMeetings().stream().map(MemberMeeting::getMeeting).toList();
-        List<MeetingListSearchDTO> meetingListSearchList = joinedMeetingList.stream().map(MeetingListSearchDTO::new).toList();
+        List<MeetingListSearchDTO> meetingListSearchList = joinedMeetingList.stream().map(meeting ->  new MeetingListSearchDTO(meeting, username)).toList();
         return meetingListSearchList;
     }
 
@@ -130,9 +136,45 @@ public class MemberService {
         List<MeetingListSearchDTO> meetingListSearchList = currentUser.getJoinedMeetings().stream()
                 .map(MemberMeeting::getMeeting)
                 .filter(meeting -> meeting.getCreator().getId().equals(currentUser.getId()))
-                .map(MeetingListSearchDTO::new)
+                .map(meeting ->  new MeetingListSearchDTO(meeting, username))
                 .collect(Collectors.toList());
 
         return meetingListSearchList;
+    }
+
+    public List<MeetingListSearchDTO> getUnfinishedMeetingList(String username) throws BadRequestException {
+        Member currentUser = findMember(username);
+
+        List<MeetingListSearchDTO> meetingListSearchList = currentUser.getJoinedMeetings().stream()
+                .map(MemberMeeting::getMeeting)
+                .filter(meeting -> !meeting.getIsFinished())
+                .map(meeting ->  new MeetingListSearchDTO(meeting, username))
+                .collect(Collectors.toList());
+        return meetingListSearchList;
+    }
+
+    public List<MeetingListSearchDTO> getFinishedMeetingList(String username) throws BadRequestException {
+        Member currentUser = findMember(username);
+
+        List<MeetingListSearchDTO> meetingListSearchList = currentUser.getJoinedMeetings().stream()
+                .map(MemberMeeting::getMeeting)
+                .filter(Meeting::getIsFinished)
+                .map(meeting ->  new MeetingListSearchDTO(meeting, username))
+                .collect(Collectors.toList());
+        return meetingListSearchList;
+    }
+    */
+
+
+    @Transactional
+    public String changeBlackReason(Long userId, String reason) throws BadRequestException {
+        Member currentUser = findMember(userId);
+        currentUser.changeBlackReasonState(reason);
+        return reason;
+    }
+
+    public Page<Member> getBlackList(BlackListSearchCondition blackListSearchCondition, Pageable pageable) throws BadRequestException {
+        Page<Member> members = memberRepository.getBlackList(blackListSearchCondition, pageable);
+        return members;
     }
 }

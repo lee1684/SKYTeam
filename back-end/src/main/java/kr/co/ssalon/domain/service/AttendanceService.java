@@ -27,30 +27,29 @@ public class AttendanceService {
     private final QrService qrService;
     private final MemberMeetingRepository memberMeetingRepository;
 
-    public List<AttendanceDTO> getAttendances(Long moimId) throws BadRequestException {
+    public List<AttendanceDTO> getAttendancesTrue(Long moimId) throws BadRequestException {
         Meeting currentMeeting = meetingService.findMeeting(moimId);
         List<MemberMeeting> participants = currentMeeting.getParticipants();
 
         List<AttendanceDTO> attendances = new ArrayList<>();
 
         for (MemberMeeting memberMeeting : participants) {
-            AttendanceDTO attendanceDTO = new AttendanceDTO(memberMeeting.getMember().getNickname(), memberMeeting.getMember().getProfilePictureUrl(), memberMeeting.isAttendance());
-            attendances.add(attendanceDTO);
+            AttendanceDTO attendanceDTO = new AttendanceDTO(memberMeeting);
+            if (memberMeeting.isAttendance()) {
+                attendances.add(attendanceDTO);
+            }
         }
         return attendances;
     }
 
     @Transactional
-    public boolean changeAttendance(Long moimId, Long userId) throws BadRequestException {
+    public boolean changeAttendance(Long moimId, Long userId, boolean attendance) throws BadRequestException {
         Meeting currentMeeting = meetingService.findMeeting(moimId);
         Member currentMember = memberService.findMember(userId);
         MemberMeeting currentMemberMeeting = memberMeetingService.findByMemberAndMeeting(currentMember, currentMeeting);
 
-        if (currentMemberMeeting.isAttendance()) {
-            currentMemberMeeting.changeAttendanceFalse();
-        } else {
-            currentMemberMeeting.changeAttendanceTrue();
-        }
+        currentMemberMeeting.changeAttendance(attendance);
+
         return currentMemberMeeting.isAttendance();
     }
 }
