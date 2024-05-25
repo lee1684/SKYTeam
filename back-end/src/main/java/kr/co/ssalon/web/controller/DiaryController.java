@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.ssalon.domain.service.DiaryService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import kr.co.ssalon.web.dto.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
