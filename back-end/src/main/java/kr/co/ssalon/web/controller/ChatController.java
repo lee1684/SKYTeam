@@ -60,8 +60,8 @@ public class ChatController {
         return ResponseEntity.ok("disconnect");
     }
 
-    @Operation(summary = "특정 모임 채팅 조회")
-    @ApiResponse(responseCode = "200", description = "특정 모임 채팅 조회 성공", content = {
+    @Operation(summary = "특정 모임 채팅 기록 조회")
+    @ApiResponse(responseCode = "200", description = "특정 모임 채팅 기록 조회 성공", content = {
             @Content(schema = @Schema(implementation = MessageDTO.class))
     })
     @GetMapping("/api/chat/{moimId}")
@@ -76,8 +76,8 @@ public class ChatController {
         return ResponseEntity.ok().body(chatService.getChatList(moimId));
     }
 
-    @Operation(summary = "특정 모임 실시간 채팅 참여자 조회")
-    @ApiResponse(responseCode = "200", description = "특정 모임 실시간 채팅 참여자 조회 성공", content = {
+    @Operation(summary = "특정 모임 채팅 실시간 참가 회원 조회")
+    @ApiResponse(responseCode = "200", description = "특정 모임 채팅 실시간 참가 회원 조회 성공", content = {
             @Content(schema = @Schema(implementation = ChatConnectedMemberDTO.class))
     })
     @GetMapping("/api/chat/{moimId}/users")
