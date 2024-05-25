@@ -31,7 +31,7 @@ public class ChatService {
     }
 
     @Transactional
-    public List<MessageDTO> getChatList(Long moimId) {
+    public List<MessageDTO> getMoimChatHistory(Long moimId) {
         return messageRepository.findAllByMeetingId(moimId).stream().map(MessageDTO::new).toList();
     }
 

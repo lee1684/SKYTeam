@@ -14,7 +14,6 @@ import kr.co.ssalon.domain.service.MemberService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import kr.co.ssalon.web.dto.*;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,8 +63,8 @@ public class ChatController {
     @ApiResponse(responseCode = "200", description = "특정 모임 채팅 기록 조회 성공", content = {
             @Content(schema = @Schema(implementation = MessageDTO.class))
     })
-    @GetMapping("/api/chat/{moimId}")
-    public ResponseEntity<?> getMoimChat(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) throws BadRequestException {
+    @GetMapping("/api/chat-history/{moimId}")
+    public ResponseEntity<?> getMoimChatHistory(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) throws BadRequestException {
         String username = customOAuth2Member.getUsername();
         Member currentUser = memberService.findMember(username);
 
@@ -73,7 +72,8 @@ public class ChatController {
             return new ResponseEntity<>("회원이 참여한 모임이 아닙니다.", HttpStatus.BAD_REQUEST);
         }
 
-        return ResponseEntity.ok().body(chatService.getChatList(moimId));
+        return ResponseEntity.ok().body(chatService.getMoimChatHistory(moimId));
+    }
 
     @Operation(summary = "회원 채팅 기록 조회")
     @ApiResponse(responseCode = "200", description = "회원 채팅 기록 조회 성공", content = {
