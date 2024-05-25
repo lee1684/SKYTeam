@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -20,11 +23,25 @@ public class Diary {
     private MemberMeeting memberMeeting;
 
     private String title;
-    private String image_url;
+
+    @ElementCollection
+    @CollectionTable(name = "diary_picture", joinColumns = @JoinColumn(name = "diary_id"))
+    private final List<String> diaryPictureUrls = new ArrayList<>();
+
     private String description;
 
 
     protected Diary() {
+    }
+
+    public void addDiaryPictureUrls(List<String> diaryPictureUrls) {
+        for (String diaryPictureUrl : diaryPictureUrls) {
+            getDiaryPictureUrls().add(diaryPictureUrl);
+        }
+    }
+
+    public void editDiaryDescription(String description) {
+        this.description = description;
     }
 
     // ***** 연관 메서드 *****
@@ -32,12 +49,13 @@ public class Diary {
         this.memberMeeting = memberMeeting;
     }
 
-    public static Diary createDiary(String title, String image_url, String description) {
+    public static Diary createDiary(String title, List<String> diaryPictureUrls, String description) {
         Diary diary = Diary.builder()
                 .title(title)
-                .image_url(image_url)
                 .description(description)
                 .build();
+        diary.addDiaryPictureUrls(diaryPictureUrls);
+
         return diary;
     }
 

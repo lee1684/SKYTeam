@@ -3,20 +3,22 @@ package kr.co.ssalon.domain.service;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import kr.co.ssalon.web.dto.DiaryFetchResponseDTO;
-import kr.co.ssalon.web.dto.DiaryInitResponseDTO;
-import kr.co.ssalon.web.dto.TicketEditResponseDTO;
-import kr.co.ssalon.web.dto.TicketImageResponseDTO;
+import kr.co.ssalon.domain.entity.Diary;
+import kr.co.ssalon.domain.entity.Meeting;
+import kr.co.ssalon.domain.entity.Member;
+import kr.co.ssalon.domain.entity.MemberMeeting;
+import kr.co.ssalon.domain.repository.DiaryRepository;
+import kr.co.ssalon.domain.repository.MeetingRepository;
+import kr.co.ssalon.domain.repository.MemberMeetingRepository;
+import kr.co.ssalon.domain.repository.MemberRepository;
+import kr.co.ssalon.web.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class DiaryService {
@@ -27,6 +29,14 @@ public class DiaryService {
 
     @Autowired
     private AwsS3Service awsS3Service;
+    @Autowired
+    private MemberMeetingRepository memberMeetingRepository;
+    @Autowired
+    private DiaryRepository diaryRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private MeetingRepository meetingRepository;
 
     public DiaryFetchResponseDTO fetchDiary(Long moimID, String username) {
         // R of CRUD : 다이어리 조회
@@ -122,6 +132,41 @@ public class DiaryService {
                     .numResult(resultSize)
                     .mapURI(imageSrcMap)
                     .build();
+    }
+
+    public DiaryInfoDTO fetchDiaryInfo(Long moimId, String username) {
+
+        Optional<Member> userOp = memberRepository.findByUsername(username);
+        Optional<Meeting> meetingOp = meetingRepository.findById(moimId);
+
+        Member user = userOp.get();
+        Meeting meeting = meetingOp.get();
+
+        Optional<MemberMeeting> memberMeetingOp = memberMeetingRepository.findByMemberAndMeeting(user, meeting);
+
+        MemberMeeting memberMeeting = memberMeetingOp.get();
+        Diary diary = memberMeeting.getDiary();
+
+        return new DiaryInfoDTO(diary);
+    }
+
+    public Diary updateDiaryInfo(Long moimId, String username, DiaryInfoDTO diaryInfoDTO) {
+
+        Optional<Member> userOp = memberRepository.findByUsername(username);
+        Optional<Meeting> meetingOp = meetingRepository.findById(moimId);
+
+        Member user = userOp.get();
+        Meeting meeting = meetingOp.get();
+
+        Optional<MemberMeeting> memberMeetingOp = memberMeetingRepository.findByMemberAndMeeting(user, meeting);
+
+        MemberMeeting memberMeeting = memberMeetingOp.get();
+        Diary diary = memberMeeting.getDiary();
+
+        diary.editDiaryDescription(diaryInfoDTO.getDescription());
+        diary.addDiaryPictureUrls(diaryInfoDTO.getDiaryPictureUrls());
+
+        return diaryRepository.save(diary);
     }
 
     private String generateRandomUUID() {
