@@ -1,10 +1,13 @@
 package kr.co.ssalon.web.controller.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.ssalon.domain.dto.MeetingDomainDTO;
+import kr.co.ssalon.domain.entity.Category;
 import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.repository.MeetingRepository;
@@ -39,8 +42,8 @@ public class AdminMeetingController {
 
 
     @Operation(summary = "모임 전체 조회")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "모임 전체 조회 성공"),
+    @ApiResponse(responseCode = "200", description = "모임 전체 조회 성공", content = {
+            @Content(schema = @Schema(implementation = Meeting.class))
     })
     @GetMapping("/api/admin/moims/all")
     public ResponseEntity<?> getMoimsAll(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
@@ -54,16 +57,16 @@ public class AdminMeetingController {
     }
 
     @Operation(summary = "모임 목록 조회")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "모임 목록 조회 성공"),
+    @ApiResponse(responseCode = "200", description = "모임 목록 조회 성공", content = {
+            @Content(schema = @Schema(implementation = MeetingListSearchPageDTO.class))
     })
     @GetMapping("/api/admin/moims")
     public ResponseEntity<MeetingListSearchPageDTO> getMoims(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, MeetingSearchCondition meetingSearchCondition, Pageable pageable) {
         try {
             String username = customOAuth2Member.getUsername();
             validationAdmin(username);
-            Page<Meeting> moims = meetingService.getMoims(meetingSearchCondition, pageable);
-            Page<MeetingListSearchDTO> moimsDto = moims.map(meeting -> new MeetingListSearchDTO(meeting));
+            Page<Meeting> moims = meetingService.getMoims(meetingSearchCondition, username, pageable);
+            Page<MeetingListSearchDTO> moimsDto = moims.map(meeting -> new MeetingListSearchDTO(meeting, username));
             MeetingListSearchPageDTO meetingListSearchPageDTO = new MeetingListSearchPageDTO(moimsDto);
             return ResponseEntity.ok().body(new JsonResult<>(meetingListSearchPageDTO).getData());
         } catch (BadRequestException e) {
@@ -72,8 +75,8 @@ public class AdminMeetingController {
     }
 
     @Operation(summary = "특정 모임 정보 조회")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "특정 모임 정보 성공"),
+    @ApiResponse(responseCode = "200", description = "특정 모임 정보 조회 성공", content = {
+            @Content(schema = @Schema(implementation = Meeting.class))
     })
     @GetMapping("/api/admin/moims/{moimId}")
     public ResponseEntity<?> getMoim(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
@@ -87,10 +90,10 @@ public class AdminMeetingController {
     }
 
     @Operation(summary = "모임 정보 수정")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "모임 정보 수정 성공"),
+    @ApiResponse(responseCode = "200", description = "모임 정보 수정 성공", content = {
+            @Content(schema = @Schema(implementation = Long.class))
     })
-    @PatchMapping("/api/moims/admin/{moimId}")
+    @PatchMapping("/api/admin/moims/{moimId}")
     public ResponseEntity<?> updateMoim(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MeetingDomainDTO meetingDomainDTO) {
         try {
             String username = customOAuth2Member.getUsername();
@@ -102,10 +105,10 @@ public class AdminMeetingController {
     }
 
     @Operation(summary = "모임 해산")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "모임 해산 성공"),
+    @ApiResponse(responseCode = "200", description = "모임 해산 성공", content = {
+            @Content(schema = @Schema(implementation = Long.class))
     })
-    @DeleteMapping("/api/moims/admin/{moimId}")
+    @DeleteMapping("/api/admin/moims/{moimId}")
     public ResponseEntity<?> deleteMoim(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
         try {
             String username = customOAuth2Member.getUsername();

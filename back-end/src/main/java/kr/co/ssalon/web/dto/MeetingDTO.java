@@ -22,7 +22,6 @@ public class MeetingDTO {
     @NotBlank
     private Long categoryId;
 
-    private Long paymentId;
     @NotBlank
     private Long creatorId;
 
@@ -46,7 +45,6 @@ public class MeetingDTO {
     public MeetingDTO(Meeting meeting) {
         this.id = meeting.getId();
         this.categoryId = meeting.getCategory().getId();
-        this.paymentId = meeting.getPayment() == null ? null : meeting.getPayment().getId();
         this.creatorId = meeting.getCreator().getId();
         this.ticketId = meeting.getTicket() == null ? null : meeting.getTicket().getId();
         this.participantIds = meeting.getParticipants().stream().map(MemberMeeting::getId).collect(Collectors.toList());

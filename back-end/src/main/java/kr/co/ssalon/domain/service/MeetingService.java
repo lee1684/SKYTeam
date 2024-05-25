@@ -3,7 +3,6 @@ package kr.co.ssalon.domain.service;
 import kr.co.ssalon.domain.dto.MeetingDomainDTO;
 import kr.co.ssalon.domain.entity.*;
 import kr.co.ssalon.domain.repository.*;
-import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import kr.co.ssalon.web.dto.ParticipantDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,7 +27,6 @@ public class MeetingService {
     private final TicketService ticketService;
     private final CategoryRepository categoryRepository;
     private final MeetingOutRepository meetingOutRepository;
-    private final MemberService memberService;
 
     // 모임 개설
     @Transactional
@@ -39,16 +36,29 @@ public class MeetingService {
         Member currentUser = findMember(username);
         // 카테고리 찾기
         Category category = findCategory(meetingDomainDTO.getCategory());
-        // 모임 생성 { 카테고리, 회원, 모임 이미지, 모임 제목, 모임 설명, 모임 장소, 모임 수용인원, 모임 날짜 }
-        Meeting meeting = Meeting.createMeeting(category, currentUser, meetingDomainDTO.getMeetingPictureUrls(), meetingDomainDTO.getTitle(), meetingDomainDTO.getDescription(), meetingDomainDTO.getLocation(), meetingDomainDTO.getCapacity(), meetingDomainDTO.getMeetingDate());
+
+        // 모임 생성 { 카테고리, 회원, 모임 이미지, 모임 제목, 모임 설명, 모임 장소, 모임 수용인원, 모임 날짜, 공유 여부 }
+        Meeting meeting = Meeting.createMeeting(
+                category,
+                currentUser,
+                meetingDomainDTO.getMeetingPictureUrls(),
+                meetingDomainDTO.getTitle(),
+                meetingDomainDTO.getDescription(),
+                meetingDomainDTO.getLocation(),
+                meetingDomainDTO.getCapacity(),
+                meetingDomainDTO.getPayment(),
+                meetingDomainDTO.getMeetingDate(),
+                meetingDomainDTO.getIsSharable()
+        );
 
         // 모임 참가 생성 및 나의 가입된 모임에 추가
         MemberMeeting memberMeeting = MemberMeeting.createMemberMeeting(currentUser, meeting);
+        memberMeeting.changeAttendanceTrue();
         memberMeetingRepository.save(memberMeeting);
         Meeting savedMeeting = meetingRepository.save(meeting);
 
         // 티켓 초기 정보 설정
-        ticketService.initTicket(savedMeeting.getId());
+        ticketService.initTicket(savedMeeting.getId(), "N");
 
         return savedMeeting.getId();
     }
@@ -96,8 +106,8 @@ public class MeetingService {
         return member.equals(meeting.getCreator());
     }
     // 모임 목록 조회
-    public Page<Meeting> getMoims(MeetingSearchCondition meetingSearchCondition, Pageable pageable) {
-        Page<Meeting> meetings = meetingRepository.searchMoims(meetingSearchCondition, pageable);
+    public Page<Meeting> getMoims(MeetingSearchCondition meetingSearchCondition, String username, Pageable pageable) {
+        Page<Meeting> meetings = meetingRepository.searchMoims(meetingSearchCondition, username, pageable);
         return meetings;
     }
 
@@ -188,7 +198,7 @@ public class MeetingService {
         Meeting meeting = findMeeting(moimId);
         Member currentUser = findMember(username);
         Member targetUser = findMember(userId);
-        MemberMeeting targetMemberMeeting = findMemberMeeting(currentUser, meeting);
+        MemberMeeting targetMemberMeeting = findMemberMeeting(targetUser, meeting);
 
         // 요청자가 모임에 포함되어 있는지 검증
         if(!isParticipant(moimId, currentUser)) {throw new BadRequestException("요청자가 모임에 참여자 목록에 존재하지 않습니다.");}
@@ -196,14 +206,12 @@ public class MeetingService {
         targetUser.deleteMemberMeeting(targetMemberMeeting);
         meeting.deleteMemberMeeting(targetMemberMeeting);
 
-        memberMeetingRepository.delete(targetMemberMeeting);
-
         // 요청자가 모임 개최자인 경우 -> 강퇴
         if(currentUser.equals(meeting.getCreator()) || !currentUser.equals(targetUser)) {
 
             MeetingOut meetingOut = MeetingOut.createMeetingOutReason(targetUser, meeting, "강퇴", reason);
             meetingOutRepository.save(meetingOut);
-
+            memberMeetingRepository.delete(targetMemberMeeting);
             return meetingOut;
         }
 
@@ -212,7 +220,7 @@ public class MeetingService {
 
             MeetingOut meetingOut = MeetingOut.createMeetingOutReason(targetUser, meeting, "탈퇴", reason);
             meetingOutRepository.save(meetingOut);
-
+            memberMeetingRepository.delete(targetMemberMeeting);
             return meetingOut;
         }
 

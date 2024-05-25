@@ -26,10 +26,6 @@ public class Meeting {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_id")
-    private Payment payment;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id")
     private Member creator;
@@ -50,10 +46,18 @@ public class Meeting {
     private String description;
     private String location;
     private Integer capacity;
+    private Integer payment;
     private LocalDateTime meetingDate;
+
+    private Boolean isSharable;
+    private Boolean isFinished = false;
+
+    private String backgroundColor;
+    private String thumbnail;
 
     protected Meeting() {
     }
+
 
     // ***** 필드 메서드 *****
     public void changeTitle(String title) {
@@ -75,6 +79,17 @@ public class Meeting {
     public void changeLocalDateTime(LocalDateTime meetingDate) {
         this.meetingDate = meetingDate != null ? meetingDate : this.meetingDate;
     }
+
+    public void changeIsFinished() { this.isFinished = true; }
+
+    public void changeBackgroundColor(String backgroundColor) {
+        this.backgroundColor = backgroundColor != null ? backgroundColor : this.backgroundColor;
+    }
+
+    public void changeThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail != null ? thumbnail : this.thumbnail;
+    }
+
 
     public void addMeetingPictureUrls(List<String> meetingPictureUrls) {
         for (String meetingPictureUrl : meetingPictureUrls) {
@@ -114,13 +129,29 @@ public class Meeting {
         getParticipants().add(memberMeeting);
     }
 
-    public static Meeting createMeeting(Category category, Member creator, List<String> meetingPictureUrls, String title, String description, String location, Integer capacity, LocalDateTime meetingDate) {
+    public static Meeting createMeeting(
+            Category category,
+            Member creator,
+            List<String> meetingPictureUrls,
+            String title,
+            String description,
+            String location,
+            Integer capacity,
+            Integer payment,
+            LocalDateTime meetingDate,
+            Boolean isSharable
+    ) {
         Meeting meeting = Meeting.builder()
                 .title(title)
+                .payment(payment)
                 .description(description)
                 .location(location)
                 .capacity(capacity)
                 .meetingDate(meetingDate)
+                .isSharable(isSharable)
+                .isFinished(false)
+                .backgroundColor("#808080")
+                .thumbnail("https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/Thumbnails/Template-240424/Placeholder_1.png")
                 .build();
 
         meeting.ownerMember(creator);

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class TicketViewController {
 
-    @GetMapping("/web/ticket/**")
+    @GetMapping("/web/**")
     public String fetchTicketPage() {
         return "forward:/";
     }

@@ -6,6 +6,7 @@ import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.MemberMeeting;
 import kr.co.ssalon.domain.repository.CategoryRepository;
+import kr.co.ssalon.web.controller.annotation.WithCustomMockUser;
 import kr.co.ssalon.web.dto.MeetingSearchCondition;
 import org.apache.coyote.BadRequestException;
 import org.assertj.core.api.Assertions;
@@ -44,6 +45,7 @@ public class MeetingServiceIntegrationTest {
     @Autowired
     CategoryService categoryService;
     List<Category> categorys = new ArrayList<>();
+
     String role = "ROLE_USER";
 
     @BeforeEach
@@ -161,8 +163,10 @@ public class MeetingServiceIntegrationTest {
     }
 
     @Test
+    @WithCustomMockUser(username = "test")
     public void 모임목록조회() throws Exception {
         //given
+        String username = "test";
         String creatorName = "creator";
         memberService.register("creator", "create@test.com", role);
         for (int i = 0; i < 35; i++) {
@@ -186,9 +190,9 @@ public class MeetingServiceIntegrationTest {
                 .build();
         PageRequest pageRequest1 = PageRequest.of(0, 10);
         PageRequest pageRequest2 = PageRequest.of(1, 10);
-        Page<Meeting> exerciseMoims = meetingService.getMoims(msc1, pageRequest1);
-        Page<Meeting> studyMoims = meetingService.getMoims(msc2, pageRequest2);
-        Page<Meeting> musicMoims = meetingService.getMoims(msc3, pageRequest1);
+        Page<Meeting> exerciseMoims = meetingService.getMoims(msc1, username, pageRequest1);
+        Page<Meeting> studyMoims = meetingService.getMoims(msc2, username, pageRequest2);
+        Page<Meeting> musicMoims = meetingService.getMoims(msc3, username, pageRequest1);
 
         //then
         assertThat(exerciseMoims.getTotalElements()).isEqualTo(15);

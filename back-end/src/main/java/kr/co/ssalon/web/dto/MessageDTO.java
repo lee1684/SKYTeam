@@ -14,19 +14,21 @@ import java.time.LocalDateTime;
 @Builder
 public class MessageDTO {
 
-    @NotNull
-    private Long id;
     @NotBlank
-    private Long memberMeetingId;
+    private String nickname;
+    @NotBlank
+    private String profilePicture;
     @NotBlank
     private String message;
     @NotBlank
-    private LocalDateTime sentAt;
+    private LocalDateTime date;
 
-    public MessageDTO(Message message) {
-        this.id = message.getId();
-        this.memberMeetingId = message.getMemberMeeting().getId();
-        this.message = message.getMessage();
-        this.sentAt = message.getSentAt();
+    public MessageDTO(Message messageEntity) {
+        Member messageSendMember = messageEntity.getMemberMeeting().getMember();
+
+        this.nickname = messageSendMember.getNickname();
+        this.profilePicture = messageSendMember.getProfilePictureUrl();
+        this.message = messageEntity.getMessage();
+        this.date = messageEntity.getSentAt();
     }
 }
