@@ -116,6 +116,21 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
         if (meetingOrder == MeetingOrder.RECENT) {
             return new OrderSpecifier<>(desc, meeting.meetingDate);
         }
+        if (meetingOrder == MeetingOrder.DEADLINE) {
+            return new OrderSpecifier<>(asc, meeting.meetingDate);
+        }
+        if (meetingOrder == MeetingOrder.MEETING_NAME) {
+            return new OrderSpecifier<>(asc, meeting.title);
+        }
+        if (meetingOrder == MeetingOrder.MEETING_NAME_REVERSE) {
+            return new OrderSpecifier<>(desc, meeting.title);
+        }
+        if (meetingOrder == MeetingOrder.CHEAP_PARTICIPATION_FEE) {
+            return new OrderSpecifier<>(asc, meeting.payment);
+        }
+        if (meetingOrder == MeetingOrder.EXPENSIVE_PARTICIPATION_FEE) {
+            return new OrderSpecifier<>(desc, meeting.payment);
+        }
         return new OrderSpecifier(asc, NullExpression.DEFAULT, OrderSpecifier.NullHandling.Default);
     }
 
