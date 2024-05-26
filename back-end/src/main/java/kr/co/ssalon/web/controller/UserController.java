@@ -60,8 +60,8 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "닉네임 중복 여부 조회 성공"),
     })
     @PostMapping("/api/users/check-nickname")
-    public Boolean checkNicknameDuplication(@RequestBody Map<String, String> nicknameMap) {
-        return memberService.checkNickname(nicknameMap.get("nickname"));
+    public Boolean checkNicknameDuplication(@RequestBody NicknameDTO nicknameDTO) {
+        return memberService.checkNickname(nicknameDTO.getNickname());
     }
 
     @Operation(summary = "회원 정보 조회")
