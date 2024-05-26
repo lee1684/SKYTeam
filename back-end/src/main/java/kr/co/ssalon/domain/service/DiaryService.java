@@ -91,13 +91,13 @@ public class DiaryService {
     }
 
     @Transactional
-    public TicketImageResponseDTO uploadImages(Long moimId, List<MultipartFile> multipartFiles) {
+    public ImageResponseDTO uploadImages(Long moimId, List<MultipartFile> multipartFiles) {
 
         Map<String, String> imageSrcMap = new HashMap<>();
 
         int requestSize = multipartFiles.size();
 
-        if (requestSize == 0) return TicketImageResponseDTO.builder()
+        if (requestSize == 0) return ImageResponseDTO.builder()
                 .resultCode("400 Bad Request")
                 .numRequest(requestSize)
                 .numResult(0)
@@ -114,19 +114,19 @@ public class DiaryService {
 
         int resultSize = awsS3Service.uploadMultiFilesViaMultipart(multipartFiles, imageSrcMap);
 
-        if (requestSize == resultSize) return TicketImageResponseDTO.builder()
+        if (requestSize == resultSize) return ImageResponseDTO.builder()
                 .resultCode("201 Created")
                 .numRequest(requestSize)
                 .numResult(resultSize)
                 .mapURI(imageSrcMap)
                 .build();
-        else if (resultSize > 0) return TicketImageResponseDTO.builder()
+        else if (resultSize > 0) return ImageResponseDTO.builder()
                 .resultCode("206 Partial Content")
                 .numRequest(requestSize)
                 .numResult(resultSize)
                 .mapURI(imageSrcMap)
                 .build();
-        else return TicketImageResponseDTO.builder()
+        else return ImageResponseDTO.builder()
                     .resultCode("502 Bad Gateway")
                     .numRequest(requestSize)
                     .numResult(resultSize)

@@ -4,13 +4,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kr.co.ssalon.web.dto.MeetingListSearchDTO;
 import kr.co.ssalon.web.dto.TicketEditResponseDTO;
 import kr.co.ssalon.domain.service.AwsS3Service;
 import kr.co.ssalon.domain.service.TicketService;
-import kr.co.ssalon.web.dto.TicketImageResponseDTO;
+import kr.co.ssalon.web.dto.ImageResponseDTO;
 import kr.co.ssalon.web.dto.TicketInitResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -71,18 +69,18 @@ public class TicketController {
 
     @Operation(summary = "모임 증표 편집 시 이미지 업로드")
     @ApiResponse(responseCode = "200", description = "모임 증표 편집 시 이미지 업로드 성공", content = {
-            @Content(schema = @Schema(implementation = TicketImageResponseDTO.class))
+            @Content(schema = @Schema(implementation = ImageResponseDTO.class))
     })
     @PostMapping(value = "/{moimId}/image") // 모임 증표 편집 시 이미지 업로드
-    public ResponseEntity<TicketImageResponseDTO> uploadFiles(@PathVariable("moimId") Long moimId, @RequestPart List<MultipartFile> files) {
+    public ResponseEntity<ImageResponseDTO> uploadFiles(@PathVariable("moimId") Long moimId, @RequestPart List<MultipartFile> files) {
 
-        TicketImageResponseDTO ticketImageResponseDTO = ticketService.uploadImages(moimId, files);
+        ImageResponseDTO imageResponseDTO = ticketService.uploadImages(moimId, files);
 
-        return switch (ticketImageResponseDTO.getResultCode()) {
-            case "201 Created" -> ResponseEntity.status(HttpStatus.CREATED).body(ticketImageResponseDTO);
-            case "206 Partial Content" -> ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(ticketImageResponseDTO);
-            case "502 Bad Gateway" -> ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(ticketImageResponseDTO);
-            default -> ResponseEntity.badRequest().body(ticketImageResponseDTO); // 400 Bad Request
+        return switch (imageResponseDTO.getResultCode()) {
+            case "201 Created" -> ResponseEntity.status(HttpStatus.CREATED).body(imageResponseDTO);
+            case "206 Partial Content" -> ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(imageResponseDTO);
+            case "502 Bad Gateway" -> ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(imageResponseDTO);
+            default -> ResponseEntity.badRequest().body(imageResponseDTO); // 400 Bad Request
         };
     }
 }
