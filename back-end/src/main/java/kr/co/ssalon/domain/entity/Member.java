@@ -35,6 +35,7 @@ public class Member {
     private String address;
     private String role;
     private String introduction;
+    @Builder.Default
     @ElementCollection
     @CollectionTable(name = "member_interests", joinColumns = @JoinColumn(name = "member_id"))
     private List<String> interests = new ArrayList<>();

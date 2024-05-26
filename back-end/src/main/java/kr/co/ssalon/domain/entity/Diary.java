@@ -22,6 +22,7 @@ public class Diary {
     @OneToOne(fetch = FetchType.LAZY)
     private MemberMeeting memberMeeting;
 
+    @Builder.Default
     private boolean editYet = true;
 
     private String title;
