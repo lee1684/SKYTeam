@@ -50,6 +50,7 @@ public class Meeting {
     private LocalDateTime meetingDate;
 
     private Boolean isSharable;
+    @Builder.Default
     private Boolean isFinished = false;
 
     private String backgroundColor;

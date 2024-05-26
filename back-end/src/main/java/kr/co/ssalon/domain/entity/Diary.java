@@ -22,6 +22,9 @@ public class Diary {
     @OneToOne(fetch = FetchType.LAZY)
     private MemberMeeting memberMeeting;
 
+    @Builder.Default
+    private boolean editYet = true;
+
     private String title;
 
     @ElementCollection
@@ -38,10 +41,12 @@ public class Diary {
         for (String diaryPictureUrl : diaryPictureUrls) {
             getDiaryPictureUrls().add(diaryPictureUrl);
         }
+        this.editYet = false;
     }
 
     public void editDiaryDescription(String description) {
         this.description = description;
+        this.editYet = false;
     }
 
     // ***** 연관 메서드 *****
@@ -53,6 +58,7 @@ public class Diary {
         Diary diary = Diary.builder()
                 .title(title)
                 .description(description)
+                .editYet(true)
                 .build();
         diary.addDiaryPictureUrls(diaryPictureUrls);
 
