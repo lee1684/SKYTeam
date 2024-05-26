@@ -16,6 +16,7 @@ import java.util.List;
 public class DiaryInfoDTO {
 
     private String description;
+    @Builder.Default
     private List<String> diaryPictureUrls = new ArrayList<>();
 
     public DiaryInfoDTO(Diary diary) {

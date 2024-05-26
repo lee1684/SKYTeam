@@ -99,7 +99,10 @@ public class DiaryController {
 
     @GetMapping("/{moimId}/info")
     public ResponseEntity<DiaryInfoDTO> fetchDiaryInfo(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
-        return ResponseEntity.ok(diaryService.fetchDiaryInfo(moimId, customOAuth2Member.getUsername()));
+        DiaryInfoDTO diaryInfoDTO = diaryService.fetchDiaryInfo(moimId, customOAuth2Member.getUsername());
+
+        if (diaryInfoDTO.getDescription().equals("NOT EDIT YET")) return ResponseEntity.notFound().build();
+        else return ResponseEntity.ok(diaryInfoDTO);
     }
 
     @PostMapping("/{moimId}/info")
