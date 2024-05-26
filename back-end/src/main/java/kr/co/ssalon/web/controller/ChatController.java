@@ -47,9 +47,10 @@ public class ChatController {
         String username = (String) accessor.getSessionAttributes().get("username");
         Member member = memberService.findMember(username);
         Meeting meeting = meetingService.findMeeting(roomId);
+        String messageType = "TALK";
 
         // 채팅 메시지 저장
-        MessageDTO messageDTO = chatService.saveMessage(member, meeting, message.get("message"));
+        MessageDTO messageDTO = chatService.saveMessage(member, meeting, message.get("message"), messageType);
 
         return messageDTO;
     }

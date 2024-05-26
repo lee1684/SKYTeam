@@ -1,7 +1,6 @@
 package kr.co.ssalon.web.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.Message;
 import lombok.*;
@@ -14,6 +13,8 @@ import java.time.LocalDateTime;
 @Builder
 public class MessageDTO {
 
+    @NotBlank
+    private String messageType;
     @NotBlank
     private String nickname;
     @NotBlank
@@ -28,6 +29,7 @@ public class MessageDTO {
     public MessageDTO(Message messageEntity) {
         Member messageSendMember = messageEntity.getMemberMeeting().getMember();
 
+        this.messageType = messageEntity.getMessageType();
         this.nickname = messageSendMember.getNickname();
         this.profilePicture = messageSendMember.getProfilePictureUrl();
         this.message = messageEntity.getMessage();

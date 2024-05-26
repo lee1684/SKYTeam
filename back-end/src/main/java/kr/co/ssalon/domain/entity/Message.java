@@ -18,6 +18,9 @@ public class Message {
     @Column(name = "message_id")
     private Long id;
 
+    @Column(name = "message_type")
+    private String messageType;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_meeting_id")
     private MemberMeeting memberMeeting;
@@ -37,8 +40,9 @@ public class Message {
 
     protected Message() {}
 
-    public static Message createMessage(MemberMeeting memberMeeting, String message) {
+    public static Message createMessage(MemberMeeting memberMeeting, String message, String messageType) {
         return Message.builder()
+                .messageType(messageType)
                 .memberMeeting(memberMeeting)
                 .meetingId(memberMeeting.getMeeting().getId())
                 .memberId(memberMeeting.getMember().getId())
