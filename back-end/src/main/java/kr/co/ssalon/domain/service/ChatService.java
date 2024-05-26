@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
@@ -32,7 +33,7 @@ public class ChatService {
 
     @Transactional
     public List<MessageDTO> getMoimChatHistory(Long moimId) {
-        return messageRepository.findAllByMeetingId(moimId).stream().filter(message -> message.getMessageType() == "TALK").map(MessageDTO::new).toList();
+        return messageRepository.findAllByMeetingId(moimId).stream().filter(message -> "TALK".equals(message.getMessageType())).map(MessageDTO::new).toList();
     }
 
     public List<MessageDTO> getMyChatHistory(Long memberId) {

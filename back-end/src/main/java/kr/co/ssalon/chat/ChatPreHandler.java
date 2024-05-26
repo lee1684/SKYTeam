@@ -35,6 +35,11 @@ public class ChatPreHandler implements ChannelInterceptor {
             String username = jwtUtil.getUsername(accessToken);
             accessor.getSessionAttributes().put("username", username);
 
+            if (StompCommand.SEND.equals(accessor.getCommand())) {
+                String messageType = accessor.getNativeHeader("MessageType").get(0);
+                accessor.getSessionAttributes().put("messageType", messageType);
+            }
+
             if (StompCommand.CONNECT.equals(accessor.getCommand())) {
                 String moimId = accessor.getFirstNativeHeader("moimId");
                 memberToChatRoomIdMap.put(username, moimId);
