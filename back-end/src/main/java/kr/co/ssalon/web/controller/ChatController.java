@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 @Tag(name = "채팅")
 @Controller
@@ -43,17 +43,21 @@ public class ChatController {
 
     @MessageMapping("/{roomId}")
     @SendTo("/room/{roomId}")
-    public MessageDTO chat(SimpMessageHeaderAccessor accessor, @DestinationVariable Long roomId, @Payload Map<String, String> message) throws BadRequestException {
+    public MessageResponseDTO chat(SimpMessageHeaderAccessor accessor, @DestinationVariable Long roomId, @Payload MessageRequestDTO messageRequestDTO) throws BadRequestException {
         String username = (String) accessor.getSessionAttributes().get("username");
         String messageType = (String) accessor.getSessionAttributes().get("messageType");
 
         Member member = memberService.findMember(username);
         Meeting meeting = meetingService.findMeeting(roomId);
 
-        // 채팅 메시지 저장
-        MessageDTO messageDTO = chatService.saveMessage(member, meeting, message.get("message"), messageType);
+        String imageUrl = Objects.equals(messageType, "ENTER")
+                ? ""
+                : chatService.changeImageBytesToUrl(messageRequestDTO.getImageBytes(), messageRequestDTO.getFileName(), roomId);
 
-        return messageDTO;
+        // 채팅 메시지 저장
+        MessageResponseDTO messageResponseDTO = chatService.saveMessage(member, meeting, messageRequestDTO.getMessage(), messageType, imageUrl);
+
+        return messageResponseDTO;
     }
 
     @MessageMapping("/disconnect")
@@ -63,7 +67,7 @@ public class ChatController {
 
     @Operation(summary = "특정 모임 채팅 기록 조회")
     @ApiResponse(responseCode = "200", description = "특정 모임 채팅 기록 조회 성공", content = {
-            @Content(schema = @Schema(implementation = MessageDTO.class))
+            @Content(schema = @Schema(implementation = MessageResponseDTO.class))
     })
     @GetMapping("/api/chat-history/{moimId}")
     public ResponseEntity<?> getMoimChatHistory(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) throws BadRequestException {
@@ -79,7 +83,7 @@ public class ChatController {
 
     @Operation(summary = "회원 채팅 기록 조회")
     @ApiResponse(responseCode = "200", description = "회원 채팅 기록 조회 성공", content = {
-            @Content(schema = @Schema(implementation = MessageDTO.class))
+            @Content(schema = @Schema(implementation = MessageResponseDTO.class))
     })
     @GetMapping("/api/chat-history/me")
     public ResponseEntity<?> getMyChatHistory(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) throws BadRequestException {

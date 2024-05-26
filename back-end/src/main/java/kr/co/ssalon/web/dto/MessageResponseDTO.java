@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MessageDTO {
+public class MessageResponseDTO {
 
     @NotBlank
     private String messageType;
@@ -25,8 +25,9 @@ public class MessageDTO {
     private LocalDateTime date;
     @NotBlank
     private String email;
+    private String imageUrl;
 
-    public MessageDTO(Message messageEntity) {
+    public MessageResponseDTO(Message messageEntity) {
         Member messageSendMember = messageEntity.getMemberMeeting().getMember();
 
         this.messageType = messageEntity.getMessageType();
@@ -35,5 +36,6 @@ public class MessageDTO {
         this.message = messageEntity.getMessage();
         this.date = messageEntity.getSentAt();
         this.email = messageSendMember.getEmail();
+        this.imageUrl = messageEntity.getImageUrl();
     }
 }

@@ -33,6 +33,8 @@ public class Message {
 
     private String message;
 
+    private String imageUrl;
+
     @CreatedDate
     @Column(name = "sent_at", updatable = false)
     private LocalDateTime sentAt;
@@ -40,13 +42,14 @@ public class Message {
 
     protected Message() {}
 
-    public static Message createMessage(MemberMeeting memberMeeting, String message, String messageType) {
+    public static Message createMessage(MemberMeeting memberMeeting, String message, String messageType, String imageUrl) {
         return Message.builder()
                 .messageType(messageType)
                 .memberMeeting(memberMeeting)
                 .meetingId(memberMeeting.getMeeting().getId())
                 .memberId(memberMeeting.getMember().getId())
                 .message(message)
+                .imageUrl(imageUrl)
                 .sentAt(LocalDateTime.now())
                 .build();
     }
