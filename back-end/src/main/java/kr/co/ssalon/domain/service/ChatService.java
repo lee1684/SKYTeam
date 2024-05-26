@@ -32,7 +32,7 @@ public class ChatService {
 
     @Transactional
     public List<MessageDTO> getMoimChatHistory(Long moimId) {
-        return messageRepository.findAllByMeetingId(moimId).stream().map(MessageDTO::new).toList();
+        return messageRepository.findAllByMeetingId(moimId).stream().filter(message -> message.getMessageType() == "TALK").map(MessageDTO::new).toList();
     }
 
     public List<MessageDTO> getMyChatHistory(Long memberId) {
