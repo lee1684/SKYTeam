@@ -22,9 +22,9 @@ public class ChatService {
     private final MessageRepository messageRepository;
 
     @Transactional
-    public MessageDTO saveMessage(Member member, Meeting meeting, String message) throws BadRequestException {
+    public MessageDTO saveMessage(Member member, Meeting meeting, String message, String messageType) throws BadRequestException {
         MemberMeeting memberMeeting = memberMeetingService.findByMemberAndMeeting(member, meeting);
-        Message messageEntity = Message.createMessage(memberMeeting, message);
+        Message messageEntity = Message.createMessage(memberMeeting, message, messageType);
         messageEntity = messageRepository.save(messageEntity);
 
         return new MessageDTO(messageEntity);
