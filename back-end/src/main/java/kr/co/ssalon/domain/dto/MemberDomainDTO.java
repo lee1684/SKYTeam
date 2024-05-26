@@ -16,6 +16,7 @@ import java.util.List;
 @Builder
 public class MemberDomainDTO {
 
+    private String email;
     private String nickname;
     private String profilePictureUrl;
     @Schema(example = "'M', 'F', 'G'")
@@ -27,6 +28,7 @@ public class MemberDomainDTO {
     private MemberDates memberDates;
 
     public MemberDomainDTO(Member member) {
+        this.email = member.getEmail();
         this.nickname = member.getNickname();
         this.profilePictureUrl = member.getProfilePictureUrl();
         this.gender = member.getGender();
