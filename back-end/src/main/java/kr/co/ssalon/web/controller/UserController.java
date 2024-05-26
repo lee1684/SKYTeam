@@ -14,12 +14,11 @@ import kr.co.ssalon.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Map;
 
 
 @Tag(name = "회원")
@@ -54,6 +53,15 @@ public class UserController {
         Member currentUser = memberService.findMember(username);
         Boolean isRegistered = currentUser.getNickname() != null;
         return new MemberSignupVerificationDTO(isRegistered);
+    }
+
+    @Operation(summary = "닉네임 중복 여부 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "닉네임 중복 여부 조회 성공"),
+    })
+    @PostMapping("/api/users/check-nickname")
+    public Boolean checkNicknameDuplication(@RequestBody Map<String, String> nicknameMap) {
+        return memberService.checkNickname(nicknameMap.get("nickname"));
     }
 
     @Operation(summary = "회원 정보 조회")

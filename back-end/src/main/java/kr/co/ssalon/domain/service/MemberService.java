@@ -4,12 +4,9 @@ import kr.co.ssalon.domain.dto.MemberDomainDTO;
 import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.MemberMeeting;
-import kr.co.ssalon.domain.entity.Report;
 import kr.co.ssalon.domain.repository.MeetingRepository;
 import kr.co.ssalon.domain.repository.MemberRepository;
 import kr.co.ssalon.web.dto.BlackListSearchCondition;
-import kr.co.ssalon.web.dto.MeetingListSearchDTO;
-import kr.co.ssalon.web.dto.ReportSearchCondition;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
@@ -19,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -176,5 +172,9 @@ public class MemberService {
     public Page<Member> getBlackList(BlackListSearchCondition blackListSearchCondition, Pageable pageable) throws BadRequestException {
         Page<Member> members = memberRepository.getBlackList(blackListSearchCondition, pageable);
         return members;
+    }
+
+    public Boolean checkNickname(String nickname) {
+        return memberRepository.existsByNickname(nickname);
     }
 }
