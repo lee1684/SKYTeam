@@ -22,6 +22,8 @@ public class MessageDTO {
     private String message;
     @NotBlank
     private LocalDateTime date;
+    @NotBlank
+    private String email;
 
     public MessageDTO(Message messageEntity) {
         Member messageSendMember = messageEntity.getMemberMeeting().getMember();
@@ -30,5 +32,6 @@ public class MessageDTO {
         this.profilePicture = messageSendMember.getProfilePictureUrl();
         this.message = messageEntity.getMessage();
         this.date = messageEntity.getSentAt();
+        this.email = messageSendMember.getEmail();
     }
 }
