@@ -147,6 +147,10 @@ public class DiaryService {
         MemberMeeting memberMeeting = memberMeetingOp.get();
         Diary diary = memberMeeting.getDiary();
 
+        if (diary.isEditYet()) return DiaryInfoDTO.builder()
+                .description("NOT EDIT YET")
+                .build();
+
         return new DiaryInfoDTO(diary);
     }
 
