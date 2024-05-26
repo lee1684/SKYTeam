@@ -45,9 +45,10 @@ public class ChatController {
     @SendTo("/room/{roomId}")
     public MessageDTO chat(SimpMessageHeaderAccessor accessor, @DestinationVariable Long roomId, @Payload Map<String, String> message) throws BadRequestException {
         String username = (String) accessor.getSessionAttributes().get("username");
+        String messageType = (String) accessor.getSessionAttributes().get("messageType");
+
         Member member = memberService.findMember(username);
         Meeting meeting = meetingService.findMeeting(roomId);
-        String messageType = "TALK";
 
         // 채팅 메시지 저장
         MessageDTO messageDTO = chatService.saveMessage(member, meeting, message.get("message"), messageType);
