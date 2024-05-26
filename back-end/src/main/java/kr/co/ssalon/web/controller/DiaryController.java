@@ -75,16 +75,16 @@ public class DiaryController {
             @ApiResponse(responseCode = "200", description = "다이어리 편집을 위한 이미지 업로드 성공")
     })
     @PostMapping("/{moimId}/image") // U of CRUD : 다이어리 편집을 위한 이미지 업로드
-    public ResponseEntity<TicketImageResponseDTO> uploadDiaryImage(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @RequestPart List<MultipartFile> files) {
+    public ResponseEntity<ImageResponseDTO> uploadDiaryImage(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @RequestPart List<MultipartFile> files) {
 
         String username = usernameConverter(customOAuth2Member.getUsername());
-        TicketImageResponseDTO ticketImageResponseDTO = diaryService.uploadImages(moimId, files);
+        ImageResponseDTO imageResponseDTO = diaryService.uploadImages(moimId, files);
 
-        return switch (ticketImageResponseDTO.getResultCode()) {
-            case "201 Created" -> ResponseEntity.status(HttpStatus.CREATED).body(ticketImageResponseDTO);
-            case "206 Partial Content" -> ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(ticketImageResponseDTO);
-            case "502 Bad Gateway" -> ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(ticketImageResponseDTO);
-            default -> ResponseEntity.badRequest().body(ticketImageResponseDTO); // 400 Bad Request
+        return switch (imageResponseDTO.getResultCode()) {
+            case "201 Created" -> ResponseEntity.status(HttpStatus.CREATED).body(imageResponseDTO);
+            case "206 Partial Content" -> ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(imageResponseDTO);
+            case "502 Bad Gateway" -> ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(imageResponseDTO);
+            default -> ResponseEntity.badRequest().body(imageResponseDTO); // 400 Bad Request
         };
     }
 
