@@ -107,7 +107,7 @@ public class DiaryController {
     }
 
     @PostMapping("/{moimId}/info")
-    public ResponseEntity<DiaryInfoDTO> updateDiaryInfo(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @ModelAttribute DiaryInfoDTO diaryInfoDTO) {
+    public ResponseEntity<DiaryInfoDTO> updateDiaryInfo(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @RequestBody DiaryInfoDTO diaryInfoDTO) {
 
         DiaryInfoDTO result = diaryService.updateDiaryInfo(moimId, customOAuth2Member.getUsername(), diaryInfoDTO);
         if (result == null) return ResponseEntity.badRequest().build();
