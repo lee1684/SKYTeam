@@ -208,7 +208,7 @@ public class DiaryService {
         DiaryInfoDTO resultDiaryInfoDTO = DiaryInfoDTO.builder()
                 .description(diaryAfter.getDescription())
                 .build();
-        resultDiaryInfoDTO.addDiaryPictureUrls(diaryAfter.getDiaryPictureUrls());
+        resultDiaryInfoDTO.setDiaryPictureUrls(diaryAfter.getDiaryPictureUrls());
 
         return resultDiaryInfoDTO;
     }
