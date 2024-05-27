@@ -102,14 +102,14 @@ public class DiaryController {
     public ResponseEntity<DiaryInfoDTO> fetchDiaryInfo(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
         DiaryInfoDTO diaryInfoDTO = diaryService.fetchDiaryInfo(moimId, customOAuth2Member.getUsername());
 
-        if (diaryInfoDTO.getDescription().equals("NOT EDIT YET")) return ResponseEntity.notFound().build();
+        if (diaryInfoDTO == null) return ResponseEntity.notFound().build();
         else return ResponseEntity.ok(diaryInfoDTO);
     }
 
     @PostMapping("/{moimId}/info")
-    public ResponseEntity<Diary> updateDiaryInfo(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @ModelAttribute DiaryInfoDTO diaryInfoDTO) {
+    public ResponseEntity<DiaryInfoDTO> updateDiaryInfo(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @ModelAttribute DiaryInfoDTO diaryInfoDTO) {
 
-        Diary result = diaryService.updateDiaryInfo(moimId, customOAuth2Member.getUsername(), diaryInfoDTO);
+        DiaryInfoDTO result = diaryService.updateDiaryInfo(moimId, customOAuth2Member.getUsername(), diaryInfoDTO);
         if (result == null) return ResponseEntity.badRequest().build();
         else return ResponseEntity.ok(result);
     }

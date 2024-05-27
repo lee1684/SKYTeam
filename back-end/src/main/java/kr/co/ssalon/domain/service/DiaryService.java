@@ -169,7 +169,7 @@ public class DiaryService {
         return new DiaryInfoDTO(diary);
     }
 
-    public Diary updateDiaryInfo(Long moimId, String username, DiaryInfoDTO diaryInfoDTO) {
+    public DiaryInfoDTO updateDiaryInfo(Long moimId, String username, DiaryInfoDTO diaryInfoDTO) {
 
         Optional<Member> userOp = memberRepository.findByUsername(username);
         if (userOp.isEmpty()) {
@@ -192,17 +192,25 @@ public class DiaryService {
         }
 
         MemberMeeting memberMeeting = memberMeetingOp.get();
-        Diary diary = diaryRepository.findByMemberMeeting(memberMeeting);
-        if (diary == null) {
+        Optional<Diary> diaryOp = diaryRepository.findById(memberMeeting.getDiary().getId());
+        if (diaryOp.isEmpty()) {
             log.error("DiaryService(updateDiaryInfo): Diary not found");
             return null;
         }
+        Diary diary = diaryOp.get();
 
         diary.editDiaryDescription(diaryInfoDTO.getDescription());
         log.info("DiaryService(updateDiaryInfo): Diary updated - {}", diaryInfoDTO.getDescription());
         diary.addDiaryPictureUrls(diaryInfoDTO.getDiaryPictureUrls());
 
-        return diaryRepository.save(diary);
+        Diary diaryAfter = diaryRepository.save(diary);
+
+        DiaryInfoDTO resultDiaryInfoDTO = DiaryInfoDTO.builder()
+                .description(diaryAfter.getDescription())
+                .build();
+        resultDiaryInfoDTO.addDiaryPictureUrls(diaryAfter.getDiaryPictureUrls());
+
+        return resultDiaryInfoDTO;
     }
 
     private String generateRandomUUID() {
