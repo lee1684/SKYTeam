@@ -15,4 +15,5 @@ public interface MemberRepository extends JpaRepository<Member,Long>, MemberRepo
 
     List<Member> findByBlackReasonIsNotNull();
 
+    Optional<Member> findByEmail(String email);
 }
