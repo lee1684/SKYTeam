@@ -102,7 +102,7 @@ public class DiaryController {
     public ResponseEntity<DiaryInfoDTO> fetchDiaryInfo(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
         DiaryInfoDTO diaryInfoDTO = diaryService.fetchDiaryInfo(moimId, customOAuth2Member.getUsername());
 
-        if (diaryInfoDTO == null) return ResponseEntity.notFound().build();
+        if (diaryInfoDTO.getDescription().equals("NOT EDIT YET")) return ResponseEntity.notFound().build();
         else return ResponseEntity.ok(diaryInfoDTO);
     }
 
