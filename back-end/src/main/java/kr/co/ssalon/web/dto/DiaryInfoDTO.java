@@ -4,13 +4,11 @@ import kr.co.ssalon.domain.entity.Diary;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class DiaryInfoDTO {
@@ -19,12 +17,17 @@ public class DiaryInfoDTO {
     @Builder.Default
     private List<String> diaryPictureUrls = new ArrayList<>();
 
-    public DiaryInfoDTO(Diary diary) {
-        this.setDescription(diary.getDescription());
-        this.addDiaryPictureUrls(diary.getDiaryPictureUrls());
+    public DiaryInfoDTO() {
+        this.description = "";
+        this.diaryPictureUrls = new ArrayList<>();
     }
 
-    public void addDiaryPictureUrls(List<String> diaryPictureUrls) {
+    public DiaryInfoDTO(Diary diary) {
+        this.setDescription(diary.getDescription());
+        this.setDiaryPictureUrls(diary.getDiaryPictureUrls().isEmpty() ? List.of("") : diary.getDiaryPictureUrls());
+    }
+
+    public void setDiaryPictureUrls(List<String> diaryPictureUrls) {
         for (String diaryPictureUrl : diaryPictureUrls) {
             getDiaryPictureUrls().add(diaryPictureUrl);
         }
