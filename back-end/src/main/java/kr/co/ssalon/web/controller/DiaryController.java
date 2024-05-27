@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kr.co.ssalon.domain.entity.Diary;
 import kr.co.ssalon.domain.service.DiaryService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import kr.co.ssalon.web.dto.*;
@@ -106,9 +107,9 @@ public class DiaryController {
     }
 
     @PostMapping("/{moimId}/info")
-    public ResponseEntity<String> updateDiaryInfo(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @ModelAttribute DiaryInfoDTO diaryInfoDTO) {
+    public ResponseEntity<Diary> updateDiaryInfo(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @ModelAttribute DiaryInfoDTO diaryInfoDTO) {
 
-        String result = diaryService.updateDiaryInfo(moimId, customOAuth2Member.getUsername(), diaryInfoDTO).toString();
+        Diary result = diaryService.updateDiaryInfo(moimId, customOAuth2Member.getUsername(), diaryInfoDTO);
         return ResponseEntity.ok(result);
     }
 
