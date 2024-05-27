@@ -68,36 +68,36 @@ export class ChattingComponent {
         moimId: this.moimId,
       },
     });
+
     this.stompClient.onConnect = (frame) => {
       console.log('Connected: ' + frame);
       this.isConnected = true;
-      this.stompClient.subscribe(`/room/${this.moimId}`, (greeting: any) =>
-        async function (this: ChattingComponent) {
-          if (this.isEntered === false) {
-            this.stompClient.publish({
-              destination: `/send/${this.moimId}`,
-              body: JSON.stringify({ message: this.simpleInput!.innerText }),
-              headers: {
-                Authorization: `Bearer ${this._apiExecutorService.token}`,
-                MessageType: 'ENTER',
-              },
-            });
-            this.isEntered = true;
-          }
-          let inComeMsg = JSON.parse(greeting.body);
-          console.log(inComeMsg);
-          if (inComeMsg.messageType === 'TALK') {
-            this.messages.push(JSON.parse(greeting.body));
-          } else if (inComeMsg.messageType === 'ENTER') {
-            this.participants =
-              await this._apiExecutorService.getChattingParticipants(
-                this.moimId
-              );
-            console.log(this.participants);
-          } else {
-          }
-        }.bind(this)
-      );
+
+      // 채팅방에 입장 메시지를 보냅니다.
+      if (!this.isEntered) {
+        this.stompClient.publish({
+          destination: `/send/${this.moimId}`,
+          body: JSON.stringify({ message: this.simpleInput!.innerText }),
+          headers: {
+            Authorization: `Bearer ${this._apiExecutorService.token}`,
+            MessageType: 'ENTER',
+          },
+        });
+        this.isEntered = true;
+        console.log('입장');
+      }
+
+      this.stompClient.subscribe(`/room/${this.moimId}`, (greeting: any) => {
+        let inComeMsg = JSON.parse(greeting.body);
+        console.log(inComeMsg);
+        if (inComeMsg.messageType === 'TALK') {
+          this.messages.push(JSON.parse(greeting.body));
+        } else if (inComeMsg.messageType === 'ENTER') {
+          this.updateParticipants();
+        } else {
+          this.updateParticipants();
+        }
+      });
     };
 
     this.stompClient.onStompError = (frame) => {
@@ -121,7 +121,7 @@ export class ChattingComponent {
   public disconnect() {
     if (this.stompClient) {
       this.stompClient.publish({
-        destination: `/send/${this.moimId}`,
+        destination: `/send/disconnect`,
         body: JSON.stringify({ message: this.simpleInput!.innerText }),
         headers: {
           Authorization: `Bearer ${this._apiExecutorService.token}`,
@@ -163,6 +163,13 @@ export class ChattingComponent {
   public isSameSender(msg: any, i: number) {
     if (i === 0) return false;
     return this.messages[i - 1].nickname === msg.nickname;
+  }
+
+  public async updateParticipants() {
+    this.participants = await this._apiExecutorService.getChattingParticipants(
+      this.moimId
+    );
+    console.log(this.participants);
   }
 
   @HostListener('keyup.enter', ['$event'])

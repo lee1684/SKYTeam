@@ -21,7 +21,8 @@
             <app-moim-review [moimId]="this.moimId" [moimTitle]="this.moimInfo.title"></app-moim-review>
         </div>
     </div>
-    <div *ngIf="this.nowTab === this.meetingInfoTabEnum.INFO" id="join-button-container">
+    <div *ngIf="!(this.nowTab === this.meetingInfoTabEnum.QRCHECK || this.nowTab === this.meetingInfoTabEnum.QRSHOW || this.nowTab === this.meetingInfoTabEnum.CHATTING)"
+        id="join-button-container">
         <app-square-button [buttonElements]="this.buttonElementsService.joinButtonElements"
             (onClickEvent)="this.onClickJoinButton()"></app-square-button>
     </div>
