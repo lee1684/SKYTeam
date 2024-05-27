@@ -27,8 +27,10 @@
     "@types/three": "^0.164.0",
     "apisauce": "^3.0.1",
     "axios": "^1.6.8",
+    "emoji-js": "^3.8.0",
     "fabric": "^6.0.0-rc1",
     "jsqr": "^1.4.0",
+    "marked": "^12.0.2",
     "ngrok": "^5.0.0-beta.2",
     "qrcode-generator": "^1.4.4",
     "rxjs": "~7.8.0",
@@ -40,6 +42,7 @@
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.3.6",
     "@angular/compiler-cli": "^17.3.6",
+    "@types/emoji-js": "^3.5.2",
     "@types/jasmine": "~5.1.0",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
