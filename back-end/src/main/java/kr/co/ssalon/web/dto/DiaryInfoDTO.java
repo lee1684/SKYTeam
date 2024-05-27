@@ -24,7 +24,7 @@ public class DiaryInfoDTO {
         this.addDiaryPictureUrls(diary.getDiaryPictureUrls());
     }
 
-    private void addDiaryPictureUrls(List<String> diaryPictureUrls) {
+    public void addDiaryPictureUrls(List<String> diaryPictureUrls) {
         for (String diaryPictureUrl : diaryPictureUrls) {
             getDiaryPictureUrls().add(diaryPictureUrl);
         }
