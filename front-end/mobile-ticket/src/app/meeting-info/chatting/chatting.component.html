@@ -1,0 +1,16 @@
+<div class="container">
+    <div id="participants-container">
+        <div id="participant-profile-imgs">d</div>
+        <div id="participant-nums">a</div>
+    </div>
+    <div id="msg-container" #msgContainer>
+        <ng-container *ngFor="let msg of messages, index as i">
+            <app-chat-container [message]="msg" [contentOnly]="this.isSameSender(msg, i)"
+                [align]="this.isMyMsg(msg)"></app-chat-container></ng-container>
+
+    </div>
+    <div id="send-input">
+        <app-simple-input [type]="'chat-input'" (onClickChatSendButtonEvent)="this.sendMessage()"
+            #simpleInput></app-simple-input>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+<div class="container">
+    <progress id="progress-bar" #progressBar [value]="this.nowOnboardingStep.value+1"
+        [max]="this.onBoardingStep.length"></progress>
+    <div id="onboarding-label"><span>{{this.nowOnboardingStep.label}}</span></div>
+
+    <div class="container" *ngIf="this.nowOnboardingStep.value === 0">
+        <app-profile-img id="profile-img" [imgSrc]="'assets/default_profile.png'"></app-profile-img>
+        <app-simple-input [label]="'닉네임'" [extraLabel]="'(필수)'" [extraLabelColor]="'#0090f2'"
+            [placeholder]="'닉네임을 입력해주세요'"
+            (onChangeEvent)="this.onChangeUserInfo('nickname', $event)"></app-simple-input>
+        <app-simple-toggle [label]="'성별'" [extraLabel]="'(필수)'" [extraLabelColor]="'#0090f2'"
+            [buttonElements]="this.buttonElementsService.genderSelectionButtons" [buttonWidth]="110"
+            (onClickToggleButtonEvent)="this.onChangeUserInfo('gender', $event)"></app-simple-toggle>
+        <app-simple-input [label]="'소개'" [placeholder]="'간단한 소개를 해주세요'"
+            (onChangeEvent)="this.onChangeUserInfo('introduction', $event)"></app-simple-input>
+    </div>
+
+    <div class=" container" *ngIf="this.nowOnboardingStep.value === 1">
+        <app-simple-toggle [buttonElements]="this.buttonElementsService.locationSelectionButtons" [columnNum]="1"
+            [buttonWidth]="350" [align]="'left'"
+            (onClickToggleButtonEvent)="this.onChangeUserInfo('address', $event)"></app-simple-toggle>
+    </div>
+
+    <div class="container" *ngIf="this.nowOnboardingStep.value === 2">
+        <app-simple-toggle [buttonElements]="this.buttonElementsService.interestSelectionButtons" [columnNum]="1"
+            [buttonWidth]="350" [align]="'left'" [multiSelection]="true"
+            (onClickToggleButtonEvent)="this.onChangeUserInfo('interests', $event)"></app-simple-toggle>
+    </div>
+
+    <div id="next-button-container">
+        <app-square-button (onClickEvent)="this.onClickNextButton($event)"
+            [buttonElements]="this.buttonElementsService.nextButtons" #nextButton></app-square-button>
+    </div>
+
+</div>

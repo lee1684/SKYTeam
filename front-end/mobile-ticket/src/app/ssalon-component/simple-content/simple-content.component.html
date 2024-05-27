@@ -1,0 +1,13 @@
+<div class="container">
+    <div id="title-container">
+        {{title}}
+    </div>
+    <div *ngIf="this.images.length>0" [style.margin-top.px]="16">
+        <app-image-row-container [images]="this.images" [imageHeight]="100"
+            [isTicketContainer]="false"></app-image-row-container>
+    </div>
+
+    <div id="content-container">
+        {{content}}
+    </div>
+</div>

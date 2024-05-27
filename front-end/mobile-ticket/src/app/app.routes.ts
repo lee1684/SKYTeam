@@ -1,13 +1,49 @@
-import { Routes } from '@angular/router';
-import { AppComponent } from './app.component';
+import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { OnboardingComponent } from './onboarding/onboarding.component';
+import { MainComponent } from './main/main.component';
+import { TicketComponent } from './ticket/ticket.component';
+import { MeetingInfoComponent } from './meeting-info/meeting-info.component';
+import { SsalonLoginComponent } from './ssalon-login/ssalon-login.component';
+import { SsalonLoginRedirectComponent } from './ssalon-login-redirect/ssalon-login-redirect.component';
+import { MeetingCreateComponent } from './meeting-create/meeting-create.component';
+import { MoimReviewComponent } from './meeting-info/moim-review/moim-review.component';
+import { MoimReviewCreateComponent } from './meeting-info/moim-review/moim-review-create/moim-review-create.component';
 
 export const routes: Routes = [
+  { path: 'web/ssalon-login', component: SsalonLoginComponent },
   {
-    path: 'info?moim=:moimId&page=:viewType&face=:faceType',
-    component: AppComponent,
+    path: 'web/ssalon-login-redirect',
+    component: SsalonLoginRedirectComponent,
+  },
+  {
+    path: 'web/onboarding',
+    component: OnboardingComponent,
+  },
+  {
+    path: 'web/main',
+    component: MainComponent,
+  },
+  {
+    path: 'web/meeting-info',
+    component: MeetingInfoComponent,
+  },
+  {
+    path: 'web/meeting-create',
+    component: MeetingCreateComponent,
+  },
+  {
+    path: 'web/ticket',
+    component: TicketComponent,
+  },
+  {
+    path: 'web/meeting-review-create',
+    component: MoimReviewCreateComponent,
   },
 ];
-// 페이지타입: enum { view=0, edit=1, share=2}
-// 앞또는뒤: enum { front=0, back=1, null=2 } null은 페이지타입 share에서 사용
-// /info?moim={모임아이디}&page={페이지타입}&face={앞또는뒤}
-// ex) /info?moim=11111111&page=1&face=0
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}

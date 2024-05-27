@@ -9,7 +9,6 @@ import {
   ColorBoardComponent,
   SsalonColor,
   SsalonColorElement,
-  SsalonColorEnum,
 } from '../../ssalon-component/color-board/color-board.component';
 import { SimpleToggleButtonGroupComponent } from '../../ssalon-component/simple-toggle-button-group/simple-toggle-button-group.component';
 import { Vector2 } from 'three';
@@ -20,8 +19,12 @@ import {
   Output,
   EventEmitter,
   Component,
+  Input,
 } from '@angular/core';
 import { Canvas, FabricImage, FabricText, Path } from 'fabric';
+import { NewButtonElement } from '../../ssalon-component/simple-toggle-group/simple-toggle-group.component';
+import { ButtonElementsService } from '../../service/button-elements.service';
+import { Router } from '@angular/router';
 
 export enum MobileTicketEditMode {
   BACKGROUND_COLOR_CHANGE,
@@ -80,6 +83,9 @@ export class MobileTicketEditorComponent {
   @ViewChild('selectedPhotoContainer', { static: false })
   selectedPhotoContainer: ElementRef | null = null;
 
+  @Input() moimId: string = '';
+  @Input() face: string = 'front';
+
   @Output() public readonly onChangeViewer = new EventEmitter();
   @Output() public readonly onObjectEditEnded = new EventEmitter();
   @Output() public readonly onBackgroundColorEditEnded = new EventEmitter();
@@ -88,17 +94,20 @@ export class MobileTicketEditorComponent {
   public ssalonColor: SsalonColor = new SsalonColor();
 
   public mobileTicketEditMode = MobileTicketEditMode;
-  public goBackButtonElement: ButtonElement = {
+  public goBackButtonElement: NewButtonElement = {
+    selected: false,
     imgSrc: 'assets/icons/go-back.png',
     label: '뒤로가기',
     value: 0,
   };
-  public previewButtonElement: ButtonElement = {
+  public previewButtonElement: NewButtonElement = {
+    selected: false,
     imgSrc: 'assets/icons/view.png',
-    label: '미리보기',
+    label: '저장 및 미리보기',
     value: 0,
   };
-  public completeButtonElement: ButtonElement = {
+  public completeButtonElement: NewButtonElement = {
+    selected: false,
     imgSrc: '',
     label: '완료',
     value: 0,
@@ -139,7 +148,8 @@ export class MobileTicketEditorComponent {
 
   private _backgroundColorViewLoaded: boolean = false;
 
-  public stickers: ButtonElement[] = [];
+  public uploadPhotoNum: number = 0;
+  public stickers: NewButtonElement[] = [];
   public editingSticker: FabricImage | null = null;
   public editingStickerSrc: string = '';
 
@@ -213,7 +223,9 @@ export class MobileTicketEditorComponent {
 
   constructor(
     private _apiExecutorService: ApiExecutorService,
-    private _sceneGraphService: ScenegraphService
+    private _router: Router,
+    private _sceneGraphService: ScenegraphService,
+    private _buttonElementsService: ButtonElementsService
   ) {}
   public ngAfterViewInit(): void {
     this.loadDecorationInfo();
@@ -229,9 +241,6 @@ export class MobileTicketEditorComponent {
       );
       this._backgroundColorViewLoaded = true;
     }
-
-    /** image feature */
-    /** sticker feature */
 
     /* text feature */
     if (this.textEditInput && !this.textFocused) {
@@ -254,7 +263,7 @@ export class MobileTicketEditorComponent {
    * fabric canvas를 건드는 것은 아니기 때문.
    */
   public async loadDecorationInfo() {
-    let decorationInfo = await this._apiExecutorService.getTicket();
+    let decorationInfo = await this._apiExecutorService.getTicket(this.moimId);
     this.backgroundColor = this.ssalonColor.getSsalonColorObjectByColor(
       decorationInfo.backgroundColor
     );
@@ -262,32 +271,64 @@ export class MobileTicketEditorComponent {
   }
 
   /** 기능 실행 */
-  public onClickChangeEditMode(value: MobileTicketEditMode): void {
+  public async onClickChangeEditMode(value: MobileTicketEditMode) {
     switch (value) {
       case MobileTicketEditMode.BACKGROUND_COLOR_CHANGE:
         break;
       case MobileTicketEditMode.PHOTO:
-        // 파일 선택 대화 상자 열기
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
         fileInput.accept = 'image/*';
+        fileInput.multiple = true;
+        let fileUrls: string[] = [];
 
         // 파일 선택 이벤트 처리
-        fileInput.onchange = function () {
+        fileInput.onchange = async function (
+          this: MobileTicketEditorComponent
+        ) {
+          // 파일 URL 배열 초기화
+          fileUrls = [];
+
           // 파일이 선택되었는지 확인
-          if (fileInput.files && fileInput.files[0]) {
-            const reader = new FileReader();
+          if (fileInput.files && fileInput.files.length > 0) {
+            const files = Array.from(fileInput.files);
+            let loadedFiles = 0;
 
-            reader.onload = function (e: any) {
-              let img = document.getElementById('selected-photo-container');
-              (img! as HTMLImageElement).src = e.target.result;
-              (img! as HTMLImageElement).width = 200; // 이미지 크기 조절
-            }.bind(this);
+            files.forEach((file, index) => {
+              const reader = new FileReader();
 
-            // 파일을 읽어들임
-            reader.readAsDataURL(fileInput.files[0]);
+              reader.onload = async function (
+                this: MobileTicketEditorComponent,
+                e: any
+              ) {
+                // 파일 URL을 배열에 추가
+                fileUrls.push(e.target.result);
+
+                // 첫 번째 파일만 미리보기로 보여주기
+                if (index === 0) {
+                  let img = document.getElementById('selected-photo-container');
+                  if (!img) {
+                    img = document.createElement('img');
+                    img.id = 'selected-photo-container';
+                    document.body.appendChild(img);
+                  }
+                  (img as HTMLImageElement).src = e.target.result;
+                  (img as HTMLImageElement).width = 80; // 이미지 크기 조절
+                }
+
+                // 모든 파일을 다 읽었을 때
+                loadedFiles++;
+                if (loadedFiles === files.length) {
+                  this.uploadPhotoNum = files.length;
+                  await this.getImageUrl(fileUrls);
+                }
+              }.bind(this);
+
+              // 파일을 읽어들임
+              reader.readAsDataURL(file);
+            });
           }
-        };
+        }.bind(this);
 
         // 파일 선택 대화 상자 열기
         fileInput.click();
@@ -330,22 +371,18 @@ export class MobileTicketEditorComponent {
   }
 
   public getStickers() {
-    let array = [
-      'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/sticker/image+1.png',
-      'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/sticker/image+2.png',
-      'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/sticker/image+3.png',
-      'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/sticker/image+4.png',
-      'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/sticker/image+5.png',
-      'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/sticker/image+6.png',
-      'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/sticker/image+8.png',
-    ];
-    array.forEach((url, index) => {
+    let number = 50;
+    for (let i = 0; i < number; i++) {
       this.stickers.push({
-        imgSrc: url,
-        label: `${index}`,
-        value: index,
+        imgSrc:
+          'https://dokcohci6rkid.cloudfront.net/sticker/ssalon_sticker_' +
+          i +
+          '.png',
+        label: `${i}`,
+        value: i,
+        selected: false,
       });
-    });
+    }
   }
 
   public getStickerArray(): any[][] {
@@ -357,13 +394,17 @@ export class MobileTicketEditorComponent {
   }
 
   public selectSticker(value: number): void {
-    if (this.ssalonStickerAttribute.src.includes(this.stickers[value].imgSrc)) {
+    if (
+      this.ssalonStickerAttribute.src.includes(this.stickers[value].imgSrc!)
+    ) {
       this.ssalonStickerAttribute.src.splice(
-        this.ssalonStickerAttribute.src.indexOf(this.stickers[value].imgSrc),
+        this.ssalonStickerAttribute.src.indexOf(this.stickers[value].imgSrc!),
         1
       );
+      this.stickers[value].selected = false;
     } else {
-      this.ssalonStickerAttribute.src.push(this.stickers[value].imgSrc);
+      this.ssalonStickerAttribute.src.push(this.stickers[value].imgSrc!);
+      this.stickers[value].selected = true;
     }
   }
 
@@ -440,20 +481,58 @@ export class MobileTicketEditorComponent {
         : (this.ssalonStickerAttribute.src = []);
       this.lastUsedFeature = MobileTicketEditMode.NONE;
     } else {
-      let tempImg = await FabricImage.fromURL(array.src[index]);
+      let tempImg = await FabricImage.fromURL(array.src[index], {
+        crossOrigin: 'anonymous',
+      });
       (this.fabricObjects as FabricImage[]).push(tempImg);
       this.loadImageRecursive(index + 1);
     }
   }
 
+  public async getImageUrl(urls: string[]) {
+    let body = new FormData();
+    function dataURItoBlob(dataURI: string) {
+      var byteString = atob(dataURI.split(',')[1]);
+      var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+      var ab = new ArrayBuffer(byteString.length);
+      var ia = new Uint8Array(ab);
+      for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+      return new Blob([ab], { type: mimeString });
+    }
+    urls.forEach((url, index) => {
+      body.append('files', dataURItoBlob(url), `${index}.png`);
+    });
+
+    try {
+      let result =
+        this.face === 'front'
+          ? await this._apiExecutorService.uploadTicketImages(this.moimId, body)
+          : await this._apiExecutorService.uploadDiaryImages(this.moimId, body);
+      let keys = Object.keys(result.mapURI);
+      for (var i = 0; i < keys.length; i++) {
+        var key = keys[i];
+        this.ssalonPhotoAttribute.src.push(result.mapURI[key]);
+      }
+      this.ssalonPhotoAttribute.src.forEach((url) => {
+        let substring = url.substring(58);
+        let proxyUrl = 'https://dokcohci6rkid.cloudfront.net' + substring;
+        url = proxyUrl;
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   /** 완료를 눌러야 fabric object를 생성 */
-  public onEndEditObject(): void {
+  public async onEndEditObject() {
     if (this.lastUsedFeature === MobileTicketEditMode.BACKGROUND_COLOR_CHANGE) {
       this.onBackgroundColorEditEnded.emit(this.backgroundColor.color);
     } else {
       switch (this.lastUsedFeature) {
         case MobileTicketEditMode.PHOTO:
-          //this.loadImageRecursive(0);
+          this.loadImageRecursive(0);
           return;
         case MobileTicketEditMode.STICKER:
           this.loadImageRecursive(0);
@@ -496,7 +575,7 @@ export class MobileTicketEditorComponent {
       }
       /** text의 경우, 수정하는 경우가 있는데, 이 함수에서 미리 다 바꾸기 때문에 object를 넘길 필요가 없음.
        * 그렇기 때문에, 미리 editMode를 NONE으로 바꿔버려 null을 보냄.
-       * null을 받은 editor viewer는 canvas.renderAll()만 진행.
+       * null을 받은 viewer는 canvas.renderAll()만 진행.
        * 이미지의 경우, asyncronous하게 진행되기 때문에 밑의 코드가 진행되지 않게 해놔야 의도대로 진행될 수 있음.
        */
       this.onObjectEditEnded.emit(
@@ -559,5 +638,7 @@ export class MobileTicketEditorComponent {
     this.drawingFabricCanvas!.add(path);
   }
 
-  public endTicketWebView(): void {}
+  public endTicketWebView(): void {
+    this._router.navigate(['/web/main']);
+  }
 }

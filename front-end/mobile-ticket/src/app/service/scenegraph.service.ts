@@ -5,6 +5,7 @@ import { MobileTicket } from '../mobile-ticket/mobile-ticket';
 import { SsalonConfigService } from './ssalon-config.service';
 import { ApiExecutorService } from './api-executor.service';
 import { Injectable } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 @Injectable({
   providedIn: 'root',
 })
@@ -18,11 +19,13 @@ export class ScenegraphService {
   private arcballControls: ArcballControls | null = null;
 
   public mobileTicket: MobileTicket | null = null;
+  public mobileTicketAutoRotate: boolean = false;
   constructor(
+    private _route: ActivatedRoute,
     private _apiExecutorService: ApiExecutorService,
-    private _ssalonConfig: SsalonConfigService
+    private _ssalonConfigService: SsalonConfigService
   ) {}
-  public initThree(): void {
+  public initThree(moimId: string): void {
     const width = this.nativeElement!.clientWidth;
     const height = this.nativeElement!.clientHeight;
 
@@ -49,7 +52,7 @@ export class ScenegraphService {
     /** create ArcballControl */
     this.createArcballControls();
     this.mobileTicket = new MobileTicket(this._apiExecutorService, this);
-    this.mobileTicket!.initMobileTicket();
+    this.mobileTicket!.initMobileTicket(moimId);
     startAnimation(this);
   }
 
@@ -110,9 +113,9 @@ export class ScenegraphService {
   }
 
   public rotateCard(): void {
-    this.mobileTicket!.mobileTicket?.rotateX(0.002);
-    this.mobileTicket!.mobileTicket?.rotateY(0.002);
-    this.mobileTicket!.mobileTicket?.rotateZ(0.002);
+    this.mobileTicket!.mobileTicket?.rotateX(0.001);
+    this.mobileTicket!.mobileTicket?.rotateY(0.001);
+    this.mobileTicket!.mobileTicket?.rotateZ(0.001);
     if (
       this.mobileTicket?.frontSide !== null &&
       this.mobileTicket?.backSide !== null
@@ -126,7 +129,9 @@ export class ScenegraphService {
 const startAnimation = function (sceneSetting: ScenegraphService) {
   const clock = new THREE.Clock();
   const animationFrame = function () {
-    //sceneSetting.rotateCard();
+    if (sceneSetting.mobileTicketAutoRotate) {
+      sceneSetting.rotateCard();
+    }
     sceneSetting.onRender();
     requestAnimationFrame(animationFrame);
   };

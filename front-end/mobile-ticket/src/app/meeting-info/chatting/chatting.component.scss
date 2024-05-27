@@ -1,0 +1,26 @@
+.container {
+    width: 100%;
+    height: 100%;
+
+    position: relative;
+}
+
+
+
+#msg-container {
+    width: 100%;
+    height: calc(100% - 150px);
+    overflow: scroll;
+}
+
+#msg-container::-webkit-scrollbar {
+    display: none;
+}
+
+#send-input {
+    position: absolute;
+    width: 350px;
+    left: 50%;
+    bottom: 0px;
+    transform: translateX(-50%);
+}

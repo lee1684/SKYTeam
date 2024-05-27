@@ -1,0 +1,11 @@
+<div class="container">
+    <div id="bottom-container">
+
+        <div class="content-container">
+            <div *ngIf="this.content === this.bottomNavigatorType.MEETING_CATEGORY"><app-meeting-category
+                    (onCategorySelectedEvent)="this.onClickButton($event)"></app-meeting-category></div>
+        </div>
+
+    </div>
+
+</div>

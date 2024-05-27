@@ -1,0 +1,17 @@
+<div class="container">
+    <div id="tab-container">
+        <app-tab-group [tabs]="this.tabElements" (onClickTabEvent)="this.onCickTabButton($event)">
+        </app-tab-group>
+    </div>
+
+    <div class="tab-content-container">
+        <div *ngIf="(this.nowTab === this.ticketListTabEnum.RUNNING  && this.isLoaded())">
+            <app-image-row-container [isTicketContainer]="true" [tickets]="this.runningTickets"
+                [columnType]="true"></app-image-row-container>
+        </div>
+        <div *ngIf="(this.nowTab === this.ticketListTabEnum.ENDED && this.isLoaded())">
+            <app-image-row-container [isTicketContainer]="true" [tickets]="this.endedTickets"
+                [columnType]="true"></app-image-row-container>
+        </div>
+    </div>
+</div>

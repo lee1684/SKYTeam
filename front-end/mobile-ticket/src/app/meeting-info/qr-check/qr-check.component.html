@@ -1,0 +1,33 @@
+<!-- QRCHECKVIEW: QRCODE 확인하는 화면의 경우 -->
+<div class="container" #qrCheckView>
+    <div id="qr-detector">
+        <video #qrVideo [style.width]="'100%'" [style.height]="'100%'" autoplay playsInline
+            [style.object-fit]="'cover'"></video>
+        <canvas id="qr-canvas" #qrCanvas [style.display]="'none'"></canvas>
+        <div id="qr-guide-container">
+            <img id="qr-guide" src="assets/qr-guide.png" height="300px" />
+        </div>
+    </div>
+
+    <div id="join-user-container" [style.margin-top]="'30px'">
+        <div class="horizontal-container" [style.justify-content]="'center'">
+            <div id="qr-checking-user-container">
+                <div id="qr-checking-user-profile-container" [style.width.px]="52" [style.height.px]="52">
+                    <img id="qr-checking-user-profile-img"
+                        [src]="this.checkStatus.checkingUser?this.checkStatus.checkingUser.profilePictureUrl:'assets/data_error.png'"
+                        height="50px" />
+                </div>
+
+                <div id="qr-check-info-container">
+                    <div class="qr-check-info" [style.font-size]="'20px'">
+                        {{this.checkStatus.checkingUser?this.checkStatus.checkingUser.nickname:'알수없음'}}</div>
+                    <div class="qr-check-info" [style.color]="this.checkStatus.color">{{this.checkStatus.text}}</div>
+                </div>
+            </div>
+        </div>
+        <div id="join-user-list">
+            <app-circle-toggle-status-group [elements]="this.joiningUsers"
+                #joiningUsersComponent></app-circle-toggle-status-group>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,7 @@
+<div class="content-container">
+    <div id="title">
+        {{'모임 카테고리'}}
+    </div>
+    <app-simple-toggle [buttonElements]="this.buttonElementsService.interestSelectionButtons" [columnNum]="1"
+        [align]="'left'" (onClickToggleButtonEvent)="this.onClilckButton($event)"></app-simple-toggle>
+</div>
