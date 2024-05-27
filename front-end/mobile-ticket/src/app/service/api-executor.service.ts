@@ -30,7 +30,7 @@ export class ApiExecutorService {
   //public apiURL: string = 'http://localhost:8080/api';
   public tokens = {};
   public token: string =
-    'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTY4MDI4MzcsImV4cCI6MTcxNjg4OTIzN30.2deUIlq3fLq0PQY-4Z2l7kZehz4S7-uqavFVosxpTo8';
+    'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTY4MDc3MDEsImV4cCI6MTcxNjg5NDEwMX0.lj7t16x9ZWETz5GOeoGXN6Z0cp1nxqXtXPuTfvADTes';
   public refreshToken: string = '';
   public myProfile: Profile = undefined as unknown as Profile;
   constructor(private _ssalonConfigService: SsalonConfigService) {
@@ -80,7 +80,6 @@ export class ApiExecutorService {
   public async getLastMessages(moimId: string) {
     try {
       let response = await this.apiExecutor?.get(`/chat-history/${moimId}`);
-      console.log(response!.data);
       return response!.data;
     } catch {
       /** dummy data */
@@ -100,7 +99,6 @@ export class ApiExecutorService {
   public async getTicket(moimId: string) {
     try {
       let response = await this.apiExecutor?.get(`/tickets/${moimId}`);
-      console.log(response!.data);
       return response!.data;
     } catch {
       /** dummy data */
@@ -110,7 +108,6 @@ export class ApiExecutorService {
 
   public async createTicket(moimId: string, template: string) {
     try {
-      console.log('post');
       let response = await this.apiExecutorJson?.post(
         `/tickets/${moimId}?template=${template}`
       );
