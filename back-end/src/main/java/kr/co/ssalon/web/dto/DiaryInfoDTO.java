@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 @Builder
 public class DiaryInfoDTO {
 
@@ -17,9 +16,9 @@ public class DiaryInfoDTO {
     @Builder.Default
     private List<String> diaryPictureUrls = new ArrayList<>();
 
-    public DiaryInfoDTO() {
-        this.description = "";
-        this.diaryPictureUrls = new ArrayList<>();
+    public DiaryInfoDTO(String description, List<String> diaryPictureUrls) {
+        this.description = description;
+        this.setDiaryPictureUrls(diaryPictureUrls);
     }
 
     public DiaryInfoDTO(Diary diary) {
