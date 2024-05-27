@@ -77,7 +77,9 @@ public class MemberMeeting {
     public void changeAttendance(boolean attendance) { this.attendance = attendance; }
 
     public static MemberMeeting createMemberMeeting(Member member, Meeting meeting) throws BadRequestException {
-        Diary diary = Diary.createDiary("제목을 작성해보세요.", new ArrayList<>(), "일기를 작성해보세요.");
+        List<String> urlList = new ArrayList<>();
+        urlList.add("");
+        Diary diary = Diary.createDiary("제목을 작성해보세요.", urlList,"일기를 작성해보세요.");
         MemberMeeting memberMeeting = MemberMeeting.builder().build();
         memberMeeting.joinMember(member);
         memberMeeting.joinMeeting(meeting);
