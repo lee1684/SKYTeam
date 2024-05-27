@@ -166,7 +166,11 @@ public class DiaryService {
                 .description("NOT EDIT YET")
                 .build();
 
-        return new DiaryInfoDTO(diary);
+        DiaryInfoDTO result = DiaryInfoDTO.builder()
+                .description(diary.getDescription())
+                .build();
+        result.setDiaryPictureUrls(diary.getDiaryPictureUrls());
+        return result;
     }
 
     public DiaryInfoDTO updateDiaryInfo(Long moimId, String username, DiaryInfoDTO diaryInfoDTO) {
