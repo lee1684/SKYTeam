@@ -20,9 +20,8 @@ public class DiaryInfoDTO {
     private List<String> diaryPictureUrls = new ArrayList<>();
 
     public DiaryInfoDTO(Diary diary) {
-        DiaryInfoDTO dto = new DiaryInfoDTO();
-        dto.setDescription(diary.getDescription());
-        dto.addDiaryPictureUrls(diary.getDiaryPictureUrls());
+        this.setDescription(diary.getDescription());
+        this.addDiaryPictureUrls(diary.getDiaryPictureUrls());
     }
 
     private void addDiaryPictureUrls(List<String> diaryPictureUrls) {
