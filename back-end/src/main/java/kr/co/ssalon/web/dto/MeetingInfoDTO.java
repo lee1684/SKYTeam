@@ -19,6 +19,7 @@ public class MeetingInfoDTO {
     private String category;
     private Integer payment;
     private String creator;
+    private String creatorEmail;
     private List<MemberSignDTO> participants;
     private List<String> meetingPictureUrls;
     private String title;
@@ -35,6 +36,7 @@ public class MeetingInfoDTO {
         this.payment = meeting.getPayment();
         this.backgroundColor = meeting.getBackgroundColor();
         this.creator = meeting.getCreator().getNickname();
+        this.creatorEmail = meeting.getCreator().getEmail();
         this.participants = meeting.getParticipants().stream().map(memberMeeting -> new MemberSignDTO(memberMeeting.getMember())).collect(Collectors.toList());
         this.meetingPictureUrls = meeting.getMeetingPictureUrls();
         this.title = meeting.getTitle();
