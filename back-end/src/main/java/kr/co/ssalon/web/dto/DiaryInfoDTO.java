@@ -1,14 +1,15 @@
 package kr.co.ssalon.web.dto;
 
 import kr.co.ssalon.domain.entity.Diary;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 @Builder
 public class DiaryInfoDTO {
 
@@ -18,7 +19,7 @@ public class DiaryInfoDTO {
 
     public DiaryInfoDTO(String description, List<String> diaryPictureUrls) {
         this.description = description;
-        this.setDiaryPictureUrls(diaryPictureUrls);
+        this.setDiaryPictureUrls(diaryPictureUrls.isEmpty() ? List.of("") : diaryPictureUrls);
     }
 
     public DiaryInfoDTO(Diary diary) {
@@ -27,6 +28,9 @@ public class DiaryInfoDTO {
     }
 
     public void setDiaryPictureUrls(List<String> diaryPictureUrls) {
+        if (diaryPictureUrls.isEmpty()) {
+            return;
+        }
         for (String diaryPictureUrl : diaryPictureUrls) {
             getDiaryPictureUrls().add(diaryPictureUrl);
         }
