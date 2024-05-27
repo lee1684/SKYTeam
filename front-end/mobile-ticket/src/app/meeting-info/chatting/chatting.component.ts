@@ -34,6 +34,7 @@ export class ChattingComponent {
   simpleInput: SimpleInputComponent | null = null;
   @ViewChild('msgContainer', { static: false })
   msgContainer: ElementRef | null = null;
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   @Input() moimId: string = undefined as unknown as string;
 
   public myProfile: Profile = undefined as unknown as Profile;
@@ -42,6 +43,8 @@ export class ChattingComponent {
   public isConnected: boolean = false;
   public isEntered: boolean = false;
   public messages: any[] = [];
+  private imageUrl: string = '';
+  private files: FileList | null = null;
 
   private stompClient: Client = undefined as unknown as Client;
   constructor(private _apiExecutorService: ApiExecutorService) {
@@ -137,16 +140,44 @@ export class ChattingComponent {
 
   public sendMessage() {
     if (this.stompClient && this.stompClient.connected) {
-      this.stompClient.publish({
-        destination: `/send/${this.moimId}`,
-        body: JSON.stringify({ message: this.simpleInput!.innerText }),
-        headers: {
-          Authorization: `Bearer ${this._apiExecutorService.token}`,
-          MessageType: 'TALK',
-        },
-      });
-      this.simpleInput!.innerText = '';
+      if (this.files) {
+        // 이미지 s3에 업로드
+        this.uploadFiles(this.files)
+          .then(() => {
+            // 이미지 업로드 완료 후 메시지 전송
+            this.publishMessage();
+            this.flushAfterSendMessage();
+          })
+          .catch(error => {
+            // 이미지 업로드 실패 시 에러 처리
+            console.error('File upload error:', error);
+          });
+      } else {
+        // 이미지가 null인 경우
+        this.publishMessage();
+        this.flushAfterSendMessage();
+      }
     }
+  }
+
+  private publishMessage() {
+    this.stompClient.publish({
+      destination: `/send/${this.moimId}`,
+      body: JSON.stringify({
+        message: this.simpleInput!.innerText,
+        imageUrl: this.imageUrl,
+      }),
+      headers: {
+        Authorization: `Bearer ${this._apiExecutorService.token}`,
+        MessageType: 'TALK',
+      },
+    });
+  }
+
+  private flushAfterSendMessage() {
+    this.simpleInput!.innerText = '';
+    this.imageUrl = '';
+    this.fileInput.nativeElement.value = '';
   }
 
   public isMyMsg(message: any) {
@@ -177,5 +208,27 @@ export class ChattingComponent {
     if (this.simpleInput?.innerText !== '') {
       this.sendMessage();
     }
+  }
+
+  public onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.files = input.files;
+    }
+  }
+
+  // 파일 업로드 함수
+  private async uploadFiles(files: FileList) {
+    const body = new FormData();
+
+    // 파일들을 FormData 객체에 추가
+    for (let i = 0; i < files.length; i++) {
+      body.append('files', files[i]);
+    }
+
+    // 서버로 파일 업로드 요청 보내기
+    const result = await this._apiExecutorService.uploadGeneralImage(body);
+    let key = Object.keys(result.mapURI)[0];
+    this.imageUrl = result.mapURI[key];
   }
 }
