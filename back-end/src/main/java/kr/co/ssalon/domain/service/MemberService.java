@@ -57,6 +57,13 @@ public class MemberService {
         return member;
     }
 
+    public Member findMemberByEmail(String email) throws BadRequestException {
+        Optional<Member> findMember = memberRepository.findByEmail(email);
+        Member member = ValidationService.validationMember(findMember);
+        return member;
+    }
+
+
     public List<Member> findAllMember() {
         return memberRepository.findAll();
     }

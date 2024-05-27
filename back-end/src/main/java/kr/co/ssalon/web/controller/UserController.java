@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.ssalon.domain.dto.MemberDomainDTO;
 import kr.co.ssalon.domain.entity.Member;
+import kr.co.ssalon.domain.repository.MemberRepository;
 import kr.co.ssalon.domain.service.MemberService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import kr.co.ssalon.web.dto.*;
@@ -28,6 +29,7 @@ import java.util.Map;
 public class UserController {
 
     private final MemberService memberService;
+    private final MemberRepository memberRepository;
 
     @Operation(summary = "회원가입")
     @ApiResponses(value = {
@@ -75,6 +77,17 @@ public class UserController {
         log.info("user = {}", member);
         return new MemberDomainDTO(member);
     }
+
+    @Operation(summary = "이메일로 회원 정보 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "이메일로 회원 정보 조회 성공"),
+    })
+    @GetMapping("/api/users/email/profile")
+    public MemberDomainDTO getUserInfoByEmail(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MemberEmailDTO memberEmailDTO) throws BadRequestException {
+        Member member = memberService.findMemberByEmail(memberEmailDTO.getEmail());
+        return new MemberDomainDTO(member);
+    }
+
 
     @Operation(summary = "회원 정보 수정")
     @ApiResponses(value = {
