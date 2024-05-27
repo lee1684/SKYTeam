@@ -50,9 +50,10 @@ public class ChatController {
         Member member = memberService.findMember(username);
         Meeting meeting = meetingService.findMeeting(roomId);
 
-        String imageUrl = Objects.equals(messageType, "ENTER")
-                ? ""
-                : chatService.changeImageBytesToUrl(messageRequestDTO.getImageBytes(), messageRequestDTO.getFileName(), roomId);
+        String imageUrl = "";
+        if (messageRequestDTO.getImageBytes() != null && messageRequestDTO.getFileName() != null) {
+            imageUrl = chatService.changeImageBytesToUrl(messageRequestDTO.getImageBytes(), messageRequestDTO.getFileName(), roomId);
+        }
 
         // 채팅 메시지 저장
         MessageResponseDTO messageResponseDTO = chatService.saveMessage(member, meeting, messageRequestDTO.getMessage(), messageType, imageUrl);
