@@ -102,7 +102,7 @@ public class DiaryController {
     public ResponseEntity<DiaryInfoDTO> fetchDiaryInfo(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
         DiaryInfoDTO diaryInfoDTO = diaryService.fetchDiaryInfo(moimId, customOAuth2Member.getUsername());
 
-        if (diaryInfoDTO.getDescription() == null || diaryInfoDTO.getDescription().equals("NOT EDIT YET")) return ResponseEntity.notFound().build();
+        if (diaryInfoDTO.getDescription().equals("NOT EDIT YET")) return ResponseEntity.notFound().build();
         else return ResponseEntity.ok(diaryInfoDTO);
     }
 
@@ -110,7 +110,8 @@ public class DiaryController {
     public ResponseEntity<Diary> updateDiaryInfo(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @ModelAttribute DiaryInfoDTO diaryInfoDTO) {
 
         Diary result = diaryService.updateDiaryInfo(moimId, customOAuth2Member.getUsername(), diaryInfoDTO);
-        return ResponseEntity.ok(result);
+        if (result == null) return ResponseEntity.badRequest().build();
+        else return ResponseEntity.ok(result);
     }
 
     private String usernameConverter(String originString) {

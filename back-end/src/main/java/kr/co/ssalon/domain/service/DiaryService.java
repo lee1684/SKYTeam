@@ -12,6 +12,7 @@ import kr.co.ssalon.domain.repository.MeetingRepository;
 import kr.co.ssalon.domain.repository.MemberMeetingRepository;
 import kr.co.ssalon.domain.repository.MemberRepository;
 import kr.co.ssalon.web.dto.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
+@Slf4j
 @Service
 public class DiaryService {
 
@@ -137,15 +139,28 @@ public class DiaryService {
     public DiaryInfoDTO fetchDiaryInfo(Long moimId, String username) {
 
         Optional<Member> userOp = memberRepository.findByUsername(username);
+        if (userOp.isEmpty()) {
+            log.error("DiaryService(fetchDiaryInfo): Member not found");
+            return null;
+        }
         Optional<Meeting> meetingOp = meetingRepository.findById(moimId);
+        if (meetingOp.isEmpty()) {
+            log.error("DiaryService(fetchDiaryInfo): Meeting not found");
+            return null;
+        }
 
         Member user = userOp.get();
         Meeting meeting = meetingOp.get();
 
         Optional<MemberMeeting> memberMeetingOp = memberMeetingRepository.findByMemberAndMeeting(user, meeting);
+        if (memberMeetingOp.isEmpty()) {
+            log.error("DiaryService(fetchDiaryInfo): MemberMeeting not found");
+            return null;
+        }
 
         MemberMeeting memberMeeting = memberMeetingOp.get();
         Diary diary = memberMeeting.getDiary();
+        log.info(diary.getDescription());
 
         if (diary.isEditYet()) return DiaryInfoDTO.builder()
                 .description("NOT EDIT YET")
@@ -157,17 +172,34 @@ public class DiaryService {
     public Diary updateDiaryInfo(Long moimId, String username, DiaryInfoDTO diaryInfoDTO) {
 
         Optional<Member> userOp = memberRepository.findByUsername(username);
+        if (userOp.isEmpty()) {
+            log.error("DiaryService(updateDiaryInfo): Member not found");
+            return null;
+        }
         Optional<Meeting> meetingOp = meetingRepository.findById(moimId);
+        if (meetingOp.isEmpty()) {
+            log.error("DiaryService(updateDiaryInfo): Meeting not found");
+            return null;
+        }
 
         Member user = userOp.get();
         Meeting meeting = meetingOp.get();
 
         Optional<MemberMeeting> memberMeetingOp = memberMeetingRepository.findByMemberAndMeeting(user, meeting);
+        if (memberMeetingOp.isEmpty()) {
+            log.error("DiaryService(updateDiaryInfo): MemberMeeting not found");
+            return null;
+        }
 
         MemberMeeting memberMeeting = memberMeetingOp.get();
-        Diary diary = memberMeeting.getDiary();
+        Diary diary = diaryRepository.findByMemberMeeting(memberMeeting);
+        if (diary == null) {
+            log.error("DiaryService(updateDiaryInfo): Diary not found");
+            return null;
+        }
 
         diary.editDiaryDescription(diaryInfoDTO.getDescription());
+        log.info("DiaryService(updateDiaryInfo): Diary updated - {}", diaryInfoDTO.getDescription());
         diary.addDiaryPictureUrls(diaryInfoDTO.getDiaryPictureUrls());
 
         return diaryRepository.save(diary);
