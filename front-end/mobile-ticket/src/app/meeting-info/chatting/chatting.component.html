@@ -16,5 +16,6 @@
     <div id="send-input">
         <app-simple-input [type]="'chat-input'" (onClickChatSendButtonEvent)="this.sendMessage()"
             #simpleInput></app-simple-input>
+      <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*">
     </div>
 </div>
