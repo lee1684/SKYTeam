@@ -11,6 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class MessageRequestDTO {
     private String message;
-    private byte[] imageBytes;
-    private String fileName;
+    private String imageUrl;
 }

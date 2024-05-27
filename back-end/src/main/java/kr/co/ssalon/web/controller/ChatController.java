@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Tag(name = "채팅")
 @Controller
@@ -49,14 +48,11 @@ public class ChatController {
 
         Member member = memberService.findMember(username);
         Meeting meeting = meetingService.findMeeting(roomId);
-
-        String imageUrl = "";
-        if (messageRequestDTO.getImageBytes() != null && messageRequestDTO.getFileName() != null) {
-            imageUrl = chatService.changeImageBytesToUrl(messageRequestDTO.getImageBytes(), messageRequestDTO.getFileName(), roomId);
-        }
+        String message = messageRequestDTO.getMessage();
+        String imageUrl = messageRequestDTO.getImageUrl();
 
         // 채팅 메시지 저장
-        MessageResponseDTO messageResponseDTO = chatService.saveMessage(member, meeting, messageRequestDTO.getMessage(), messageType, imageUrl);
+        MessageResponseDTO messageResponseDTO = chatService.saveMessage(member, meeting, message, messageType, imageUrl);
 
         return messageResponseDTO;
     }
