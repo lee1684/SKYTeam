@@ -18,8 +18,6 @@ import {
 import { ApiExecutorService } from '../service/api-executor.service';
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { FabricImage, FabricText, Path } from 'fabric';
-import jsQR from 'jsqr';
-import qrcode from 'qrcode-generator';
 import { ScenegraphService } from '../service/scenegraph.service';
 import {
   CircleToggleStatusGroupComponent,
@@ -118,7 +116,8 @@ export class TicketComponent {
 
   @Input() public moimId: string = undefined as unknown as string;
   @Input() public viewType: string = undefined as unknown as string;
-  @Input() public createTemplate: string | undefined = undefined;
+  @Input() public createTemplate: string = undefined as unknown as string;
+  @Input() public face: string = 'front';
   public isFromUrl: boolean = false;
   constructor(
     private _apiExecutorService: ApiExecutorService,
@@ -134,6 +133,7 @@ export class TicketComponent {
         this.moimId = params['moimId'];
         this.viewType = params['viewType'];
         this.createTemplate = params['createTemplate'];
+        this.face = params['face'];
         this.isFromUrl = true;
         this.setFirstPage();
       });
@@ -158,7 +158,6 @@ export class TicketComponent {
   }
 
   public async changeViewMode(mode: MobileTicketViewMode) {
-    console.log(mode);
     this.mode = mode;
   }
 
@@ -226,7 +225,11 @@ export class TicketComponent {
       body.append('files', dataURItoBlob(imageDataURL), 'image.png');
       console.log(dataURItoBlob(imageDataURL));
       /* 서버에 저장 API 연결해야함. */
-      await this._apiExecutorService.editTicket(this.moimId, body);
+      if (this.face === 'front') {
+        await this._apiExecutorService.editTicket(this.moimId, body);
+      } else {
+        await this._apiExecutorService.editDiary(this.moimId, body);
+      }
     }
   }
 

@@ -9,6 +9,9 @@
         (onChangeEvent)="this.onInput('location', $event)"></app-simple-input>
     <app-simple-input [type]="'longText'" [label]="'모임 소개'" [placeholder]="'어떤 활동을 하는지 모임에 대해 소개해주세요'"
         (onChangeEvent)="this.onInput('description', $event)"></app-simple-input>
+    <app-image-row-container [label]="'사진'" [extraLabel]="'(선택)'" [extraLabelColor]="'#006BFF'"
+        [isTicketContainer]="false" [imageHeight]="100" [images]="this.photos"
+        (onClickImageEvent)="this.onClickImage($event)"></app-image-row-container>
     <app-simple-input [type]="'number'" [checkBoxLabel]="'인원 제한 없음'" [enableCheckbox]="true" [label]="'최대 인원수'"
         [placeholder]="'원하는 최대 인원 수를 입력해주세요'" (onClickCheckboxEvent)="this.onClickNoLimitCapacity()"
         (onChangeEvent)="this.onInput('capacity', $event)" #capacity></app-simple-input>

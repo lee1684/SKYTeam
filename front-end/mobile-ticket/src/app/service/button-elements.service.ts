@@ -17,6 +17,14 @@ export class ButtonElementsService {
     },
   ];
 
+  public createDiaryButtonElements: NewButtonElement[] = [
+    {
+      selected: true,
+      value: 0,
+      label: '후기 작성하기',
+    },
+  ];
+
   /**
    * Login
    */

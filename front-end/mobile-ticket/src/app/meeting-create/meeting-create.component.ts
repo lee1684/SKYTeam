@@ -97,6 +97,7 @@ export class MeetingCreateComponent {
         moimId: this.resultMeetingInfo.id,
         viewType: 'edit',
         createTemplate: this.createTicketMode === 0 ? 'N' : 'A',
+        face: 'front',
       },
     });
   }
@@ -106,7 +107,6 @@ export class MeetingCreateComponent {
       this.resultMeetingInfo = await this._apiExecutorService.createMeeting(
         this.meetingInfo
       );
-      console.log(this.resultMeetingInfo);
       this.nowStep = CreateMeetingStep.TICKET;
     }
   }

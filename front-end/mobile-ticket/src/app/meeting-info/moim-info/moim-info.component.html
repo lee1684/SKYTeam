@@ -1,7 +1,18 @@
 <div class="container">
-    <app-simple-content [title]="'개최자'" [content]="this.moimInfo.creator"></app-simple-content>
+    <div id="creator-container">
+        <div id="title-container">
+            개최자
+        </div>
+        <div id="profile-container">
+            <img id="profile-img-container" [src]="this.moimInfo.creatorProfilePictureUrl" />
+            <div id="name-container">{{this.moimInfo.creator}}</div>
+        </div>
+    </div>
+
     <app-simple-content [title]="'모임 날짜'" [content]="this.getDate()"></app-simple-content>
     <app-simple-content [title]="'모임 장소'" [content]="this.moimInfo.location"></app-simple-content>
     <app-simple-content [title]="'모임소개'" [content]="this.moimInfo.description"></app-simple-content>
+    <app-simple-content *ngIf="(this.moimInfo.meetingPictureUrls).length > 0" [title]="'사진'"
+        [images]="this.getImageUrlsToNewButtonElements(this.moimInfo.meetingPictureUrls)"></app-simple-content>
     <app-simple-content [title]="'참가비'" [content]="this.getBill()"></app-simple-content>
 </div>

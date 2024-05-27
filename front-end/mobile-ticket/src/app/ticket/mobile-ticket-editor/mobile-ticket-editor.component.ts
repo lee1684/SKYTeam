@@ -84,6 +84,7 @@ export class MobileTicketEditorComponent {
   selectedPhotoContainer: ElementRef | null = null;
 
   @Input() moimId: string = '';
+  @Input() face: string = 'front';
 
   @Output() public readonly onChangeViewer = new EventEmitter();
   @Output() public readonly onObjectEditEnded = new EventEmitter();
@@ -505,10 +506,10 @@ export class MobileTicketEditorComponent {
     });
 
     try {
-      let result = await this._apiExecutorService.uploadImages(
-        this.moimId,
-        body
-      );
+      let result =
+        this.face === 'front'
+          ? await this._apiExecutorService.uploadTicketImages(this.moimId, body)
+          : await this._apiExecutorService.uploadDiaryImages(this.moimId, body);
       let keys = Object.keys(result.mapURI);
       for (var i = 0; i < keys.length; i++) {
         var key = keys[i];
@@ -574,7 +575,7 @@ export class MobileTicketEditorComponent {
       }
       /** text의 경우, 수정하는 경우가 있는데, 이 함수에서 미리 다 바꾸기 때문에 object를 넘길 필요가 없음.
        * 그렇기 때문에, 미리 editMode를 NONE으로 바꿔버려 null을 보냄.
-       * null을 받은 editor viewer는 canvas.renderAll()만 진행.
+       * null을 받은 viewer는 canvas.renderAll()만 진행.
        * 이미지의 경우, asyncronous하게 진행되기 때문에 밑의 코드가 진행되지 않게 해놔야 의도대로 진행될 수 있음.
        */
       this.onObjectEditEnded.emit(

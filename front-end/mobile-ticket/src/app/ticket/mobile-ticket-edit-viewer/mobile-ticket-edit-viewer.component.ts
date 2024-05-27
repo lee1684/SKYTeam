@@ -30,8 +30,9 @@ export class MobileTicketEditViewerComponent {
   @ViewChild('editCanvas', { static: false })
   editCanvas: ElementRef | null = null;
 
-  @Input() moimId: string = '';
-  @Input() createTemplate: string | undefined = undefined;
+  @Input() moimId: string = undefined as unknown as string;
+  @Input() createTemplate: string = undefined as unknown as string;
+  @Input() face: string = undefined as unknown as string;
 
   @Output() public readonly onClickText = new EventEmitter();
   public canvas: Canvas | null = null;
@@ -111,12 +112,21 @@ export class MobileTicketEditViewerComponent {
   public async loadDecorationInfo() {
     let decorationInfo: any = null;
     if (this.createTemplate !== undefined) {
-      await this._apiExecutorService.createTicket(
-        this.moimId,
-        this.createTemplate!
-      );
+      if (this.face === 'front') {
+        await this._apiExecutorService.createTicket(
+          this.moimId,
+          this.createTemplate!
+        );
+        decorationInfo = await this._apiExecutorService.getTicket(this.moimId);
+      } else if (this.face === 'back') {
+        await this._apiExecutorService.createDiary(
+          this.moimId,
+          this.createTemplate!
+        );
+        decorationInfo = await this._apiExecutorService.getDiary(this.moimId);
+      }
     }
-    decorationInfo = await this._apiExecutorService.getTicket(this.moimId);
+    console.log(decorationInfo);
     await this.canvas?.loadFromJSON(decorationInfo.fabric);
     this.canvas?.renderAll();
   }

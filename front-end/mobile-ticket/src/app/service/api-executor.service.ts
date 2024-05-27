@@ -10,6 +10,16 @@ export const setToken = function (
   apiExecutorService.setToken(token);
 };
 
+export interface Profile {
+  nickname: string;
+  profilePictureUrl: string;
+  gender: 'M' | 'F' | 'G';
+  address: string;
+  introduction: string;
+  interests: string[];
+  email: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -19,16 +29,18 @@ export class ApiExecutorService {
   public apiURL: string = 'https://ssalon.co.kr/api';
   //public apiURL: string = 'http://localhost:8080/api';
   public tokens = {};
-  private _token: string =
-    'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTY0ODQxOTYsImV4cCI6MTcxNjU3MDU5Nn0.SicEswnA4oJmg40-lvm-3owU0A67E7n6kd5IAUB9k8o';
+  public token: string =
+    'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTY4MDI4MzcsImV4cCI6MTcxNjg4OTIzN30.2deUIlq3fLq0PQY-4Z2l7kZehz4S7-uqavFVosxpTo8';
   public refreshToken: string = '';
-
+  public myProfile: Profile = undefined as unknown as Profile;
   constructor(private _ssalonConfigService: SsalonConfigService) {
     this.initApiExecutor();
   }
 
+  public async ngOnInit() {}
+
   public setToken(token: string) {
-    this._token = token;
+    this.token = token;
   }
 
   private initApiExecutor() {
@@ -37,6 +49,8 @@ export class ApiExecutorService {
       headers: {
         'Content-Type': 'multipart/form-data',
         'Access-Control-Allow-Origin': '*',
+        Authorization: `Bearer ${this.token}`,
+        withCredentials: true,
       },
     });
     this.apiExecutorJson = axios.create({
@@ -44,8 +58,9 @@ export class ApiExecutorService {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
-        Authorization: `Bearer ${this._token}`,
+        Authorization: `Bearer ${this.token}`,
         Refresh: this.refreshToken,
+        withCredentials: true,
       },
     });
     /*
@@ -54,14 +69,42 @@ export class ApiExecutorService {
     */
   }
 
-  public async getTicket(moimId: string) {
+  public async getMyProfile() {
     try {
-      let response = await this.apiExecutor?.get(`/tickets/${moimId}`);
+      let response = await this.apiExecutorJson?.get(`/users/me/profile`);
+      this.myProfile = response!.data;
+      console.log(this.myProfile);
+    } catch {}
+  }
+
+  public async getLastMessages(moimId: string) {
+    try {
+      let response = await this.apiExecutor?.get(`/chat-history/${moimId}`);
+      console.log(response!.data);
       return response!.data;
     } catch {
       /** dummy data */
-      let tempJson = await axios.get('assets/decoration.json');
-      return tempJson.data;
+      return false;
+    }
+  }
+
+  public async getChattingParticipants(moimId: string) {
+    try {
+      let response = await this.apiExecutorJson?.get(`/chat/${moimId}/users`);
+      return response!.data;
+    } catch {
+      return false;
+    }
+  }
+
+  public async getTicket(moimId: string) {
+    try {
+      let response = await this.apiExecutor?.get(`/tickets/${moimId}`);
+      console.log(response!.data);
+      return response!.data;
+    } catch {
+      /** dummy data */
+      return false;
     }
   }
 
@@ -81,7 +124,6 @@ export class ApiExecutorService {
 
   public async editTicket(moimId: string, body: FormData) {
     try {
-      console.log('EDIT');
       let response = await this.apiExecutor?.put(`/tickets/${moimId}`, body);
       return response!.data;
     } catch (error) {
@@ -92,7 +134,7 @@ export class ApiExecutorService {
     }
   }
 
-  public async uploadImages(moimId: string, body: FormData) {
+  public async uploadTicketImages(moimId: string, body: FormData) {
     try {
       let response = await this.apiExecutor?.post(
         `/tickets/${moimId}/image`,
@@ -107,20 +149,93 @@ export class ApiExecutorService {
     }
   }
 
-  public async getDiary() {
+  public async createMoimReview(moimId: string, body: any) {
     try {
-      let response = await this.apiExecutor?.post(
-        `/diary/${this._ssalonConfigService.DIARY_ID}`
+      let response = await this.apiExecutorJson?.post(
+        `/diary/${moimId}/info`,
+        body
       );
       return response!.data;
     } catch {
+      return false;
+    }
+  }
+
+  public async getMoimReview(moimId: string) {
+    try {
+      let response = await this.apiExecutorJson?.get(`/diary/${moimId}/info`);
+      console.log(response!.data);
+      return response!.data;
+    } catch {
+      return false;
+    }
+  }
+
+  public async getDiary(moimId: string) {
+    try {
+      let response = await this.apiExecutor?.get(`/diary/${moimId}`);
+      return JSON.parse(response!.data.resultJSON);
+    } catch {
+      /** dummy data */
+      return false;
+    }
+  }
+
+  public async createDiary(moimId: string, template: string) {
+    try {
+      let response = await this.apiExecutorJson?.post(
+        `/diary/${moimId}?template=${template}`
+      );
+      return response!.data;
+    } catch (e) {
+      console.log(e);
       /** dummy data */
       let tempJson = await axios.get('assets/decoration.json');
       return tempJson.data;
     }
   }
 
-  public async editDiary(diaryId: string) {}
+  public async editDiary(moimId: string, body: FormData) {
+    try {
+      let response = await this.apiExecutor?.put(`/diary/${moimId}`, body);
+      return response!.data;
+    } catch (error) {
+      console.log(error);
+      /** dummy data */
+      let tempJson = await axios.get('assets/decoration.json');
+      return tempJson.data;
+    }
+  }
+
+  public async uploadDiaryImages(moimId: string, body: FormData) {
+    try {
+      let response = await this.apiExecutor?.post(
+        `/diary/${moimId}/image`,
+        body
+      );
+      return response!.data;
+    } catch (error) {
+      console.log(error);
+      /** dummy data */
+      let tempJson = await axios.get('assets/decoration.json');
+      return tempJson.data;
+    }
+  }
+
+  public async uploadGeneralImage(body: FormData) {
+    try {
+      let response = await this.apiExecutor?.post(
+        `/image-upload/general`,
+        body
+      );
+      return response!.data;
+    } catch (error) {
+      console.log(error);
+      /** dummy data */
+      let tempJson = await axios.get('assets/decoration.json');
+      return tempJson.data;
+    }
+  }
 
   public async getBarcode(moimId: string) {
     try {
