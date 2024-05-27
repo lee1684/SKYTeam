@@ -5,6 +5,7 @@ import { SsalonConfigService } from './service/ssalon-config.service';
 import { CommonModule } from '@angular/common';
 import { OnboardingComponent } from './onboarding/onboarding.component';
 import { MainComponent } from './main/main.component';
+import { ApiExecutorService } from './service/api-executor.service';
 
 @Component({
   selector: 'app-root',
@@ -22,6 +23,14 @@ import { MainComponent } from './main/main.component';
 export class AppComponent {
   constructor(
     private _route: ActivatedRoute,
-    private _ssalonConfigService: SsalonConfigService
+    private _ssalonConfigService: SsalonConfigService,
+    private _apiExecutorService: ApiExecutorService
   ) {}
+
+  public ngOnInit(): void {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${'access'}=`);
+    this._apiExecutorService.setToken(parts.pop()!.split(';').shift()!);
+    this._apiExecutorService.getMyProfile();
+  }
 }

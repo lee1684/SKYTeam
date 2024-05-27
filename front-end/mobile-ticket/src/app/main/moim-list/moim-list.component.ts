@@ -31,7 +31,6 @@ export class MoimListComponent {
   public ticketThumbnails: Ticket[][] = [];
   constructor(
     private _apiExecutorService: ApiExecutorService,
-    private _router: Router,
     public buttonElementsService: ButtonElementsService
   ) {}
   public async ngOnInit() {

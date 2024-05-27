@@ -70,6 +70,7 @@ export class ImageRowContainerComponent {
   public onClickImage(value: number): void {
     this.onClickImageEvent.emit(value);
   }
+
   public getThumbSrc(moimId: number): string {
     return (
       'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/Thumbnails/' +

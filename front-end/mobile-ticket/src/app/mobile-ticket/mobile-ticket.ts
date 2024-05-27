@@ -16,13 +16,14 @@ import {
   SsalonConfigService,
 } from '../service/ssalon-config.service';
 import { ActivatedRoute } from '@angular/router';
+import axios from 'axios';
 
 export class MobileTicket {
   public mobileTicket: Object3D | null = null;
   public frontSide: Face | null = null;
-  public frontDecorationInfo: DecorationInfo | null = null;
+  public frontDecorationInfo: DecorationInfo | boolean | null = null;
   public backSide: Face | null = null;
-  public backDecorationinfo: DecorationInfo | null = null;
+  public backDecorationinfo: DecorationInfo | boolean | null = null;
   constructor(
     private _apiExecutorService: ApiExecutorService,
     private _sceneGraphService: ScenegraphService
@@ -32,7 +33,16 @@ export class MobileTicket {
   public async initMobileTicket(moimId: string): Promise<any> {
     /** 앞의 정보가 있다면 받아오기(앞면 정보는 항상 있을듯) */
     this.frontDecorationInfo = await this._apiExecutorService.getTicket(moimId);
-    this.backDecorationinfo = await this._apiExecutorService.getTicket(moimId);
+    if (this.frontDecorationInfo === false)
+      this.frontDecorationInfo = (
+        await axios.get('assets/decoration.json')
+      ).data;
+    this.backDecorationinfo = await this._apiExecutorService.getDiary(moimId);
+    console.log(this.backDecorationinfo);
+    if (this.backDecorationinfo === false)
+      this.backDecorationinfo = (
+        await axios.get('assets/decoration.json')
+      ).data;
     this.loadMaterial();
   }
 
@@ -61,7 +71,8 @@ export class MobileTicket {
     //roughness: 0.8,
     //color: 0xffffff,
     //metalness: 0.2,
-    let backgroundColorString = this.frontDecorationInfo?.backgroundColor;
+    let backgroundColorString = (this.frontDecorationInfo as DecorationInfo)
+      .backgroundColor;
     ((this.mobileTicket as Mesh).material as MeshPhongMaterial).color.set(
       parseInt(backgroundColorString?.slice(1)!, 16)
     );
@@ -80,7 +91,7 @@ export class MobileTicket {
       this.frontSide = new Face(
         new Vector2(350, 600),
         'front',
-        this.frontDecorationInfo?.fabric
+        (this.frontDecorationInfo as DecorationInfo).fabric
       );
       this.frontSide.rotateZ(-Math.PI / 2);
       this.frontSide.position.add(new Vector3(0, 0, 2.05));
@@ -92,7 +103,7 @@ export class MobileTicket {
       this.backSide = new Face(
         new Vector2(350, 600),
         'back',
-        this.backDecorationinfo?.fabric
+        (this.backDecorationinfo as DecorationInfo).fabric
       );
       this.backSide.rotateZ(-Math.PI / 2);
       this.backSide.rotateY(-Math.PI);

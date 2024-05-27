@@ -1,0 +1,20 @@
+<div class="container">
+    <app-top-navigator [style.width]="'100%'" [title]="this.moimTitle" [shareButton]="false" [defaultBack]="false"
+        (backButtonClickEvent)="this.onClickBackButton()"></app-top-navigator>
+    <div class="content-container">
+        <div *ngIf="this.nowStep === this.createDiaryStep.INFO">
+            <app-create-moim-review-info [reviewInfo]="this.reviewInfo" [moimId]="this.moimId"
+                (onCreateButtonReadyEvent)="this.changeCreateDiaryTypeButtonState(true)"
+                #createMoimReviewInfoComponent></app-create-moim-review-info>
+        </div>
+        <div *ngIf="this.nowStep === createDiaryStep.DIARY">
+            <app-create-diary
+                (onClickToggleButtonEvent)="this.changeCreateTicketButtonState($event)"></app-create-diary>
+        </div>
+    </div>
+    <div class="bottom-button">
+        <app-square-button
+            [buttonElements]="(this.nowStep===this.createDiaryStep.INFO)?this.buttonElementsService.nextButtons: this.buttonElementsService.createTicketButtons"
+            (onClickEvent)="(this.nowStep===this.createDiaryStep.INFO)?this.onClickNextButton(): this.onClickCreateTicketButton()"></app-square-button>
+    </div>
+</div>

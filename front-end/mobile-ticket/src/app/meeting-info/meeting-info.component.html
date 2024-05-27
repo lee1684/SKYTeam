@@ -15,7 +15,10 @@
             <app-moim-info [moimId]="this.moimId" [moimInfo]="this.moimInfo"></app-moim-info>
         </div>
         <div *ngIf="this.nowTab === this.meetingInfoTabEnum.CHATTING" class="content">
-            <app-chatting></app-chatting>
+            <app-chatting [moimId]="this.moimId"></app-chatting>
+        </div>
+        <div *ngIf="this.nowTab === this.meetingInfoTabEnum.DIARY" class="content">
+            <app-moim-review [moimId]="this.moimId" [moimTitle]="this.moimInfo.title"></app-moim-review>
         </div>
     </div>
     <div *ngIf="this.nowTab === this.meetingInfoTabEnum.INFO" id="join-button-container">

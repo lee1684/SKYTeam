@@ -23,7 +23,9 @@
     width: 100%;
     background-color: white;
     margin-top: 40px;
+    overflow-y: scroll;
 }
+
 
 #ticket-container::-webkit-scrollbar {
     display: none;

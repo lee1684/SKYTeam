@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 export class TopNavigatorComponent {
   @Input() title: string = '';
   @Input() shareButton: boolean = false;
+  @Input() backButton: boolean = true;
   @Input() defaultBack: boolean = true;
 
   @Output() backButtonClickEvent = new EventEmitter();

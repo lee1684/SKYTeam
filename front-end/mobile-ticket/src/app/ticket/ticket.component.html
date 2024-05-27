@@ -15,11 +15,11 @@
 <!-- APPEDITVIEW: 앱에서 보는 꾸미기 화면의 경우 -->
 <div class="container" [hidden]="!(this.mode === this.mobileTicketViewMode.APPEDITVIEW)" #appEditView>
   <div id="editor-viewer-container">
-    <app-mobile-ticket-edit-viewer [moimId]="this.moimId" [createTemplate]="this.createTemplate" #mobileTicketEditViewer
-      (onClickText)="this.openTextEditor($event)"></app-mobile-ticket-edit-viewer>
+    <app-mobile-ticket-edit-viewer [moimId]="this.moimId" [createTemplate]="this.createTemplate" [face]="this.face"
+      #mobileTicketEditViewer (onClickText)="this.openTextEditor($event)"></app-mobile-ticket-edit-viewer>
   </div>
   <div id="editor-container">
-    <app-mobile-ticket-editor [moimId]="this.moimId" #mobileTicketEditor [style.height]="
+    <app-mobile-ticket-editor [moimId]="this.moimId" [face]="this.face" #mobileTicketEditor [style.height]="
       this.editMode === this.mobileTicketEditMode.NONE ? '60px' : '100%'
     " (onChangeViewer)="this.changeEditMode($event)" (onClickPreview)="this.onClickPreviewButton()"
       (onObjectEditEnded)="this.applyEdit($event)"
