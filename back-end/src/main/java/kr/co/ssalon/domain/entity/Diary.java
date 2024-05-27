@@ -27,9 +27,10 @@ public class Diary {
 
     private String title;
 
+    @Builder.Default
     @ElementCollection
     @CollectionTable(name = "diary_picture", joinColumns = @JoinColumn(name = "diary_id"))
-    private final List<String> diaryPictureUrls = new ArrayList<>();
+    private List<String> diaryPictureUrls = new ArrayList<>();
 
     private String description;
 
@@ -38,6 +39,7 @@ public class Diary {
     }
 
     public void addDiaryPictureUrls(List<String> diaryPictureUrls) {
+        // 초기화 후 재생성 로직 필요할 듯?
         for (String diaryPictureUrl : diaryPictureUrls) {
             getDiaryPictureUrls().add(diaryPictureUrl);
         }
@@ -45,7 +47,7 @@ public class Diary {
     }
 
     public void editDiaryDescription(String description) {
-        this.description = description;
+        this.description = description != null ? description : this.description;
         this.editYet = false;
     }
 
