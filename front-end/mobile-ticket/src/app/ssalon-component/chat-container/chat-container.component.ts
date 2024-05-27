@@ -2,6 +2,8 @@ import { Component, Input } from '@angular/core';
 import { ApiExecutorService } from '../../service/api-executor.service';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { marked } from 'marked';
+import { EmojiConvertor } from 'emoji-js';
 @Component({
   selector: 'app-chat-container',
   standalone: true,
@@ -14,8 +16,12 @@ export class ChatContainerComponent {
   @Input() content: string = undefined as unknown as string;
   @Input() message: any = undefined as unknown as string;
   @Input() align: string = 'left';
+  public convertedHTML: any = '';
+
   constructor(private _apiExecutorService: ApiExecutorService) {}
-  public ngOnInit() {}
+  public ngOnInit() {
+    this.convertedHTML = this.convertMarkdown(this.message.message).replace(/<p[^>]*>/g, '').replace(/<\/p>/g, '');;
+  }
   public getTime(date: string) {
     let dateObj = new Date(date);
     const kstOffset = 9 * 60; // 9시간을 분 단위로 변환
@@ -25,5 +31,17 @@ export class ChatContainerComponent {
     const hours = kstDate.getHours().toString().padStart(2, '0');
     const minutes = kstDate.getMinutes().toString().padStart(2, '0');
     return `${hours} : ${minutes}`;
+  }
+
+  public convertMarkdown(message: string) {
+    // emoji-js 인스턴스 생성
+    const emoji = new EmojiConvertor();
+    emoji.replace_mode = 'unified'; // 통일된 이모지 코드로 변환
+    emoji.allow_native = true; // 네이티브 이모지를 허용
+
+    const markedMessage = marked.parse(message) as string;
+    const emojiConvertedHtml = emoji.replace_colons(markedMessage);
+
+    return emojiConvertedHtml;
   }
 }
