@@ -4,12 +4,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kr.co.ssalon.domain.entity.Diary;
 import kr.co.ssalon.domain.service.DiaryService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
-import kr.co.ssalon.web.dto.DiaryFetchResponseDTO;
-import kr.co.ssalon.web.dto.DiaryInitResponseDTO;
-import kr.co.ssalon.web.dto.TicketEditResponseDTO;
-import kr.co.ssalon.web.dto.TicketImageResponseDTO;
+import kr.co.ssalon.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -78,16 +76,16 @@ public class DiaryController {
             @ApiResponse(responseCode = "200", description = "다이어리 편집을 위한 이미지 업로드 성공")
     })
     @PostMapping("/{moimId}/image") // U of CRUD : 다이어리 편집을 위한 이미지 업로드
-    public ResponseEntity<TicketImageResponseDTO> uploadDiaryImage(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @RequestPart List<MultipartFile> files) {
+    public ResponseEntity<ImageResponseDTO> uploadDiaryImage(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @RequestPart List<MultipartFile> files) {
 
         String username = usernameConverter(customOAuth2Member.getUsername());
-        TicketImageResponseDTO ticketImageResponseDTO = diaryService.uploadImages(moimId, files);
+        ImageResponseDTO imageResponseDTO = diaryService.uploadImages(moimId, files);
 
-        return switch (ticketImageResponseDTO.getResultCode()) {
-            case "201 Created" -> ResponseEntity.status(HttpStatus.CREATED).body(ticketImageResponseDTO);
-            case "206 Partial Content" -> ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(ticketImageResponseDTO);
-            case "502 Bad Gateway" -> ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(ticketImageResponseDTO);
-            default -> ResponseEntity.badRequest().body(ticketImageResponseDTO); // 400 Bad Request
+        return switch (imageResponseDTO.getResultCode()) {
+            case "201 Created" -> ResponseEntity.status(HttpStatus.CREATED).body(imageResponseDTO);
+            case "206 Partial Content" -> ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(imageResponseDTO);
+            case "502 Bad Gateway" -> ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(imageResponseDTO);
+            default -> ResponseEntity.badRequest().body(imageResponseDTO); // 400 Bad Request
         };
     }
 
@@ -98,6 +96,22 @@ public class DiaryController {
     @DeleteMapping("/{moimId}") // D of CRUD : 다이어리 삭제
     public ResponseEntity<String> deleteDiary(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
         return null;
+    }
+
+    @GetMapping("/{moimId}/info")
+    public ResponseEntity<DiaryInfoDTO> fetchDiaryInfo(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId) {
+        DiaryInfoDTO diaryInfoDTO = diaryService.fetchDiaryInfo(moimId, customOAuth2Member.getUsername());
+
+        if (diaryInfoDTO.getDescription().equals("NOT EDIT YET")) return ResponseEntity.notFound().build();
+        else return ResponseEntity.ok(diaryInfoDTO);
+    }
+
+    @PostMapping("/{moimId}/info")
+    public ResponseEntity<DiaryInfoDTO> updateDiaryInfo(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable Long moimId, @RequestBody DiaryInfoDTO diaryInfoDTO) {
+
+        DiaryInfoDTO result = diaryService.updateDiaryInfo(moimId, customOAuth2Member.getUsername(), diaryInfoDTO);
+        if (result == null) return ResponseEntity.badRequest().build();
+        else return ResponseEntity.ok(result);
     }
 
     private String usernameConverter(String originString) {

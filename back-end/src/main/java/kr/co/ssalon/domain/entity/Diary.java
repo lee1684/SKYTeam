@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -19,12 +22,33 @@ public class Diary {
     @OneToOne(fetch = FetchType.LAZY)
     private MemberMeeting memberMeeting;
 
+    @Builder.Default
+    private boolean editYet = true;
+
     private String title;
-    private String image_url;
+
+    @Builder.Default
+    @ElementCollection
+    @CollectionTable(name = "diary_picture", joinColumns = @JoinColumn(name = "diary_id"))
+    private List<String> diaryPictureUrls = new ArrayList<>();
+
     private String description;
 
 
     protected Diary() {
+    }
+
+    public void addDiaryPictureUrls(List<String> diaryPictureUrls) {
+        // 초기화 후 재생성 로직 필요할 듯?
+        for (String diaryPictureUrl : diaryPictureUrls) {
+            getDiaryPictureUrls().add(diaryPictureUrl);
+        }
+        this.editYet = false;
+    }
+
+    public void editDiaryDescription(String description) {
+        this.description = description != null ? description : this.description;
+        this.editYet = false;
     }
 
     // ***** 연관 메서드 *****
@@ -32,12 +56,14 @@ public class Diary {
         this.memberMeeting = memberMeeting;
     }
 
-    public static Diary createDiary(String title, String image_url, String description) {
+    public static Diary createDiary(String title, List<String> diaryPictureUrls, String description) {
         Diary diary = Diary.builder()
                 .title(title)
-                .image_url(image_url)
                 .description(description)
+                .editYet(true)
                 .build();
+        diary.addDiaryPictureUrls(diaryPictureUrls);
+
         return diary;
     }
 

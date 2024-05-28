@@ -37,6 +37,7 @@ public class Member {
     private String introduction;
     private String meetingRecommendation;
     private String categoryRecommendation;
+
     @Builder.Default
     @ElementCollection
     @CollectionTable(name = "member_interests", joinColumns = @JoinColumn(name = "member_id"))
