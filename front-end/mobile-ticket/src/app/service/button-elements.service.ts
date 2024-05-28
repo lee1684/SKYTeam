@@ -5,6 +5,20 @@ import { NewButtonElement } from '../ssalon-component/simple-toggle-group/simple
   providedIn: 'root',
 })
 export class ButtonElementsService {
+  private mainCategoryTab: string[] = [
+    '전체',
+    '운동',
+    '독서',
+    '요리',
+    '여행',
+    '음악',
+    '스터디',
+    '쇼핑',
+    '예술',
+    '사진',
+    '게임'
+  ];
+
   /**
    * Meeting Info
    */
@@ -126,78 +140,7 @@ export class ButtonElementsService {
    * Main
    */
 
-  public categorySelectionButtons: NewButtonElement[] = [
-    {
-      selected: true,
-      value: 0,
-      label: '전체',
-      solid: true,
-      unselectedBackgroundColor: '#F8F8F8',
-      unselectedFontColor: '#000000',
-      selectedBackgroundColor: '#000000',
-      selectedFontColor: '#ffffff',
-    },
-    {
-      selected: false,
-      value: 1,
-      label: '운동',
-      solid: true,
-      unselectedBackgroundColor: '#F8F8F8',
-      unselectedFontColor: '#000000',
-      selectedBackgroundColor: '#000000',
-      selectedFontColor: '#ffffff',
-    },
-    {
-      selected: false,
-      value: 2,
-      label: '게임',
-      solid: true,
-      unselectedBackgroundColor: '#F8F8F8',
-      unselectedFontColor: '#000000',
-      selectedBackgroundColor: '#000000',
-      selectedFontColor: '#ffffff',
-    },
-    {
-      selected: false,
-      value: 3,
-      label: '음악',
-      solid: true,
-      unselectedBackgroundColor: '#F8F8F8',
-      unselectedFontColor: '#000000',
-      selectedBackgroundColor: '#000000',
-      selectedFontColor: '#ffffff',
-    },
-    {
-      selected: false,
-      value: 4,
-      label: '요리',
-      solid: true,
-      unselectedBackgroundColor: '#F8F8F8',
-      unselectedFontColor: '#000000',
-      selectedBackgroundColor: '#000000',
-      selectedFontColor: '#ffffff',
-    },
-    {
-      selected: false,
-      value: 5,
-      label: '독서',
-      solid: true,
-      unselectedBackgroundColor: '#F8F8F8',
-      unselectedFontColor: '#000000',
-      selectedBackgroundColor: '#000000',
-      selectedFontColor: '#ffffff',
-    },
-    {
-      selected: false,
-      value: 6,
-      label: '영화',
-      solid: true,
-      unselectedBackgroundColor: '#F8F8F8',
-      unselectedFontColor: '#000000',
-      selectedBackgroundColor: '#000000',
-      selectedFontColor: '#ffffff',
-    },
-  ];
+  public categorySelectionButtons: NewButtonElement[] = [];
 
   /**
    * Meeting Create
@@ -231,7 +174,20 @@ export class ButtonElementsService {
       label: '다음',
     },
   ];
-  constructor() {}
+  constructor() {
+    for (let i = 0; i < 11; i++) {
+      this.categorySelectionButtons.push({
+        selected: (i === 0), // 0번 버튼은 선택된 상태로 초기화
+        value: i,
+        label: this.mainCategoryTab[i],
+        solid: true,
+        unselectedBackgroundColor: '#F8F8F8',
+        unselectedFontColor: '#000000',
+        selectedBackgroundColor: '#000000',
+        selectedFontColor: '#ffffff',
+      });
+    }
+  }
   public getLabelByValue(buttonElements: NewButtonElement[], value: number) {
     return buttonElements.find((element) => element.value === value)?.label;
   }
