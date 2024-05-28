@@ -68,6 +68,12 @@
     resize: none;
 }
 
+#markdown {
+    width: 100%;
+    height: 500px;
+    border: 1px solid red;
+}
+
 #text::-webkit-inner-spin-button {
     -webkit-appearance: none;
     display: none;
