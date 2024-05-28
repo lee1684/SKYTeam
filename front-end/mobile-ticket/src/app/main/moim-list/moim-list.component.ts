@@ -1,5 +1,5 @@
 import { NgFor, NgIf } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import {
   NewButtonElement,
   SimpleToggleGroupComponent,
@@ -27,6 +27,7 @@ import { ApiExecutorService } from '../../service/api-executor.service';
 export class MoimListComponent {
   @ViewChild('ticketContainer')
   ticketContainer: ElementRef<HTMLDivElement> | null = null;
+  @ViewChildren('rowContainers') rowContainers!: QueryList<ElementRef>;
 
   public ticketThumbnails: Ticket[][] = [];
   constructor(
@@ -50,8 +51,10 @@ export class MoimListComponent {
     }
   }
   public onClickCategoryButton(value: number): void {
+    const rowContainer = this.rowContainers.toArray().find(rowContainer => rowContainer.nativeElement.id === value.toString());
     this.ticketContainer!.nativeElement.scrollTo({
-      top: 200,
+      top: rowContainer!.nativeElement.offsetTop - 50,
+      behavior: 'smooth',
     });
   }
 
