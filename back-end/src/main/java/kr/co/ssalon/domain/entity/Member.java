@@ -35,6 +35,9 @@ public class Member {
     private String address;
     private String role;
     private String introduction;
+    private String meetingRecommendation;
+    private String categoryRecommendation;
+
     @Builder.Default
     @ElementCollection
     @CollectionTable(name = "member_interests", joinColumns = @JoinColumn(name = "member_id"))
@@ -77,6 +80,14 @@ public class Member {
         this.introduction = introduction != null ? introduction : this.introduction;
     }
 
+    public void changeMeetingRecommendation(String meetingRecommendation) {
+        this.meetingRecommendation = meetingRecommendation != null ? meetingRecommendation : this.meetingRecommendation;
+    }
+
+    public void changeCategoryRecommendation(String categoryRecommendation) {
+        this.categoryRecommendation = categoryRecommendation != null ? categoryRecommendation : this.categoryRecommendation;
+    }
+
     public void changeLastLoginDate() {
         this.memberDates.preUpdate();
     }
@@ -107,6 +118,8 @@ public class Member {
         changeAddress(address);
         changeIntroduction(introduction);
         addInterests(interests);
+        changeMeetingRecommendation("1,2,3,4,5,6,7,8,9,10");
+        changeCategoryRecommendation("1,2,3,4,5,6,7,8,9,10");
     }
 
     // ***** 연관 메서드 *****
