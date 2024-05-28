@@ -18,6 +18,31 @@ export class ButtonElementsService {
     '사진',
     '게임'
   ];
+  private category: string[] = [
+    '운동',
+    '독서',
+    '요리',
+    '여행',
+    '음악',
+    '스터디',
+    '쇼핑',
+    '예술',
+    '사진',
+    '게임'
+  ];
+
+  private categoryEnglish: string[] = [
+    'exercise',
+    'book',
+    'food',
+    'travel',
+    'music',
+    'study',
+    'shopping',
+    'art',
+    'photography',
+    'game'
+  ];
 
   /**
    * Meeting Info
@@ -103,38 +128,7 @@ export class ButtonElementsService {
     { selected: false, value: 9, label: '인천광역시' },
   ];
   /** 세번째 화면 */
-  public interestSelectionButtons = [
-    {
-      selected: false,
-      value: 0,
-      label: '운동',
-      imgSrc: 'assets/interest-icons/excersize.png',
-    },
-    {
-      selected: false,
-      value: 1,
-      label: '게임',
-      imgSrc: 'assets/interest-icons/game.png',
-    },
-    {
-      selected: false,
-      value: 2,
-      label: '음악',
-      imgSrc: 'assets/interest-icons/music.png',
-    },
-    {
-      selected: false,
-      value: 3,
-      label: '요리',
-      imgSrc: 'assets/interest-icons/food.png',
-    },
-    {
-      selected: false,
-      value: 4,
-      label: '독서',
-      imgSrc: 'assets/interest-icons/book.png',
-    },
-  ];
+  public interestSelectionButtons: NewButtonElement[] = [];
 
   /**
    * Main
@@ -175,6 +169,15 @@ export class ButtonElementsService {
     },
   ];
   constructor() {
+    for (let i = 0; i < 10; i++) {
+      this.interestSelectionButtons.push({
+        selected: false,
+        value: i,
+        label: this.category[i],
+        imgSrc: `assets/interest-icons/${this.categoryEnglish[i]}.png`,
+      });
+    }
+
     for (let i = 0; i < 11; i++) {
       this.categorySelectionButtons.push({
         selected: (i === 0), // 0번 버튼은 선택된 상태로 초기화
