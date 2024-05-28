@@ -23,6 +23,7 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final MeetingRepository meetingRepository;
+    private final RecommendService recommendService;
 
     @Transactional
     public Member register(String username, String email, String role) throws Exception {
@@ -88,6 +89,7 @@ public class MemberService {
         );
         if (isRealSignup) {
             currentUser.initMemberDates();
+            recommendService.updateMemberEmbedding(currentUser);
         }
         return currentUser;
     }
@@ -95,12 +97,21 @@ public class MemberService {
     @Transactional
     public Member updateUserInfoForAdmin(Long userId, MemberDomainDTO additionalInfo) throws BadRequestException {
         Member updateUser = findMember(userId);
+        Member oldUserInfo = findMember(userId);
 
         updateUser.initDetailSignInfo(
                 additionalInfo.getNickname(), additionalInfo.getProfilePictureUrl(),
                 additionalInfo.getGender(), additionalInfo.getAddress(), additionalInfo.getIntroduction(),
                 additionalInfo.getInterests()
         );
+
+        if (!updateUser.getGender().equals(oldUserInfo.getGender())
+                && updateUser.getAddress().equals(oldUserInfo.getAddress())
+                && updateUser.getInterests().equals(oldUserInfo.getInterests())
+                && updateUser.getIntroduction().equals(oldUserInfo.getIntroduction())) {
+            recommendService.updateMemberEmbedding(updateUser);
+        }
+
         return updateUser;
     }
 

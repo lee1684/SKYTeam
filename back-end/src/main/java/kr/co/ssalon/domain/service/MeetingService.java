@@ -27,6 +27,7 @@ public class MeetingService {
     private final TicketService ticketService;
     private final CategoryRepository categoryRepository;
     private final MeetingOutRepository meetingOutRepository;
+    private final RecommendService recommendService;
 
     // 모임 개설
     @Transactional
@@ -132,6 +133,11 @@ public class MeetingService {
 
         // Dirty Checking
         currentMeeting.updateMeeting(category, meetingDomainDTO.getMeetingPictureUrls(), meetingDomainDTO.getTitle(), meetingDomainDTO.getDescription(), meetingDomainDTO.getLocation(), meetingDomainDTO.getCapacity(), meetingDomainDTO.getMeetingDate());
+
+        // 임베딩 업데이트
+        Meeting updatedMeeting = findMeeting(moimId);
+        recommendService.updateMoimEmbedding(updatedMeeting);
+
         return currentMeeting.getId();
     }
 
@@ -141,6 +147,10 @@ public class MeetingService {
         Meeting currentMeeting = findMeeting(moimId);
         Category category = findCategory(meetingDomainDTO.getCategory());
         currentMeeting.updateMeeting(category, meetingDomainDTO.getMeetingPictureUrls(), meetingDomainDTO.getTitle(), meetingDomainDTO.getDescription(), meetingDomainDTO.getLocation(), meetingDomainDTO.getCapacity(), meetingDomainDTO.getMeetingDate());
+
+        Meeting updatedMeeting = findMeeting(moimId);
+        recommendService.updateMoimEmbedding(updatedMeeting);
+
         return currentMeeting.getId();
     }
 
