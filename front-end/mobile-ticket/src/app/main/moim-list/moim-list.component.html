@@ -5,7 +5,7 @@
 </div>
 <div id="ticket-container" #ticketContainer>
     <ng-container *ngFor="let categoryElement of this.buttonElementsService.categorySelectionButtons; index as i">
-        <div *ngIf="this.isLoadedTickets(i)" class="tickets-row-container">
+        <div #rowContainers [id]="i" *ngIf="this.isLoadedTickets(i)" class="tickets-row-container">
             <app-image-row-container [tickets]="this.ticketThumbnails[i]" [isTicketContainer]="true"
                 [label]="categoryElement.label"></app-image-row-container>
         </div>
