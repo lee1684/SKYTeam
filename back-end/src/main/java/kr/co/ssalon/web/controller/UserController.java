@@ -8,18 +8,18 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.ssalon.domain.dto.MemberDomainDTO;
 import kr.co.ssalon.domain.entity.Member;
+import kr.co.ssalon.domain.repository.MemberRepository;
 import kr.co.ssalon.domain.service.MemberService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import kr.co.ssalon.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Map;
 
 
 @Tag(name = "회원")
@@ -29,6 +29,7 @@ import java.util.List;
 public class UserController {
 
     private final MemberService memberService;
+    private final MemberRepository memberRepository;
 
     @Operation(summary = "회원가입")
     @ApiResponses(value = {
@@ -56,6 +57,15 @@ public class UserController {
         return new MemberSignupVerificationDTO(isRegistered);
     }
 
+    @Operation(summary = "닉네임 중복 여부 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "닉네임 중복 여부 조회 성공"),
+    })
+    @PostMapping("/api/users/check-nickname")
+    public Boolean checkNicknameDuplication(@RequestBody NicknameDTO nicknameDTO) {
+        return memberService.checkNickname(nicknameDTO.getNickname());
+    }
+
     @Operation(summary = "회원 정보 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "회원 정보 조회 성공"),
@@ -67,6 +77,17 @@ public class UserController {
         log.info("user = {}", member);
         return new MemberDomainDTO(member);
     }
+
+    @Operation(summary = "이메일로 회원 정보 조회")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "이메일로 회원 정보 조회 성공"),
+    })
+    @GetMapping("/api/users/email/profile")
+    public MemberDomainDTO getUserInfoByEmail(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MemberEmailDTO memberEmailDTO) throws BadRequestException {
+        Member member = memberService.findMemberByEmail(memberEmailDTO.getEmail());
+        return new MemberDomainDTO(member);
+    }
+
 
     @Operation(summary = "회원 정보 수정")
     @ApiResponses(value = {

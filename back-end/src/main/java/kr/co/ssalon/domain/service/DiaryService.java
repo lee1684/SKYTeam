@@ -3,21 +3,25 @@ package kr.co.ssalon.domain.service;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import kr.co.ssalon.web.dto.DiaryFetchResponseDTO;
-import kr.co.ssalon.web.dto.DiaryInitResponseDTO;
-import kr.co.ssalon.web.dto.TicketEditResponseDTO;
-import kr.co.ssalon.web.dto.TicketImageResponseDTO;
+import kr.co.ssalon.domain.entity.Diary;
+import kr.co.ssalon.domain.entity.Meeting;
+import kr.co.ssalon.domain.entity.Member;
+import kr.co.ssalon.domain.entity.MemberMeeting;
+import kr.co.ssalon.domain.repository.DiaryRepository;
+import kr.co.ssalon.domain.repository.MeetingRepository;
+import kr.co.ssalon.domain.repository.MemberMeetingRepository;
+import kr.co.ssalon.domain.repository.MemberRepository;
+import kr.co.ssalon.web.dto.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
+@Slf4j
 @Service
 public class DiaryService {
 
@@ -27,6 +31,14 @@ public class DiaryService {
 
     @Autowired
     private AwsS3Service awsS3Service;
+    @Autowired
+    private MemberMeetingRepository memberMeetingRepository;
+    @Autowired
+    private DiaryRepository diaryRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private MeetingRepository meetingRepository;
 
     public DiaryFetchResponseDTO fetchDiary(Long moimID, String username) {
         // R of CRUD : 다이어리 조회
@@ -81,13 +93,13 @@ public class DiaryService {
     }
 
     @Transactional
-    public TicketImageResponseDTO uploadImages(Long moimId, List<MultipartFile> multipartFiles) {
+    public ImageResponseDTO uploadImages(Long moimId, List<MultipartFile> multipartFiles) {
 
         Map<String, String> imageSrcMap = new HashMap<>();
 
         int requestSize = multipartFiles.size();
 
-        if (requestSize == 0) return TicketImageResponseDTO.builder()
+        if (requestSize == 0) return ImageResponseDTO.builder()
                 .resultCode("400 Bad Request")
                 .numRequest(requestSize)
                 .numResult(0)
@@ -104,24 +116,105 @@ public class DiaryService {
 
         int resultSize = awsS3Service.uploadMultiFilesViaMultipart(multipartFiles, imageSrcMap);
 
-        if (requestSize == resultSize) return TicketImageResponseDTO.builder()
+        if (requestSize == resultSize) return ImageResponseDTO.builder()
                 .resultCode("201 Created")
                 .numRequest(requestSize)
                 .numResult(resultSize)
                 .mapURI(imageSrcMap)
                 .build();
-        else if (resultSize > 0) return TicketImageResponseDTO.builder()
+        else if (resultSize > 0) return ImageResponseDTO.builder()
                 .resultCode("206 Partial Content")
                 .numRequest(requestSize)
                 .numResult(resultSize)
                 .mapURI(imageSrcMap)
                 .build();
-        else return TicketImageResponseDTO.builder()
+        else return ImageResponseDTO.builder()
                     .resultCode("502 Bad Gateway")
                     .numRequest(requestSize)
                     .numResult(resultSize)
                     .mapURI(imageSrcMap)
                     .build();
+    }
+
+    public DiaryInfoDTO fetchDiaryInfo(Long moimId, String username) {
+
+        Optional<Member> userOp = memberRepository.findByUsername(username);
+        if (userOp.isEmpty()) {
+            log.error("DiaryService(fetchDiaryInfo): Member not found");
+            return null;
+        }
+        Optional<Meeting> meetingOp = meetingRepository.findById(moimId);
+        if (meetingOp.isEmpty()) {
+            log.error("DiaryService(fetchDiaryInfo): Meeting not found");
+            return null;
+        }
+
+        Member user = userOp.get();
+        Meeting meeting = meetingOp.get();
+
+        Optional<MemberMeeting> memberMeetingOp = memberMeetingRepository.findByMemberAndMeeting(user, meeting);
+        if (memberMeetingOp.isEmpty()) {
+            log.error("DiaryService(fetchDiaryInfo): MemberMeeting not found");
+            return null;
+        }
+
+        MemberMeeting memberMeeting = memberMeetingOp.get();
+        Diary diary = memberMeeting.getDiary();
+        log.info(diary.getDescription());
+
+        if (diary.isEditYet()) return DiaryInfoDTO.builder()
+                .description("NOT EDIT YET")
+                .build();
+
+        DiaryInfoDTO result = DiaryInfoDTO.builder()
+                .description(diary.getDescription())
+                .build();
+        result.setDiaryPictureUrls(diary.getDiaryPictureUrls());
+        return result;
+    }
+
+    public DiaryInfoDTO updateDiaryInfo(Long moimId, String username, DiaryInfoDTO diaryInfoDTO) {
+
+        Optional<Member> userOp = memberRepository.findByUsername(username);
+        if (userOp.isEmpty()) {
+            log.error("DiaryService(updateDiaryInfo): Member not found");
+            return null;
+        }
+        Optional<Meeting> meetingOp = meetingRepository.findById(moimId);
+        if (meetingOp.isEmpty()) {
+            log.error("DiaryService(updateDiaryInfo): Meeting not found");
+            return null;
+        }
+
+        Member user = userOp.get();
+        Meeting meeting = meetingOp.get();
+
+        Optional<MemberMeeting> memberMeetingOp = memberMeetingRepository.findByMemberAndMeeting(user, meeting);
+        if (memberMeetingOp.isEmpty()) {
+            log.error("DiaryService(updateDiaryInfo): MemberMeeting not found");
+            return null;
+        }
+
+        MemberMeeting memberMeeting = memberMeetingOp.get();
+        Optional<Diary> diaryOp = diaryRepository.findById(memberMeeting.getDiary().getId());
+        if (diaryOp.isEmpty()) {
+            log.error("DiaryService(updateDiaryInfo): Diary not found");
+            return null;
+        }
+        Diary diary = diaryOp.get();
+
+        diary.editDiaryDescription(diaryInfoDTO.getDescription());
+        log.info("DiaryService(updateDiaryInfo): Diary updated - {}", diaryInfoDTO.getDescription());
+        diary.addDiaryPictureUrls(diaryInfoDTO.getDiaryPictureUrls());
+
+        Diary diaryAfter = diaryRepository.save(diary);
+
+        DiaryInfoDTO resultDiaryInfoDTO = DiaryInfoDTO.builder()
+                .description(diaryAfter.getDescription())
+                .build();
+        resultDiaryInfoDTO.setDiaryPictureUrls(diaryAfter.getDiaryPictureUrls());
+
+        return resultDiaryInfoDTO;
     }
 
     private String generateRandomUUID() {

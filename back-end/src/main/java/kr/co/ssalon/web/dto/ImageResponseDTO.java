@@ -11,7 +11,7 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TicketImageResponseDTO {
+public class ImageResponseDTO {
 
     private String resultCode;
     private int numRequest;
