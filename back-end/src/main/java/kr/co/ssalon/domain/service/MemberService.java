@@ -38,7 +38,6 @@ public class MemberService {
         Optional<Member> findMember = memberRepository.findByUsername(username);
         Member member = ValidationService.validationMember(findMember);
         member.changeEmail(email);
-        member.changeRole(role);
         if (member.getMemberDates() != null) {
             member.changeLastLoginDate();
         }
