@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -53,7 +54,11 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.addCookie(refreshCookie);
 
         // redirect 경로 설정
-        response.sendRedirect("https://ssalon.co.kr/web/ssalon-login-redirect");
+        if (Objects.equals(role, "ROLE_ADMIN")) {
+            response.sendRedirect("https://ssalon.co.kr/admin");
+        } else {
+            response.sendRedirect("https://ssalon.co.kr/web/ssalon-login-redirect");
+        }
 
         // JSON 객체 생성
         JSONObject jsonResponse = new JSONObject();
