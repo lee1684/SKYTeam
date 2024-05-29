@@ -1,9 +1,13 @@
 <div class="container">
     <div id="bottom-container">
-
+        <div id="title">
+            {{'모임 카테고리'}}
+        </div>
         <div class="content-container">
-            <div *ngIf="this.content === this.bottomNavigatorType.MEETING_CATEGORY"><app-meeting-category
-                    (onCategorySelectedEvent)="this.onClickButton($event)"></app-meeting-category></div>
+            <div *ngIf="this.content === this.bottomNavigatorType.MEETING_CATEGORY">
+
+                <app-meeting-category (onCategorySelectedEvent)="this.onClickButton($event)"></app-meeting-category>
+            </div>
         </div>
 
     </div>

@@ -9,7 +9,7 @@
 
 #msg-container {
     width: 100%;
-    height: calc(100% - 170px);
+    height: calc(100% - 100px);
     overflow: scroll;
 }
 
@@ -26,7 +26,12 @@
 }
 
 #participants-container {
-    height: 60px;
+    position: absolute;
+    width: 350px;
+    overflow-x: hidden;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     justify-content: right;
     align-items: center;
@@ -40,8 +45,8 @@
 }
 
 #profile-img {
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
