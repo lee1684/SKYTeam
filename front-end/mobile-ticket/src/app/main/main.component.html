@@ -3,9 +3,9 @@
         <img src="assets/ssalon_logo_hand.svg" height="30px" />
     </div>
     <div id="tab-container">
-        <div *ngIf="this.nowTab === mainTabEnum.MAIN">
+        <ng-container *ngIf="this.nowTab === mainTabEnum.MAIN">
             <app-moim-list></app-moim-list>
-        </div>
+        </ng-container>
         <div *ngIf="this.nowTab === mainTabEnum.SEARCH">
             <app-moim-search></app-moim-search>
         </div>

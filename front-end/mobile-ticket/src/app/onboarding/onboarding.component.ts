@@ -20,7 +20,7 @@ export interface OnboardingStep {
 
 export interface RegisterUserInfo {
   nickname: string;
-  profilePrictureUrl: string;
+  profilePictureUrl: string;
   gender: '' | 'M' | 'F' | 'G';
   address: string;
   introduction: string;
@@ -53,7 +53,7 @@ export class OnboardingComponent {
   public nowOnboardingStep: OnboardingStep = this.onBoardingStep[0];
   private _userInfo: RegisterUserInfo | null = {
     nickname: '',
-    profilePrictureUrl: '',
+    profilePictureUrl: '',
     gender: '',
     address: '',
     introduction: '',
@@ -100,7 +100,6 @@ export class OnboardingComponent {
     if (this.nowOnboardingStep === this.onBoardingStep[0]) {
       if (
         this._userInfo!.nickname !== '' &&
-        this._userInfo!.introduction !== '' &&
         this._userInfo!.gender !== ''
       ) {
         this.buttonElementsService.nextButtons[0]!.selected = true;
@@ -132,6 +131,9 @@ export class OnboardingComponent {
         this.buttonElementsService.interestSelectionButtons.every((element) => {
           element.selected = false;
         });
+        if (this._userInfo?.profilePictureUrl.length === 0) {
+          this._userInfo.profilePictureUrl = 'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/default_profile.png';
+        }
         await this._router.navigate(['/web/main']);
       } else {
         this.nowOnboardingStep = this.onBoardingStep[nextStep];

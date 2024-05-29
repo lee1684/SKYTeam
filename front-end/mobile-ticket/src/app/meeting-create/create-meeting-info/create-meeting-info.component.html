@@ -13,10 +13,10 @@
         [isTicketContainer]="false" [imageHeight]="100" [images]="this.photos"
         (onClickImageEvent)="this.onClickImage($event)"></app-image-row-container>
     <app-simple-input [type]="'number'" [checkBoxLabel]="'인원 제한 없음'" [enableCheckbox]="true" [label]="'최대 인원수'"
-        [placeholder]="'원하는 최대 인원 수를 입력해주세요'" (onClickCheckboxEvent)="this.onClickNoLimitCapacity()"
+        [placeholder]="'원하는 최대 인원 수를 입력해주세요'" (onClickCheckboxEvent)="this.onClickNoLimitCapacity($event)"
         (onChangeEvent)="this.onInput('capacity', $event)" #capacity></app-simple-input>
     <app-simple-input [type]="'number'" [checkBoxLabel]="'무료'" [enableCheckbox]="true" [label]="'참가비'"
-        [placeholder]="'참가비를 입력해주세요'" (onClickCheckboxEvent)="this.onClickFree()"
+        [placeholder]="'참가비를 입력해주세요'" (onClickCheckboxEvent)="this.onClickFree($event)"
         (onChangeEvent)="this.onInput('payment', $event)" #fee></app-simple-input>
 </div>
 

@@ -30,7 +30,11 @@ export class AppComponent {
   public ngOnInit(): void {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${'access'}=`);
-    this._apiExecutorService.setToken(parts.pop()!.split(';').shift()!);
+    //this._apiExecutorService.setToken(parts.pop()!.split(';').shift()!);
+    this._apiExecutorService.setToken(
+      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTY5NDQxMDgsImV4cCI6MTcxNzAzMDUwOH0.UXKAMBFB9m51CM_dDlqhzPBz4lAwzdz0BrZhCpuLfrE'
+    );
+
     this._apiExecutorService.getMyProfile();
   }
 }

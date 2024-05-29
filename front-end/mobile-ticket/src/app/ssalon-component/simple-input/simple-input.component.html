@@ -13,14 +13,22 @@
         </div>
 
     </div>
+    <div *ngIf="type === 'longText'">
+        <button *ngIf="showGeneralHTML" (click)="onClickMarkdown()">마크다운 미리보기</button>
+        <button *ngIf="!showGeneralHTML" (click)="onClickGeneralHTML()">일반 텍스트 보기</button>
+    </div>
     <div id="input-container">
         <input *ngIf="this.type !== 'longText'" id="input" [type]="this.type" [placeholder]="this.placeholder"
+            [style.padding-left.px]="(this.type==='chat-input')?40:10"
             [style.padding-right.px]="(this.type==='chat-input')?40:10" autocomplete="off" (click)="this.onClickInput()"
             (input)="this.onChangeInput($event)" [(ngModel)]="this.innerText" #textDiv />
+        <img *ngIf="this.type === 'chat-input'" id="chat-send-image" src="assets/icons/add.png"
+            (click)="this.onClickImgSendButton()" />
         <img *ngIf="this.type === 'chat-input'" id="chat-send-button" src="assets/icons/send_message.png"
             (click)="this.onClickChatSendButton()" />
-        <textarea *ngIf="this.type === 'longText'" id="text" [placeholder]="this.placeholder"
+        <textarea *ngIf="this.type === 'longText' && showGeneralHTML" id="text" [placeholder]="this.placeholder"
             (click)="this.onClickInput()" (input)="this.onChangeInput($event)" [(ngModel)]="this.innerText"
             [style.height.px]="this.longTextHeight" #textDiv></textarea>
+        <div *ngIf="type === 'longText' && !showGeneralHTML" id="markdown" [innerHTML]="convertedHTML"></div>
     </div>
 </div>

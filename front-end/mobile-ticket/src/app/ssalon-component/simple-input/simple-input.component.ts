@@ -9,6 +9,8 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { marked } from 'marked';
+import { EmojiConvertor } from 'emoji-js';
 
 @Component({
   selector: 'app-simple-input',
@@ -40,8 +42,12 @@ export class SimpleInputComponent {
   @Output() public readonly onClickEvent = new EventEmitter();
   @Output() public readonly onClickCheckboxEvent = new EventEmitter();
   @Output() public readonly onClickChatSendButtonEvent = new EventEmitter();
+  @Output() public readonly onClickImgSendButtonEvent = new EventEmitter();
 
   public isChecked: boolean = false;
+  public convertedHTML: any = '';
+  public showGeneralHTML: boolean = true;
+
   constructor(private cd: ChangeDetectorRef) {}
   public onClickInput(): void {
     this.onClickEvent.emit(this.innerText);
@@ -57,5 +63,32 @@ export class SimpleInputComponent {
   }
   public onClickChatSendButton(): void {
     this.onClickChatSendButtonEvent.emit();
+  }
+
+  public onClickImgSendButton(): void {
+    this.onClickImgSendButtonEvent.emit();
+  }
+
+  public onClickMarkdown(): void {
+    this.showGeneralHTML = false;
+    this.convertedHTML = this.convertMarkdown(this.innerText as string)
+      .replace(/<p[^>]*>/g, '')
+      .replace(/<\/p>/g, '');
+  }
+
+  public onClickGeneralHTML(): void {
+    this.showGeneralHTML = true;
+  }
+
+  public convertMarkdown(message: string) {
+    // emoji-js 인스턴스 생성
+    const emoji = new EmojiConvertor();
+    emoji.replace_mode = 'unified'; // 통일된 이모지 코드로 변환
+    emoji.allow_native = true; // 네이티브 이모지를 허용
+
+    const markedMessage = marked.parse(message) as string;
+    const emojiConvertedHtml = emoji.replace_colons(markedMessage);
+
+    return emojiConvertedHtml;
   }
 }

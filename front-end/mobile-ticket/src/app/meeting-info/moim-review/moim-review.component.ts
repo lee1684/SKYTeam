@@ -22,23 +22,13 @@ import { ButtonElementsService } from '../../service/button-elements.service';
 export class MoimReviewComponent {
   @Input() moimId: string = '';
   @Input() moimTitle: string = '';
-  public isReviewCreated: boolean = false;
+  @Input() isReviewCreated: boolean = false;
   constructor(
     private _apiExecutorService: ApiExecutorService,
     private _router: Router,
     public buttonElementService: ButtonElementsService
   ) {}
-  public ngOnInit() {
-    this.checkDiaryCreated();
-  }
-  public async checkDiaryCreated() {
-    let result = await this._apiExecutorService.getMoimReview(this.moimId);
-    if (result === false) {
-      this.isReviewCreated = false;
-    } else {
-      this.isReviewCreated = true;
-    }
-  }
+  public ngOnInit() {}
   public onClickCreateDiaryButton() {
     this._router.navigate([`/web/meeting-review-create`], {
       queryParams: {

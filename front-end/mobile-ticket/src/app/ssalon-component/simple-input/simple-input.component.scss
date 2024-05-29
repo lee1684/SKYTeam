@@ -68,6 +68,12 @@
     resize: none;
 }
 
+#markdown {
+    width: 100%;
+    height: 500px;
+    border: 1px solid red;
+}
+
 #text::-webkit-inner-spin-button {
     -webkit-appearance: none;
     display: none;
@@ -105,6 +111,19 @@
 }
 
 #chat-send-button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+#chat-send-image {
+    position: absolute;
+    top: 15px;
+    left: 12px;
+    height: 18px;
+}
+
+#chat-send-image:hover {
     background-color: rgba(0, 0, 0, 0.1);
     border-radius: 50%;
     cursor: pointer;

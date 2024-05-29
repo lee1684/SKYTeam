@@ -18,10 +18,11 @@
             <app-chatting [moimId]="this.moimId"></app-chatting>
         </div>
         <div *ngIf="this.nowTab === this.meetingInfoTabEnum.DIARY" class="content">
-            <app-moim-review [moimId]="this.moimId" [moimTitle]="this.moimInfo.title"></app-moim-review>
+            <app-moim-review [moimId]="this.moimId" [moimTitle]="this.moimInfo.title"
+                [isReviewCreated]="this.isReviewCreated"></app-moim-review>
         </div>
     </div>
-    <div *ngIf="this.nowTab === this.meetingInfoTabEnum.INFO" id="join-button-container">
+    <div *ngIf="this.showButton()" id="join-button-container">
         <app-square-button [buttonElements]="this.buttonElementsService.joinButtonElements"
             (onClickEvent)="this.onClickJoinButton()"></app-square-button>
     </div>

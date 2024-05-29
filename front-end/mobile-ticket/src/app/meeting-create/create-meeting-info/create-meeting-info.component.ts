@@ -63,9 +63,7 @@ export class CreateMeetingInfoComponent {
     private _apiExecutorService: ApiExecutorService
   ) {}
   public ngAfterViewChecked() {
-    if (this.isAllTyped()) {
-      this.onCreateButtonReadyEvent.emit(true);
-    }
+    this.onCreateButtonReadyEvent.emit(this.isAllTyped());
   }
   public popUpBottomNavigator() {
     this.isPopUpBottomNavigator = true;
@@ -77,13 +75,13 @@ export class CreateMeetingInfoComponent {
     );
     this.isPopUpBottomNavigator = false;
   }
-  public onClickNoLimitCapacity() {
-    this.capacity!.innerText = Infinity;
-    this.meetingInfo.maxMember = 100000;
+  public onClickNoLimitCapacity(checkNoLimit: boolean) {
+    this.capacity!.innerText = checkNoLimit ? 99999 : '';
+    this.meetingInfo.capacity = checkNoLimit ? 99999 : 0;
   }
-  public onClickFree() {
-    this.fee!.innerText = 0;
-    this.meetingInfo.payment = 0;
+  public onClickFree(checkFreePayment: boolean) {
+    this.fee!.innerText = checkFreePayment ? 0 : '';
+    this.meetingInfo.payment = checkFreePayment ? 0 : -1;
   }
   public onInput(type: string, value: any) {
     this.meetingInfo[type] = value;
