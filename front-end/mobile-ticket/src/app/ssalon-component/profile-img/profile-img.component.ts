@@ -11,7 +11,7 @@ import { ApiExecutorService } from '../../service/api-executor.service';
 })
 export class ProfileImgComponent {
   @Input() imgSize = 96;
-  @Input() imgSrc = 'assets/heart.png';
+  @Input() imgSrc = 'assets/default_profile.png';
   @Input() isEditable = true;
 
   @Output() public readonly onImgClickEvent = new EventEmitter();

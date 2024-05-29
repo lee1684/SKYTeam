@@ -16,7 +16,7 @@ export class ButtonElementsService {
     '쇼핑',
     '예술',
     '사진',
-    '게임'
+    '게임',
   ];
   private category: string[] = [
     '운동',
@@ -28,7 +28,7 @@ export class ButtonElementsService {
     '쇼핑',
     '예술',
     '사진',
-    '게임'
+    '게임',
   ];
 
   private categoryEnglish: string[] = [
@@ -41,7 +41,7 @@ export class ButtonElementsService {
     'shopping',
     'art',
     'photography',
-    'game'
+    'game',
   ];
 
   /**
@@ -168,6 +168,13 @@ export class ButtonElementsService {
       label: '다음',
     },
   ];
+  public shareJoinButtons: NewButtonElement[] = [
+    {
+      selected: true,
+      value: 0,
+      label: '모임 참여해보기',
+    },
+  ];
   constructor() {
     for (let i = 0; i < 10; i++) {
       this.interestSelectionButtons.push({
@@ -180,7 +187,7 @@ export class ButtonElementsService {
 
     for (let i = 0; i < 11; i++) {
       this.categorySelectionButtons.push({
-        selected: (i === 0), // 0번 버튼은 선택된 상태로 초기화
+        selected: i === 0, // 0번 버튼은 선택된 상태로 초기화
         value: i,
         label: this.mainCategoryTab[i],
         solid: true,
