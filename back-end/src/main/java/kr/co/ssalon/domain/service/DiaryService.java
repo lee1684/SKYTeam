@@ -162,9 +162,7 @@ public class DiaryService {
         Diary diary = memberMeeting.getDiary();
         log.info(diary.getDescription());
 
-        if (diary.isEditYet()) return DiaryInfoDTO.builder()
-                .description("NOT EDIT YET")
-                .build();
+        if (diary.isEditYet()) return null;
 
         DiaryInfoDTO result = DiaryInfoDTO.builder()
                 .description(diary.getDescription())
