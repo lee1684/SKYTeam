@@ -1,7 +1,12 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 export default function Home() {
-  return (
-    <div>
-      <h1>Home</h1>
-    </div>
-  );
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate('/user-list', { replace: true });
+  }, [navigate]);
+
+  return null;
 }

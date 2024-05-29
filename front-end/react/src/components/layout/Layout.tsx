@@ -1,9 +1,10 @@
 import { Avatar, Menu, MenuProps } from 'antd';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import avatar from '../../assets/images/avatar.png';
 import { Header } from 'antd/es/layout/layout';
 import { UserOutlined, AlertOutlined } from '@ant-design/icons';
+import { textStyles } from '../../assets/textStyles';
 type MenuItem = Required<MenuProps>['items'][number];
 
 const items: MenuItem[] = [
@@ -18,7 +19,7 @@ const items: MenuItem[] = [
         type: 'group',
 
         children: [
-          { key: '1', label: '전체 목록' },
+          { key: '/user-list', label: '전체 목록' },
           { key: '2', label: '블랙리스트' },
         ],
       },
@@ -26,7 +27,7 @@ const items: MenuItem[] = [
         key: 'g2',
         label: '모임',
         type: 'group',
-        children: [{ key: '3', label: '전체 목록' }],
+        children: [{ key: '/moim-list', label: '전체 목록' }],
       },
     ],
   },
@@ -49,9 +50,15 @@ const Wrapper = styled.div`
   flex: 1;
 `;
 
+const Text = styled.div`
+  ${textStyles.medium}
+`;
+
 export default function Layout() {
+  const navigate = useNavigate();
+
   const onClick: MenuProps['onClick'] = (e) => {
-    console.log(e);
+    navigate(e.key);
   };
 
   return (
@@ -67,7 +74,7 @@ export default function Layout() {
           top: 0,
         }}
       >
-        <div
+        <Text
           style={{
             height: 64,
             display: 'flex',
@@ -79,7 +86,7 @@ export default function Layout() {
           }}
         >
           SSALON
-        </div>
+        </Text>
         <div
           style={{
             height: 128,
@@ -98,15 +105,15 @@ export default function Layout() {
               gap: 8,
             }}
           >
-            <div
+            <Text
               style={{
                 fontSize: 16,
                 fontWeight: 'bold',
                 color: 'white',
               }}
             >
-              ADMIN
-            </div>
+              임시 관리자
+            </Text>
             <div
               style={{
                 display: 'flex',
@@ -122,13 +129,13 @@ export default function Layout() {
                   height: 16,
                 }}
               />
-              <div
+              <Text
                 style={{
                   color: 'green',
                 }}
               >
                 Online
-              </div>
+              </Text>
             </div>
           </div>
         </div>
