@@ -45,13 +45,15 @@ export class OnboardingComponent {
   progressBar: ElementRef | null = null;
   @ViewChild('nextButton', { static: true })
   nextButton: SquareButtonComponent | null = null;
+  @ViewChild('profileImg', { static: false })
+  profileImg: ProfileImgComponent | null = null;
   public onBoardingStep: OnboardingStep[] = [
     { label: '프로필을 작성해주세요', value: 0 },
     { label: '모임을 할 장소를 선택해주세요', value: 1 },
     { label: '관심 있는 카테고리를 선택해주세요', value: 2 },
   ];
   public nowOnboardingStep: OnboardingStep = this.onBoardingStep[0];
-  private _userInfo: RegisterUserInfo | null = {
+  private _userInfo: RegisterUserInfo = {
     nickname: '',
     profilePictureUrl: '',
     gender: '',
@@ -98,10 +100,7 @@ export class OnboardingComponent {
           });
     }
     if (this.nowOnboardingStep === this.onBoardingStep[0]) {
-      if (
-        this._userInfo!.nickname !== '' &&
-        this._userInfo!.gender !== ''
-      ) {
+      if (this._userInfo!.nickname !== '' && this._userInfo!.gender !== '') {
         this.buttonElementsService.nextButtons[0]!.selected = true;
       }
     } else if (this.nowOnboardingStep === this.onBoardingStep[1]) {
@@ -124,6 +123,8 @@ export class OnboardingComponent {
       return 'G';
     }
   }
+  public onClickEditProfileImageButton() {}
+
   public async onClickNextButton(value: number) {
     if (this.buttonElementsService.nextButtons[0]!.selected) {
       const nextStep = this.nowOnboardingStep.value + 1;
@@ -131,11 +132,13 @@ export class OnboardingComponent {
         this.buttonElementsService.interestSelectionButtons.every((element) => {
           element.selected = false;
         });
-        if (this._userInfo?.profilePictureUrl.length === 0) {
-          this._userInfo.profilePictureUrl = 'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/default_profile.png';
-        }
+
+        await this._apiExecutorService.registerUser(this._userInfo);
         await this._router.navigate(['/web/main']);
       } else {
+        if (this.nowOnboardingStep === this.onBoardingStep[0]) {
+          this._userInfo.profilePictureUrl = this.profileImg!.imgSrc;
+        }
         this.nowOnboardingStep = this.onBoardingStep[nextStep];
       }
       this.buttonElementsService.nextButtons[0]!.selected = false;
