@@ -40,6 +40,10 @@ export const routes: Routes = [
     path: 'web/meeting-review-create',
     component: MoimReviewCreateComponent,
   },
+  {
+    path: '',
+    component: SsalonLoginRedirectComponent,
+  },
 ];
 
 @NgModule({
