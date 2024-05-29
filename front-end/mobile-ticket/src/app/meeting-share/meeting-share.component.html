@@ -1,1 +1,6 @@
-<p>meeting-share works!</p>
+<div class="container">
+    <app-ticket [moimId]="this.moimId" [viewType]="'view'"></app-ticket>
+</div>
+<div id="join-button-container">
+    <app-square-button [buttonElements]="this.buttonElementsService.shareJoinButtons"></app-square-button>
+</div>

@@ -9,6 +9,7 @@ import { SsalonLoginRedirectComponent } from './ssalon-login-redirect/ssalon-log
 import { MeetingCreateComponent } from './meeting-create/meeting-create.component';
 import { MoimReviewComponent } from './meeting-info/moim-review/moim-review.component';
 import { MoimReviewCreateComponent } from './meeting-info/moim-review/moim-review-create/moim-review-create.component';
+import { MeetingShareComponent } from './meeting-share/meeting-share.component';
 
 export const routes: Routes = [
   { path: 'web/ssalon-login', component: SsalonLoginComponent },
@@ -41,8 +42,8 @@ export const routes: Routes = [
     component: MoimReviewCreateComponent,
   },
   {
-    path: '',
-    component: SsalonLoginRedirectComponent,
+    path: 'web/share',
+    component: MeetingShareComponent,
   },
 ];
 

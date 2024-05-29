@@ -4,7 +4,7 @@
     <div id="onboarding-label"><span>{{this.nowOnboardingStep.label}}</span></div>
 
     <div class="container" *ngIf="this.nowOnboardingStep.value === 0">
-        <app-profile-img id="profile-img" [imgSrc]="'assets/default_profile.png'"></app-profile-img>
+        <app-profile-img id="profile-img" #profileImg></app-profile-img>
         <app-simple-input [label]="'닉네임'" [extraLabel]="'(필수)'" [extraLabelColor]="'#0090f2'"
             [placeholder]="'닉네임을 입력해주세요'"
             (onChangeEvent)="this.onChangeUserInfo('nickname', $event)"></app-simple-input>
