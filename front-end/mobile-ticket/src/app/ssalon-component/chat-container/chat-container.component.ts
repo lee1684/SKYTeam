@@ -20,7 +20,9 @@ export class ChatContainerComponent {
 
   constructor(private _apiExecutorService: ApiExecutorService) {}
   public ngOnInit() {
-    this.convertedHTML = this.convertMarkdown(this.message.message).replace(/<p[^>]*>/g, '').replace(/<\/p>/g, '');;
+    this.convertedHTML = this.convertMarkdown(this.message.message)
+      .replace(/<p[^>]*>/g, '')
+      .replace(/<\/p>/g, '');
   }
   public getTime(date: string) {
     let dateObj = new Date(date);
