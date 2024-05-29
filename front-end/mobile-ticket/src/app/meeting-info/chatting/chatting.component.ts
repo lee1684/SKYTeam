@@ -43,10 +43,10 @@ export class ChattingComponent {
   public isConnected: boolean = false;
   public isEntered: boolean = false;
   public messages: any[] = [];
-  private imageUrl: string = '';
-  private files: FileList | null = null;
 
-  private stompClient: Client = undefined as unknown as Client;
+  private _imageUrl: string = '';
+  private _file: File = undefined as unknown as File;
+  private _stompClient: Client = undefined as unknown as Client;
   constructor(private _apiExecutorService: ApiExecutorService) {
     // 새로고침 시 disconnect 설정
     window.addEventListener('beforeunload', () => {
@@ -64,7 +64,7 @@ export class ChattingComponent {
       return message.messageType === 'TALK';
     });
 
-    this.stompClient = new Client({
+    this._stompClient = new Client({
       brokerURL: 'wss://ssalon.co.kr/ws-stomp',
       connectHeaders: {
         Authorization: `Bearer ${this._apiExecutorService.token}`,
@@ -72,13 +72,13 @@ export class ChattingComponent {
       },
     });
 
-    this.stompClient.onConnect = (frame) => {
+    this._stompClient.onConnect = (frame) => {
       console.log('Connected: ' + frame);
       this.isConnected = true;
 
       // 채팅방에 입장 메시지를 보냅니다.
       if (!this.isEntered) {
-        this.stompClient.publish({
+        this._stompClient.publish({
           destination: `/send/${this.moimId}`,
           body: JSON.stringify({ message: this.simpleInput!.innerText }),
           headers: {
@@ -90,7 +90,7 @@ export class ChattingComponent {
         console.log('입장');
       }
 
-      this.stompClient.subscribe(`/room/${this.moimId}`, (greeting: any) => {
+      this._stompClient.subscribe(`/room/${this.moimId}`, (greeting: any) => {
         let inComeMsg = JSON.parse(greeting.body);
         console.log(inComeMsg);
         if (inComeMsg.messageType === 'TALK') {
@@ -103,7 +103,7 @@ export class ChattingComponent {
       });
     };
 
-    this.stompClient.onStompError = (frame) => {
+    this._stompClient.onStompError = (frame) => {
       console.error('Broker reported error: ' + frame.headers['message']);
       console.error('Additional details: ' + frame.body);
     };
@@ -118,12 +118,12 @@ export class ChattingComponent {
   }
 
   public connect() {
-    this.stompClient.activate();
+    this._stompClient.activate();
   }
 
   public disconnect() {
-    if (this.stompClient) {
-      this.stompClient.publish({
+    if (this._stompClient) {
+      this._stompClient.publish({
         destination: `/send/disconnect`,
         body: JSON.stringify({ message: this.simpleInput!.innerText }),
         headers: {
@@ -131,7 +131,7 @@ export class ChattingComponent {
           MessageType: 'LEAVE',
         },
       });
-      this.stompClient.deactivate();
+      this._stompClient.deactivate();
       this.isConnected = false;
       this.isEntered = false;
       this.messages = [];
@@ -139,16 +139,16 @@ export class ChattingComponent {
   }
 
   public sendMessage() {
-    if (this.stompClient && this.stompClient.connected) {
-      if (this.files) {
+    if (this._stompClient && this._stompClient.connected) {
+      if (this._file) {
         // 이미지 s3에 업로드
-        this.uploadFiles(this.files)
+        this.uploadFile(this._file)
           .then(() => {
             // 이미지 업로드 완료 후 메시지 전송
             this.publishMessage();
             this.flushAfterSendMessage();
           })
-          .catch(error => {
+          .catch((error) => {
             // 이미지 업로드 실패 시 에러 처리
             console.error('File upload error:', error);
           });
@@ -161,11 +161,11 @@ export class ChattingComponent {
   }
 
   private publishMessage() {
-    this.stompClient.publish({
+    this._stompClient.publish({
       destination: `/send/${this.moimId}`,
       body: JSON.stringify({
         message: this.simpleInput!.innerText,
-        imageUrl: this.imageUrl,
+        imageUrl: this._imageUrl,
       }),
       headers: {
         Authorization: `Bearer ${this._apiExecutorService.token}`,
@@ -176,7 +176,7 @@ export class ChattingComponent {
 
   private flushAfterSendMessage() {
     this.simpleInput!.innerText = '';
-    this.imageUrl = '';
+    this._imageUrl = '';
     this.fileInput.nativeElement.value = '';
   }
 
@@ -200,7 +200,6 @@ export class ChattingComponent {
     this.participants = await this._apiExecutorService.getChattingParticipants(
       this.moimId
     );
-    console.log(this.participants);
   }
 
   @HostListener('keyup.enter', ['$event'])
@@ -210,25 +209,30 @@ export class ChattingComponent {
     }
   }
 
-  public onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.files = input.files;
-    }
+  public sendImage() {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.onchange = async function (this: ChattingComponent) {
+      this._imageUrl = '';
+      if (fileInput.files && fileInput.files.length > 0) {
+        this._file = fileInput.files[0];
+        this._imageUrl = await this.uploadFile(this._file);
+        this.sendMessage();
+      }
+    }.bind(this);
+    fileInput.click();
   }
 
-  // 파일 업로드 함수
-  private async uploadFiles(files: FileList) {
+  private async uploadFile(file: File) {
     const body = new FormData();
 
     // 파일들을 FormData 객체에 추가
-    for (let i = 0; i < files.length; i++) {
-      body.append('files', files[i]);
-    }
+    body.append('files', file);
 
     // 서버로 파일 업로드 요청 보내기
     const result = await this._apiExecutorService.uploadGeneralImage(body);
     let key = Object.keys(result.mapURI)[0];
-    this.imageUrl = result.mapURI[key];
+    return result.mapURI[key];
   }
 }

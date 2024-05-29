@@ -30,7 +30,7 @@ export class ApiExecutorService {
   //public apiURL: string = 'http://localhost:8080/api';
   public tokens = {};
   public token: string =
-    'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTY4MDI4MzcsImV4cCI6MTcxNjg4OTIzN30.2deUIlq3fLq0PQY-4Z2l7kZehz4S7-uqavFVosxpTo8';
+    'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTY5NDQxMDgsImV4cCI6MTcxNzAzMDUwOH0.UXKAMBFB9m51CM_dDlqhzPBz4lAwzdz0BrZhCpuLfrE';
   public refreshToken: string = '';
   public myProfile: Profile = undefined as unknown as Profile;
   constructor(private _ssalonConfigService: SsalonConfigService) {

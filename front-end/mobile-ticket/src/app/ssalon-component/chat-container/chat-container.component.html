@@ -10,7 +10,9 @@
         <div id="date-container" *ngIf="this.align==='right'" [style.margin-right.px]="5">
             {{this.getTime(this.message.date)}}</div>
         <div *ngIf="this.message.imageUrl?.length === 0" id="text-container" [innerHTML]="convertedHTML"></div>
-        <img *ngIf="this.message.imageUrl?.length > 0" id="image" [src]="this.message.imageUrl" />
+        <img *ngIf="this.message.imageUrl?.length > 0" id="chat-image-container" width="100%"
+            [src]="this.message.imageUrl" />
+
         <div id="date-container" *ngIf="this.align==='left'" [style.margin-left.px]="5">
             {{this.getTime(this.message.date)}}</div>
     </div>

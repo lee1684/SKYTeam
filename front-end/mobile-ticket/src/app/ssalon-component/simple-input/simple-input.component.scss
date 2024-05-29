@@ -115,3 +115,16 @@
     border-radius: 50%;
     cursor: pointer;
 }
+
+#chat-send-image {
+    position: absolute;
+    top: 15px;
+    left: 12px;
+    height: 18px;
+}
+
+#chat-send-image:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    cursor: pointer;
+}
