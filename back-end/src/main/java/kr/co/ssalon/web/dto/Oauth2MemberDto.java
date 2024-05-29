@@ -23,7 +23,7 @@ public class Oauth2MemberDto {
     public Oauth2MemberDto(OAuth2Response oAuth2Response) {
         this.username =  oAuth2Response.getProvider() + " " + oAuth2Response.getProviderId();
         this.email = oAuth2Response.getEmail();
-        if (this.role.isEmpty()) {
+        if (this.role == null) {
             this.role = "ROLE_USER";
         }
     }
