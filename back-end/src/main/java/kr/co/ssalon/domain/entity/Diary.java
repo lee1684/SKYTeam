@@ -62,9 +62,16 @@ public class Diary {
                 .description(description)
                 .editYet(true)
                 .build();
-        diary.addDiaryPictureUrls(diaryPictureUrls);
+        diary.initDiaryPictureUrls(diaryPictureUrls);
 
         return diary;
+    }
+
+    public void initDiaryPictureUrls(List<String> diaryPictureUrls) {
+        // 초기화 후 재생성 로직 필요할 듯?
+        for (String diaryPictureUrl : diaryPictureUrls) {
+            getDiaryPictureUrls().add(diaryPictureUrl);
+        }
     }
 
 }
