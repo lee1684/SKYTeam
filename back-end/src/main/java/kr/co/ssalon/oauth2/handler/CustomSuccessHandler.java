@@ -55,8 +55,10 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         // redirect 경로 설정
         if (Objects.equals(role, "ROLE_ADMIN")) {
+            log.info("@@@@@@@@@@@@@@@@@if문 role: {}", role);
             response.sendRedirect("https://ssalon.co.kr/admin");
         } else {
+            log.info("@@@@@@@@@@@@@@@@@else문 role: {}", role);
             response.sendRedirect("https://ssalon.co.kr/web/ssalon-login-redirect");
         }
 
