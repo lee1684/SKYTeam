@@ -5,7 +5,7 @@
                 <img id="profile-img" [src]="participant.profilePictureUrl" width="50px" height="50px" />
             </ng-container>
         </div>
-        <div id="participant-nums">{{this.participants.length}} 참가 중</div>
+        <div id="participant-nums">{{this.participants.length}}명 참가 중</div>
     </div>
     <div id="msg-container" #msgContainer>
         <ng-container *ngFor="let msg of messages, index as i">
@@ -15,7 +15,6 @@
     </div>
     <div id="send-input">
         <app-simple-input [type]="'chat-input'" (onClickChatSendButtonEvent)="this.sendMessage()"
-            #simpleInput></app-simple-input>
-      <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*">
+            (onClickImgSendButtonEvent)="this.sendImage()" #simpleInput></app-simple-input>
     </div>
 </div>

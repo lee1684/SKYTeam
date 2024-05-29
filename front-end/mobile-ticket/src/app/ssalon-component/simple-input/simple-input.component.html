@@ -19,8 +19,11 @@
     </div>
     <div id="input-container">
         <input *ngIf="this.type !== 'longText'" id="input" [type]="this.type" [placeholder]="this.placeholder"
+            [style.padding-left.px]="(this.type==='chat-input')?40:10"
             [style.padding-right.px]="(this.type==='chat-input')?40:10" autocomplete="off" (click)="this.onClickInput()"
             (input)="this.onChangeInput($event)" [(ngModel)]="this.innerText" #textDiv />
+        <img *ngIf="this.type === 'chat-input'" id="chat-send-image" src="assets/icons/add.png"
+            (click)="this.onClickImgSendButton()" />
         <img *ngIf="this.type === 'chat-input'" id="chat-send-button" src="assets/icons/send_message.png"
             (click)="this.onClickChatSendButton()" />
         <textarea *ngIf="this.type === 'longText' && showGeneralHTML" id="text" [placeholder]="this.placeholder"

@@ -42,6 +42,7 @@ export class SimpleInputComponent {
   @Output() public readonly onClickEvent = new EventEmitter();
   @Output() public readonly onClickCheckboxEvent = new EventEmitter();
   @Output() public readonly onClickChatSendButtonEvent = new EventEmitter();
+  @Output() public readonly onClickImgSendButtonEvent = new EventEmitter();
 
   public isChecked: boolean = false;
   public convertedHTML: any = '';
@@ -64,9 +65,15 @@ export class SimpleInputComponent {
     this.onClickChatSendButtonEvent.emit();
   }
 
+  public onClickImgSendButton(): void {
+    this.onClickImgSendButtonEvent.emit();
+  }
+
   public onClickMarkdown(): void {
     this.showGeneralHTML = false;
-    this.convertedHTML = this.convertMarkdown(this.innerText as string).replace(/<p[^>]*>/g, '').replace(/<\/p>/g, '');
+    this.convertedHTML = this.convertMarkdown(this.innerText as string)
+      .replace(/<p[^>]*>/g, '')
+      .replace(/<\/p>/g, '');
   }
 
   public onClickGeneralHTML(): void {
