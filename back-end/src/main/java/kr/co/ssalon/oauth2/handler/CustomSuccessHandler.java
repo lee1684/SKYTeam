@@ -4,6 +4,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kr.co.ssalon.domain.repository.MemberRepository;
 import kr.co.ssalon.jwt.JWTUtil;
 import kr.co.ssalon.jwt.RedisRefreshToken;
 import kr.co.ssalon.jwt.RedisRefreshTokenRepository;
@@ -29,6 +30,7 @@ import java.util.Objects;
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JWTUtil jwtUtil;
     private final RedisRefreshTokenRepository redisRefreshTokenRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -36,10 +38,11 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         CustomOAuth2Member customOAuth2Member = (CustomOAuth2Member) authentication.getPrincipal();
         String username = customOAuth2Member.getUsername();
 
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-        GrantedAuthority auth = iterator.next();
-        String role = auth.getAuthority();
+//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+//        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
+//        GrantedAuthority auth = iterator.next();
+//        String role = auth.getAuthority();
+        String role = memberRepository.findByUsername(username).get().getRole();
 
         String access = jwtUtil.createJwt("access", username, role, 86400000L);
         String refresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
@@ -56,7 +59,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // redirect 경로 설정
         if (Objects.equals(role, "ROLE_ADMIN")) {
             log.info("@@@@@@@@@@@@@@@@@if문 role: {}", role);
-            response.sendRedirect("https://ssalon.co.kr/admin");
+            response.sendRedirect("https://ssalon.co.kr/admin/index.html");
         } else {
             log.info("@@@@@@@@@@@@@@@@@else문 role: {}", role);
             response.sendRedirect("https://ssalon.co.kr/web/ssalon-login-redirect");
