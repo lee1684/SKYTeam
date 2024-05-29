@@ -159,7 +159,13 @@ public class DiaryService {
         }
 
         MemberMeeting memberMeeting = memberMeetingOp.get();
-        Diary diary = memberMeeting.getDiary();
+        Optional<Diary> diaryOp = diaryRepository.findByMemberMeeting(memberMeeting);
+        if (diaryOp.isEmpty()) {
+            log.error("DiaryService(fetchDiaryInfo): Diary not found");
+            return null;
+        }
+
+        Diary diary = diaryOp.get();
         log.info(diary.getDescription());
 
         if (diary.isEditYet()) return null;
@@ -186,6 +192,8 @@ public class DiaryService {
 
         Member user = userOp.get();
         Meeting meeting = meetingOp.get();
+        log.info("Updating diary info: user ID - " + user.getId().toString());
+        log.info("Updating diary info: meeting ID - " + meeting.getId().toString());
 
         Optional<MemberMeeting> memberMeetingOp = memberMeetingRepository.findByMemberAndMeeting(user, meeting);
         if (memberMeetingOp.isEmpty()) {
@@ -194,6 +202,7 @@ public class DiaryService {
         }
 
         MemberMeeting memberMeeting = memberMeetingOp.get();
+        log.info("Updating diary info: memberMeeting ID - " + memberMeeting.getId().toString());
         Optional<Diary> diaryOp = diaryRepository.findByMemberMeeting(memberMeeting);
         if (diaryOp.isEmpty()) {
             log.error("DiaryService(updateDiaryInfo): Diary not found");
