@@ -61,6 +61,7 @@ export class MeetingInfoComponent {
   public isCreator: boolean = false;
   public isParticipant: boolean = false;
   public joiningUsers: StatusElement[] = [];
+  public isReviewCreated: boolean = false;
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
@@ -75,17 +76,10 @@ export class MeetingInfoComponent {
   public async ngOnInit() {
     this.moimInfo = await this._apiExecutorService.getMoimInfo(this.moimId);
     this.ticketInfo = await this._apiExecutorService.getTicket(this.moimId);
+    await this.checkDiaryCreated();
     this.tabs = await this.getTabs();
     this.nowTab = this.tabs.find((tab) => tab.selected)!.value;
-    if (this.isParticipant) {
-      this.buttonElementsService.joinButtonElements[0].selected = false;
-      this.buttonElementsService.joinButtonElements[0].label = this.isCreator
-        ? '정보 및 증표 수정하기(개최자입니다)'
-        : '참가자입니다.';
-    } else {
-      this.buttonElementsService.joinButtonElements[0].selected = true;
-      this.buttonElementsService.joinButtonElements[0].label = '참가하기';
-    }
+    this.changeButtonLabel(this.nowTab);
     let userInfos = await this._apiExecutorService.getJoiningUsers(this.moimId);
     userInfos.forEach((userInfo: any, index: number) => {
       this.joiningUsers.push({
@@ -99,6 +93,42 @@ export class MeetingInfoComponent {
 
   public onClickTab(tab: MeetingInfoTabEnum) {
     this.nowTab = tab;
+    this.changeButtonLabel(this.nowTab);
+  }
+
+  public async checkDiaryCreated() {
+    let result = await this._apiExecutorService.getMoimReview(this.moimId);
+    if (result === false) {
+      this.isReviewCreated = false;
+    } else {
+      this.isReviewCreated = true;
+    }
+  }
+
+  public changeButtonLabel(tabEnum: MeetingInfoTabEnum) {
+    if (tabEnum === MeetingInfoTabEnum.TICKET) {
+      if (this.isParticipant && this.isCreator) {
+        this.buttonElementsService.joinButtonElements[0].selected = false;
+        this.buttonElementsService.joinButtonElements[0].label =
+          '증표 앞면 수정하기';
+      }
+    } else if (tabEnum === MeetingInfoTabEnum.INFO) {
+      if (this.isParticipant) {
+        this.buttonElementsService.joinButtonElements[0].selected = false;
+        this.buttonElementsService.joinButtonElements[0].label = this.isCreator
+          ? '모임 정보 수정하기(개최자입니다)'
+          : '참가 취소하기(참가자입니다)';
+      } else {
+        this.buttonElementsService.joinButtonElements[0].selected = true;
+        this.buttonElementsService.joinButtonElements[0].label = '참가하기';
+      }
+    } else if (tabEnum === MeetingInfoTabEnum.DIARY) {
+      if (this.isReviewCreated) {
+        this.buttonElementsService.joinButtonElements[0].selected = false;
+        this.buttonElementsService.joinButtonElements[0].label =
+          '모임 후기 수정하기';
+      }
+    }
   }
 
   public async getTabs(): Promise<NewButtonElement[]> {
@@ -192,6 +222,15 @@ export class MeetingInfoComponent {
       '/Thumb-' +
       moimId +
       '.png'
+    );
+  }
+
+  public showButton(): boolean {
+    return !(
+      this.nowTab === this.meetingInfoTabEnum.QRCHECK ||
+      this.nowTab === this.meetingInfoTabEnum.QRSHOW ||
+      this.nowTab === this.meetingInfoTabEnum.CHATTING ||
+      (this.nowTab === this.meetingInfoTabEnum.DIARY && !this.isReviewCreated)
     );
   }
 }
