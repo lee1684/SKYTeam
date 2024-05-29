@@ -194,7 +194,7 @@ public class DiaryService {
         }
 
         MemberMeeting memberMeeting = memberMeetingOp.get();
-        Optional<Diary> diaryOp = diaryRepository.findByMemberMeetingId(memberMeeting.getId());
+        Optional<Diary> diaryOp = diaryRepository.findByMemberMeeting(memberMeeting);
         if (diaryOp.isEmpty()) {
             log.error("DiaryService(updateDiaryInfo): Diary not found");
             return null;

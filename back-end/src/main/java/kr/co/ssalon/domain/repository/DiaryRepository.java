@@ -8,6 +8,5 @@ import java.util.Optional;
 
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
 
-    Optional<Diary> findByMemberMeetingId(Long memberMeetingId);
-    Diary findByMemberMeeting(MemberMeeting memberMeeting);
+    Optional<Diary> findByMemberMeeting(MemberMeeting memberMeeting);
 }
