@@ -1,12 +1,14 @@
 package kr.co.ssalon.domain.service;
 
 import com.google.gson.JsonObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 
+@Slf4j
 @Service
 public class AwsLambdaService {
 
@@ -53,6 +55,8 @@ public class AwsLambdaService {
                         .build())
                 .bodyValue(jsonObject.toString())
                 .retrieve();
+
+        log.warn("UserEmbedding query sent.");
     }
 
     public void updateMoimEmbedding(Long moimID, String moimTitle, String prompt) {
