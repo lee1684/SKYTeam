@@ -2,21 +2,26 @@ package kr.co.ssalon.domain.service;
 
 import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Member;
+import kr.co.ssalon.domain.repository.MeetingRepository;
 import kr.co.ssalon.domain.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class RecommendService {
 
     private final MemberRepository memberRepository;
     private final AwsLambdaService awsLambdaService;
+    private final MeetingRepository meetingRepository;
 
     @Autowired
-    public RecommendService(AwsLambdaService awsLambdaService, MemberRepository memberRepository) {
+    public RecommendService(AwsLambdaService awsLambdaService, MemberRepository memberRepository, MeetingRepository meetingRepository) {
         this.awsLambdaService = awsLambdaService;
         this.memberRepository = memberRepository;
+        this.meetingRepository = meetingRepository;
     }
 
     @Async
@@ -68,5 +73,23 @@ public class RecommendService {
         prompt.append(meeting.getDescription());
 
         awsLambdaService.updateMoimEmbedding(moimId, moimTitle, prompt.toString());
+    }
+
+    @Async
+    public void updateMoimEmbeddingAll() {
+
+        List<Meeting> allMeetings = meetingRepository.findAll();
+
+        for (Meeting meeting : allMeetings) {
+            Long moimId = meeting.getId();
+            String moimTitle = meeting.getTitle();
+            StringBuilder prompt = new StringBuilder();
+
+            prompt.append("우리 모임은 ").append(meeting.getCategory()).append(" 모임입니다. ");
+            prompt.append("우리 모임은 ").append(meeting.getLocation()).append("에서 열립니다. ");
+            prompt.append(meeting.getDescription());
+
+            awsLambdaService.updateMoimEmbedding(moimId, moimTitle, prompt.toString());
+        }
     }
 }
