@@ -1,5 +1,7 @@
 package kr.co.ssalon.web.controller;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -89,13 +91,31 @@ public class MeetingController {
     @GetMapping("/api/moims/home")
     public ResponseEntity<?> getHomeMoims(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, HomeMeetingSearchCondition homeMeetingSearchCondition) {
         try {
+            Gson gson = new Gson();
+
             List<MeetingHomeDTO> categorizedMeetings = new ArrayList<>();
             String username = customOAuth2Member.getUsername();
 
+            Member member = memberService.findMember(username);
+            String meetingRecommendString = member.getMeetingRecommendation();
+            String categoryRecommendString =member.getCategoryRecommendation();
+            List<Long> meetingRecommendList = gson.fromJson(meetingRecommendString, new TypeToken<List<Long>>() {});
+            List<Long> categoryRecommendList = gson.fromJson(categoryRecommendString, new TypeToken<List<Long>>() {});
+
+            List<MeetingHomeSearchDTO> recommendMeetings = new ArrayList<>();
+            for (Long i : meetingRecommendList) {
+                Meeting meeting = meetingService.findMeeting(i);
+                if (meeting == null) continue;
+                MeetingHomeSearchDTO meetingHomeSearchDTO = new MeetingHomeSearchDTO(meeting, username);
+                recommendMeetings.add(meetingHomeSearchDTO);
+            }
+            MeetingHomeDTO recomMeetingHomeDTO = new MeetingHomeDTO("추천", recommendMeetings);
+            categorizedMeetings.add(recomMeetingHomeDTO);
+
             for (int i = 1; i <= homeMeetingSearchCondition.getCategoryLen(); i++) {
                 try {
-                    String categoryName = categoryService.findCategory(Long.valueOf(i)).getName();
-                    List<Meeting> meetings = meetingRepository.findMeetingsByCategoryId(Long.valueOf(i)).stream()
+                    String categoryName = categoryService.findCategory(categoryRecommendList.get(i-1)).getName();
+                    List<Meeting> meetings = meetingRepository.findMeetingsByCategoryId(categoryRecommendList.get(i-1)).stream()
                             .filter(meeting -> {
                                 if (homeMeetingSearchCondition.getIsEnd() != null) {
                                     return homeMeetingSearchCondition.getIsEnd().equals(meeting.getIsFinished());
