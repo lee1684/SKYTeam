@@ -49,7 +49,7 @@ public class AwsLambdaService {
 
         webClient.post()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/api/embedding")
+                        .path("/api/embedding/user")
                         .build())
                 .bodyValue(jsonObject.toString())
                 .retrieve();
