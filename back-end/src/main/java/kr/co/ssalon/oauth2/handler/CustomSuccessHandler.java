@@ -60,9 +60,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         if (Objects.equals(role, "ROLE_ADMIN")) {
             log.info("@@@@@@@@@@@@@@@@@if문 role: {}", role);
             log.info("#################" + request.getHeader("Host"));
-            if (request.getHeader("Host").equals("localhost:3000"))
-                response.sendRedirect("localhost:3000");
-            response.sendRedirect("https://ssalon.co.kr/admin/index.html");
+            response.sendRedirect("localhost:3000");
         } else {
             log.info("@@@@@@@@@@@@@@@@@else문 role: {}", role);
             response.sendRedirect("https://ssalon.co.kr/web/ssalon-login-redirect");
