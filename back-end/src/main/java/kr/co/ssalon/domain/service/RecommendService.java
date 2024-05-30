@@ -26,7 +26,14 @@ public class RecommendService {
         String memberName = member.getNickname();
         StringBuilder prompt = new StringBuilder();
 
-        prompt.append("저는 ").append(member.getGender()).append("입니다. ");
+        switch (member.getGender()) {
+            case 'M':
+                prompt.append("저는 남성입니다. ");
+                break;
+            case 'F':
+                prompt.append("저는 여성입니다. ");
+                break;
+        }
         prompt.append("저는 ").append(member.getAddress()).append("에서 활동합니다. 저는 ");
         for (String interest : member.getInterests()) {
             prompt.append(interest).append(", ");
