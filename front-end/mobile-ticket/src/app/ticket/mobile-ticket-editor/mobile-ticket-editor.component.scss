@@ -1,0 +1,153 @@
+.editor-button {
+    width: 50px;
+    height: 50px;
+    margin: 10px;
+}
+
+.feature-button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.horizontal-container {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#detail-editor {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-color: rgba(0, 0, 0, 0.9);
+    width: 100%;
+    height: 100%;
+}
+
+#text-edit-input {
+    font-size: 30px;
+    font-family: 'Courier New', Courier, monospace;
+    -webkit-text-size-adjust: 100%;
+    background-color: transparent;
+    caret-color: #006BFF;
+    color: #efefef;
+    width: 70%;
+    height: 400px;
+    border: none;
+    outline: none;
+    text-align: center;
+}
+
+#text-edit-feature-container {
+    position: absolute;
+    width: 100%;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    display: flex;
+    justify-content: center;
+}
+
+.fonts {
+    position: absolute;
+    bottom: 120px;
+    left: 0px;
+    width: 100%;
+    height: 20px;
+}
+
+.color-board {
+    position: absolute;
+    width: 100%;
+    bottom: 20px;
+}
+
+#text-align {
+    position: absolute;
+    bottom: 180px;
+    left: 0px;
+    width: 100%;
+}
+
+#preview {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+.sticker {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.sticker:hover {
+    cursor: pointer;
+}
+
+.selected {
+    border: 2px solid #006BFF;
+}
+
+.ticket-background {
+    position: absolute;
+    top: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#sticker-edit-feature-container {
+    overflow-y: auto;
+    height: 100%;
+}
+
+#selected-photo-container {
+    position: absolute;
+    width: 200px;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    display: flex;
+    justify-content: center;
+}
+
+#upload-photo-num {
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    top: calc(40% - 100px);
+    left: calc(50% - 100px);
+    display: flex;
+    justify-content: center;
+    background-color: white;
+    color: black;
+    border-radius: 50%;
+}
+
+.selected-status {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: green;
+}
+
+#edit-feature-buttons {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

@@ -1,0 +1,7 @@
+<div id="meeting-info-conatiner">
+    <app-simple-input [type]="'longText'" [label]="'후기'" [placeholder]="'재밌었던 점을 작성해주세요!'" [checkBoxLabel]="'마크다운 미리보기'"
+        [enableCheckbox]="true" (onChangeEvent)="this.onInput('description', $event)"></app-simple-input>
+    <app-image-row-container [label]="'사진'" [extraLabel]="'(선택)'" [extraLabelColor]="'#006BFF'"
+        [isTicketContainer]="false" [imageHeight]="100" [images]="this.photos"
+        (onClickImageEvent)="this.onClickImage($event)"></app-image-row-container>
+</div>

@@ -1,0 +1,6 @@
+<div class="container">
+    <ng-container *ngFor="let tab of this.tabs">
+        <div [ngClass]="this.getClass(tab.value)" [style.width.px]="this.getButtonWidth()"
+            (click)="this.onClickTab(tab.value)">{{tab.label}}</div>
+    </ng-container>
+</div>

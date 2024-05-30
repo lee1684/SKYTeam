@@ -1,0 +1,30 @@
+.color-back {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #efefef;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.color-back:hover {
+    cursor: pointer;
+}
+
+.color-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.color-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-bottom: 10px;
+}
+
+.selected {
+    background-color: #006BFF !important;
+}

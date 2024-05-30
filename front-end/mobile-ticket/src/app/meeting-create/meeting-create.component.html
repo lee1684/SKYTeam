@@ -1,0 +1,19 @@
+<div class="container">
+    <app-top-navigator [style.width]="'100%'" [title]="'모임만들기'" [shareButton]="false" [defaultBack]="false"
+        (backButtonClickEvent)="this.onClickBackButton()"></app-top-navigator>
+    <div class="content-container">
+        <div *ngIf="this.nowStep === createMeetingStep.INFO">
+            <app-create-meeting-info (onCreateButtonReadyEvent)="this.changeCreateTicketTypeButtonState($event)"
+                [meetingInfo]="this.meetingInfo" #createMeetingInfoComponent></app-create-meeting-info>
+        </div>
+        <div *ngIf="this.nowStep === createMeetingStep.TICKET">
+            <app-create-ticket
+                (onClickToggleButtonEvent)="this.changeCreateTicketButtonState($event)"></app-create-ticket>
+        </div>
+    </div>
+    <div class="bottom-button">
+        <app-square-button
+            [buttonElements]="(this.nowStep===this.createMeetingStep.INFO)?this.buttonElementsService.nextButtons: this.buttonElementsService.createTicketButtons"
+            (onClickEvent)="(this.nowStep===this.createMeetingStep.INFO)?this.onClickNextButton(): this.onClickCreateTicketButton()"></app-square-button>
+    </div>
+</div>

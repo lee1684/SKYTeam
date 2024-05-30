@@ -1,0 +1,15 @@
+#simple-button {
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+
+#simple-button:hover {
+  cursor: pointer;
+}
+
+#text-div {
+  text-align: center;
+}

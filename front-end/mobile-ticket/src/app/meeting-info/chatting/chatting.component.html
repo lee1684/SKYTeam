@@ -1,0 +1,20 @@
+<div class="container">
+    <div id="msg-container" #msgContainer>
+        <ng-container *ngFor="let msg of messages, index as i">
+            <app-chat-container [message]="msg" [contentOnly]="this.isSameSender(msg, i)"
+                [align]="this.isMyMsg(msg)"></app-chat-container></ng-container>
+
+    </div>
+    <div id="send-input">
+        <app-simple-input [type]="'chat-input'" (onClickChatSendButtonEvent)="this.sendMessage()"
+            (onClickImgSendButtonEvent)="this.sendImage()" #simpleInput></app-simple-input>
+    </div>
+    <div id="participants-container">
+        <div id="participant-profile-imgs">
+            <ng-container *ngFor="let participant of this.participants">
+                <img id="profile-img" [src]="participant.profilePictureUrl" width="50px" height="50px" />
+            </ng-container>
+        </div>
+        <div id="participant-nums">{{this.participants.length}}명 참가 중</div>
+    </div>
+</div>
