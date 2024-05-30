@@ -29,7 +29,7 @@ export class ApiExecutorService {
   public apiURL: string = 'https://ssalon.co.kr/api';
   //public apiURL: string = 'http://localhost:8080/api';
   public tokens = {};
-  public token: string = '';
+  public token: string = 'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgdklmemUyQ0VBQ3I3Nl9CMW5hbHQ4MGRFd3JwbmhzUklRVUU3a3FIcXFXVSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTcwNjIzNDMsImV4cCI6MTcxNzE0ODc0M30.Id79IocPE4c5HqsfsbeWekFz3iwjYUWlDaBbrXORtuo';
   public refreshToken: string = '';
   public myProfile: Profile = undefined as unknown as Profile;
   constructor(private _ssalonConfigService: SsalonConfigService) {

@@ -10,6 +10,7 @@ import { MeetingCreateComponent } from './meeting-create/meeting-create.componen
 import { MoimReviewComponent } from './meeting-info/moim-review/moim-review.component';
 import { MoimReviewCreateComponent } from './meeting-info/moim-review/moim-review-create/moim-review-create.component';
 import { MeetingShareComponent } from './meeting-share/meeting-share.component';
+import { ProfileUpdateComponent } from './main/profile/profile-update/profile-update.component';
 
 export const routes: Routes = [
   { path: 'web/ssalon-login', component: SsalonLoginComponent },
@@ -49,6 +50,10 @@ export const routes: Routes = [
     path: '',
     component: SsalonLoginComponent,
   },
+  {
+    path: 'web/profile-update',
+    component: ProfileUpdateComponent,
+  }
 ];
 
 @NgModule({
