@@ -1,4 +1,4 @@
-import { NgFor, NgIf } from '@angular/common';
+import { NgFor, NgIf, NgOptimizedImage } from '@angular/common';
 import {
   Component,
   EventEmitter,
@@ -21,7 +21,7 @@ export interface Ticket {
 @Component({
   selector: 'app-image-row-container',
   standalone: true,
-  imports: [NgIf, NgFor],
+  imports: [NgIf, NgFor, NgOptimizedImage],
   templateUrl: './image-row-container.component.html',
   styleUrl: './image-row-container.component.scss',
 })

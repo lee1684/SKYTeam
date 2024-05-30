@@ -26,7 +26,7 @@ export class SimpleInputComponent {
   @Input() extraLabelColor: string = '';
   @Input() placeholder: string = '';
   @Input() maxWidth: number = 300;
-  @Input() longTextHeight: number = 120;
+  @Input() longTextHeight: number = 300;
   @Input() type:
     | 'text'
     | 'longText'
@@ -59,6 +59,16 @@ export class SimpleInputComponent {
   }
   public onClickCheckbox(event: any): void {
     this.isChecked = event.target.checked;
+    if (this.type === 'longText') {
+      if (this.isChecked) {
+        this.showGeneralHTML = false;
+        this.convertedHTML = this.convertMarkdown(this.innerText as string)
+          .replace(/<p[^>]*>/g, '')
+          .replace(/<\/p>/g, '');
+      } else {
+        this.showGeneralHTML = true;
+      }
+    }
     this.onClickCheckboxEvent.emit(this.isChecked);
   }
   public onClickChatSendButton(): void {

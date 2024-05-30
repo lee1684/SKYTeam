@@ -6,7 +6,7 @@ import { NewButtonElement } from '../ssalon-component/simple-toggle-group/simple
 })
 export class ButtonElementsService {
   private mainCategoryTab: string[] = [
-    '전체',
+    '추천',
     '운동',
     '독서',
     '요리',

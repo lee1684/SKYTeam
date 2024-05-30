@@ -67,6 +67,12 @@ export class OnboardingComponent {
     private _apiExecutorService: ApiExecutorService,
     public buttonElementsService: ButtonElementsService
   ) {}
+
+  public ngOnInit() {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${'access'}=`);
+    this._apiExecutorService.setToken(parts.pop()!.split(';').shift()!);
+  }
   public onChangeUserInfo(type: string, value: string): void {
     switch (type) {
       case 'nickname':

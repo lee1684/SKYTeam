@@ -20,6 +20,9 @@ export class SsalonLoginRedirectComponent {
     this._apiExecutorService.setToken(parts.pop()!.split(';').shift()!);
   }
   public async ngOnInit() {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${'access'}=`);
+    this._apiExecutorService.setToken(parts.pop()!.split(';').shift()!);
     let response = await this._apiExecutorService.getIsRegister();
     console.log(response);
     setTimeout(() => {}, 3000);

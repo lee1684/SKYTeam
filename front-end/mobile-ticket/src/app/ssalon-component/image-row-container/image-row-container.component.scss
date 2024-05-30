@@ -1,3 +1,10 @@
+#virtual-scroll-container {
+    height: 300px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
 .image-row-container {
     display: flex;
     flex-direction: row;

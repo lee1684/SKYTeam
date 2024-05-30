@@ -17,6 +17,8 @@ import {
 } from '@angular/core';
 import { degToRad } from 'three/src/math/MathUtils.js';
 import { create } from 'apisauce';
+import { Ticket } from '../../ssalon-component/image-row-container/image-row-container.component';
+import { DecorationInfo } from '../../service/ssalon-config.service';
 @Component({
   selector: 'app-mobile-ticket-edit-viewer',
   standalone: true,
@@ -37,10 +39,16 @@ export class MobileTicketEditViewerComponent {
   @Output() public readonly onClickText = new EventEmitter();
   public canvas: Canvas | null = null;
   public isCursorDown: boolean = false;
+  public decorationInfo: DecorationInfo =
+    undefined as unknown as DecorationInfo;
+  public backgroundColor: string = '#ffffff';
   constructor(private _apiExecutorService: ApiExecutorService) {}
-  public ngOnInit(): void {}
-  public ngAfterViewInit(): void {
-    this.initFabric();
+  public async ngOnInit() {
+    console.log(this.moimId, this.createTemplate, this.face);
+  }
+  public async ngAfterViewInit() {
+    await this.loadDecorationInfo();
+    await this.initFabric();
   }
   public async initFabric() {
     this.canvas = new Canvas(this.editCanvas?.nativeElement);
@@ -67,68 +75,38 @@ export class MobileTicketEditViewerComponent {
     this.canvas.on('object:rotating', (event: any) => {
       this.isCursorDown = false;
     });
-    await this.loadDecorationInfo();
-  }
 
-  public addRemoveIconToControl() {
-    var deleteIcon =
-      "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='595.275px' height='595.275px' viewBox='200 215 230 470' xml:space='preserve'%3E%3Ccircle style='fill:%23F44336;' cx='299.76' cy='439.067' r='218.516'/%3E%3Cg%3E%3Crect x='267.162' y='307.978' transform='matrix(0.7071 -0.7071 0.7071 0.7071 -222.6202 340.6915)' style='fill:white;' width='65.545' height='262.18'/%3E%3Crect x='266.988' y='308.153' transform='matrix(0.7071 0.7071 -0.7071 0.7071 398.3889 -83.3116)' style='fill:white;' width='65.544' height='262.179'/%3E%3C/g%3E%3C/svg%3E";
-
-    var img = document.createElement('img');
-    img.src = deleteIcon;
-    console.log(FabricObject.prototype);
-    FabricObject.prototype.controls['deleteControl'] = new Control({
-      x: 0.5,
-      y: -0.5,
-      offsetY: 16,
-      cursorStyle: 'pointer',
-      mouseUpHandler: deleteObject,
-      render: renderIcon,
-    });
-
-    function deleteObject(eventData: any, transform: any) {
-      var target = transform.target;
-      var canvas = target.canvas;
-      canvas.remove(target);
-      canvas.requestRenderAll();
-    }
-
-    function renderIcon(
-      ctx: any,
-      left: any,
-      top: any,
-      styleOverride: any,
-      fabricObject: any
-    ) {
-      var size = 20;
-      ctx.save();
-      ctx.translate(left, top);
-      ctx.rotate(degToRad(fabricObject.angle));
-      ctx.drawImage(img, -size / 2, -size / 2, size, size);
-      ctx.restore();
-    }
+    await this.canvas?.loadFromJSON(this.decorationInfo.fabric);
+    this.canvas?.renderAll();
   }
 
   public async loadDecorationInfo() {
+    console.log(this.moimId);
     let decorationInfo: any = null;
     if (this.createTemplate !== undefined) {
       if (this.face === 'front') {
-        await this._apiExecutorService.createTicket(
-          this.moimId,
-          this.createTemplate!
+        if (this.createTemplate !== 'edit') {
+          await this._apiExecutorService.createTicket(
+            this.moimId,
+            this.createTemplate!
+          );
+        }
+        console.log(await this._apiExecutorService.getTicket(this.moimId));
+        this.decorationInfo = await this._apiExecutorService.getTicket(
+          this.moimId
         );
-        decorationInfo = await this._apiExecutorService.getTicket(this.moimId);
       } else if (this.face === 'back') {
-        await this._apiExecutorService.createDiary(
-          this.moimId,
-          this.createTemplate!
+        if (this.createTemplate !== 'edit') {
+          await this._apiExecutorService.createDiary(
+            this.moimId,
+            this.createTemplate!
+          );
+        }
+        this.decorationInfo = await this._apiExecutorService.getDiary(
+          this.moimId
         );
-        decorationInfo = await this._apiExecutorService.getDiary(this.moimId);
       }
     }
-    console.log(decorationInfo);
-    await this.canvas?.loadFromJSON(decorationInfo.fabric);
-    this.canvas?.renderAll();
   }
 
   public updateCanvas(
@@ -153,6 +131,6 @@ export class MobileTicketEditViewerComponent {
   }
 
   public updateBackgroundColor(color: string): void {
-    this.backgroundPath?.nativeElement.setAttribute('fill', color);
+    this.backgroundColor = color;
   }
 }
