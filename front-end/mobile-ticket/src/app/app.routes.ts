@@ -45,6 +45,10 @@ export const routes: Routes = [
     path: 'web/share',
     component: MeetingShareComponent,
   },
+  {
+    path: '',
+    component: SsalonLoginComponent,
+  },
 ];
 
 @NgModule({

@@ -2,6 +2,7 @@ import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader.js';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 import { Face } from './face';
 import {
+  AxesHelper,
   Group,
   Mesh,
   MeshPhongMaterial,
@@ -38,7 +39,6 @@ export class MobileTicket {
         await axios.get('assets/decoration.json')
       ).data;
     this.backDecorationinfo = await this._apiExecutorService.getDiary(moimId);
-    console.log(this.backDecorationinfo);
     if (this.backDecorationinfo === false)
       this.backDecorationinfo = (
         await axios.get('assets/decoration.json')
@@ -77,9 +77,11 @@ export class MobileTicket {
       parseInt(backgroundColorString?.slice(1)!, 16)
     );
     this.mobileTicket.rotateOnAxis(new Vector3(0, 0, 1), Math.PI / 2);
-    this.mobileTicket!.rotateX(Math.PI / 8);
-    this.mobileTicket!.rotateY(Math.PI / 8);
+    this.mobileTicket.rotateOnAxis(new Vector3(1, 0, 0), Math.PI / 10);
+    this.mobileTicket.rotateOnAxis(new Vector3(0, 1, 0), Math.PI / 10);
     this._sceneGraphService.scene!.add(this.mobileTicket!);
+    //let a = new AxesHelper(100);
+    //this._sceneGraphService.scene!.add(a);
     this.initSide('front');
     this.initSide('back');
     this.checkFaceVisible();
@@ -94,9 +96,9 @@ export class MobileTicket {
         (this.frontDecorationInfo as DecorationInfo).fabric
       );
       this.frontSide.rotateZ(-Math.PI / 2);
-      this.frontSide.position.add(new Vector3(0, 0, 2.05));
+      this.frontSide.position.add(new Vector3(0, 0, 1.2));
       this.mobileTicket?.add(this.frontSide);
-      this.frontSide.scale.multiplyScalar(0.205);
+      this.frontSide.scale.multiplyScalar(0.2);
     } else if (side === 'back') {
       /** get decoration info from the server */
 
@@ -107,8 +109,9 @@ export class MobileTicket {
       );
       this.backSide.rotateZ(-Math.PI / 2);
       this.backSide.rotateY(-Math.PI);
+      this.backSide.position.add(new Vector3(0, 0, -1.2));
       this.mobileTicket?.add(this.backSide);
-      this.backSide.scale.multiplyScalar(0.205);
+      this.backSide.scale.multiplyScalar(0.2);
     }
   }
 

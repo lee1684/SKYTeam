@@ -16,6 +16,7 @@ import { NgIf } from '@angular/common';
 import { ImageRowContainerComponent } from '../../ssalon-component/image-row-container/image-row-container.component';
 import { NewButtonElement } from '../../ssalon-component/simple-toggle-group/simple-toggle-group.component';
 import { ApiExecutorService } from '../../service/api-executor.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-create-meeting-info',
@@ -60,8 +61,10 @@ export class CreateMeetingInfoComponent {
 
   constructor(
     public buttonElementsService: ButtonElementsService,
-    private _apiExecutorService: ApiExecutorService
+    private _apiExecutorService: ApiExecutorService,
+    private _route: ActivatedRoute
   ) {}
+
   public ngAfterViewChecked() {
     this.onCreateButtonReadyEvent.emit(this.isAllTyped());
   }

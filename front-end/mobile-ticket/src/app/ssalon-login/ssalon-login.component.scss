@@ -7,6 +7,16 @@
     position: relative;
 }
 
+#background {
+    position: absolute;
+    top: 175px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    height: 400px;
+    background-color: #f5f5f5;
+}
+
 #logo-container {
     position: absolute;
     top: 120px;

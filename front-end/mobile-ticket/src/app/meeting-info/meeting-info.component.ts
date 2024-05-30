@@ -52,8 +52,8 @@ export class MeetingInfoComponent {
   @ViewChild('ticket', { static: false }) ticket: TicketComponent | null = null;
 
   public moimId: string = '';
-  public moimInfo: any = {};
-  public ticketInfo: any = {};
+  public moimInfo: any = undefined as unknown as any;
+  public ticketInfo: any = undefined as unknown as any;
   public joined: boolean = false;
   public meetingInfoTabEnum = MeetingInfoTabEnum;
   public tabs: NewButtonElement[] = [];
@@ -206,12 +206,26 @@ export class MeetingInfoComponent {
     if (this.buttonElementsService.joinButtonElements[0].selected) {
       await this._apiExecutorService.joinMoim(this.moimId);
       location.reload();
-      //let currentUrl = this._router.url;
-      //this._router.navigate([`/web/meeting-info`], {
-      //  queryParams: {
-      //    moimId: this.moimId,
-      //  },
-      //});
+    } else {
+      if (this.nowTab === this.meetingInfoTabEnum.TICKET && this.isCreator) {
+        this._router.navigate(['/web/ticket'], {
+          queryParams: {
+            moimId: this.moimId,
+            viewType: 'edit',
+            createTemplate: 'edit',
+            face: 'front',
+          },
+        });
+      } else if (
+        this.nowTab === this.meetingInfoTabEnum.INFO &&
+        this.isCreator
+      ) {
+        this._router.navigate(['/web/meeting-create'], {
+          queryParams: {
+            moimId: this.moimId,
+          },
+        });
+      }
     }
   }
 
@@ -232,5 +246,13 @@ export class MeetingInfoComponent {
       this.nowTab === this.meetingInfoTabEnum.CHATTING ||
       (this.nowTab === this.meetingInfoTabEnum.DIARY && !this.isReviewCreated)
     );
+  }
+
+  public isLoadedMoimInfo(): boolean {
+    if (this.moimInfo === undefined) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }

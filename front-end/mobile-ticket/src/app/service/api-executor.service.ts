@@ -99,7 +99,6 @@ export class ApiExecutorService {
   public async getTicket(moimId: string) {
     try {
       let response = await this.apiExecutor?.get(`/tickets/${moimId}`);
-      console.log(response!.data);
       return response!.data;
     } catch {
       /** dummy data */
@@ -279,6 +278,18 @@ export class ApiExecutorService {
   public async getMoimInfo(moimId: string) {
     try {
       let response = await this.apiExecutorJson?.get(`/moims/${moimId}`);
+      return response!.data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  public async editMoimInfo(moimId: string, body: any) {
+    try {
+      let response = await this.apiExecutorJson?.patch(
+        `/moims/${moimId}`,
+        body
+      );
       return response!.data;
     } catch (e) {
       console.log(e);
