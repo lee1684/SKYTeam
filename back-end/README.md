@@ -3,8 +3,8 @@
 # :dancers: SSALON: 증표 기반 일회성 모임관리 서비스
 ![SSALON 메인 이미지](https://i.imgur.com/OVJeDPd.png)  
 :house: **서비스 홈페이지** : [살롱 바로가기](https://ssalon.co.kr)  
-:open_file_folder: **레포지토리 루트로 이동** : [레포지토리 루트](../)  
-:open_file_folder: **각 엔드별 상세 레포지토리** : [프론트엔드](./front-end) | [백엔드](./back-end)  
+:open_file_folder: **레포지토리 루트로 이동** : [레포지토리 루트](/)  
+:open_file_folder: **각 엔드별 상세 레포지토리** : [프론트엔드](/front-end) | [백엔드](/back-end)  
 
 </div> <br>
 
