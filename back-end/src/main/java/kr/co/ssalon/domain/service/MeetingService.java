@@ -3,15 +3,15 @@ package kr.co.ssalon.domain.service;
 import kr.co.ssalon.domain.dto.MeetingDomainDTO;
 import kr.co.ssalon.domain.entity.*;
 import kr.co.ssalon.domain.repository.*;
-import kr.co.ssalon.web.dto.ParticipantDTO;
+import kr.co.ssalon.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
-import kr.co.ssalon.web.dto.MeetingSearchCondition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,6 +28,7 @@ public class MeetingService {
     private final CategoryRepository categoryRepository;
     private final MeetingOutRepository meetingOutRepository;
     private final RecommendService recommendService;
+    private final ValidationService validationService;
 
     // 모임 개설
     @Transactional
@@ -242,6 +243,69 @@ public class MeetingService {
         }
     }
 
+    public List<MeetingHomeDTO> getHomeMoims(String username, HomeMeetingSearchCondition homeMeetingSearchCondition) throws BadRequestException {
+        List<MeetingHomeDTO> categorizedMeetings = new ArrayList<>();
+        Member member = findMember(username);
+
+        Long[] recommendCategoryOrder = stringToLongArray(member.getCategoryRecommendation());
+        Long[] recommendMeetingOrder = stringToLongArray(member.getMeetingRecommendation());
+
+        // 맨 처음 추천 모임
+        List<Meeting> recommendMeetings = new ArrayList<>();
+        for (int i = 0; i < homeMeetingSearchCondition.getMeetingLen(); i++) {
+            recommendMeetings.add(findMeeting(recommendMeetingOrder[i]));
+        }
+        MeetingHomeDTO recommendMeetingHomeDTO = new MeetingHomeDTO("추천", recommendMeetings.stream()
+                .map(meeting -> new MeetingHomeSearchDTO(meeting, username))
+                .collect(Collectors.toList()));
+        categorizedMeetings.add(recommendMeetingHomeDTO);
+
+        for (int i = 0; i < homeMeetingSearchCondition.getCategoryLen() - 1; i++) {
+            try {
+                String categoryName = findCategory(recommendCategoryOrder[i]).getName();
+                List<Meeting> meetings = meetingRepository.findMeetingsByCategoryId(recommendCategoryOrder[i]).stream()
+                        .filter(meeting -> {
+                            if(homeMeetingSearchCondition.getIsEnd() != null) {
+                                return homeMeetingSearchCondition.getIsEnd().equals(meeting.getIsFinished());
+                            }
+                            return true;
+                        })
+                        .sorted((meeting1, meeting2) -> {
+                            if (homeMeetingSearchCondition.getOrder() != null) {
+                                switch (homeMeetingSearchCondition.getOrder()) {
+                                    case CAPACITY:
+                                        return Integer.compare(meeting2.getCapacity(), meeting1.getCapacity());
+                                    case NUMBER:
+                                        return Long.compare(meeting2.getId(), meeting1.getId());
+                                    case RECENT:
+                                        return meeting2.getMeetingDate().compareTo(meeting1.getMeetingDate());
+                                    default:
+                                        return 0;
+                                }
+                            }
+                            return 0;
+                        })
+                        .limit(homeMeetingSearchCondition.getMeetingLen())
+                        .collect(Collectors.toList());
+                MeetingHomeDTO meetingHomeDTO = new MeetingHomeDTO(categoryName, meetings.stream()
+                        .map(meeting -> new MeetingHomeSearchDTO(meeting, username))
+                        .collect(Collectors.toList()));
+                categorizedMeetings.add(meetingHomeDTO);
+            } catch (BadRequestException e) {
+                continue;
+            }
+        }
+        return categorizedMeetings;
+    }
+
+    private Long[] stringToLongArray(String str) {
+        String[] stringArray = str.split(",");
+        Long[] longArray = new Long[stringArray.length];
+        for (int i = 0; i < stringArray.length; i++) {
+            longArray[i] = Long.parseLong(stringArray[i]);
+        }
+        return longArray;
+    }
     private Member findMember(String username) throws BadRequestException {
         Optional<Member> findMember = memberRepository.findByUsername(username);
         Member member = ValidationService.validationMember(findMember);
@@ -262,6 +326,12 @@ public class MeetingService {
 
     private Category findCategory(String categoryName) throws BadRequestException {
         Optional<Category> findCategory = categoryRepository.findByName(categoryName);
+        Category category = ValidationService.validationCategory(findCategory);
+        return category;
+    }
+
+    private Category findCategory(Long categoryId) throws BadRequestException {
+        Optional<Category> findCategory = categoryRepository.findById(categoryId);
         Category category = ValidationService.validationCategory(findCategory);
         return category;
     }

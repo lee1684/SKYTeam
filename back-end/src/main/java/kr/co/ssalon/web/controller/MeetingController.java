@@ -111,7 +111,7 @@ public class MeetingController {
                 MeetingHomeSearchDTO meetingHomeSearchDTO = new MeetingHomeSearchDTO(meeting, username);
                 recommendMeetings.add(meetingHomeSearchDTO);
             }
-            MeetingHomeDTO recomMeetingHomeDTO = new MeetingHomeDTO("살롱추", recommendMeetings);
+            MeetingHomeDTO recomMeetingHomeDTO = new MeetingHomeDTO("살롱추천", recommendMeetings);
             categorizedMeetings.add(recomMeetingHomeDTO);
 
             for (int i = 1; i <= homeMeetingSearchCondition.getCategoryLen(); i++) {
