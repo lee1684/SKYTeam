@@ -1,5 +1,11 @@
+<div align="center">
+    
 # :dancers: SSALON: 증표 기반 일회성 모임관리 서비스
-![SSALON 메인 이미지](https://i.imgur.com/OVJeDPd.png)
+![SSALON 메인 이미지](https://i.imgur.com/OVJeDPd.png)  
+:house: **서비스 홈페이지** : [살롱 바로가기](https://ssalon.co.kr/web/ssalon-login)  
+:open_file_folder: **각 엔드별 상세 레포지토리** : [프론트엔드](./front-end) | [백엔드](./back-end)  
+
+</div> <br>
 
 ## 🔍 프로젝트 개요 (Overview)
 최근 사람들은 새로운 곳에 소속되어 새로운 관계가 생기는 것을 꺼려하는 등 집단주의 보다는 개인주의적 성향이 매우 강한 편입니다. 이러한 배경에서 일회성 모임에 대한 수요는 계속 해서 늘어나고 있는 상황입니다. 하지만 참가자 인증의 불편함, 모임 홍보의 어려움, 추가적인 추억 보존 수단 수요, 불만족스러운 서비스 이용자 경험 등으로 인해 현재 시장에 나와있는 서비스들은 소비자들의 수요를 충분히 만족시키지 못하고 있다고 판단됩니다.  
@@ -23,152 +29,38 @@
 ### 3D 인터랙티브 증표
 WebGL 라이브러리인 **Three.js**를 통해 증표를 렌더링하고, 이벤트 처리를 통해 상호작용 할 수 있도록 구현하였습니다. HTML Canvas 라이브러리인 **Fabric.js**를 통해 증표의 앞, 뒤를 꾸밀 수 있는 에디터를 개발했습니다.
 
-### 모임/카테고리 추천 시스템
-**OpenAI의 Embedding API**를 사용하여 사용자, 모임, 카테고리 정보를 임베딩합니다. 이를 MongoDB Atlas의 벡터 DB에 저장하여 신속한 유사도 계산 및 추천 결과를 도출하여 사용자 맞춤 모임 노출 및 카테고리 정렬이 가능합니다.
+### 모임/카테고리 추천 시스템 (_In progress_)
+**OpenAI의 Embedding API**를 사용하여 사용자, 모임, 카테고리 정보를 임베딩합니다. 이를 MongoDB Atlas의 벡터 DB에 저장하고 신속한 유사도 계산을 통한 추천 결과 도출로 사용자 맞춤 모임 노출 및 카테고리 정렬을 구현합니다.
 
 ### 모임 참가자 간 채팅
 **Web Socket** 구현 및 적용을 바탕으로 Web application과 Server간의 지속적이고 신속한 양방향 통신을 통해 모임 내 구성원 간 실시간 채팅 기능을 지원합니다.
 
-### 모임 참가자 인증
+### 실제 오프라인 모임 진행 시 모임 참가자 인증
 **ZXing** 라이브러리와 **WebRTC**를 사용하여 구현하였으며 QR코드 제시 및 촬영을 통해 오프라인 모임 참가자 인증이 가능합니다. 
 
 ## 🔧 주요 기술스택 (Technology Stacks)
 ### 프론트엔드 (Front-End)
-<table>
-    <tr>
-        <th><center>-</center></th>
-        <th align="center"><center>이름</center></th>
-        <th>사용 용도</th>
-    </tr>
-    <tr>
-        <td><center><img align="top" src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E" alt="JavaScript"></center></td>
-        <td valign="">JavaScript</td>
-        <td valign="">프론트엔드 주요 프로그래밍 언어</td>
-    </tr>
-    <tr>
-        <td><center><img align="top" src="https://img.shields.io/badge/angular-%23DD0031.svg?style=for-the-badge&logo=angular&logoColor=white" alt="Angular"></center></td>
-        <td valign="">Angular</td>
-        <td valign="">사용자 페이지 구현</td>
-    </tr>
-    <tr>
-        <td><center><img align="top" src="https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB" alt="React"></center></td>
-        <td valign="">React</td>
-        <td valign="">관리자 페이지 구현</td>
-    </tr>
-    <tr>
-        <td><center><img align="top" src="https://img.shields.io/badge/threejs-black?style=for-the-badge&logo=three.js&logoColor=white" alt="Three.js"></center></td>
-        <td valign="">Three.js</td>
-        <td valign="">3D 증표 구현</td>
-    </tr>
-    <tr>
-        <td><center><img align="top" src="https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white" alt="HTML Canvas"></center></td>
-        <td valign="">Fabric.js</td>
-        <td valign="">HTML Canvas 기반 라이브러리로 3D 증표 구현</td>
-    </tr>
-</table>
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
+![Angular](https://img.shields.io/badge/angular-%23DD0031.svg?style=for-the-badge&logo=angular&logoColor=white)
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![Threejs](https://img.shields.io/badge/threejs-black?style=for-the-badge&logo=three.js&logoColor=white)
+![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
 
 ### 백엔드 (Back-End)
-<table>
-    <tr>
-        <th><center>-</center></th>
-        <th align="center"><center>이름</center></th>
-        <th>사용 용도</th>
-    </tr>
-    <tr>
-        <td><center><img align="top" src="https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java"></center></td>
-        <td valign="">Java</td>
-        <td valign="">Spring Boot 주요 프로그래밍 언어</td>
-    </tr>
-    <tr>
-        <td><center><img align="top" src="https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54" alt="Python"></center></td>
-        <td valign="">Python</td>
-        <td valign="">AWS Lambda 주요 프로그래밍 언어</td>
-    </tr>
-    <tr>
-        <td><center><img align="top" src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=Spring%20Boot&logoColor=white" alt="Spring Boot"></center></td>
-        <td valign="">Spring Boot</td>
-        <td valign="">서버 주요 로직 구현</td>
-    </tr>
-    <tr>
-        <td><center><img align="top" src="https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white" alt="AWS"></center></td>
-        <td valign="">AWS Lambda</td>
-        <td valign="">추천 시스템 관련 로직 구현</td>
-    </tr>
-    <tr>
-        <td><center><img align="top" src="https://img.shields.io/badge/Spring_Security-6DB33F?style=for-the-badge&logo=Spring-Security&logoColor=white" alt="Spring Security"></center></td>
-        <td valign="">Spring Security</td>
-        <td valign="">역할 기반 권한 제어(Role-based Access Control)</td>
-    </tr>
-    <tr>
-        <td><center><img align="top" src="https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL"></center></td>
-        <td valign="">MySQL</td>
-        <td valign="">사용자 및 모임 정보 관리</td>
-    </tr>
-    <tr>
-        <td><center><img align="top" src="https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white" alt="Redis"></center></td>
-        <td valign="">Redis</td>
-        <td valign="">사용자 로그인 정보 관리</td>
-    </tr>
-    <tr>
-        <td><center><img align="top" src="https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB"></center></td>
-        <td valign="">MongoDB Atlas</td>
-        <td valign="">추천 시스템의 벡터 DB로서<br>임베딩 정보 관리 및 벡터 유사도 검색 수행</td>
-    </tr>
-    <tr>
-        <td><center><img align="top" src="https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white" alt="AWS"></center></td>
-        <td valign="">AWS EC2</td>
-        <td valign="">서버 인스턴스 서빙</td>
-    </tr>
-    <tr>
-        <td><center><img align="top" src="https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white" alt="AWS"></center></td>
-        <td valign="">AWS RDS</td>
-        <td valign="">MySQL DB 인스턴스 서빙</td>
-    </tr>
-    <tr>
-        <td><center><img align="top" src="https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white" alt="AWS"></center></td>
-        <td valign="">AWS ElasticCache</td>
-        <td valign="">Redis DB 인스턴스 서빙</td>
-    </tr>
-    <tr>
-        <td><center><img align="top" src="https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white" alt="AWS"></center></td>
-        <td valign="">AWS S3</td>
-        <td valign="">이미지, JSON 등 정적 파일 관리</td>
-    </tr>
-</table>
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+<img src="https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=Spring%20Boot&logoColor=white"/>
+![Spring Security](https://img.shields.io/badge/Spring_Security-6DB33F?style=for-the-badge&logo=Spring-Security&logoColor=white)
+![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white)
+![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
+![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
 
 ### 외부 API (External API)
-<table>
-    <tr>
-        <th><center>-</center></th>
-        <th align="center"><center>이름</center></th>
-        <th>사용 용도</th>
-    </tr>
-    <tr>
-        <td><center><img align="top" src="https://img.shields.io/badge/OpenAI-74aa9c?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI"></center></td>
-        <td valign="">OpenAI</td>
-        <td valign="">Embedding API 활용하여 사용자/모임/카테고리 정보에서 임베딩 추출</td>
-    </tr>
-    <tr>
-        <td><center><img align="top" src="https://img.shields.io/badge/kakao-ffcd00.svg?style=for-the-badge&logo=kakao&logoColor=black" alt="Kakao"></center></td>
-        <td valign="">Kakao</td>
-        <td valign="">소셜 로그인을 통한 OAuth 사용자 인증</td>
-    </tr>
-    <tr>
-        <td><center><img align="top" src="https://img.shields.io/badge/google-4285F4.svg?style=for-the-badge&logo=google&logoColor=white" alt="Google"></center></td>
-        <td valign="">Google</td>
-        <td valign="">소셜 로그인을 통한 OAuth 사용자 인증</td>
-    </tr>
-    <tr>
-        <td><center><img align="top" src="https://img.shields.io/badge/naver-03C75A.svg?style=for-the-badge&logo=naver&logoColor=white" alt="Naver"></center></td>
-        <td valign="">Naver</td>
-        <td valign="">소셜 로그인을 통한 OAuth 사용자 인증</td>
-    </tr>
-    <tr>
-        <td><center><img align="top" src="https://img.shields.io/badge/kakaopay-ffcd00.svg?style=for-the-badge&logo=kakao&logoColor=black" alt="Kakaopay"></center></td>
-        <td valign="">Kakaopay</td>
-        <td valign="">서비스 이용 중 발생하는 결제 처리</td>
-    </tr>
-</table>
+![OpenAI](https://img.shields.io/badge/OpenAI-74aa9c?style=for-the-badge&logo=openai&logoColor=white)
+![Google](https://img.shields.io/badge/google-4285F4?style=for-the-badge&logo=google&logoColor=white)
+![Kakao](https://img.shields.io/badge/kakao-ffcd00.svg?style=for-the-badge&logo=kakao&logoColor=000000)
+![Naver](https://img.shields.io/badge/naver-00C300?style=for-the-badge&logo=naver&logoColor=white)
 
 ### 기타 도구 (Other Tools)
 <table>
@@ -225,7 +117,6 @@ AJOU SOFTCON 홈페이지의 [살롱 소개 페이지](https://softcon.ajou.ac.k
 | [이정준](https://github.com/lee1684) | 소프트웨어학과 |   백엔드   |  -  |  |
 
 + 팀원 이름 클릭 시 해당 팀원의 Github 프로필로 연결됩니다.
-+ Special Thanks to 한수현 멘토님
 
 ## 🎊 2024-1 AJOU SOFTCON 전시 (2024-1 AJOU SOFTCON Presentation)
 [2024-1 AJOU SOFTCON](https://softcon.ajou.ac.kr/works/works.asp?uid=1784) : 이 링크를 클릭하여 SOFTCON 홈페이지 내 '살롱' 소개 페이지로 이동할 수 있습니다.
