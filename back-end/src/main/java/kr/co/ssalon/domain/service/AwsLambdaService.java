@@ -54,7 +54,10 @@ public class AwsLambdaService {
                         .path("/api/embedding/user")
                         .build())
                 .bodyValue(jsonObject.toString())
-                .retrieve();
+                .retrieve()
+                .bodyToMono(String.class)
+                .timeout(Duration.ofSeconds(10))
+                .block();
 
         log.warn("UserEmbedding query sent.");
     }
@@ -71,7 +74,10 @@ public class AwsLambdaService {
                         .path("/api/embedding/moim")
                         .build())
                 .bodyValue(jsonObject.toString())
-                .retrieve();
+                .retrieve()
+                .bodyToMono(String.class)
+                .timeout(Duration.ofSeconds(10))
+                .block();
     }
 
     public void updateCategoryEmbedding(Long categoryID, String categoryName, String prompt) {
@@ -86,6 +92,9 @@ public class AwsLambdaService {
                         .path("/api/embedding/category")
                         .build())
                 .bodyValue(jsonObject.toString())
-                .retrieve();
+                .retrieve()
+                .bodyToMono(String.class)
+                .timeout(Duration.ofSeconds(10))
+                .block();
     }
 }
