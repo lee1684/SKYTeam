@@ -17,6 +17,7 @@ import kr.co.ssalon.domain.repository.MeetingRepository;
 import kr.co.ssalon.domain.service.CategoryService;
 import kr.co.ssalon.domain.service.MeetingService;
 import kr.co.ssalon.domain.service.MemberService;
+import kr.co.ssalon.domain.service.RecommendService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import kr.co.ssalon.web.dto.*;
 import lombok.*;
@@ -47,6 +48,7 @@ public class MeetingController {
     private final MeetingRepository meetingRepository;
     private final CategoryRepository categoryRepository;
     private final CategoryService categoryService;
+    private final RecommendService recommendService;
 
     @Operation(summary = "모임 참가")
     @ApiResponse(responseCode = "200", description = "모임 참가 성공", content = {
@@ -279,4 +281,24 @@ public class MeetingController {
         }
     }
 
+    @Operation(summary = "모임 임베딩 전체 강제 갱신")
+    @ApiResponse(responseCode = "200", description = "모임 임베딩 전체 강제 갱신 요청 성공", content = {
+            @Content(schema = @Schema(implementation = String.class))
+    })
+    @GetMapping("/admin/moims/embedding")
+    public ResponseEntity<String> updateMoimEmbeddingAll(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
+        try {
+            Member member = memberService.findMember(customOAuth2Member.getUsername());
+
+            if (member.getRole().equals("ROLE_ADMIN")) {
+                recommendService.updateMoimEmbeddingAll();
+                return ResponseEntity.ok( "Request Sent");
+            }
+            else {
+                return ResponseEntity.badRequest().build();
+            }
+        } catch (BadRequestException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }
