@@ -61,6 +61,9 @@ public class MeetingService {
         // 티켓 초기 정보 설정
         ticketService.initTicket(savedMeeting.getId(), "N");
 
+        // 모임 정보 임베딩
+        recommendService.updateMoimEmbedding(savedMeeting);
+
         return savedMeeting.getId();
     }
 
