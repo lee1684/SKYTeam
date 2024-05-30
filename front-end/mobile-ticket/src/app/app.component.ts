@@ -30,10 +30,10 @@ export class AppComponent {
   public ngOnInit(): void {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${'access'}=`);
-    //this._apiExecutorService.setToken(parts.pop()!.split(';').shift()!);
-    this._apiExecutorService.setToken(
-      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTcwNDA4MzYsImV4cCI6MTcxNzEyNzIzNn0.GlVeJXSNZUifBO6Zj86EpczGl1VO2Y9bVxJ-deR3j-s'
-    );
+    this._apiExecutorService.setToken(parts.pop()!.split(';').shift()!);
+    //this._apiExecutorService.setToken(
+    // 'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTcwNTU3MzksImV4cCI6MTcxNzE0MjEzOX0.RX0oFq6_u6llid2YjAG7-x6W6T5O3fG6GOTUScf3XWE'
+    //);
 
     this._apiExecutorService.getMyProfile();
   }

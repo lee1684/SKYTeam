@@ -8,7 +8,7 @@ import { ButtonElementsService } from '../service/button-elements.service';
 import { SquareButtonComponent } from '../ssalon-component/square-button/square-button.component';
 import { CreateMeetingInfoComponent } from './create-meeting-info/create-meeting-info.component';
 import { CreateTicketComponent } from './create-ticket/create-ticket.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ApiExecutorService } from '../service/api-executor.service';
 
 export enum CreateMeetingStep {
@@ -43,6 +43,7 @@ export class MeetingCreateComponent {
   createMeetingInfoComponent: CreateMeetingInfoComponent | null = null;
   public createMeetingStep = CreateMeetingStep;
   public nowStep: CreateMeetingStep = CreateMeetingStep.INFO;
+  public meetingId: string | null = null;
   public meetingInfo: any = {
     title: '',
     description: '',
@@ -62,6 +63,7 @@ export class MeetingCreateComponent {
     private _location: Location,
     private _router: Router
   ) {}
+  public async ngOnInit() {}
   public onClickBackButton() {
     if (this.nowStep === CreateMeetingStep.TICKET) {
       this.nowStep = CreateMeetingStep.INFO;

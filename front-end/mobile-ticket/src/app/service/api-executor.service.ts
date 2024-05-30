@@ -29,8 +29,7 @@ export class ApiExecutorService {
   public apiURL: string = 'https://ssalon.co.kr/api';
   //public apiURL: string = 'http://localhost:8080/api';
   public tokens = {};
-  public token: string =
-    'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTcwNDA4MzYsImV4cCI6MTcxNzEyNzIzNn0.GlVeJXSNZUifBO6Zj86EpczGl1VO2Y9bVxJ-deR3j-s';
+  public token: string = '';
   public refreshToken: string = '';
   public myProfile: Profile = undefined as unknown as Profile;
   constructor(private _ssalonConfigService: SsalonConfigService) {
@@ -279,6 +278,18 @@ export class ApiExecutorService {
   public async getMoimInfo(moimId: string) {
     try {
       let response = await this.apiExecutorJson?.get(`/moims/${moimId}`);
+      return response!.data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  public async editMoimInfo(moimId: string, body: any) {
+    try {
+      let response = await this.apiExecutorJson?.patch(
+        `/moims/${moimId}`,
+        body
+      );
       return response!.data;
     } catch (e) {
       console.log(e);

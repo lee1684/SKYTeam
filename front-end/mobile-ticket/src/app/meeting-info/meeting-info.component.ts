@@ -207,13 +207,22 @@ export class MeetingInfoComponent {
       await this._apiExecutorService.joinMoim(this.moimId);
       location.reload();
     } else {
-      if (this.nowTab === this.meetingInfoTabEnum.TICKET) {
+      if (this.nowTab === this.meetingInfoTabEnum.TICKET && this.isCreator) {
         this._router.navigate(['/web/ticket'], {
           queryParams: {
             moimId: this.moimId,
             viewType: 'edit',
             createTemplate: 'edit',
             face: 'front',
+          },
+        });
+      } else if (
+        this.nowTab === this.meetingInfoTabEnum.INFO &&
+        this.isCreator
+      ) {
+        this._router.navigate(['/web/meeting-create'], {
+          queryParams: {
+            moimId: this.moimId,
           },
         });
       }
