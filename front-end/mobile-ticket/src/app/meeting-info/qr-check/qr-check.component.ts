@@ -38,7 +38,18 @@ export class QrCheckComponent {
     text: string;
   } = { checkStatus: null, color: '#006BFF', text: 'QR코드를 인식해주세요.' };
   constructor(private _apiExecutorService: ApiExecutorService) {}
-  public ngOnInit() {}
+  public async ngOnInit() {
+    this.joiningUsers = [];
+    let userInfos = await this._apiExecutorService.getJoiningUsers(this.moimId);
+    userInfos.forEach((userInfo: any, index: number) => {
+      this.joiningUsers.push({
+        imgSrc: userInfo.profilePictureUrl,
+        label: userInfo.nickname,
+        value: userInfo.userId,
+        status: userInfo.attendance,
+      });
+    });
+  }
   public async ngAfterViewChecked() {
     this.startQRCodeDetection();
   }
@@ -143,5 +154,9 @@ export class QrCheckComponent {
       this.isDetectingQRCode = false;
       this.isCameraLoaded = false;
     }
+  }
+
+  public isLoadedJoiningUsers() {
+    return this.joiningUsers.length > 0;
   }
 }

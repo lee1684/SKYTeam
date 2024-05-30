@@ -190,6 +190,7 @@ export class TicketComponent {
 
   public async onClickPreviewButton() {
     await this.updateServer();
+    this.createTemplate = 'edit';
     this.changeViewMode(MobileTicketViewMode.APPVIEW);
   }
 

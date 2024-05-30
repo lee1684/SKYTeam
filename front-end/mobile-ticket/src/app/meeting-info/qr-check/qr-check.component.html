@@ -9,7 +9,7 @@
         </div>
     </div>
 
-    <div id="join-user-container" [style.margin-top]="'30px'">
+    <div id="join-user-container" *ngIf="this.isLoadedJoiningUsers()" [style.margin-top]="'30px'">
         <div class="horizontal-container" [style.justify-content]="'center'">
             <div id="qr-checking-user-container">
                 <div id="qr-checking-user-profile-container" [style.width.px]="52" [style.height.px]="52">

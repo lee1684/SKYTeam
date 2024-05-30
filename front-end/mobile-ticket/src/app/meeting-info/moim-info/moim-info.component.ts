@@ -22,9 +22,7 @@ export class MoimInfoComponent {
   @Input() moimInfo: any = {};
   constructor(private _apiExecutorService: ApiExecutorService) {}
 
-  public async ngOnInit() {
-    console.log(this.moimInfo);
-  }
+  public async ngOnInit() {}
 
   public getDate() {
     const date = new Date(this.moimInfo.meetingDate);

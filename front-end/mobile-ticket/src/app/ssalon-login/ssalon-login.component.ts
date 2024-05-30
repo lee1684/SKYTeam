@@ -6,11 +6,12 @@ import {
 } from '../ssalon-component/simple-toggle-group/simple-toggle-group.component';
 import { Router } from '@angular/router';
 import { ButtonElementsService } from '../service/button-elements.service';
+import { TicketComponent } from '../ticket/ticket.component';
 
 @Component({
   selector: 'app-ssalon-login',
   standalone: true,
-  imports: [SimpleToggleGroupComponent],
+  imports: [SimpleToggleGroupComponent, TicketComponent],
   templateUrl: './ssalon-login.component.html',
   styleUrl: './ssalon-login.component.scss',
 })

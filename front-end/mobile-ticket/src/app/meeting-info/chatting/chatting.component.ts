@@ -177,7 +177,6 @@ export class ChattingComponent {
   private flushAfterSendMessage() {
     this.simpleInput!.innerText = '';
     this._imageUrl = '';
-    this.fileInput.nativeElement.value = '';
   }
 
   public isMyMsg(message: any) {
