@@ -118,8 +118,8 @@ public class Member {
         changeAddress(address);
         changeIntroduction(introduction);
         addInterests(interests);
-        changeMeetingRecommendation("1,2,3,4,5,6,7,8,9,10");
-        changeCategoryRecommendation("1,2,3,4,5,6,7,8,9,10");
+        changeMeetingRecommendation("[1,2,3,4,5,6,7,8,9,10]");
+        changeCategoryRecommendation("[1,2,3,4,5,6,7,8,9,10]");
     }
 
     // ***** 연관 메서드 *****
