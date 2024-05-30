@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: ssalon
+  profiles:
+    active: test
+
+
+
+  # url, username, password edit
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/?serverTimezone=Asia/Seoul
+    username:
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
