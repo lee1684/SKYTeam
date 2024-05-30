@@ -122,7 +122,7 @@ public class MeetingService {
 
     // 모임 정보 업데이트
     @Transactional
-    public Long editMoim(String username, Long moimId, MeetingDomainDTO meetingDomainDTO) throws BadRequestException {
+    public Long editMoim(String username, Long moimId, MeetingInfoDTO meetingInfoDTO) throws BadRequestException {
 
         // 모임 개최자 찾기
         Member currentUser = findMember(username);
@@ -136,10 +136,8 @@ public class MeetingService {
         }
 
         // 카테고리 찾기
-        Category category = findCategory(meetingDomainDTO.getCategory());
-
-        // Dirty Checking
-        currentMeeting.updateMeeting(category, meetingDomainDTO.getMeetingPictureUrls(), meetingDomainDTO.getTitle(), meetingDomainDTO.getDescription(), meetingDomainDTO.getLocation(), meetingDomainDTO.getCapacity(), meetingDomainDTO.getMeetingDate());
+        Category category = findCategory(meetingInfoDTO.getCategory());
+        currentMeeting.updateMeeting(category, meetingInfoDTO.getPayment(), meetingInfoDTO.getMeetingPictureUrls(), meetingInfoDTO.getTitle(), meetingInfoDTO.getDescription(), meetingInfoDTO.getLocation(), meetingInfoDTO.getCapacity(), meetingInfoDTO.getMeetingDate(), meetingInfoDTO.getIsSharable());
 
         // 임베딩 업데이트
         Meeting updatedMeeting = findMeeting(moimId);
@@ -150,10 +148,10 @@ public class MeetingService {
 
     // 모임 정보 업데이트
     @Transactional
-    public Long editMoim(Long moimId, MeetingDomainDTO meetingDomainDTO) throws BadRequestException {
+    public Long editMoim(Long moimId, MeetingInfoDTO meetingInfoDTO) throws BadRequestException {
         Meeting currentMeeting = findMeeting(moimId);
-        Category category = findCategory(meetingDomainDTO.getCategory());
-        currentMeeting.updateMeeting(category, meetingDomainDTO.getMeetingPictureUrls(), meetingDomainDTO.getTitle(), meetingDomainDTO.getDescription(), meetingDomainDTO.getLocation(), meetingDomainDTO.getCapacity(), meetingDomainDTO.getMeetingDate());
+        Category category = findCategory(meetingInfoDTO.getCategory());
+        currentMeeting.updateMeeting(category, meetingInfoDTO.getPayment(), meetingInfoDTO.getMeetingPictureUrls(), meetingInfoDTO.getTitle(), meetingInfoDTO.getDescription(), meetingInfoDTO.getLocation(), meetingInfoDTO.getCapacity(), meetingInfoDTO.getMeetingDate(), meetingInfoDTO.getIsSharable());
 
         Meeting updatedMeeting = findMeeting(moimId);
         recommendService.updateMoimEmbedding(updatedMeeting);
