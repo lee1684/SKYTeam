@@ -1,0 +1,48 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.container::-webkit-scrollbar {
+    display: none;
+}
+
+#progress-bar {
+    width: 350px;
+    height: 10px;
+    margin-top: 28px;
+    margin-bottom: 28px;
+    appearance: none;
+}
+
+#progress-bar::-webkit-progress-bar {
+    background-color: #efefef;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+#progress-bar::-webkit-progress-value {
+    background-color: #006BFF;
+}
+
+#onboarding-label {
+    width: 350px;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: left;
+}
+
+#profile-img {
+    margin-bottom: 24px;
+}
+
+#next-button-container {
+    margin-bottom: 20px;
+}

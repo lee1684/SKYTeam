@@ -1,0 +1,13 @@
+<div id="container" #toggleButtonContainer>
+    <div *ngFor="let row of this.modifiedSsalonColors">
+        <div class="color-row">
+            <div class="color-back" *ngFor="let element of row" [style.width]="this.outerSize"
+                [style.height]="this.outerSize" (click)="this.onClickToggleButton(element.value)" #toggleButton>
+                <div class="color-circle" [style.background-color]="element.color" [style.width]="this.innerSize"
+                    [style.height]="this.innerSize"></div>
+
+            </div>
+        </div>
+    </div>
+
+</div>

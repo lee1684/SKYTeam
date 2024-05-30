@@ -1,0 +1,61 @@
+.container {
+    width: 100%;
+    height: 100%;
+
+    position: relative;
+}
+
+
+
+#msg-container {
+    width: 100%;
+    height: calc(100% - 100px);
+    overflow: scroll;
+}
+
+#msg-container::-webkit-scrollbar {
+    display: none;
+}
+
+#send-input {
+    position: absolute;
+    width: 350px;
+    left: 50%;
+    bottom: 0px;
+    transform: translateX(-50%);
+}
+
+#participants-container {
+    position: absolute;
+    width: 350px;
+    overflow-x: hidden;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+#participant-profile-imgs {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    margin-right: 10px;
+}
+
+#profile-img {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#participant-nums {
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    margin-right: 10px;
+}

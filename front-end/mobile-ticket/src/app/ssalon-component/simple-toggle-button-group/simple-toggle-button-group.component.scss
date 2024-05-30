@@ -1,0 +1,27 @@
+.container {
+    width: auto;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+}
+
+.toggle-button {
+    height: 100%;
+    min-width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    margin: 5px;
+    color: #efefef;
+    background-color: transparent;
+}
+
+.toggle-button:hover {
+    cursor: pointer;
+}
+
+
+.selected {
+    background-color: #0090f2;
+}

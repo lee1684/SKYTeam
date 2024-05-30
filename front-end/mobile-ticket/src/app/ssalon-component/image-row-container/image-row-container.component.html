@@ -1,0 +1,48 @@
+<div>
+    <div id="label-container" *ngIf="this.label !== ''">
+        {{this.label}}
+        <span id="extra-label-container" [style.color]="this.extraLabelColor"
+            *ngIf="this.extraLabel !== ''">{{this.extraLabel}}</span>
+    </div>
+    <div>
+        <div *ngIf="this.isTicketContainer">
+            <ng-container *ngFor="let row of this.modifiedTickets">
+                <div class="image-row-container" [style.margin-bottom.px]="(this.modifiedTickets.length > 1)?16:0"
+                    [style.width.px]="this.ticketRowContainerWidth">
+                    <ng-container *ngFor="let ticket of row, index as i">
+                        <div class="image-container" (click)="onClickTicket(ticket.moimId)">
+
+                            <svg width="175" height="300" viewBox="0 0 175 300" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect width="175" height="300" rx="10" [attr.fill]="ticket.backgroundColor" />
+                            </svg>
+
+                            <img class="deco-container" [ngSrc]="this.getThumbSrc(ticket.moimId)" height="300"
+                                width="175" priority="true" />
+                            <div class="sub-info-container" *ngIf="ticket.isCreator">
+                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                        d="M9.0012 1.94922C9.25734 1.94922 9.49141 2.09419 9.60551 2.32351L11.402 5.93387L15.4268 3.72795C15.6579 3.60129 15.9415 3.6207 16.1532 3.77764C16.3649 3.93458 16.4659 4.20037 16.4119 4.45829L14.7244 12.5126C14.6588 12.8253 14.3831 13.0492 14.0637 13.0492H3.9387C3.61925 13.0492 3.34355 12.8253 3.27804 12.5126L1.59054 4.45829C1.5365 4.20037 1.6375 3.93458 1.84919 3.77764C2.06087 3.6207 2.34454 3.60129 2.57562 3.72795L6.60038 5.93387L8.39688 2.32351C8.51099 2.09419 8.74506 1.94922 9.0012 1.94922Z"
+                                        fill="#ffffff" />
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                        d="M3.4512 14.9992C3.4512 14.6264 3.7534 14.3242 4.1262 14.3242H13.8762C14.249 14.3242 14.5512 14.6264 14.5512 14.9992C14.5512 15.372 14.249 15.6742 13.8762 15.6742H4.1262C3.7534 15.6742 3.4512 15.372 3.4512 14.9992Z"
+                                        fill="#ffffff" />
+                                </svg>
+
+                            </div>
+                            <div class="title-container">{{ticket.meetingTitle}}</div>
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-container>
+        </div>
+        <div *ngIf="!this.isTicketContainer" class="image-row-container">
+            <ng-container *ngFor="let image of images">
+                <img class="image-container" [src]="image.imgSrc" [height]="this.imageHeight"
+                    (click)="this.onClickImage(image.value)" />
+            </ng-container>
+
+        </div>
+    </div>
+</div>

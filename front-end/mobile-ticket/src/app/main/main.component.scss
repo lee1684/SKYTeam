@@ -1,0 +1,57 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-y: scroll;
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.container::-webkit-scrollbar {
+    display: none;
+}
+
+#logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    margin-top: 14px;
+    width: 95%;
+}
+
+#tab-container {
+    height: calc(100% - 80px);
+    width: 95%;
+    margin-top: 20px;
+    overflow-y: scroll;
+    position: relative;
+}
+
+#tab-container::-webkit-scrollbar {
+    display: none;
+}
+
+
+#navigator-container {
+    width: 100%;
+}
+
+.navigator-button {
+    height: 20px;
+}
+
+.navigator-button svg {
+    fill: #BCBCBC;
+}
+
+.navigator-button-selected {
+    height: 20px;
+    fill: black;
+    stroke: rgba(0, 0, 0, 0);
+}
+
+.navigator-button-selected svg {
+    fill: #2c2c2c;
+}

@@ -1,0 +1,25 @@
+<div class="container">
+    <div id="logo-container">
+        <img src="assets/ssalon_logo_hand.svg" height="30px" />
+    </div>
+    <div id="tab-container">
+        <ng-container *ngIf="this.nowTab === mainTabEnum.MAIN">
+            <app-moim-list></app-moim-list>
+        </ng-container>
+        <div *ngIf="this.nowTab === mainTabEnum.SEARCH">
+            <app-moim-search></app-moim-search>
+        </div>
+        <div *ngIf="this.nowTab === mainTabEnum.MINE">
+            <app-my-ticket-list></app-my-ticket-list>
+        </div>
+        <div *ngIf="this.nowTab === mainTabEnum.PROFILE">
+            <app-profile></app-profile>
+        </div>
+    </div>
+
+    <div id="navigator-container">
+        <app-bottom-navigator
+            (onClickNavigatorButtonEvent)="this.onClickNavigatorButton($event)"></app-bottom-navigator>
+    </div>
+
+</div>
