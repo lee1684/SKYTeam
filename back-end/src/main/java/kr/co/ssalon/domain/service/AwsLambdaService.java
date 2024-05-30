@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+
 @Service
 public class AwsLambdaService {
 
@@ -23,7 +25,8 @@ public class AwsLambdaService {
                         .queryParam("userID", userID)
                         .build())
                 .retrieve()
-                .bodyToMono(String.class);
+                .bodyToMono(String.class)
+                .timeout(Duration.ofSeconds(10));
     }
 
     public Mono<String> fetchCategoryRecommendation(Long userID) {
@@ -33,7 +36,8 @@ public class AwsLambdaService {
                         .queryParam("userID", userID)
                         .build())
                 .retrieve()
-                .bodyToMono(String.class);
+                .bodyToMono(String.class)
+                .timeout(Duration.ofSeconds(10));
     }
 
     public void updateUserEmbedding(Long userID, String username, String prompt) {
