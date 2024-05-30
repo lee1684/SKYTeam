@@ -34,9 +34,14 @@ public class RecommendService {
         prompt.append("이외 흥미 있는 여러가지 것들을 좋아합니다. ");
         prompt.append(member.getIntroduction());
 
-        awsLambdaService.updateUserEmbedding(memberId, memberName, prompt.toString());
-        String moimResult = awsLambdaService.fetchMoimRecommendation(memberId).block();
-        String categoryResult = awsLambdaService.fetchCategoryRecommendation(memberId).block();
+        String moimResult = "1,2,3,4,5,6,7,8,9,10";
+        String categoryResult = "1,2,3,4,5,6,7,8,9,10";
+        try {
+            awsLambdaService.updateUserEmbedding(memberId, memberName, prompt.toString());
+        } finally {
+            moimResult = awsLambdaService.fetchMoimRecommendation(memberId).block();
+            categoryResult = awsLambdaService.fetchCategoryRecommendation(memberId).block();
+        }
 
         member.changeMeetingRecommendation(moimResult);
         member.changeCategoryRecommendation(categoryResult);
