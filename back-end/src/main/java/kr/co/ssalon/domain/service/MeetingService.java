@@ -9,6 +9,7 @@ import org.apache.coyote.BadRequestException;
 import kr.co.ssalon.web.dto.MeetingSearchCondition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,7 @@ public class MeetingService {
     private final CategoryRepository categoryRepository;
     private final MeetingOutRepository meetingOutRepository;
     private final RecommendService recommendService;
+    private final AwsLambdaService awsLambdaService;
 
     // 모임 개설
     @Transactional
@@ -239,6 +241,23 @@ public class MeetingService {
 
         else {
             throw new BadRequestException("요청자와 타겟의 관계가 잘못 설정되었습니다.");
+        }
+    }
+
+    public void updateMoimEmbeddingAll() {
+
+        List<Meeting> allMeetings = meetingRepository.findAll();
+
+        for (Meeting meeting : allMeetings) {
+            Long moimId = meeting.getId();
+            String moimTitle = meeting.getTitle();
+            StringBuilder prompt = new StringBuilder();
+
+            prompt.append("우리 모임은 ").append(meeting.getCategory().getName()).append(" 모임입니다. ");
+            prompt.append("우리 모임은 ").append(meeting.getLocation()).append("에서 열립니다. ");
+            prompt.append(meeting.getDescription());
+
+            awsLambdaService.updateMoimEmbedding(moimId, moimTitle, prompt.toString());
         }
     }
 
