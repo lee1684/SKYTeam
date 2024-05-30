@@ -1,0 +1,40 @@
+<app-simple-input
+  [label]="'닉네임'"
+  [innerText]="userInfo.nickname"
+  [extraLabel]="'(필수)'"
+  [extraLabelColor]="'#0090f2'"
+  [placeholder]="'닉네임을 입력해주세요.'"
+  (onChangeEvent)="this.onChangeUserInfo('nickname', $event)"
+></app-simple-input>
+<app-simple-toggle
+  [label]="'성별'"
+  [extraLabel]="'(필수)'"
+  [extraLabelColor]="'#0090f2'"
+  [buttonElements]="this.buttonElementsService.genderSelectionButtons"
+  [buttonWidth]="110"
+  (onClickToggleButtonEvent)="this.onChangeUserInfo('gender', $event)"
+></app-simple-toggle>
+<app-simple-input
+  [label]="'소개'"
+  [placeholder]="'간단한 소개를 해주세요.'"
+  (onChangeEvent)="this.onChangeUserInfo('introduction', $event)"
+></app-simple-input>
+<div class="container">
+  <app-simple-toggle
+    [buttonElements]="this.buttonElementsService.locationSelectionButtons"
+    [columnNum]="1"
+    [buttonWidth]="350"
+    [align]="'left'"
+    (onClickToggleButtonEvent)="this.onChangeUserInfo('address', $event)"
+  ></app-simple-toggle>
+</div>
+<div class="container">
+  <app-simple-toggle
+    [buttonElements]="this.buttonElementsService.interestSelectionButtons"
+    [columnNum]="1"
+    [buttonWidth]="350"
+    [align]="'left'"
+    [multiSelection]="true"
+    (onClickToggleButtonEvent)="this.onChangeUserInfo('interests', $event)"
+  ></app-simple-toggle>
+</div>

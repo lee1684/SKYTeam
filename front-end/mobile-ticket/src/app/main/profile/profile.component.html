@@ -4,9 +4,10 @@
     <div id="profile-img-container">
         <app-profile-img [imgSrc]="this.myProfile.profilePictureUrl" [isEditable]="false"></app-profile-img>
     </div>
-    <app-simple-content [title]="'이름'" [content]="this.myProfile.nickname"></app-simple-content>
+    <app-simple-content [title]="'닉네임'" [content]="this.myProfile.nickname"></app-simple-content>
     <app-simple-content [title]="'이메일'" [content]="this.myProfile.email"></app-simple-content>
     <app-simple-content [title]="'성별'" [content]="this.getGender(this.myProfile.gender)"></app-simple-content>
     <app-simple-content [title]="'지역'" [content]="this.myProfile.address"></app-simple-content>
     <app-simple-content [title]="'소개'" [content]="this.myProfile.introduction"></app-simple-content>
+    <button (click)="onClickProfileUpdate()">프로필 수정</button>
 </div>

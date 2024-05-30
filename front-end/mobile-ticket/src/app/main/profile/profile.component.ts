@@ -6,6 +6,7 @@ import {
 } from '../../service/api-executor.service';
 import { ProfileImgComponent } from '../../ssalon-component/profile-img/profile-img.component';
 import { TopNavigatorComponent } from '../../ssalon-component/top-navigator/top-navigator.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -16,7 +17,10 @@ import { TopNavigatorComponent } from '../../ssalon-component/top-navigator/top-
 })
 export class ProfileComponent {
   @Input() myProfile: Profile = undefined as unknown as Profile;
-  constructor(private _apiExecutorService: ApiExecutorService) {}
+  constructor(
+    private _router: Router,
+    private _apiExecutorService: ApiExecutorService
+  ) {}
   public ngOnInit() {
     this.myProfile = this._apiExecutorService.myProfile;
   }
@@ -28,5 +32,9 @@ export class ProfileComponent {
     } else {
       return '기타';
     }
+  }
+
+  public onClickProfileUpdate(): void {
+    this._router.navigate(['/web/profile-update']);
   }
 }

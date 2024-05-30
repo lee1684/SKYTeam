@@ -11,6 +11,7 @@ import { MoimReviewComponent } from './meeting-info/moim-review/moim-review.comp
 import { MoimReviewCreateComponent } from './meeting-info/moim-review/moim-review-create/moim-review-create.component';
 import { MeetingShareComponent } from './meeting-share/meeting-share.component';
 import { MeetingEditComponent } from './meeting-edit/meeting-edit.component';
+import { ProfileUpdateComponent } from './main/profile/profile-update/profile-update.component';
 
 export const routes: Routes = [
   {
@@ -52,6 +53,10 @@ export const routes: Routes = [
   {
     path: 'web/meeting-edit',
     component: MeetingEditComponent,
+  },
+  {
+    path: 'web/profile-update',
+    component: ProfileUpdateComponent,
   },
 ];
 
