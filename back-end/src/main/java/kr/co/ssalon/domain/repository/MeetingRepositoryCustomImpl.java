@@ -23,7 +23,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.querydsl.jpa.JPAExpressions.select;
 import static kr.co.ssalon.domain.entity.QMeeting.meeting;
@@ -48,6 +50,9 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
         // Find member by username (assuming you have a method to do this)
         Member member = findMemberByUsername(username);
 
+
+
+
         List<Meeting> content = query
                 .selectFrom(meeting)
                 .where(
@@ -55,7 +60,7 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
                         isEndEq(meetingSearchCondition.getIsEnd()),
                         isParticipantEq(meetingSearchCondition.getIsParticipant(), member)
                 )
-                .orderBy(orderEq(meetingSearchCondition.getOrder()))
+                .orderBy(orderEq(meetingSearchCondition.getOrder(), member))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -104,7 +109,7 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
     }
 
     // 정렬 필터링
-    private OrderSpecifier<?> orderEq(MeetingOrder meetingOrder) {
+    private OrderSpecifier<?> orderEq(MeetingOrder meetingOrder, Member member) {
         Order desc = Order.DESC;
         Order asc = Order.ASC;
         if (meetingOrder == MeetingOrder.CAPACITY) {
@@ -115,6 +120,19 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
         }
         if (meetingOrder == MeetingOrder.RECENT) {
             return new OrderSpecifier<>(desc, meeting.meetingDate);
+        }
+        if (meetingOrder == MeetingOrder.RECOMMEND) {
+            String recommendation = member.getMeetingRecommendation();
+            if (recommendation != null && !recommendation.isEmpty()) {
+                List<Long> recommendedIds = Arrays.stream(recommendation
+                                .replaceAll("[\\[\\]]", "")
+                                .split(","))
+                        .map(Long::parseLong)
+                        .collect(Collectors.toList());
+                return new OrderSpecifier<>(Order.ASC, Expressions.stringTemplate(
+                        "FIELD({0}, {1})", meeting.id, String.join(",", recommendedIds.stream().map(String::valueOf).collect(Collectors.toList()))
+                ));
+            }
         }
         return new OrderSpecifier(asc, NullExpression.DEFAULT, OrderSpecifier.NullHandling.Default);
     }
