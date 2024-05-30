@@ -306,7 +306,7 @@ public class MeetingController {
             Member member = memberService.findMember(customOAuth2Member.getUsername());
 
             if (member.getRole().equals("ROLE_ADMIN")) {
-                recommendService.updateMoimEmbeddingAll();
+                meetingService.updateMoimEmbeddingAll();
                 return ResponseEntity.ok( "Request Sent");
             }
             else {

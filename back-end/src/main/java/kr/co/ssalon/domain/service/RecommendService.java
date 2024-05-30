@@ -74,22 +74,4 @@ public class RecommendService {
 
         awsLambdaService.updateMoimEmbedding(moimId, moimTitle, prompt.toString());
     }
-
-    @Async
-    public void updateMoimEmbeddingAll() {
-
-        List<Meeting> allMeetings = meetingRepository.findAll();
-
-        for (Meeting meeting : allMeetings) {
-            Long moimId = meeting.getId();
-            String moimTitle = meeting.getTitle();
-            StringBuilder prompt = new StringBuilder();
-
-            prompt.append("우리 모임은 ").append(meeting.getCategory()).append(" 모임입니다. ");
-            prompt.append("우리 모임은 ").append(meeting.getLocation()).append("에서 열립니다. ");
-            prompt.append(meeting.getDescription());
-
-            awsLambdaService.updateMoimEmbedding(moimId, moimTitle, prompt.toString());
-        }
-    }
 }
