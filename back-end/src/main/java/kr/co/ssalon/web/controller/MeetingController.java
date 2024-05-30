@@ -205,10 +205,10 @@ public class MeetingController {
             @Content(schema = @Schema(implementation = Long.class))
     })
     @PatchMapping("/api/moims/{moimId}")
-    public ResponseEntity<?> updateMoim(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MeetingDomainDTO meetingDomainDTO) {
+    public ResponseEntity<?> updateMoim(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MeetingInfoDTO meetingInfoDTO) {
         try {
             String username = customOAuth2Member.getUsername();
-            return ResponseEntity.ok().body(meetingService.editMoim(username, moimId, meetingDomainDTO));
+            return ResponseEntity.ok().body(meetingService.editMoim(username, moimId, meetingInfoDTO));
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

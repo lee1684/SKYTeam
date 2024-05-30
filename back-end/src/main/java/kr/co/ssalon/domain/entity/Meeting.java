@@ -91,22 +91,25 @@ public class Meeting {
         this.thumbnail = thumbnail != null ? thumbnail : this.thumbnail;
     }
 
+    public void changePayment(Integer payment) {this.payment = payment != null ? payment : this.payment;}
 
+    public void changeIsSharable(Boolean isSharable) {this.isSharable = isSharable != null ? isSharable : this.isSharable;}
     public void addMeetingPictureUrls(List<String> meetingPictureUrls) {
         for (String meetingPictureUrl : meetingPictureUrls) {
             getMeetingPictureUrls().add(meetingPictureUrl);
         }
     }
 
-    public void updateMeeting(Category category, List<String> meetingPictureUrls, String title, String description, String location, Integer capacity, LocalDateTime meetingDates) {
+    public void updateMeeting(Category category, Integer payment, List<String> meetingPictureUrls, String title, String description, String location, Integer capacity, LocalDateTime meetingDates, Boolean isSharable) {
         changeCategory(category);
+        changePayment(payment);
         addMeetingPictureUrls(meetingPictureUrls);
         changeTitle(title);
         changeDescription(description);
         changeLocation(location);
         changeCapacity(capacity);
         changeLocalDateTime(meetingDates);
-
+        changeIsSharable(isSharable);
     }
 
     // ***** 연관 메서드 *****
