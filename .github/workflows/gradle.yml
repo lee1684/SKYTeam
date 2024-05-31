@@ -49,7 +49,7 @@ jobs:
           ls -al
           touch ./application.yml
           
-          # GitHub-Actions에서 설정한 값을 application-aws.yml 파일에 쓰기
+          # GitHub-Actions에서 설정한 값을 application.yml 파일에 쓰기
           echo "copy properties"
           echo "${{ secrets.AWS_PROPERTIES }}" > ./application.yml
         shell: bash
