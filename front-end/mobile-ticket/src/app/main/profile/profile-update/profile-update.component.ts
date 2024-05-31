@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { RegisterUserInfo } from '../../../onboarding/onboarding.component';
 import { Router } from '@angular/router';
 import { ButtonElementsService } from '../../../service/button-elements.service';
@@ -25,6 +25,9 @@ import { SquareButtonComponent } from '../../../ssalon-component/square-button/s
   styleUrl: './profile-update.component.scss'
 })
 export class ProfileUpdateComponent {
+  @ViewChild('profileImg', { static: false })
+  profileImg: ProfileImgComponent | null = null;
+
   private _userInfo: RegisterUserInfo = {
     nickname: '',
     profilePictureUrl: '',
@@ -55,6 +58,18 @@ export class ProfileUpdateComponent {
     const genderSelectionButton = this.buttonElementsService.genderSelectionButtons
       .find(genderSelectionButton => genderSelectionButton.value === this.genderMap[this._userInfo.gender]);
     genderSelectionButton!.selected = true;
+
+    const locationSelectionButton = this.buttonElementsService.locationSelectionButtons
+      .find(locationSelectionButton => locationSelectionButton.label === this._userInfo.address);
+    locationSelectionButton!.selected = true;
+
+    this.buttonElementsService.interestSelectionButtons.forEach(interestSelectionButton => {
+      this._userInfo.interests.forEach(interest => {
+        if (interestSelectionButton.label === interest) {
+          interestSelectionButton.selected = true;
+        }
+      });
+    });
   }
 
   public onChangeUserInfo(type: string, value: string): void {
@@ -98,5 +113,10 @@ export class ProfileUpdateComponent {
     } else {
       return 'G';
     }
+  }
+
+  public async onClickUpdate() {
+    this._apiExecutorService.updateMyProfile(this._userInfo)
+      .then(() => this._router.navigate(['/web/main']));
   }
 }

@@ -76,6 +76,13 @@ export class ApiExecutorService {
     } catch {}
   }
 
+  public async updateMyProfile(body: RegisterUserInfo) {
+    try {
+      let response = await this.apiExecutorJson?.patch(`/users/me/profile`, body);
+      this.myProfile = response!.data;
+    } catch {}
+  }
+
   public async getLastMessages(moimId: string) {
     try {
       let response = await this.apiExecutor?.get(`/chat-history/${moimId}`);
