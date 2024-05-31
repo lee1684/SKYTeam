@@ -23,6 +23,7 @@ import { StatusElement } from '../ssalon-component/circle-toggle-status-group/ci
 import { QrShowComponent } from './qr-show/qr-show.component';
 import { MobileTicketViewerComponent } from '../ticket/mobile-ticket-viewer/mobile-ticket-viewer.component';
 import { MoimReviewComponent } from './moim-review/moim-review.component';
+import { trigger, state, style } from '@angular/animations';
 
 export enum MeetingInfoTabEnum {
   TICKET,
@@ -51,6 +52,10 @@ export enum MeetingInfoTabEnum {
   ],
   templateUrl: './meeting-info.component.html',
   styleUrl: './meeting-info.component.scss',
+  animations: [
+    /* 제어 패널 이동 애니메이션 */
+    trigger('copiedAnim', [state('1', style({ top: '50px' }))]),
+  ],
 })
 export class MeetingInfoComponent {
   @ViewChild('ticket', { static: false }) ticket: TicketComponent | null = null;
@@ -67,6 +72,8 @@ export class MeetingInfoComponent {
   public isParticipant: boolean = false;
   public joiningUsers: StatusElement[] = [];
   public isReviewCreated: boolean = false;
+
+  public isCopyButtonClicked: boolean = false;
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
@@ -244,6 +251,17 @@ export class MeetingInfoComponent {
         });
       }
     }
+  }
+
+  public async onClickShareButton() {
+    await navigator.clipboard.writeText(
+      `ssalon.co.kr/web/share?id=${this.moimId}`
+    );
+    console.log('Text copied to clipboard');
+    this.isCopyButtonClicked = true;
+    setTimeout(() => {
+      this.isCopyButtonClicked = false;
+    }, 2000);
   }
 
   public getThumbSrc(moimId: string): string {

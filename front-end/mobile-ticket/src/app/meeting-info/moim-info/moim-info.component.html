@@ -12,7 +12,8 @@
     <app-simple-content [title]="'모임 장소'" [content]="this.moimInfo.location"></app-simple-content>
     <app-simple-content [title]="'모임소개'" [content]="this.moimInfo.description"></app-simple-content>
     <app-simple-content *ngIf="(this.moimInfo.meetingPictureUrls).length > 0" [title]="'사진'"
-        [images]="this.getImageUrlsToNewButtonElements(this.moimInfo.meetingPictureUrls)"></app-simple-content>
+        [images]="this.getImageUrlsToNewButtonElements(this.moimInfo.meetingPictureUrls)"
+        [imageHeight]="300"></app-simple-content>
     <app-simple-content [title]="'참가비'" [content]="this.getBill()"></app-simple-content>
 
 </div>

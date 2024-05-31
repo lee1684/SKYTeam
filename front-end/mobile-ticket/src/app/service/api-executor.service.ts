@@ -29,7 +29,8 @@ export class ApiExecutorService {
   public apiURL: string = 'https://ssalon.co.kr/api';
   //public apiURL: string = 'http://localhost:8080/api';
   public tokens = {};
-  public token: string = 'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgdklmemUyQ0VBQ3I3Nl9CMW5hbHQ4MGRFd3JwbmhzUklRVUU3a3FIcXFXVSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTcwNjIzNDMsImV4cCI6MTcxNzE0ODc0M30.Id79IocPE4c5HqsfsbeWekFz3iwjYUWlDaBbrXORtuo';
+  public token: string =
+    'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTcwNjkxMzYsImV4cCI6MTcxNzE1NTUzNn0.rhvlpwvgGpASq4O-UywaniYCmYm4-8ZFrqwXWGLVDJQ';
   public refreshToken: string = '';
   public myProfile: Profile = undefined as unknown as Profile;
   constructor(private _ssalonConfigService: SsalonConfigService) {
@@ -78,7 +79,10 @@ export class ApiExecutorService {
 
   public async updateMyProfile(body: RegisterUserInfo) {
     try {
-      let response = await this.apiExecutorJson?.patch(`/users/me/profile`, body);
+      let response = await this.apiExecutorJson?.patch(
+        `/users/me/profile`,
+        body
+      );
       this.myProfile = response!.data;
     } catch {}
   }
@@ -320,7 +324,7 @@ export class ApiExecutorService {
     try {
       let url =
         params === ''
-          ? '/moims?size=1000&isEnd=false'
+          ? '/moims?size=1000&isEnd=false' //'/moims/home?categoryLen=10&meetingLen=10&isEnd=false&order=RECENT' //'
           : `/moims?isEnd=false&category=${params}&size=1000`;
       let response = await this.apiExecutorJson?.get(url);
       return response!.data;
