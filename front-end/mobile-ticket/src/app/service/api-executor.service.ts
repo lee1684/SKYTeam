@@ -20,6 +20,11 @@ export interface Profile {
   email: string;
 }
 
+export interface ImageGeneration {
+  prompt: string;
+  highQuality: boolean;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -129,6 +134,16 @@ export class ApiExecutorService {
       /** dummy data */
       let tempJson = await axios.get('assets/decoration.json');
       return tempJson.data;
+    }
+  }
+
+  public async generateImage(moimId: string, body: ImageGeneration) {
+    try {
+
+      const response = await this.apiExecutorJson?.post(`/image/generate/${moimId}`, body)
+      return response!.data;
+    } catch (error) {
+      console.log(error);
     }
   }
 

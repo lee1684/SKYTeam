@@ -15,7 +15,7 @@ import {
   DecorationInfo,
   SsalonConfigService,
 } from '../service/ssalon-config.service';
-import { ApiExecutorService } from '../service/api-executor.service';
+import { ApiExecutorService, ImageGeneration } from '../service/api-executor.service';
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { FabricImage, FabricText, Path } from 'fabric';
 import { ScenegraphService } from '../service/scenegraph.service';
@@ -26,6 +26,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { TopNavigatorComponent } from '../ssalon-component/top-navigator/top-navigator.component';
 import { NewButtonElement } from '../ssalon-component/simple-toggle-group/simple-toggle-group.component';
+import { SimpleInputComponent } from '../ssalon-component/simple-input/simple-input.component';
 
 export enum MobileTicketViewMode {
   APPVIEW,
@@ -51,6 +52,7 @@ export interface User {
     CircleToggleButtonGroupComponent,
     CircleToggleStatusGroupComponent,
     SimpleButtonComponent,
+    SimpleInputComponent,
     NgIf,
     TopNavigatorComponent,
   ],
@@ -113,6 +115,9 @@ export class TicketComponent {
     color: string;
     text: string;
   } = { checkStatus: null, color: '#006BFF', text: 'QR코드를 인식해주세요.' };
+  private prompt: string = '';
+  private tempImg: any;
+  public imageUrl: string = '';
 
   @Input() public moimId: string = undefined as unknown as string;
   @Input() public viewType: string = undefined as unknown as string;
@@ -141,6 +146,30 @@ export class TicketComponent {
       this.isFromUrl = false;
       this.setFirstPage();
     }
+  }
+
+  public onChangeInput(prompt: string): void {
+    this.prompt = prompt;
+  }
+
+  public async onClickImageGeneration() {
+    const body: ImageGeneration = {
+      prompt: this.prompt,
+      highQuality: false, // true: 0.08 달러 사용, false: 0.02 달러 사용
+    }
+
+    // 실제 API 사용 (비용 O)
+    // this.imageUrl = await this._apiExecutorService.generateImage(this.moimId, body);
+
+    // 테스트용 (비용 X)
+    this.imageUrl = 'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/Images/62/1b30cc57-fa8d-4491-a609-06ccf3ba83dc.png';
+
+    const tempImg = await FabricImage.fromURL(this.imageUrl, {
+      crossOrigin: 'anonymous',
+    });
+    const fabricObjects = (this.mobileTicketEditor?.fabricObjects as FabricImage[]);
+    fabricObjects.push(tempImg);
+    this.mobileTicketEditViewer?.updateCanvas(fabricObjects);
   }
 
   public setFirstPage() {
