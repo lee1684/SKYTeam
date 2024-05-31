@@ -1,8 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { TopNavigatorComponent } from '../ssalon-component/top-navigator/top-navigator.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TabGroupComponent } from '../ssalon-component/tab-group/tab-group.component';
-import { NewButtonElement } from '../ssalon-component/simple-toggle-group/simple-toggle-group.component';
+import {
+  NewButtonElement,
+  SimpleToggleGroupComponent,
+} from '../ssalon-component/simple-toggle-group/simple-toggle-group.component';
 import { NgIf } from '@angular/common';
 import { SimpleContentComponent } from '../ssalon-component/simple-content/simple-content.component';
 import { MoimInfoComponent } from './moim-info/moim-info.component';
@@ -44,6 +47,7 @@ export enum MeetingInfoTabEnum {
     QrShowComponent,
     TicketComponent,
     MoimReviewComponent,
+    SimpleToggleGroupComponent,
   ],
   templateUrl: './meeting-info.component.html',
   styleUrl: './meeting-info.component.scss',
@@ -51,13 +55,14 @@ export enum MeetingInfoTabEnum {
 export class MeetingInfoComponent {
   @ViewChild('ticket', { static: false }) ticket: TicketComponent | null = null;
 
+  @Input() nowTab: MeetingInfoTabEnum = MeetingInfoTabEnum.INFO;
+
   public moimId: string = '';
   public moimInfo: any = undefined as unknown as any;
   public ticketInfo: any = undefined as unknown as any;
   public joined: boolean = false;
   public meetingInfoTabEnum = MeetingInfoTabEnum;
   public tabs: NewButtonElement[] = [];
-  public nowTab: MeetingInfoTabEnum = MeetingInfoTabEnum.INFO;
   public isCreator: boolean = false;
   public isParticipant: boolean = false;
   public joiningUsers: StatusElement[] = [];
@@ -106,13 +111,7 @@ export class MeetingInfoComponent {
   }
 
   public changeButtonLabel(tabEnum: MeetingInfoTabEnum) {
-    if (tabEnum === MeetingInfoTabEnum.TICKET) {
-      if (this.isParticipant && this.isCreator) {
-        this.buttonElementsService.joinButtonElements[0].selected = false;
-        this.buttonElementsService.joinButtonElements[0].label =
-          '증표 앞면 수정하기';
-      }
-    } else if (tabEnum === MeetingInfoTabEnum.INFO) {
+    if (tabEnum === MeetingInfoTabEnum.INFO) {
       if (this.isParticipant) {
         this.buttonElementsService.joinButtonElements[0].selected = false;
         this.buttonElementsService.joinButtonElements[0].label = this.isCreator
@@ -201,13 +200,9 @@ export class MeetingInfoComponent {
       queryParams: { moimId: this.moimId, viewType: 'view' },
     });
   }
-
-  public async onClickJoinButton() {
-    if (this.buttonElementsService.joinButtonElements[0].selected) {
-      await this._apiExecutorService.joinMoim(this.moimId);
-      location.reload();
-    } else {
-      if (this.nowTab === this.meetingInfoTabEnum.TICKET && this.isCreator) {
+  public onClickEditTicketButton($event: any) {
+    if (this.nowTab === this.meetingInfoTabEnum.TICKET) {
+      if ($event === 0) {
         this._router.navigate(['/web/ticket'], {
           queryParams: {
             moimId: this.moimId,
@@ -216,12 +211,34 @@ export class MeetingInfoComponent {
             face: 'front',
           },
         });
-      } else if (
-        this.nowTab === this.meetingInfoTabEnum.INFO &&
-        this.isCreator
-      ) {
-        this._router.navigate(['/web/meeting-create'], {
+      } else {
+        this._router.navigate(['/web/ticket'], {
           queryParams: {
+            moimId: this.moimId,
+            viewType: 'edit',
+            createTemplate: 'edit',
+            face: 'back',
+          },
+        });
+      }
+    }
+  }
+  public async onClickJoinButton() {
+    if (this.buttonElementsService.joinButtonElements[0].selected) {
+      await this._apiExecutorService.joinMoim(this.moimId);
+      location.reload();
+    } else {
+      if (this.nowTab === this.meetingInfoTabEnum.INFO && this.isCreator) {
+        this._router.navigate(['/web/meeting-edit'], {
+          queryParams: {
+            editType: 'moimInfo',
+            moimId: this.moimId,
+          },
+        });
+      } else if (this.nowTab === this.meetingInfoTabEnum.DIARY) {
+        this._router.navigate(['/web/meeting-edit'], {
+          queryParams: {
+            editType: 'reviewInfo',
             moimId: this.moimId,
           },
         });

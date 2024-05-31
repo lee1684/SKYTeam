@@ -175,6 +175,27 @@ export class ButtonElementsService {
       label: '모임 참여해보기',
     },
   ];
+
+  public editCompleteButtons: NewButtonElement[] = [
+    {
+      selected: true,
+      value: 0,
+      label: '수정 완료',
+    },
+  ];
+
+  public editTicketButtons: NewButtonElement[] = [
+    {
+      selected: false,
+      value: 0,
+      label: '증표 앞면 수정하기',
+    },
+    {
+      selected: false,
+      value: 1,
+      label: '증표 뒷면 수정하기',
+    },
+  ];
   constructor() {
     for (let i = 0; i < 10; i++) {
       this.interestSelectionButtons.push({
