@@ -110,7 +110,7 @@ public class ChatGptService {
 
         BufferedImage resizedImage = new BufferedImage(360, 600, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = resizedImage.createGraphics();
-        g.drawImage(originalImage, 0, 0, 360, 600, null);
+        g.drawImage(originalImage, 0, 0, 345, 595, null);
         g.dispose();
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
