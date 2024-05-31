@@ -116,6 +116,7 @@ export class ProfileUpdateComponent {
   }
 
   public async onClickUpdate() {
+    this._userInfo.profilePictureUrl = this.profileImg!.imgSrc;
     this._apiExecutorService.updateMyProfile(this._userInfo)
       .then(() => this._router.navigate(['/web/main']));
   }
