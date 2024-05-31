@@ -38,8 +38,7 @@ public class ChatGptService {
             .readTimeout(30, TimeUnit.SECONDS)
             .build();
 
-    public String generateAndResizeImage(ImageGenerationDTO imageGenerationDTO) throws IOException {
-        Long moimId = imageGenerationDTO.getMoimId();
+    public String generateAndResizeImage(Long moimId, ImageGenerationDTO imageGenerationDTO) throws IOException {
         String prompt = imageGenerationDTO.getPrompt();
         Boolean highQuality = imageGenerationDTO.getHighQuality();
 

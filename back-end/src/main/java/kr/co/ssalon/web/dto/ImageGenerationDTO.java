@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ImageGenerationDTO {
 
-    Long moimId;
     String prompt;
     Boolean highQuality;
 }
