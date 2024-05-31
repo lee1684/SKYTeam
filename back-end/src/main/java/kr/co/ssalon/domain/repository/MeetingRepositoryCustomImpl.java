@@ -14,7 +14,6 @@ import kr.co.ssalon.domain.dto.MeetingOrder;
 import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.MemberMeeting;
-import kr.co.ssalon.domain.entity.QMemberMeeting;
 import kr.co.ssalon.domain.service.MeetingService;
 import kr.co.ssalon.web.dto.MeetingSearchCondition;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,6 @@ import static kr.co.ssalon.domain.entity.QMemberMeeting.memberMeeting;
 @Component
 public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
 
-    MeetingService meetingService;
     EntityManager em;
     JPAQueryFactory query;
 
@@ -50,9 +48,6 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
         // Find member by username (assuming you have a method to do this)
         Member member = findMemberByUsername(username);
 
-
-
-
         List<Meeting> content = query
                 .selectFrom(meeting)
                 .where(
@@ -60,7 +55,7 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
                         isEndEq(meetingSearchCondition.getIsEnd()),
                         isParticipantEq(meetingSearchCondition.getIsParticipant(), member)
                 )
-                .orderBy(orderEq(meetingSearchCondition.getOrder(), member))
+                .orderBy(orderEq(meetingSearchCondition.getOrder()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -109,7 +104,7 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
     }
 
     // 정렬 필터링
-    private OrderSpecifier<?> orderEq(MeetingOrder meetingOrder, Member member) {
+    private OrderSpecifier<?> orderEq(MeetingOrder meetingOrder) {
         Order desc = Order.DESC;
         Order asc = Order.ASC;
         if (meetingOrder == MeetingOrder.CAPACITY) {
@@ -120,19 +115,6 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
         }
         if (meetingOrder == MeetingOrder.RECENT) {
             return new OrderSpecifier<>(desc, meeting.meetingDate);
-        }
-        if (meetingOrder == MeetingOrder.RECOMMEND) {
-            String recommendation = member.getMeetingRecommendation();
-            if (recommendation != null && !recommendation.isEmpty()) {
-                List<Long> recommendedIds = Arrays.stream(recommendation
-                                .replaceAll("[\\[\\]]", "")
-                                .split(","))
-                        .map(Long::parseLong)
-                        .collect(Collectors.toList());
-                return new OrderSpecifier<>(Order.ASC, Expressions.stringTemplate(
-                        "FIELD({0}, {1})", meeting.id, String.join(",", recommendedIds.stream().map(String::valueOf).collect(Collectors.toList()))
-                ));
-            }
         }
         return new OrderSpecifier(asc, NullExpression.DEFAULT, OrderSpecifier.NullHandling.Default);
     }
@@ -146,11 +128,13 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
     }
 
     private Member findMemberByUsername(String username) {
-        // Implement a method to find a Member entity by username
-        // Example:
-        return em.createQuery("SELECT m FROM Member m WHERE m.username = :username", Member.class)
+        System.out.println("Finding member by username: " + username);
+        Member member = em.createQuery("SELECT m FROM Member m WHERE m.username = :username", Member.class)
                 .setParameter("username", username)
                 .getSingleResult();
+        System.out.println("Found member: " + member);
+        return member;
     }
+
 
 }
