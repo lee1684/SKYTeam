@@ -17,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -107,6 +108,32 @@ public class AwsS3Service {
         }
 
         return "200 OK";
+    }
+
+    public String uploadFileViaByteArray(Long moimId, byte[] byteArray) {
+        String keyName = "Images/" + moimId + "/" + UUID.randomUUID() + ".png";
+        try {
+            // Byte -> InputStream 변환
+            InputStream inputStream = new ByteArrayInputStream(byteArray);
+
+            // PutObjectRequest 설정
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucketStaticName)
+                    .contentType("image/png")
+                    .contentLength((long) byteArray.length)
+                    .key(keyName)
+                    .build();
+
+            // 업로드 실행
+           s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(inputStream, byteArray.length));
+        } catch (Exception e) {
+            // 임시 에러 로깅 처리
+            e.printStackTrace();
+            return "502 Bad Gateway";
+        }
+
+        String imageUrl = "https://" + bucketStaticName + ".s3.ap-northeast-2.amazonaws.com/" + keyName;
+        return imageUrl;
     }
 
     public int uploadMultiFilesViaMultipart(List<MultipartFile> multipartFiles, Map<String, String> imageKeyMap) {
