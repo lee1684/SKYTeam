@@ -1,3 +1,5 @@
+import { ButtonElementsService } from './../../service/button-elements.service';
+import { NewButtonElement } from './../../ssalon-component/simple-toggle-group/simple-toggle-group.component';
 import { Component, Input } from '@angular/core';
 import { SimpleContentComponent } from '../../ssalon-component/simple-content/simple-content.component';
 import {
@@ -17,12 +19,26 @@ import { Router } from '@angular/router';
 })
 export class ProfileComponent {
   @Input() myProfile: Profile = undefined as unknown as Profile;
+
+  public  interestImages: NewButtonElement[] = [];
+
   constructor(
     private _router: Router,
-    private _apiExecutorService: ApiExecutorService
+    private _apiExecutorService: ApiExecutorService,
+    private buttonElementsService: ButtonElementsService,
   ) {}
   public ngOnInit() {
     this.myProfile = this._apiExecutorService.myProfile;
+    this.interestImages = this.myProfile.interests.map(interest => {
+      const categoryIndex = this.buttonElementsService.category.indexOf(interest);
+      const categoryEnglish = this.buttonElementsService.categoryEnglish[categoryIndex];
+      return {
+        label: interest,
+        value: categoryIndex,
+        imgSrc: `assets/interest-icons/${categoryEnglish}.png`,
+        selected: false,
+      };
+    })
   }
   public getGender(genderString: string) {
     if (genderString === 'M') {

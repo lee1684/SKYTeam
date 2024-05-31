@@ -19,11 +19,14 @@ export class SimpleContentComponent {
   @Input() title: string = '';
   @Input() content: string = '';
   @Input() images: NewButtonElement[] = [];
+  @Input() imageHeight: number = 0;
+  @Input() isMarkdown: boolean = true;
+
   constructor() {}
   public ngOnInit(): void {
-    this.contentContainer.nativeElement.innerHTML = this.convertMarkdown(
+    this.contentContainer.nativeElement.innerHTML = this.isMarkdown ? this.convertMarkdown(
       this.content
-    );
+    ) : this.content;
   }
 
   public convertMarkdown(message: string) {

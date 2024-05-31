@@ -39,8 +39,12 @@
         </div>
         <div *ngIf="!this.isTicketContainer" class="image-row-container">
             <ng-container *ngFor="let image of images">
-                <img class="image-container" [src]="image.imgSrc" [height]="this.imageHeight"
-                    (click)="this.onClickImage(image.value)" />
+                <img class="image-container"
+                  [src]="image.imgSrc"
+                  [height]="this.imageHeight"
+                  (click)="this.onClickImage(image.value)"
+                  [title]="image.label"
+                />
             </ng-container>
 
         </div>

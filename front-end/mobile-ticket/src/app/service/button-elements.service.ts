@@ -18,7 +18,7 @@ export class ButtonElementsService {
     '사진',
     '게임',
   ];
-  private category: string[] = [
+  public category: string[] = [
     '운동',
     '독서',
     '요리',
@@ -31,7 +31,7 @@ export class ButtonElementsService {
     '게임',
   ];
 
-  private categoryEnglish: string[] = [
+  public categoryEnglish: string[] = [
     'exercise',
     'book',
     'food',
