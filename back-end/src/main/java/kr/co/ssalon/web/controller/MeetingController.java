@@ -84,6 +84,33 @@ public class MeetingController {
         return ResponseEntity.ok().body(new JsonResult<>(meetingListSearchPageDTO).getData());
     }
 
+    @Operation(summary = "추천 모임 리스트 조회")
+    @ApiResponse(responseCode = "200", description = "추천 모임 리스트 조회 성공", content = {
+            @Content(schema = @Schema(implementation = MeetingListSearchDTO.class))
+    })
+    @GetMapping("/api/moims/recommend")
+    public ResponseEntity<?> getMoimsByRecommend(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
+        try {
+            Gson gson = new Gson();
+
+            List<MeetingListSearchDTO> meetingListSearchDTOs = new ArrayList<>();
+            String username = customOAuth2Member.getUsername();
+            Member member = memberService.findMember(username);
+
+            List<Long> meetingRecommendList = gson.fromJson(member.getMeetingRecommendation(), new TypeToken<List<Long>>() {});
+
+            for (int i = 0; i < meetingRecommendList.size(); i++) {
+                Meeting meeting = meetingService.findMeeting(meetingRecommendList.get(i));
+                MeetingListSearchDTO meetingListSearchDTO = new MeetingListSearchDTO(meeting, username);
+                meetingListSearchDTOs.add(meetingListSearchDTO);
+            }
+
+            return ResponseEntity.ok().body(new JsonResult<>(meetingListSearchDTOs).getData());
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     // 홈 화면 조회
     // 모임 목록 필터 설정, 목록에 표시될 모임의 숫자 등
     // 현재 개설된 모임 목록
@@ -98,26 +125,15 @@ public class MeetingController {
 
             List<MeetingHomeDTO> categorizedMeetings = new ArrayList<>();
             String username = customOAuth2Member.getUsername();
-
             Member member = memberService.findMember(username);
-            String meetingRecommendString = member.getMeetingRecommendation();
-            String categoryRecommendString =member.getCategoryRecommendation();
-            List<Long> meetingRecommendList = gson.fromJson(meetingRecommendString, new TypeToken<List<Long>>() {});
-            List<Long> categoryRecommendList = gson.fromJson(categoryRecommendString, new TypeToken<List<Long>>() {});
+            List<Long> categoryRecommendList = gson.fromJson(member.getCategoryRecommendation(), new TypeToken<List<Long>>() {});
 
-            List<Meeting> recommendMeetings = new ArrayList<>();
-            for (Long i = 1L; i <= homeMeetingSearchCondition.getMeetingLen(); i++) {
-                recommendMeetings.add(meetingService.findMeeting(i));
-            }
-            MeetingHomeDTO recomMeetingHomeDTO = new MeetingHomeDTO("살롱추천", recommendMeetings.stream()
-                    .map(meeting -> new MeetingHomeSearchDTO(meeting, username))
-                    .collect(Collectors.toList()));
-            categorizedMeetings.add(recomMeetingHomeDTO);
-
-            for (int i = 1; i <= homeMeetingSearchCondition.getCategoryLen() - 1; i++) {
+            for (int i = 0; i < homeMeetingSearchCondition.getCategoryLen(); i++) {
                 try {
-                    String categoryName = categoryService.findCategory(categoryRecommendList.get(i-1)).getName();
-                    List<Meeting> meetings = meetingRepository.findMeetingsByCategoryId(categoryRecommendList.get(i-1)).stream()
+                    Integer index = homeMeetingSearchCondition.getCategoryLen() * homeMeetingSearchCondition.getCategoryPage() - 1;
+
+                    String categoryName = categoryService.findCategory(categoryRecommendList.get(i)).getName();
+                    List<Meeting> meetings = meetingRepository.findMeetingsByCategoryId(categoryRecommendList.get(i)).stream()
                             .filter(meeting -> {
                                 if (homeMeetingSearchCondition.getIsEnd() != null) {
                                     return homeMeetingSearchCondition.getIsEnd().equals(meeting.getIsFinished());
@@ -150,9 +166,7 @@ public class MeetingController {
                     continue;
                 }
             }
-
             return ResponseEntity.ok().body(new JsonResult<>(categorizedMeetings).getData());
-
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

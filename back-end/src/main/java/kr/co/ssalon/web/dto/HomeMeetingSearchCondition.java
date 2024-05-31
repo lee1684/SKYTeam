@@ -15,10 +15,13 @@ import lombok.NoArgsConstructor;
 @Builder
 public class HomeMeetingSearchCondition {
     @Schema(description = "조회할 상위 카테고리 숫자", example = "1, 2, 3, 4, ... ")
-    private Long categoryLen;
+    private Integer categoryLen;
+
+    @Schema(description = "조회할 카테고리 페이지 번호", example = "1, 2, 3, 4, ... ")
+    private Integer categoryPage;
 
     @Schema(description = "각 카테고리당 모임 개수")
-    private Long meetingLen;
+    private Integer meetingLen;
 
     @Schema(description = "isEnd 필터링", example = "true, false")
     private Boolean isEnd;
