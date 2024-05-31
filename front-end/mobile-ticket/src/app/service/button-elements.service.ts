@@ -160,6 +160,12 @@ export class ButtonElementsService {
       label: '템플릿으로 만들기',
       imgSrc: 'assets/create-ticket-type-icons/template.png',
     },
+    {
+      selected: false,
+      value: 2,
+      label: 'OpenAI 이미지 생성',
+      imgSrc: 'assets/create-ticket-type-icons/template.png',
+    }
   ];
   public nextButtons: NewButtonElement[] = [
     {

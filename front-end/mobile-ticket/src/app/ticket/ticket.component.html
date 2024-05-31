@@ -15,8 +15,25 @@
 <!-- APPEDITVIEW: 앱에서 보는 꾸미기 화면의 경우 -->
 <div class="container" *ngIf="(this.mode === this.mobileTicketViewMode.APPEDITVIEW)" #appEditView>
   <div id="editor-viewer-container">
-    <app-mobile-ticket-edit-viewer [moimId]="this.moimId" [createTemplate]="this.createTemplate" [face]="this.face"
-      #mobileTicketEditViewer (onClickText)="this.openTextEditor($event)"></app-mobile-ticket-edit-viewer>
+    <div id="prompt">
+      <app-simple-input
+        [type]="'longText'"
+        [placeholder]="'원하는 이미지에 대한 설명을 입력해주세요.'"
+        [longTextHeight]="100"
+        #description
+      ></app-simple-input>
+      <button
+        id="image-generation"
+        (click)="onClickImageGeneration()"
+      >이미지 생성</button>
+    </div>
+    <app-mobile-ticket-edit-viewer
+      [moimId]="this.moimId"
+      [createTemplate]="this.createTemplate"
+      [face]="this.face"
+      #mobileTicketEditViewer
+      (onClickText)="this.openTextEditor($event)"
+    ></app-mobile-ticket-edit-viewer>
   </div>
   <div id="editor-container">
     <app-mobile-ticket-editor [moimId]="this.moimId" [face]="this.face" #mobileTicketEditor [style.height]="
