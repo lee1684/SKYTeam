@@ -55,16 +55,14 @@ jobs:
         shell: bash
 
       # Google Translation key 설정
-      - name: setup Google Translation key
-        run: |
-          # spring의 resources 경로로 이동
-          cd ./back-end/src/main/resources
-
-          touch ./service-account-file.json
-
-          # GitHub-Actions에서 설정한 값을 service-account-file.json 파일에 쓰기
-          echo "copy service-account-file"
-          echo "${{ secrets.GOOGLE_TRANSLATION_KEY }}" > ./service-account-file.json
+      - name: Create Google Translation JSON file from secret
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "./back-end/src/main/resources/service-account-file.json"
+          json: ${{ secrets.GOOGLE_TRANSLATION_KEY }}
+  
+      - name: Verify JSON file creation
+        run: cat ./back-end/src/main/resources/service-account-file.json
         
 
       # gradlew 파일 실행권한 설정
