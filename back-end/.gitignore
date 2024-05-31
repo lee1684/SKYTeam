@@ -39,3 +39,6 @@ out/
 ### *.yml / *.properties ###
 *.yml
 application.properties
+
+### google cloud translation api key ###
+service-account-file.json
