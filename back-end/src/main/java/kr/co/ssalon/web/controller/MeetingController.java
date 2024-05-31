@@ -100,9 +100,15 @@ public class MeetingController {
             List<Long> meetingRecommendList = gson.fromJson(member.getMeetingRecommendation(), new TypeToken<List<Long>>() {});
 
             for (int i = 0; i < meetingRecommendList.size(); i++) {
-                Meeting meeting = meetingService.findMeeting(meetingRecommendList.get(i));
-                MeetingListSearchDTO meetingListSearchDTO = new MeetingListSearchDTO(meeting, username);
-                meetingListSearchDTOs.add(meetingListSearchDTO);
+                if (meetingRecommendList != null) {
+                    Meeting meeting = meetingService.findMeeting(meetingRecommendList.get(i));
+                    MeetingListSearchDTO meetingListSearchDTO = new MeetingListSearchDTO(meeting, username);
+                    meetingListSearchDTOs.add(meetingListSearchDTO);
+                } else {
+                    Meeting meeting = meetingService.findMeeting((long) (i));
+                    MeetingListSearchDTO meetingListSearchDTO = new MeetingListSearchDTO(meeting, username);
+                    meetingListSearchDTOs.add(meetingListSearchDTO);
+                }
             }
 
             return ResponseEntity.ok().body(new JsonResult<>(meetingListSearchDTOs).getData());
@@ -130,37 +136,71 @@ public class MeetingController {
 
             for (int i = 0; i < homeMeetingSearchCondition.getCategoryLen(); i++) {
                 try {
-                    Integer index = homeMeetingSearchCondition.getCategoryLen() * homeMeetingSearchCondition.getCategoryPage() - 1;
+                    if (categoryRecommendList != null) {
+                        Integer index = homeMeetingSearchCondition.getCategoryLen() * homeMeetingSearchCondition.getCategoryPage() - 1;
 
-                    String categoryName = categoryService.findCategory(categoryRecommendList.get(i)).getName();
-                    List<Meeting> meetings = meetingRepository.findMeetingsByCategoryId(categoryRecommendList.get(i)).stream()
-                            .filter(meeting -> {
-                                if (homeMeetingSearchCondition.getIsEnd() != null) {
-                                    return homeMeetingSearchCondition.getIsEnd().equals(meeting.getIsFinished());
-                                }
-                                return true; // isEnd 필터가 없는 경우 모든 모임 포함
-                            })
-                            .sorted((meeting1, meeting2) -> {
-                                if (homeMeetingSearchCondition.getOrder() != null) {
-                                    switch (homeMeetingSearchCondition.getOrder()) {
-                                        case CAPACITY:
-                                            return Integer.compare(meeting2.getCapacity(), meeting1.getCapacity());
-                                        case NUMBER:
-                                            return Long.compare(meeting2.getId(), meeting1.getId());
-                                        case RECENT:
-                                            return meeting2.getMeetingDate().compareTo(meeting1.getMeetingDate());
-                                        default:
-                                            return 0;
+                        String categoryName = categoryService.findCategory(categoryRecommendList.get(i + index)).getName();
+                        List<Meeting> meetings = meetingRepository.findMeetingsByCategoryId(categoryRecommendList.get(i + index)).stream()
+                                .filter(meeting -> {
+                                    if (homeMeetingSearchCondition.getIsEnd() != null) {
+                                        return homeMeetingSearchCondition.getIsEnd().equals(meeting.getIsFinished());
                                     }
-                                }
-                                return 0;
-                            })
-                            .limit(homeMeetingSearchCondition.getMeetingLen()) // 각 카테고리당 모임 최대 개수 설정
-                            .collect(Collectors.toList());
-                    MeetingHomeDTO meetingHomeDTO = new MeetingHomeDTO(categoryName, meetings.stream()
-                            .map(meeting -> new MeetingHomeSearchDTO(meeting, username))
-                            .collect(Collectors.toList()));
-                    categorizedMeetings.add(meetingHomeDTO);
+                                    return true; // isEnd 필터가 없는 경우 모든 모임 포함
+                                })
+                                .sorted((meeting1, meeting2) -> {
+                                    if (homeMeetingSearchCondition.getOrder() != null) {
+                                        switch (homeMeetingSearchCondition.getOrder()) {
+                                            case CAPACITY:
+                                                return Integer.compare(meeting2.getCapacity(), meeting1.getCapacity());
+                                            case NUMBER:
+                                                return Long.compare(meeting2.getId(), meeting1.getId());
+                                            case RECENT:
+                                                return meeting2.getMeetingDate().compareTo(meeting1.getMeetingDate());
+                                            default:
+                                                return 0;
+                                        }
+                                    }
+                                    return 0;
+                                })
+                                .limit(homeMeetingSearchCondition.getMeetingLen()) // 각 카테고리당 모임 최대 개수 설정
+                                .collect(Collectors.toList());
+                        MeetingHomeDTO meetingHomeDTO = new MeetingHomeDTO(categoryName, meetings.stream()
+                                .map(meeting -> new MeetingHomeSearchDTO(meeting, username))
+                                .collect(Collectors.toList()));
+                        categorizedMeetings.add(meetingHomeDTO);
+                    } else {
+                        Integer index = homeMeetingSearchCondition.getCategoryLen() * homeMeetingSearchCondition.getCategoryPage() - 1;
+
+                        String categoryName = categoryService.findCategory((long) (i + 1 + index)).getName();
+                        List<Meeting> meetings = meetingRepository.findMeetingsByCategoryId((long) (i + 1 + index)).stream()
+                                .filter(meeting -> {
+                                    if (homeMeetingSearchCondition.getIsEnd() != null) {
+                                        return homeMeetingSearchCondition.getIsEnd().equals(meeting.getIsFinished());
+                                    }
+                                    return true; // isEnd 필터가 없는 경우 모든 모임 포함
+                                })
+                                .sorted((meeting1, meeting2) -> {
+                                    if (homeMeetingSearchCondition.getOrder() != null) {
+                                        switch (homeMeetingSearchCondition.getOrder()) {
+                                            case CAPACITY:
+                                                return Integer.compare(meeting2.getCapacity(), meeting1.getCapacity());
+                                            case NUMBER:
+                                                return Long.compare(meeting2.getId(), meeting1.getId());
+                                            case RECENT:
+                                                return meeting2.getMeetingDate().compareTo(meeting1.getMeetingDate());
+                                            default:
+                                                return 0;
+                                        }
+                                    }
+                                    return 0;
+                                })
+                                .limit(homeMeetingSearchCondition.getMeetingLen()) // 각 카테고리당 모임 최대 개수 설정
+                                .collect(Collectors.toList());
+                        MeetingHomeDTO meetingHomeDTO = new MeetingHomeDTO(categoryName, meetings.stream()
+                                .map(meeting -> new MeetingHomeSearchDTO(meeting, username))
+                                .collect(Collectors.toList()));
+                        categorizedMeetings.add(meetingHomeDTO);
+                    }
                 } catch (BadRequestException e) {
                     // 카테고리가 없는 경우 해당 카테고리를 무시하고 다음 카테고리를 조회
                     continue;
