@@ -54,6 +54,19 @@ jobs:
           echo "${{ secrets.AWS_PROPERTIES }}" > ./application.yml
         shell: bash
 
+      # Google Translation key 설정
+      - name: setup Google Translation key
+        run: |
+          # spring의 resources 경로로 이동
+          cd ./back-end/src/main/resources
+
+          touch ./service-account-file.json
+
+          # GitHub-Actions에서 설정한 값을 service-account-file.json 파일에 쓰기
+          echo "copy service-account-file"
+          echo "${{ secrets.GOOGLE_TRANSLATION_KEY }}" > ./service-account-file.json
+        
+
       # gradlew 파일 실행권한 설정
       - name: Grant execute permission for gradlew
         run: |
