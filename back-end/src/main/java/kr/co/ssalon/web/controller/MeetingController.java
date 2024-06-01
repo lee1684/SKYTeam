@@ -122,7 +122,7 @@ public class MeetingController {
     // 현재 개설된 모임 목록
     @Operation(summary = "홈 화면 조회")
     @ApiResponse(responseCode = "200", description = "홈 화면 조회 성공", content = {
-            @Content(schema = @Schema(implementation = MeetingHomeDTO.class))
+            @Content(schema = @Schema(implementation = MeetingListSearchPageDTO.class))
     })
     @GetMapping("/api/moims/home")
     public ResponseEntity<?> getHomeMoims(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, HomeMeetingSearchCondition homeMeetingSearchCondition) {
@@ -206,7 +206,9 @@ public class MeetingController {
                     continue;
                 }
             }
-            return ResponseEntity.ok().body(new JsonResult<>(categorizedMeetings).getData());
+
+            MeetingListSearchPageDTO meetingListSearchPageDTO = new MeetingListSearchPageDTO(categorizedMeetings, categoryRepository.existsById((long) homeMeetingSearchCondition.getCategoryLen() * homeMeetingSearchCondition.getCategoryPage()));
+            return ResponseEntity.ok().body(new JsonResult<>(meetingListSearchPageDTO).getData());
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

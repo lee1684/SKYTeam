@@ -20,4 +20,9 @@ public class MeetingListSearchPageDTO <T>{
         this.content = moims.getContent();
         this.hasNext = moims.hasNext();
     }
+
+    public MeetingListSearchPageDTO(List<T> content, Boolean hasNext) {
+        this.content = content;
+        this.hasNext = hasNext;
+    }
 }
