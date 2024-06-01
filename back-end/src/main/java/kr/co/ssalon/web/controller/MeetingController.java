@@ -206,8 +206,8 @@ public class MeetingController {
                     continue;
                 }
             }
-
-            MeetingListSearchPageDTO meetingListSearchPageDTO = new MeetingListSearchPageDTO(categorizedMeetings, categoryRepository.existsById((long) homeMeetingSearchCondition.getCategoryLen() * homeMeetingSearchCondition.getCategoryPage()));
+            Boolean bool = categoryRepository.existsById((long) homeMeetingSearchCondition.getCategoryLen() * homeMeetingSearchCondition.getCategoryPage());
+            MeetingListSearchPageDTO meetingListSearchPageDTO = new MeetingListSearchPageDTO(categorizedMeetings, bool);
             return ResponseEntity.ok().body(new JsonResult<>(meetingListSearchPageDTO).getData());
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
