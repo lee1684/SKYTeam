@@ -41,6 +41,7 @@ public class ChatGptService {
     public String generateAndResizeImage(Long moimId, ImageGenerationDTO imageGenerationDTO) throws IOException {
         String prompt = imageGenerationDTO.getPrompt();
         Boolean highQuality = imageGenerationDTO.getHighQuality();
+        Integer imageSize = highQuality ? 1024 : 512;
 
         String translatedText = translationService.translateText(prompt, "ko", "en");
         log.info("translatedText = {}", translatedText);
@@ -48,7 +49,7 @@ public class ChatGptService {
         Map<String, Object> requestHashMap = new HashMap<>();
         requestHashMap.put("prompt", translatedText);
         requestHashMap.put("n", 1);
-        requestHashMap.put("size", String.format("%dx%d", 1024, 1024));
+        requestHashMap.put("size", String.format("%dx%d", imageSize, imageSize));
         if (highQuality) {
             requestHashMap.put("model", "dall-e-3");
             requestHashMap.put("quality", "hd");
@@ -108,7 +109,7 @@ public class ChatGptService {
         ByteArrayInputStream bais = new ByteArrayInputStream(originalImageBytes);
         BufferedImage originalImage = ImageIO.read(bais);
 
-        BufferedImage resizedImage = new BufferedImage(360, 600, BufferedImage.TYPE_INT_RGB);
+        BufferedImage resizedImage = new BufferedImage(345, 595, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = resizedImage.createGraphics();
         g.drawImage(originalImage, 0, 0, 345, 595, null);
         g.dispose();
