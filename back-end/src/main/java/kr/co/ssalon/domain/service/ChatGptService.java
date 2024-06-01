@@ -109,9 +109,9 @@ public class ChatGptService {
         ByteArrayInputStream bais = new ByteArrayInputStream(originalImageBytes);
         BufferedImage originalImage = ImageIO.read(bais);
 
-        BufferedImage resizedImage = new BufferedImage(345, 595, BufferedImage.TYPE_INT_RGB);
+        BufferedImage resizedImage = new BufferedImage(350, 600, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = resizedImage.createGraphics();
-        g.drawImage(originalImage, 0, 0, 345, 595, null);
+        g.drawImage(originalImage, 0, 0, 350, 600, null);
         g.dispose();
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
