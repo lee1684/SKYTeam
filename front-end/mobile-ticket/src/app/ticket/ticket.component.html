@@ -20,6 +20,7 @@
         [type]="'longText'"
         [placeholder]="'원하는 이미지에 대한 설명을 입력해주세요.'"
         [longTextHeight]="100"
+        (onChangeEvent)="onChangeInput($event)"
         #description
       ></app-simple-input>
       <button
