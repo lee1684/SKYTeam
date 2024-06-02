@@ -16,9 +16,8 @@
 #logo-container {
     display: flex;
     align-items: center;
-    justify-content: left;
     margin-top: 14px;
-    width: 95%;
+    width: 100%;
 }
 
 #tab-container {
@@ -27,6 +26,8 @@
     margin-top: 20px;
     overflow-y: scroll;
     position: relative;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 #tab-container::-webkit-scrollbar {

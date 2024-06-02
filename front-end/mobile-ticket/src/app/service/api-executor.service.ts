@@ -29,7 +29,8 @@ export class ApiExecutorService {
   public apiURL: string = 'https://ssalon.co.kr/api';
   //public apiURL: string = 'http://localhost:8080/api';
   public tokens = {};
-  public token: string = '';
+  public token: string =
+    'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTczMTc4ODksImV4cCI6MTcxNzQwNDI4OX0.GI0AvhDGCfkAq5BG3J4MuVn-yXwvsA9D-Byid1kTmxk';
   public refreshToken: string = '';
   public myProfile: Profile = undefined as unknown as Profile;
   constructor(private _ssalonConfigService: SsalonConfigService) {
@@ -72,7 +73,16 @@ export class ApiExecutorService {
     try {
       let response = await this.apiExecutorJson?.get(`/users/me/profile`);
       this.myProfile = response!.data;
-      console.log(this.myProfile);
+    } catch {}
+  }
+
+  public async updateMyProfile(body: RegisterUserInfo) {
+    try {
+      let response = await this.apiExecutorJson?.patch(
+        `/users/me/profile`,
+        body
+      );
+      this.myProfile = response!.data;
     } catch {}
   }
 
@@ -99,6 +109,7 @@ export class ApiExecutorService {
   public async getTicket(moimId: string) {
     try {
       let response = await this.apiExecutor?.get(`/tickets/${moimId}`);
+      console.log(response!.data);
       return response!.data;
     } catch {
       /** dummy data */
@@ -163,6 +174,18 @@ export class ApiExecutorService {
     try {
       let response = await this.apiExecutorJson?.get(`/diary/${moimId}/info`);
       console.log(response!.data);
+      return response!.data;
+    } catch {
+      return false;
+    }
+  }
+
+  public async editMoimReview(moimId: string, body: any) {
+    try {
+      let response = await this.apiExecutorJson?.post(
+        `/diary/${moimId}/info`,
+        body
+      );
       return response!.data;
     } catch {
       return false;
@@ -300,7 +323,7 @@ export class ApiExecutorService {
     try {
       let url =
         params === ''
-          ? '/moims?size=1000&isEnd=false'
+          ? '/moims?size=1000&isEnd=false' //'/moims/home?categoryLen=10&meetingLen=10&isEnd=false&order=RECENT' //'
           : `/moims?isEnd=false&category=${params}&size=1000`;
       let response = await this.apiExecutorJson?.get(url);
       return response!.data;

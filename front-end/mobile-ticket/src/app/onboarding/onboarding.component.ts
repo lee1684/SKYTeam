@@ -21,7 +21,7 @@ export interface OnboardingStep {
 export interface RegisterUserInfo {
   nickname: string;
   profilePictureUrl: string;
-  gender: '' | 'M' | 'F' | 'G';
+  gender: 'M' | 'F' | 'G';
   address: string;
   introduction: string;
   interests: string[];
@@ -56,7 +56,7 @@ export class OnboardingComponent {
   private _userInfo: RegisterUserInfo = {
     nickname: '',
     profilePictureUrl: '',
-    gender: '',
+    gender: 'M',
     address: '',
     introduction: '',
     interests: [],
@@ -106,7 +106,7 @@ export class OnboardingComponent {
           });
     }
     if (this.nowOnboardingStep === this.onBoardingStep[0]) {
-      if (this._userInfo!.nickname !== '' && this._userInfo!.gender !== '') {
+      if (this._userInfo!.nickname !== '') {
         this.buttonElementsService.nextButtons[0]!.selected = true;
       }
     } else if (this.nowOnboardingStep === this.onBoardingStep[1]) {

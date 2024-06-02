@@ -19,6 +19,7 @@ export class SimpleContentComponent {
   @Input() title: string = '';
   @Input() content: string = '';
   @Input() images: NewButtonElement[] = [];
+  @Input() imageHeight: number = 200;
   constructor() {}
   public ngOnInit(): void {
     this.contentContainer.nativeElement.innerHTML = this.convertMarkdown(

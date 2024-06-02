@@ -10,9 +10,14 @@ import { MeetingCreateComponent } from './meeting-create/meeting-create.componen
 import { MoimReviewComponent } from './meeting-info/moim-review/moim-review.component';
 import { MoimReviewCreateComponent } from './meeting-info/moim-review/moim-review-create/moim-review-create.component';
 import { MeetingShareComponent } from './meeting-share/meeting-share.component';
+import { MeetingEditComponent } from './meeting-edit/meeting-edit.component';
+import { ProfileUpdateComponent } from './main/profile/profile-update/profile-update.component';
 
 export const routes: Routes = [
-  { path: 'web/ssalon-login', component: SsalonLoginComponent },
+  {
+    path: '',
+    component: SsalonLoginComponent,
+  },
   {
     path: 'web/ssalon-login-redirect',
     component: SsalonLoginRedirectComponent,
@@ -46,8 +51,12 @@ export const routes: Routes = [
     component: MeetingShareComponent,
   },
   {
-    path: '',
-    component: SsalonLoginComponent,
+    path: 'web/meeting-edit',
+    component: MeetingEditComponent,
+  },
+  {
+    path: 'web/profile-update',
+    component: ProfileUpdateComponent,
   },
 ];
 

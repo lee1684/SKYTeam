@@ -1,8 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { TopNavigatorComponent } from '../ssalon-component/top-navigator/top-navigator.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TabGroupComponent } from '../ssalon-component/tab-group/tab-group.component';
-import { NewButtonElement } from '../ssalon-component/simple-toggle-group/simple-toggle-group.component';
+import {
+  NewButtonElement,
+  SimpleToggleGroupComponent,
+} from '../ssalon-component/simple-toggle-group/simple-toggle-group.component';
 import { NgIf } from '@angular/common';
 import { SimpleContentComponent } from '../ssalon-component/simple-content/simple-content.component';
 import { MoimInfoComponent } from './moim-info/moim-info.component';
@@ -20,6 +23,7 @@ import { StatusElement } from '../ssalon-component/circle-toggle-status-group/ci
 import { QrShowComponent } from './qr-show/qr-show.component';
 import { MobileTicketViewerComponent } from '../ticket/mobile-ticket-viewer/mobile-ticket-viewer.component';
 import { MoimReviewComponent } from './moim-review/moim-review.component';
+import { trigger, state, style } from '@angular/animations';
 
 export enum MeetingInfoTabEnum {
   TICKET,
@@ -44,12 +48,19 @@ export enum MeetingInfoTabEnum {
     QrShowComponent,
     TicketComponent,
     MoimReviewComponent,
+    SimpleToggleGroupComponent,
   ],
   templateUrl: './meeting-info.component.html',
   styleUrl: './meeting-info.component.scss',
+  animations: [
+    /* 제어 패널 이동 애니메이션 */
+    trigger('copiedAnim', [state('1', style({ top: '50px' }))]),
+  ],
 })
 export class MeetingInfoComponent {
   @ViewChild('ticket', { static: false }) ticket: TicketComponent | null = null;
+
+  @Input() nowTab: MeetingInfoTabEnum = MeetingInfoTabEnum.INFO;
 
   public moimId: string = '';
   public moimInfo: any = undefined as unknown as any;
@@ -57,11 +68,12 @@ export class MeetingInfoComponent {
   public joined: boolean = false;
   public meetingInfoTabEnum = MeetingInfoTabEnum;
   public tabs: NewButtonElement[] = [];
-  public nowTab: MeetingInfoTabEnum = MeetingInfoTabEnum.INFO;
   public isCreator: boolean = false;
   public isParticipant: boolean = false;
   public joiningUsers: StatusElement[] = [];
   public isReviewCreated: boolean = false;
+
+  public isCopyButtonClicked: boolean = false;
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
@@ -106,13 +118,7 @@ export class MeetingInfoComponent {
   }
 
   public changeButtonLabel(tabEnum: MeetingInfoTabEnum) {
-    if (tabEnum === MeetingInfoTabEnum.TICKET) {
-      if (this.isParticipant && this.isCreator) {
-        this.buttonElementsService.joinButtonElements[0].selected = false;
-        this.buttonElementsService.joinButtonElements[0].label =
-          '증표 앞면 수정하기';
-      }
-    } else if (tabEnum === MeetingInfoTabEnum.INFO) {
+    if (tabEnum === MeetingInfoTabEnum.INFO) {
       if (this.isParticipant) {
         this.buttonElementsService.joinButtonElements[0].selected = false;
         this.buttonElementsService.joinButtonElements[0].label = this.isCreator
@@ -201,13 +207,9 @@ export class MeetingInfoComponent {
       queryParams: { moimId: this.moimId, viewType: 'view' },
     });
   }
-
-  public async onClickJoinButton() {
-    if (this.buttonElementsService.joinButtonElements[0].selected) {
-      await this._apiExecutorService.joinMoim(this.moimId);
-      location.reload();
-    } else {
-      if (this.nowTab === this.meetingInfoTabEnum.TICKET && this.isCreator) {
+  public onClickEditTicketButton($event: any) {
+    if (this.nowTab === this.meetingInfoTabEnum.TICKET) {
+      if ($event === 0) {
         this._router.navigate(['/web/ticket'], {
           queryParams: {
             moimId: this.moimId,
@@ -216,17 +218,50 @@ export class MeetingInfoComponent {
             face: 'front',
           },
         });
-      } else if (
-        this.nowTab === this.meetingInfoTabEnum.INFO &&
-        this.isCreator
-      ) {
-        this._router.navigate(['/web/meeting-create'], {
+      } else {
+        this._router.navigate(['/web/ticket'], {
           queryParams: {
+            moimId: this.moimId,
+            viewType: 'edit',
+            createTemplate: 'edit',
+            face: 'back',
+          },
+        });
+      }
+    }
+  }
+  public async onClickJoinButton() {
+    if (this.buttonElementsService.joinButtonElements[0].selected) {
+      await this._apiExecutorService.joinMoim(this.moimId);
+      location.reload();
+    } else {
+      if (this.nowTab === this.meetingInfoTabEnum.INFO && this.isCreator) {
+        this._router.navigate(['/web/meeting-edit'], {
+          queryParams: {
+            editType: 'moimInfo',
+            moimId: this.moimId,
+          },
+        });
+      } else if (this.nowTab === this.meetingInfoTabEnum.DIARY) {
+        this._router.navigate(['/web/meeting-edit'], {
+          queryParams: {
+            editType: 'reviewInfo',
             moimId: this.moimId,
           },
         });
       }
     }
+  }
+
+  public async onClickShareButton() {
+    await navigator.clipboard.writeText(
+      `ssalon.co.kr/web/share?id=${this.moimId}&title=${this.moimInfo.title}`
+    );
+    console.log('Text copied to clipboard');
+    this.isCopyButtonClicked = true;
+    setTimeout(() => {
+      this.isCopyButtonClicked = false;
+    }, 2000);
   }
 
   public getThumbSrc(moimId: string): string {

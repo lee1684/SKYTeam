@@ -21,21 +21,12 @@ import { NewButtonElement } from '../../ssalon-component/simple-toggle-group/sim
   styleUrl: './moim-info.component.scss',
 })
 export class MoimInfoComponent {
-  @ViewChild('date', { static: true })
-  date: SimpleInputComponent | null = null;
-  @ViewChild('location', { static: true })
-  location: SimpleInputComponent | null = null;
-  @ViewChild('description', { static: true })
-  description: SimpleInputComponent | null = null;
-  @ViewChild('photo', { static: true })
-  photo: ImageRowContainerComponent | null = null;
   @ViewChild('capacity', { static: true })
   capacity: SimpleInputComponent | null = null;
   @ViewChild('fee', { static: true }) fee: SimpleInputComponent | null = null;
 
   @Input() moimId: string = '';
   @Input() moimInfo: any = {};
-  @Input() mode: 'show' | 'edit' = 'show';
   public photos: NewButtonElement[] = [
     {
       imgSrc: 'assets/add_photo.png',
@@ -47,16 +38,7 @@ export class MoimInfoComponent {
 
   constructor(private _apiExecutorService: ApiExecutorService) {}
 
-  public async ngOnInit() {
-    this.date!.innerText = this.moimInfo.date;
-    this.location!.innerText = this.moimInfo.location;
-    this.description!.innerText = this.moimInfo.description;
-    this.capacity!.innerText = this.moimInfo.capacity;
-    this.fee!.innerText = this.moimInfo.payment;
-    this.photos = this.getImageUrlsToNewButtonElements(
-      this.moimInfo.meetingPictureUrls
-    );
-  }
+  public async ngOnInit() {}
 
   public getDate() {
     const date = new Date(this.moimInfo.meetingDate);

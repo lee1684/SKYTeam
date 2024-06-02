@@ -1,4 +1,5 @@
 <div class="content-container">
     <app-simple-toggle [buttonElements]="this.buttonElementsService.interestSelectionButtons" [columnNum]="1"
-        [align]="'left'" (onClickToggleButtonEvent)="this.onClilckButton($event)"></app-simple-toggle>
+        [align]="'left'" [multiSelection]="true"
+        (onClickToggleButtonEvent)="this.onClilckButton($event)"></app-simple-toggle>
 </div>

@@ -33,7 +33,8 @@ export class SimpleInputComponent {
     | 'datetime-local'
     | 'number'
     | 'category'
-    | 'chat-input' = 'text';
+    | 'chat-input'
+    | 'search' = 'text';
   @Input() innerText: string | number = '';
   @Input() enableCheckbox: boolean = false;
   @Input() checkBoxLabel: string = '';
@@ -43,6 +44,7 @@ export class SimpleInputComponent {
   @Output() public readonly onClickCheckboxEvent = new EventEmitter();
   @Output() public readonly onClickChatSendButtonEvent = new EventEmitter();
   @Output() public readonly onClickImgSendButtonEvent = new EventEmitter();
+  @Output() public readonly onClickSearchButtonEvent = new EventEmitter();
 
   public isChecked: boolean = false;
   public convertedHTML: any = '';
@@ -77,6 +79,10 @@ export class SimpleInputComponent {
 
   public onClickImgSendButton(): void {
     this.onClickImgSendButtonEvent.emit();
+  }
+
+  public onClickSearchButton(): void {
+    this.onClickSearchButtonEvent.emit();
   }
 
   public onClickMarkdown(): void {

@@ -45,7 +45,7 @@ export class CreateMeetingInfoComponent {
     location: '',
     meetingDate: '',
     payment: -1,
-    meetingPictureUrls: [''],
+    meetingPictureUrls: [],
     isSharable: true,
   };
   @Input() photos: NewButtonElement[] = [
