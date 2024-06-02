@@ -122,7 +122,7 @@ public class MeetingController {
     // 현재 개설된 모임 목록
     @Operation(summary = "홈 화면 조회")
     @ApiResponse(responseCode = "200", description = "홈 화면 조회 성공", content = {
-            @Content(schema = @Schema(implementation = MeetingHomeDTO.class))
+            @Content(schema = @Schema(implementation = MeetingListSearchPageDTO.class))
     })
     @GetMapping("/api/moims/home")
     public ResponseEntity<?> getHomeMoims(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, HomeMeetingSearchCondition homeMeetingSearchCondition) {
@@ -133,11 +133,11 @@ public class MeetingController {
             String username = customOAuth2Member.getUsername();
             Member member = memberService.findMember(username);
             List<Long> categoryRecommendList = gson.fromJson(member.getCategoryRecommendation(), new TypeToken<List<Long>>() {});
-
+            Integer index = homeMeetingSearchCondition.getCategoryLen() * (homeMeetingSearchCondition.getCategoryPage() - 1);
             for (int i = 0; i < homeMeetingSearchCondition.getCategoryLen(); i++) {
                 try {
-                    if (categoryRecommendList != null) {
-                        Integer index = homeMeetingSearchCondition.getCategoryLen() * homeMeetingSearchCondition.getCategoryPage() - 1;
+                    if (categoryRecommendList != null && index + i < categoryRecommendList.size())  {
+
 
                         String categoryName = categoryService.findCategory(categoryRecommendList.get(i + index)).getName();
                         List<Meeting> meetings = meetingRepository.findMeetingsByCategoryId(categoryRecommendList.get(i + index)).stream()
@@ -168,8 +168,7 @@ public class MeetingController {
                                 .map(meeting -> new MeetingHomeSearchDTO(meeting, username))
                                 .collect(Collectors.toList()));
                         categorizedMeetings.add(meetingHomeDTO);
-                    } else {
-                        Integer index = homeMeetingSearchCondition.getCategoryLen() * homeMeetingSearchCondition.getCategoryPage() - 1;
+                    } else if (index + i < categoryRecommendList.size()){
 
                         String categoryName = categoryService.findCategory((long) (i + 1 + index)).getName();
                         List<Meeting> meetings = meetingRepository.findMeetingsByCategoryId((long) (i + 1 + index)).stream()
@@ -206,7 +205,9 @@ public class MeetingController {
                     continue;
                 }
             }
-            return ResponseEntity.ok().body(new JsonResult<>(categorizedMeetings).getData());
+            Boolean bool = categoryRepository.existsById((long) (homeMeetingSearchCondition.getCategoryLen() * homeMeetingSearchCondition.getCategoryPage()));
+            MeetingListSearchPageDTO meetingListSearchPageDTO = new MeetingListSearchPageDTO(categorizedMeetings, bool);
+            return ResponseEntity.ok().body(new JsonResult<>(meetingListSearchPageDTO).getData());
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
