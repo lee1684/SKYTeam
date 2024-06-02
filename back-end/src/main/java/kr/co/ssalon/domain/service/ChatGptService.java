@@ -76,10 +76,9 @@ public class ChatGptService {
         log.info("openai api response = {}", jsonData);
         String imageUrl = extractImageUrlFromResponse(jsonData);
 
-        byte[] originalImageBytes = downloadImage(imageUrl);
-        byte[] resizedImage = resizeImage(originalImageBytes);
+        byte[] imageBytes = downloadImage(imageUrl);
 
-        return awsS3Service.uploadFileViaByteArray(moimId, resizedImage);
+        return awsS3Service.uploadFileViaByteArray(moimId, imageBytes);
     }
 
     private String extractImageUrlFromResponse(String jsonData) throws IOException {
