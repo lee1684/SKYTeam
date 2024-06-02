@@ -75,6 +75,12 @@ export class MobileTicketEditViewerComponent {
     this.canvas.on('object:rotating', (event: any) => {
       this.isCursorDown = false;
     });
+    this.canvas.on('object:modified', (event: any) => {
+      this.canvas?.moveObjectTo(
+        event.target as FabricObject,
+        this.canvas.getObjects().length - 1
+      );
+    });
 
     await this.canvas?.loadFromJSON(this.decorationInfo.fabric);
     this.canvas?.renderAll();

@@ -25,8 +25,10 @@ import { Canvas, FabricImage, FabricText, Path } from 'fabric';
 import { NewButtonElement } from '../../ssalon-component/simple-toggle-group/simple-toggle-group.component';
 import { ButtonElementsService } from '../../service/button-elements.service';
 import { Router } from '@angular/router';
+import { SquareButtonComponent } from '../../ssalon-component/square-button/square-button.component';
 
 export enum MobileTicketEditMode {
+  AI_GENERATE,
   BACKGROUND_COLOR_CHANGE,
   PHOTO,
   STICKER,
@@ -67,6 +69,7 @@ export interface SsalonPathAttribute {
     ColorBoardComponent,
     NgFor,
     NgIf,
+    SquareButtonComponent,
   ],
   templateUrl: './mobile-ticket-editor.component.html',
   styleUrl: './mobile-ticket-editor.component.scss',
@@ -115,8 +118,13 @@ export class MobileTicketEditorComponent {
 
   public editFeatures: ButtonElement[] = [
     {
+      imgSrc: 'assets/icons/ai_generate.png',
+      label: 'ai',
+      value: MobileTicketEditMode.AI_GENERATE,
+    },
+    {
       imgSrc: 'assets/icons/color-board.png',
-      label: '미리보기 뷰',
+      label: '배경색 변경',
       value: MobileTicketEditMode.BACKGROUND_COLOR_CHANGE,
     },
     {
@@ -529,6 +537,7 @@ export class MobileTicketEditorComponent {
   public async onEndEditObject() {
     if (this.lastUsedFeature === MobileTicketEditMode.BACKGROUND_COLOR_CHANGE) {
       this.onBackgroundColorEditEnded.emit(this.backgroundColor.color);
+      this._backgroundColorViewLoaded = false;
     } else {
       switch (this.lastUsedFeature) {
         case MobileTicketEditMode.PHOTO:
@@ -567,8 +576,10 @@ export class MobileTicketEditorComponent {
             );
             this.lastUsedFeature = MobileTicketEditMode.NONE;
           }
+          this.textFocused = false;
           break;
         case MobileTicketEditMode.DRAW:
+          this._isDrawingFabricCanvasLoaded = true;
           break;
         case MobileTicketEditMode.NONE:
           break;
