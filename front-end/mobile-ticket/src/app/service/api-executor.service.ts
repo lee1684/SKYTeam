@@ -30,7 +30,7 @@ export class ApiExecutorService {
   //public apiURL: string = 'http://localhost:8080/api';
   public tokens = {};
   public token: string =
-    'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTcwNjkxMzYsImV4cCI6MTcxNzE1NTUzNn0.rhvlpwvgGpASq4O-UywaniYCmYm4-8ZFrqwXWGLVDJQ';
+    'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTczMTc4ODksImV4cCI6MTcxNzQwNDI4OX0.GI0AvhDGCfkAq5BG3J4MuVn-yXwvsA9D-Byid1kTmxk';
   public refreshToken: string = '';
   public myProfile: Profile = undefined as unknown as Profile;
   constructor(private _ssalonConfigService: SsalonConfigService) {
@@ -73,7 +73,6 @@ export class ApiExecutorService {
     try {
       let response = await this.apiExecutorJson?.get(`/users/me/profile`);
       this.myProfile = response!.data;
-      console.log(this.myProfile);
     } catch {}
   }
 

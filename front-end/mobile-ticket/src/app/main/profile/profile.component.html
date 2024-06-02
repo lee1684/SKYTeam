@@ -1,13 +1,22 @@
 <div class="container">
-    <app-top-navigator [title]="'프로필'" [backButton]="false"></app-top-navigator>
+    <div *ngIf="this.mode === 'info'" class="container">
+        <app-top-navigator [title]="'프로필'" [backButton]="false"></app-top-navigator>
 
-    <div id="profile-img-container">
-        <app-profile-img [imgSrc]="this.myProfile.profilePictureUrl" [isEditable]="false"></app-profile-img>
+        <div id="profile-img-container">
+            <app-profile-img [imgSrc]="this.myProfile.profilePictureUrl" [isEditable]="false"></app-profile-img>
+        </div>
+        <app-simple-content [title]="'닉네임'" [content]="this.myProfile.nickname"></app-simple-content>
+        <app-simple-content [title]="'이메일'" [content]="this.myProfile.email"></app-simple-content>
+        <app-simple-content [title]="'성별'" [content]="this.getGender(this.myProfile.gender)"></app-simple-content>
+        <app-simple-content [title]="'관심분야'" [content]="this.myProfile.interests.join(',')"></app-simple-content>
+        <app-simple-content [title]="'지역'" [content]="this.myProfile.address"></app-simple-content>
+        <app-simple-content [title]="'소개'" [content]="this.myProfile.introduction"></app-simple-content>
     </div>
-    <app-simple-content [title]="'닉네임'" [content]="this.myProfile.nickname"></app-simple-content>
-    <app-simple-content [title]="'이메일'" [content]="this.myProfile.email"></app-simple-content>
-    <app-simple-content [title]="'성별'" [content]="this.getGender(this.myProfile.gender)"></app-simple-content>
-    <app-simple-content [title]="'지역'" [content]="this.myProfile.address"></app-simple-content>
-    <app-simple-content [title]="'소개'" [content]="this.myProfile.introduction"></app-simple-content>
-    <button (click)="onClickProfileUpdate()">프로필 수정</button>
+    <div *ngIf="this.mode === 'edit'">
+        <app-profile-update #profileUpdate></app-profile-update>
+    </div>
+    <div id="profile-update-button">
+        <app-square-button [buttonElements]="this.buttonElementsService.editProfileButton"
+            (onClickEvent)="this.onClickProfileUpdate()"></app-square-button>
+    </div>
 </div>

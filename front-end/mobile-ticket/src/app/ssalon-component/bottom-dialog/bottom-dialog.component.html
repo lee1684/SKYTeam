@@ -1,13 +1,20 @@
 <div class="container">
     <div id="bottom-container">
         <div id="title">
-            {{'모임 카테고리'}}
+            {{'카테고리'}}
         </div>
         <div class="content-container">
             <div *ngIf="this.content === this.bottomNavigatorType.MEETING_CATEGORY">
 
                 <app-meeting-category (onCategorySelectedEvent)="this.onClickButton($event)"></app-meeting-category>
             </div>
+            <div *ngIf="this.content === this.bottomNavigatorType.MEETING_LOCATION">
+
+                <app-meeting-location (onCategorySelectedEvent)="this.onClickButton($event)"></app-meeting-location>
+            </div>
+        </div>
+        <div class="complete-button">
+            <app-square-button (onClickEvent)="this.onClickCompleteButton()"></app-square-button>
         </div>
 
     </div>

@@ -14,6 +14,7 @@ import { SquareButtonComponent } from '../ssalon-component/square-button/square-
 })
 export class MeetingShareComponent {
   public moimId: string = '';
+  public title: string = '';
   constructor(
     private _apiExecutorService: ApiExecutorService,
     private _route: ActivatedRoute,
@@ -22,7 +23,7 @@ export class MeetingShareComponent {
   ) {
     this._route.queryParams.subscribe((params) => {
       this.moimId = params['id'];
-      console.log(params);
+      this.title = params['title'];
     });
   }
   public ngOnInit(): void {}

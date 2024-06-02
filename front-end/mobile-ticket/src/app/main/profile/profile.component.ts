@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { SimpleContentComponent } from '../../ssalon-component/simple-content/simple-content.component';
 import {
   ApiExecutorService,
@@ -7,19 +7,35 @@ import {
 import { ProfileImgComponent } from '../../ssalon-component/profile-img/profile-img.component';
 import { TopNavigatorComponent } from '../../ssalon-component/top-navigator/top-navigator.component';
 import { Router } from '@angular/router';
+import { ProfileUpdateComponent } from './profile-update/profile-update.component';
+import { NgIf } from '@angular/common';
+import { SquareButtonComponent } from '../../ssalon-component/square-button/square-button.component';
+import { ButtonElementsService } from '../../service/button-elements.service';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [ProfileImgComponent, SimpleContentComponent, TopNavigatorComponent],
+  imports: [
+    ProfileImgComponent,
+    SimpleContentComponent,
+    TopNavigatorComponent,
+    ProfileUpdateComponent,
+    NgIf,
+    SquareButtonComponent,
+  ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
 })
 export class ProfileComponent {
+  @ViewChild('profileUpdate', { static: false })
+  profileUpdate: ProfileUpdateComponent | null = null;
   @Input() myProfile: Profile = undefined as unknown as Profile;
+
+  public mode: 'edit' | 'info' = 'info';
   constructor(
     private _router: Router,
-    private _apiExecutorService: ApiExecutorService
+    private _apiExecutorService: ApiExecutorService,
+    public buttonElementsService: ButtonElementsService
   ) {}
   public ngOnInit() {
     this.myProfile = this._apiExecutorService.myProfile;
@@ -34,7 +50,18 @@ export class ProfileComponent {
     }
   }
 
-  public onClickProfileUpdate(): void {
-    this._router.navigate(['/web/profile-update']);
+  public async onClickProfileUpdate() {
+    if (this.mode === 'info') {
+      this.buttonElementsService.editProfileButton[0].label = '수정완료';
+      this.buttonElementsService.editProfileButton[0].selected = true;
+      this.mode = 'edit';
+    } else {
+      await this.profileUpdate!.onClickUpdate();
+      await this._apiExecutorService.getMyProfile();
+      this.myProfile = this._apiExecutorService.myProfile;
+      this.buttonElementsService.editProfileButton[0].label = '프로필 수정';
+      this.buttonElementsService.editProfileButton[0].selected = false;
+      this.mode = 'info';
+    }
   }
 }

@@ -1,49 +1,24 @@
 <div class="profile-update-container">
-  <app-profile-img
-    id="profile-img"
-    [imgSrc]="userInfo.profilePictureUrl"
-    #profileImg
-  ></app-profile-img>
-  <app-simple-input
-    [label]="'닉네임'"
-    [innerText]="userInfo.nickname"
-    [extraLabel]="'(필수)'"
-    [extraLabelColor]="'#0090f2'"
-    [placeholder]="'닉네임을 입력해주세요.'"
-    (onChangeEvent)="this.onChangeUserInfo('nickname', $event)"
-  ></app-simple-input>
-  <app-simple-toggle
-    [label]="'성별'"
-    [extraLabel]="'(필수)'"
-    [extraLabelColor]="'#0090f2'"
-    [buttonElements]="this.buttonElementsService.genderSelectionButtons"
-    [buttonWidth]="110"
-    (onClickToggleButtonEvent)="this.onChangeUserInfo('gender', $event)"
-  ></app-simple-toggle>
-  <app-simple-input
-    [innerText]="this.userInfo.introduction"
-    [label]="'소개'"
-    [placeholder]="'간단한 소개를 해주세요.'"
-    (onChangeEvent)="this.onChangeUserInfo('introduction', $event)"
-  ></app-simple-input>
-  <div class="container">
-    <app-simple-toggle
-      [buttonElements]="this.buttonElementsService.locationSelectionButtons"
-      [columnNum]="1"
-      [buttonWidth]="350"
-      [align]="'left'"
-      (onClickToggleButtonEvent)="this.onChangeUserInfo('address', $event)"
-    ></app-simple-toggle>
-  </div>
-  <div class="container">
-    <app-simple-toggle
-      [buttonElements]="this.buttonElementsService.interestSelectionButtons"
-      [columnNum]="1"
-      [buttonWidth]="350"
-      [align]="'left'"
-      [multiSelection]="true"
-      (onClickToggleButtonEvent)="this.onChangeUserInfo('interests', $event)"
-    ></app-simple-toggle>
-  </div>
-  <button (click)="onClickUpdate()">완료</button>
+  <app-profile-img id="profile-img" [imgSrc]="userInfo.profilePictureUrl" #profileImg></app-profile-img>
+  <app-simple-input [label]="'닉네임'" [innerText]="userInfo.nickname" [extraLabel]="'(필수)'" [extraLabelColor]="'#0090f2'"
+    [placeholder]="'닉네임을 입력해주세요.'" (onChangeEvent)="this.onChangeUserInfo('nickname', $event)"></app-simple-input>
+  <app-simple-toggle [label]="'성별'" [extraLabel]="'(필수)'" [extraLabelColor]="'#0090f2'"
+    [buttonElements]="this.buttonElementsService.genderSelectionButtons" [buttonWidth]="110"
+    (onClickToggleButtonEvent)="this.onChangeUserInfo('gender', $event)"></app-simple-toggle>
+  <app-simple-input [innerText]="this.userInfo.introduction" [label]="'소개'" [placeholder]="'간단한 소개를 해주세요.'"
+    (onChangeEvent)="this.onChangeUserInfo('introduction', $event)"></app-simple-input>
+  <app-simple-input [label]="'관심사'" [innerText]="this.getInterestString()"
+    (onClickEvent)="this.popUpInterestsDialog()"></app-simple-input>
+  <app-simple-input [label]="'지역'" [innerText]="this.userInfo.address"
+    (onClickEvent)="this.popUpLocationDialog()"></app-simple-input>
+</div>
+<div *ngIf="this.isInterestPopUp">
+  <app-bottom-dialog [content]="this.bottomNavigatorType.MEETING_CATEGORY"
+    (onClickEvent)="this.onInterestSelectedEvent($event)"
+    (onClickCompleteButtonEvent)="this.popUpInterestsDialog()"></app-bottom-dialog>
+</div>
+<div *ngIf="this.isLocationPopUp">
+  <app-bottom-dialog [content]="this.bottomNavigatorType.MEETING_LOCATION"
+    (onClickEvent)="this.onLocationSelectedEvent($event)"
+    (onClickCompleteButtonEvent)="this.popUpLocationDialog()"></app-bottom-dialog>
 </div>

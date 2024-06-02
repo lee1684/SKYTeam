@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { RegisterUserInfo } from '../../../onboarding/onboarding.component';
 import { Router } from '@angular/router';
 import { ButtonElementsService } from '../../../service/button-elements.service';
@@ -9,6 +9,11 @@ import { SimpleInputComponent } from '../../../ssalon-component/simple-input/sim
 import { ProfileImgComponent } from '../../../ssalon-component/profile-img/profile-img.component';
 import { SimpleToggleGroupComponent } from '../../../ssalon-component/simple-toggle-group/simple-toggle-group.component';
 import { SquareButtonComponent } from '../../../ssalon-component/square-button/square-button.component';
+import { BottomNavigatorComponent } from '../../../ssalon-component/bottom-navigator/bottom-navigator.component';
+import {
+  BottomDialogComponent,
+  BottomNavigatorType,
+} from '../../../ssalon-component/bottom-dialog/bottom-dialog.component';
 
 @Component({
   selector: 'app-profile-update',
@@ -20,13 +25,19 @@ import { SquareButtonComponent } from '../../../ssalon-component/square-button/s
     ProfileImgComponent,
     SimpleToggleGroupComponent,
     SquareButtonComponent,
+    BottomDialogComponent,
   ],
   templateUrl: './profile-update.component.html',
-  styleUrl: './profile-update.component.scss'
+  styleUrl: './profile-update.component.scss',
 })
 export class ProfileUpdateComponent {
   @ViewChild('profileImg', { static: false })
   profileImg: ProfileImgComponent | null = null;
+
+  @Output() public readonly onUpdatedEvent = new EventEmitter();
+  public bottomNavigatorType = BottomNavigatorType;
+  public isInterestPopUp = false;
+  public isLocationPopUp = false;
 
   private _userInfo: RegisterUserInfo = {
     nickname: '',
@@ -38,10 +49,10 @@ export class ProfileUpdateComponent {
   };
 
   private genderMap = {
-    'M': 0,
-    'F': 1,
-    'G': 2,
-  }
+    M: 0,
+    F: 1,
+    G: 2,
+  };
 
   constructor(
     private _router: Router,
@@ -55,21 +66,31 @@ export class ProfileUpdateComponent {
 
   public async ngOnInit() {
     this._userInfo = await this._apiExecutorService.getProfile();
-    const genderSelectionButton = this.buttonElementsService.genderSelectionButtons
-      .find(genderSelectionButton => genderSelectionButton.value === this.genderMap[this._userInfo.gender]);
+    const genderSelectionButton =
+      this.buttonElementsService.genderSelectionButtons.find(
+        (genderSelectionButton) =>
+          genderSelectionButton.value === this.genderMap[this._userInfo.gender]
+      );
     genderSelectionButton!.selected = true;
 
-    const locationSelectionButton = this.buttonElementsService.locationSelectionButtons
-      .find(locationSelectionButton => locationSelectionButton.label === this._userInfo.address);
+    const locationSelectionButton =
+      this.buttonElementsService.locationSelectionButtons.find(
+        (locationSelectionButton) =>
+          locationSelectionButton.label === this._userInfo.address
+      );
     locationSelectionButton!.selected = true;
 
-    this.buttonElementsService.interestSelectionButtons.forEach(interestSelectionButton => {
-      this._userInfo.interests.forEach(interest => {
-        if (interestSelectionButton.label === interest) {
-          interestSelectionButton.selected = true;
-        }
-      });
-    });
+    this.buttonElementsService.interestSelectionButtons.forEach(
+      (interestSelectionButton) => {
+        this._userInfo.interests.forEach((interest) => {
+          if (interestSelectionButton.label === interest) {
+            interestSelectionButton.selected = true;
+          } else {
+            interestSelectionButton.selected = false;
+          }
+        });
+      }
+    );
   }
 
   public onChangeUserInfo(type: string, value: string): void {
@@ -81,9 +102,11 @@ export class ProfileUpdateComponent {
         this._userInfo!.introduction = value;
         break;
       case 'gender':
-        const index = this.buttonElementsService.genderSelectionButtons.find((button) => {
-          return button.selected === true;
-        })!.value;
+        const index = this.buttonElementsService.genderSelectionButtons.find(
+          (button) => {
+            return button.selected === true;
+          }
+        )!.value;
         this._userInfo!.gender = this.getStringFromGenderEnum(index);
         break;
       case 'address':
@@ -115,9 +138,38 @@ export class ProfileUpdateComponent {
     }
   }
 
+  public getInterestString() {
+    return this._userInfo.interests.join(', ');
+  }
+
+  public onInterestSelectedEvent($event: number) {
+    this._userInfo.interests =
+      this.buttonElementsService.interestSelectionButtons
+        .filter((buttonElement) => {
+          return buttonElement.selected;
+        })
+        .map((buttonElement) => {
+          return buttonElement.label;
+        });
+  }
+
+  public onLocationSelectedEvent($event: number) {
+    this._userInfo.address =
+      this.buttonElementsService.locationSelectionButtons.find(
+        (buttonElement) => {
+          return buttonElement.selected;
+        }
+      )!.label;
+  }
+  public popUpInterestsDialog() {
+    this.isInterestPopUp = !this.isInterestPopUp;
+  }
+  public popUpLocationDialog() {
+    this.isLocationPopUp = !this.isLocationPopUp;
+  }
   public async onClickUpdate() {
     this._userInfo.profilePictureUrl = this.profileImg!.imgSrc;
-    this._apiExecutorService.updateMyProfile(this._userInfo)
-      .then(() => this._router.navigate(['/web/main']));
+    await this._apiExecutorService.updateMyProfile(this._userInfo);
+    this.onUpdatedEvent.emit();
   }
 }

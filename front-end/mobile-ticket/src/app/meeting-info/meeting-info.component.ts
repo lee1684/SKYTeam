@@ -255,7 +255,7 @@ export class MeetingInfoComponent {
 
   public async onClickShareButton() {
     await navigator.clipboard.writeText(
-      `ssalon.co.kr/web/share?id=${this.moimId}`
+      `ssalon.co.kr/web/share?id=${this.moimId}&title=${this.moimInfo.title}`
     );
     console.log('Text copied to clipboard');
     this.isCopyButtonClicked = true;

@@ -32,7 +32,7 @@ export class AppComponent {
     const parts = value.split(`; ${'access'}=`);
     //this._apiExecutorService.setToken(parts.pop()!.split(';').shift()!);
     this._apiExecutorService.setToken(
-      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTcwNjkxMzYsImV4cCI6MTcxNzE1NTUzNn0.rhvlpwvgGpASq4O-UywaniYCmYm4-8ZFrqwXWGLVDJQ'
+      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTcxNTg5MDAsImV4cCI6MTcxNzI0NTMwMH0.Tm3WcLtav24nFj0IJy6HEDJ3YL9ZTPEE5HbI9NLkqXY'
     );
 
     this._apiExecutorService.getMyProfile();

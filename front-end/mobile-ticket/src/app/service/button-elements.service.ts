@@ -196,6 +196,13 @@ export class ButtonElementsService {
       label: '증표 뒷면 수정하기',
     },
   ];
+  public editProfileButton: NewButtonElement[] = [
+    {
+      selected: false,
+      value: 0,
+      label: '프로필 수정하기',
+    },
+  ];
   constructor() {
     for (let i = 0; i < 10; i++) {
       this.interestSelectionButtons.push({
