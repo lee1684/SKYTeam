@@ -121,7 +121,7 @@ public class MeetingService {
         return meetings;
     }
 
-    /*
+
     public Page<Meeting> searchByKeyword(String keyword, Pageable pageable){
         if(keyword == null) keyword = "";
 
@@ -129,7 +129,7 @@ public class MeetingService {
         return byKeywordContaining;
     }
 
-     */
+
 
     // 모임 정보 업데이트
     @Transactional
