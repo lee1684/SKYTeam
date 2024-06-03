@@ -122,8 +122,11 @@ public class MeetingService {
     }
 
 
-    public Page<Meeting> searchByKeyword(String keyword, Pageable pageable){
-        if(keyword == null) keyword = "";
+    public Page<Meeting> searchByKeyword(String keyword, Pageable pageable) {
+        if (keyword == null || keyword.isEmpty()) {
+            // keyword가 null이거나 빈 문자열인 경우 빈 페이지 반환
+            return Page.empty(pageable);
+        }
 
         Page<Meeting> byKeywordContaining = meetingRepository.searchByTitleOrDescription(keyword, pageable);
         return byKeywordContaining;
