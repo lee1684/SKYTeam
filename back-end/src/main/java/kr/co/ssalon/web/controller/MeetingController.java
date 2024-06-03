@@ -102,23 +102,29 @@ public class MeetingController {
             for (int i = 0; i < meetingRecommendList.size(); i++) {
                 Meeting meeting;
 
-                if (member.getMeetingRecommendation() != null) {
-                    // member.getMeetingRecommendation()이 null이 아닌 경우
-                    meeting = meetingService.findMeeting(meetingRecommendList.get(i));
-                } else {
-                    // member.getMeetingRecommendation()이 null인 경우
-                    meeting = meetingService.findMeeting((long) i);
+                try {
+                    if (member.getMeetingRecommendation() != null) {
+                        // member.getMeetingRecommendation()이 null이 아닌 경우
+                        meeting = meetingService.findMeeting(meetingRecommendList.get(i));
+                    } else {
+                        // member.getMeetingRecommendation()이 null인 경우
+                        meeting = meetingService.findMeeting((long) i);
+                    }
+
+                    Boolean isSearchForEnd = meetingSearchCondition.getIsEnd();
+
+                    if (isSearchForEnd == null ||
+                            (meeting.getIsFinished() && isSearchForEnd) ||
+                            (!meeting.getIsFinished() && !isSearchForEnd)) {
+                        // 검색 조건이 null이거나, 조건과 일치하는 미팅만 리스트에 추가
+                        MeetingListSearchDTO meetingListSearchDTO = new MeetingListSearchDTO(meeting, username);
+                        meetingListSearchDTOs.add(meetingListSearchDTO);
+                    }
+                } catch (BadRequestException e) {
+                    // findMeeting 시 모임이 존재하지 않아 BadRequestException이 발생하면 continue
+                    continue;
                 }
 
-                Boolean isSearchForEnd = meetingSearchCondition.getIsEnd();
-
-                if (isSearchForEnd == null ||
-                        (meeting.getIsFinished() && isSearchForEnd) ||
-                        (!meeting.getIsFinished() && !isSearchForEnd)) {
-                    // 검색 조건이 null이거나, 조건과 일치하는 미팅만 리스트에 추가
-                    MeetingListSearchDTO meetingListSearchDTO = new MeetingListSearchDTO(meeting, username);
-                    meetingListSearchDTOs.add(meetingListSearchDTO);
-                }
             }
 
             return ResponseEntity.ok().body(new JsonResult<>(meetingListSearchDTOs).getData());
