@@ -50,6 +50,8 @@ public class RecommendService {
         String categoryResult = "1,2,3,4,5,6,7,8,9,10";
         try {
             awsLambdaService.updateUserEmbedding(memberId, memberName, prompt.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             moimResult = awsLambdaService.fetchMoimRecommendation(memberId).block();
             categoryResult = awsLambdaService.fetchCategoryRecommendation(memberId).block();
