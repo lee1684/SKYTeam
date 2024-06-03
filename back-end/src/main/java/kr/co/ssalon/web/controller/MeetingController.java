@@ -100,22 +100,21 @@ public class MeetingController {
             List<Long> meetingRecommendList = gson.fromJson(member.getMeetingRecommendation(), new TypeToken<List<Long>>() {});
 
             for (int i = 0; i < meetingRecommendList.size(); i++) {
+                Meeting meeting;
+
                 if (member.getMeetingRecommendation() != null) {
                     // This block handles the case where member.getMeetingRecommendation() is not null
-                    Meeting meeting = meetingService.findMeeting(meetingRecommendList.get(i));
-                    if (meeting.getIsFinished() && meetingSearchCondition.getIsEnd()) {
-                        MeetingListSearchDTO meetingListSearchDTO = new MeetingListSearchDTO(meeting, username);
-                        meetingListSearchDTOs.add(meetingListSearchDTO);
-                    } else if (!meeting.getIsFinished() && !meetingSearchCondition.getIsEnd()) {
-                        MeetingListSearchDTO meetingListSearchDTO = new MeetingListSearchDTO(meeting, username);
-                        meetingListSearchDTOs.add(meetingListSearchDTO);
-                    } else {
-                        MeetingListSearchDTO meetingListSearchDTO = new MeetingListSearchDTO(meeting, username);
-                        meetingListSearchDTOs.add(meetingListSearchDTO);
-                    }
+                    meeting = meetingService.findMeeting(meetingRecommendList.get(i));
                 } else {
                     // This block handles the case where member.getMeetingRecommendation() is null
-                    Meeting meeting = meetingService.findMeeting((long) (i));
+                    meeting = meetingService.findMeeting((long) i);
+                }
+
+                boolean isMeetingFinished = meeting.getIsFinished();
+                boolean isSearchForEnd = meetingSearchCondition.getIsEnd();
+
+                if ((isMeetingFinished && isSearchForEnd) || (!isMeetingFinished && !isSearchForEnd)) {
+                    // Add meeting to the list if it matches the search condition
                     MeetingListSearchDTO meetingListSearchDTO = new MeetingListSearchDTO(meeting, username);
                     meetingListSearchDTOs.add(meetingListSearchDTO);
                 }
