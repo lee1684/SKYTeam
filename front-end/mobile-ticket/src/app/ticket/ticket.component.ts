@@ -15,7 +15,10 @@ import {
   DecorationInfo,
   SsalonConfigService,
 } from '../service/ssalon-config.service';
-import { ApiExecutorService, ImageGeneration } from '../service/api-executor.service';
+import {
+  ApiExecutorService,
+  ImageGeneration,
+} from '../service/api-executor.service';
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { FabricImage, FabricText, Path } from 'fabric';
 import { ScenegraphService } from '../service/scenegraph.service';
@@ -148,36 +151,23 @@ export class TicketComponent {
     }
   }
 
+  public ngOnDestroy(): void {
+    this._sceneGraphService.destroy();
+  }
+
   public onChangeInput(prompt: string): void {
     this.prompt = prompt;
   }
 
-  public async onClickImageGeneration() {
-    const body: ImageGeneration = {
-      prompt: this.prompt,
-      highQuality: false, // true: 0.08 달러 사용, false: 0.02 달러 사용
-    }
-
-    // 실제 API 사용 (비용 O)
-    // this.imageUrl = await this._apiExecutorService.generateImage(this.moimId, body);
-
-    // 테스트용 (비용 X)
-    this.imageUrl = 'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/Images/62/1b30cc57-fa8d-4491-a609-06ccf3ba83dc.png';
-
-    const tempImg = await FabricImage.fromURL(this.imageUrl, {
-      crossOrigin: 'anonymous',
-    });
-    const fabricObjects = (this.mobileTicketEditor?.fabricObjects as FabricImage[]);
-    fabricObjects.push(tempImg);
-    this.mobileTicketEditViewer?.updateCanvas(fabricObjects);
-  }
-
   public setFirstPage() {
     if (this.viewType === 'edit') {
+      this._sceneGraphService.mobileTicketAutoRotate = false;
       this.changeViewMode(MobileTicketViewMode.APPEDITVIEW);
     } else if (this.viewType === 'view') {
+      this._sceneGraphService.mobileTicketAutoRotate = false;
       this.changeViewMode(MobileTicketViewMode.APPVIEW);
     } else {
+      this._sceneGraphService.mobileTicketAutoRotate = true;
       this.changeViewMode(MobileTicketViewMode.WEBVIEW);
     }
   }
@@ -224,7 +214,9 @@ export class TicketComponent {
   }
 
   public async onClickQuitButton() {
-    this._router.navigate(['/web/main']);
+    this._router.navigate(['/web/meeting-info'], {
+      queryParams: { moimId: this.moimId },
+    });
   }
 
   public async updateServer() {

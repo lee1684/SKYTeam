@@ -14,7 +14,6 @@ import {
   Profile,
 } from '../../service/api-executor.service';
 import { Client, Message } from '@stomp/stompjs';
-import SockJS from 'sockjs-client';
 import { SimpleInputComponent } from '../../ssalon-component/simple-input/simple-input.component';
 import { ChatContainerComponent } from '../../ssalon-component/chat-container/chat-container.component';
 
@@ -46,7 +45,6 @@ export class ChattingComponent {
   public isConnected: boolean = false;
   public isEntered: boolean = false;
   public messages: any[] = [];
-
   private _imageUrl: string = '';
   private _file: File = undefined as unknown as File;
   private _stompClient: Client = undefined as unknown as Client;
@@ -55,12 +53,6 @@ export class ChattingComponent {
     window.addEventListener('beforeunload', () => {
       this.disconnect();
     });
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${'access'}=`);
-    this._apiExecutorService.token = parts.pop()!.split(';').shift()!;
-    /*
-    this._apiExecutorService.token =
-      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTc0MDY5MDgsImV4cCI6MTcxNzQ5MzMwOH0.TyRWScFy0Fq-W0JRE2n0Woune8B2fvCJH58pYTEbyeQ';*/
   }
 
   public async ngOnInit() {
@@ -142,6 +134,14 @@ export class ChattingComponent {
   public disconnect() {
     if (this._stompClient) {
       this._stompClient.publish({
+        destination: `/send/${this.moimId}`,
+        body: JSON.stringify({ message: this.simpleInput!.innerText }),
+        headers: {
+          Authorization: `Bearer ${this._apiExecutorService.token}`,
+          MessageType: 'LEAVE',
+        },
+      });
+      this._stompClient.publish({
         destination: `/send/disconnect`,
         body: JSON.stringify({ message: this.simpleInput!.innerText }),
         headers: {
@@ -149,7 +149,6 @@ export class ChattingComponent {
           MessageType: 'LEAVE',
         },
       });
-
       this._stompClient.deactivate();
       this.isConnected = false;
       this.isEntered = false;

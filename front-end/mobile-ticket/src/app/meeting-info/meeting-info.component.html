@@ -1,6 +1,7 @@
 <div class="container">
     <app-top-navigator *ngIf="this.isLoadedMoimInfo()" [style.width]="'100%'" [title]="this.moimInfo.title"
-        [shareButton]="true" (shareButtonClickEvent)="this.onClickShareButton()"></app-top-navigator>
+        [shareButton]="true" (shareButtonClickEvent)="this.onClickShareButton()"
+        (backButtonClickEvent)="this.onClickBackButton()"></app-top-navigator>
     <div *ngIf="this.isCopyButtonClicked" id="copy-alert-container" [@copiedAnim]="this.isCopyButtonClicked">링크 복사 완료!
     </div>
     <app-tab-group [tabs]="this.tabs" (onClickTabEvent)="this.onClickTab($event)"></app-tab-group>

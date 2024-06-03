@@ -79,7 +79,9 @@ export class QrCheckComponent {
           this.qrVideo.nativeElement.readyState ===
           this.qrVideo.nativeElement.HAVE_ENOUGH_DATA
         ) {
-          const canvasContext = this.qrCanvas.nativeElement.getContext('2d');
+          const canvasContext = this.qrCanvas.nativeElement.getContext('2d', {
+            willReadFrequently: true,
+          });
           this.qrCanvas.nativeElement.height =
             this.qrVideo.nativeElement.videoHeight;
           this.qrCanvas.nativeElement.width =
@@ -148,9 +150,12 @@ export class QrCheckComponent {
   }
   public stopDetectQRCode() {
     if (this.qrStream) {
+      this.qrVideo!.nativeElement.remove();
       this.qrStream.getTracks().forEach((track) => {
         track.stop();
       });
+      this.qrStream!.removeTrack(this.qrStream!.getVideoTracks()[0]);
+
       this.isDetectingQRCode = false;
       this.isCameraLoaded = false;
     }

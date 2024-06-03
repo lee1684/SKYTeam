@@ -39,12 +39,9 @@ export class ApiExecutorService {
   public refreshToken: string = '';
   public myProfile: Profile = undefined as unknown as Profile;
   constructor(private _ssalonConfigService: SsalonConfigService) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${'access'}=`);
-    this.token = parts.pop()!.split(';').shift()!;
-
     this.token =
       'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTc0MDY5MDgsImV4cCI6MTcxNzQ5MzMwOH0.TyRWScFy0Fq-W0JRE2n0Woune8B2fvCJH58pYTEbyeQ';
+    /**/
 
     this.initApiExecutor();
   }
@@ -363,7 +360,7 @@ export class ApiExecutorService {
     try {
       let url =
         params === ''
-          ? '/moims/home?categoryLen=10&meetingLen=10&categoryPage=1&isEnd=true' //'/moims?size=1000&isEnd=false' //'
+          ? '/moims/home?categoryLen=10&meetingLen=10&categoryPage=1&isEnd=false' //'/moims?size=1000&isEnd=false' //'
           : `/moims?isEnd=false&category=${params}&size=1000`;
       let response = await this.apiExecutorJson?.get(url);
       return response!.data;

@@ -34,7 +34,6 @@ export class QrShowComponent {
     //let url = `http://localhost:8080/web/ticket?moimId=${this.moimId}&viewType=view`;
     this.ticketViewerSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     await this.setQrCodeImgSrc();
-    this._sceneGraphService.mobileTicketAutoRotate = true;
   }
   public async setQrCodeImgSrc() {
     let a = qrcode(0, 'L');

@@ -28,13 +28,6 @@ export class AppComponent {
   ) {}
 
   public ngOnInit(): void {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${'access'}=`);
-    this._apiExecutorService.setToken(parts.pop()!.split(';').shift()!);
-    //this._apiExecutorService.setToken(
-    //  'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTc0MDQ1MTcsImV4cCI6MTcxNzQ5MDkxN30.ac0p0QkVpWj_xMtY__jFkbEgVEQWbtCHyA-zn8p3-uo'
-    //);
-
     this._apiExecutorService.getMyProfile();
   }
 }

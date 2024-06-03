@@ -276,6 +276,10 @@ export class MeetingInfoComponent {
     }, 2000);
   }
 
+  public async onClickBackButton() {
+    this._router.navigate(['/web/main']);
+  }
+
   public getThumbSrc(moimId: string): string {
     return (
       'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/Thumbnails/' +

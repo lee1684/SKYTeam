@@ -262,6 +262,10 @@ export class ButtonElementsService {
   public getLabelByValue(buttonElements: NewButtonElement[], value: number) {
     return buttonElements.find((element) => element.value === value)?.label;
   }
+
+  public getValueByLabel(buttonElements: NewButtonElement[], label: string) {
+    return buttonElements.find((element) => element.label === label)?.value;
+  }
   public inintButtons() {
     /**
      * Meeting Info

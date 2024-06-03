@@ -17,9 +17,6 @@ export class SsalonLoginRedirectComponent {
     private _router: Router,
     private _route: ActivatedRoute
   ) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${'access'}=`);
-    this._apiExecutorService.setToken(parts.pop()!.split(';').shift()!);
     if (sessionStorage.getItem('goMoimId')) {
       this.goMoimId = sessionStorage.getItem('goMoimId')!;
     } else {
@@ -31,7 +28,6 @@ export class SsalonLoginRedirectComponent {
     const parts = value.split(`; ${'access'}=`);
     this._apiExecutorService.setToken(parts.pop()!.split(';').shift()!);
     let response = await this._apiExecutorService.getIsRegister();
-    setTimeout(() => {}, 3000);
 
     if (response !== false) {
       if (this.goMoimId === 'undefined') {
