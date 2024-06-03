@@ -34,15 +34,21 @@ export class ApiExecutorService {
   public apiURL: string = 'https://ssalon.co.kr/api';
   //public apiURL: string = 'http://localhost:8080/api';
   public tokens = {};
-  public token: string =
-    'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTczMTc4ODksImV4cCI6MTcxNzQwNDI4OX0.GI0AvhDGCfkAq5BG3J4MuVn-yXwvsA9D-Byid1kTmxk';
+  public token: string = '';
+
   public refreshToken: string = '';
   public myProfile: Profile = undefined as unknown as Profile;
   constructor(private _ssalonConfigService: SsalonConfigService) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${'access'}=`);
+    this.token = parts.pop()!.split(';').shift()!;
+
+    /*
+    this.token =
+      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTc0MDY5MDgsImV4cCI6MTcxNzQ5MzMwOH0.TyRWScFy0Fq-W0JRE2n0Woune8B2fvCJH58pYTEbyeQ';
+*/
     this.initApiExecutor();
   }
-
-  public async ngOnInit() {}
 
   public setToken(token: string) {
     this.token = token;
@@ -150,8 +156,10 @@ export class ApiExecutorService {
 
   public async generateImage(moimId: string, body: ImageGeneration) {
     try {
-
-      const response = await this.apiExecutorJson?.post(`/image/generate/${moimId}`, body)
+      const response = await this.apiExecutorJson?.post(
+        `/image/generate/${moimId}`,
+        body
+      );
       return response!.data;
     } catch (error) {
       console.log(error);
@@ -273,6 +281,24 @@ export class ApiExecutorService {
     }
   }
 
+  public async getCategorys() {
+    try {
+      let response = await this.apiExecutorJson?.get('/category/all');
+      return response!.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  public async getRecommendedCategorys() {
+    try {
+      let response = await this.apiExecutorJson?.get('category/recommend');
+      return response!.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   public async getBarcode(moimId: string) {
     try {
       let response = await this.apiExecutorJson?.get(`/tickets/${moimId}/link`);
@@ -338,8 +364,18 @@ export class ApiExecutorService {
     try {
       let url =
         params === ''
-          ? '/moims?size=1000&isEnd=false' //'/moims/home?categoryLen=10&meetingLen=10&isEnd=false&order=RECENT' //'
+          ? '/moims/home?categoryLen=10&meetingLen=10&categoryPage=1&isEnd=true' //'/moims?size=1000&isEnd=false' //'
           : `/moims?isEnd=false&category=${params}&size=1000`;
+      let response = await this.apiExecutorJson?.get(url);
+      return response!.data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  public async getRecommendedMoims(params: string = '') {
+    try {
+      let url = '/moims/recommend?isEnd=false';
       let response = await this.apiExecutorJson?.get(url);
       return response!.data;
     } catch (e) {
@@ -361,6 +397,17 @@ export class ApiExecutorService {
     try {
       let url = `/moims?isParticipant=true&isEnd=true&size=100`;
       let response = await this.apiExecutorJson?.get(url);
+      return response!.data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  public async searchMoims(keyword: string) {
+    try {
+      let response = await this.apiExecutorJson?.get(
+        `/moims/search/keyword?keyword=${keyword}`
+      );
       return response!.data;
     } catch (e) {
       console.log(e);

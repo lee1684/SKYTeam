@@ -23,6 +23,7 @@ export class ChatContainerComponent {
     this.convertedHTML = this.convertMarkdown(this.message.message)
       .replace(/<p[^>]*>/g, '')
       .replace(/<\/p>/g, '');
+    console.log(this.convertedHTML);
   }
   public getTime(date: string) {
     let dateObj = new Date(date);

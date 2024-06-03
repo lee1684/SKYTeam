@@ -103,7 +103,19 @@ export class MeetingInfoComponent {
     });
   }
 
-  public onClickTab(tab: MeetingInfoTabEnum) {
+  public async onClickTab(tab: MeetingInfoTabEnum) {
+    this.moimInfo = await this._apiExecutorService.getMoimInfo(this.moimId);
+    this.ticketInfo = await this._apiExecutorService.getTicket(this.moimId);
+    await this.checkDiaryCreated();
+    let userInfos = await this._apiExecutorService.getJoiningUsers(this.moimId);
+    userInfos.forEach((userInfo: any, index: number) => {
+      this.joiningUsers.push({
+        imgSrc: userInfo.profilePictureUrl,
+        label: userInfo.nickname,
+        value: userInfo.userId,
+        status: userInfo.attendance,
+      });
+    });
     this.nowTab = tab;
     this.changeButtonLabel(this.nowTab);
   }

@@ -4,11 +4,16 @@ import {
   EventEmitter,
   HostListener,
   Input,
+  OnChanges,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import { NewButtonElement } from '../simple-toggle-group/simple-toggle-group.component';
 import { Router } from '@angular/router';
-
+export interface TicketList {
+  categoryName: string;
+  meetingList: Ticket[];
+}
 export interface Ticket {
   ticketThumb: string;
   backgroundColor: string;
@@ -35,6 +40,7 @@ export class ImageRowContainerComponent {
   @Input() images: NewButtonElement[] = [
     { imgSrc: 'assets/heart.png', value: 0, label: 'heart', selected: false },
   ];
+  @Input() circleImage: boolean = false;
   @Input() tickets: Ticket[] = [];
   @Input() modifiedTickets: Ticket[][] = [];
   @Input() columnType: boolean = false;
@@ -54,6 +60,7 @@ export class ImageRowContainerComponent {
       this.ticketRowContainerWidth = window.innerWidth * 0.95;
     }
   }
+  public ngAfterViewInit(): void {}
 
   public ngAfterViewChecked(): void {}
   private _setLayout() {

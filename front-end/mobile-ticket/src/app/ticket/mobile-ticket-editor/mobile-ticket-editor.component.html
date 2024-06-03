@@ -25,18 +25,26 @@
                     [highContrast]="true"></app-simple-button>
             </div>
         </div>
-        <!-- text edit feature -->
+        <!-- ai-generate feature -->
         <div *ngIf="this.editMode === this.mobileTicketEditMode.AI_GENERATE">
-            <div id="text-edit-feature-container" #textEditFeatureContainer>
-                <textarea id="text-edit-input" #textEditInput autocomplete="off" type="text"
-                    [style.text-align]="this.ssalonTextAttribute.textAlign"
-                    [style.color]="this.ssalonTextAttribute.color"
-                    [style.font-family]="this.ssalonTextAttribute.fontFamily"
-                    (input)="this.onChangeSsalonTextAttribute('text', $event)"></textarea>
+            <div id="generate-container">
+
+                <img width="300" height="300" #generatedImage />
+                <div id="generator">
+                    <textarea id="prompt" #prompt autocomplete="off" type="text"
+                        [style.text-align]="this.ssalonTextAttribute.textAlign"
+                        [style.color]="this.ssalonTextAttribute.color"
+                        [style.font-family]="this.ssalonTextAttribute.fontFamily" [style.height]="'100px'"
+                        [style.width]="'300px'" [placeholder]="'생성하고 싶은 사진의 설명을 입력해주세요'"></textarea>
+                    <div [style.display]="'flex'" [style.justify-content]="'center'">
+                        <button id="generate-button" (click)="this.generateImage()">생성</button>
+                        <div *ngIf="this.generatingImage" id="spinner"></div>
+                    </div>
+
+                </div>
+
             </div>
-            <div>
-                <app-square-button></app-square-button>
-            </div>
+
         </div>
         <!-- background color edit feature -->
         <div *ngIf="
@@ -53,7 +61,7 @@
         <!-- text edit feature -->
         <div *ngIf="this.editMode === this.mobileTicketEditMode.TEXT">
             <div id="text-edit-feature-container" #textEditFeatureContainer>
-                <textarea id="text-edit-input" #textEditInput autocomplete="off" type="text"
+                <textarea class="text-edit-input" #textEditInput autocomplete="off" type="text"
                     [style.text-align]="this.ssalonTextAttribute.textAlign"
                     [style.color]="this.ssalonTextAttribute.color"
                     [style.font-family]="this.ssalonTextAttribute.fontFamily"

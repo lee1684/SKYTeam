@@ -87,7 +87,6 @@ export class MobileTicketEditViewerComponent {
   }
 
   public async loadDecorationInfo() {
-    console.log(this.moimId);
     let decorationInfo: any = null;
     if (this.createTemplate !== undefined) {
       if (this.face === 'front') {
@@ -121,7 +120,11 @@ export class MobileTicketEditViewerComponent {
     console.log(this.canvas?.toJSON());
     if (fabricObjects !== null) {
       for (let index = 0; index < fabricObjects.length; index++) {
-        this.canvas?.add(fabricObjects[index]);
+        this.canvas!.add(fabricObjects[index]);
+        this.canvas!.moveObjectTo(
+          fabricObjects[index] as FabricObject,
+          this.canvas!.getObjects().length - 1
+        );
       }
     }
     this.canvas?.renderAll();

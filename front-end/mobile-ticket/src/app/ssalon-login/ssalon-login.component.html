@@ -1,4 +1,4 @@
-<div class="new-container">
+<div class="new-container" *ngIf="!this.isLowerWidth()">
     <div class="left-container">
         <img id="new-logo-container" src="assets/ssalon_logo_hand.svg" height="65" />
         <div id="new-login-buttons-container">
@@ -10,12 +10,10 @@
     <div class="right-container">
         <app-ticket [moimId]="'2'" [viewType]="'view'"></app-ticket>
     </div>
-
-
 </div>
 
-<!--
-    <div class="container">
+
+<div class="container" *ngIf="this.isLowerWidth()">
     <div class="left-container"></div>
     <div class="right-container"></div>
     <div id="background">
@@ -28,4 +26,3 @@
             (onClickToggleButtonEvent)="this.onClickLoginButton($event)"></app-simple-toggle>
     </div>
 </div>
--->

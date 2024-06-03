@@ -1,8 +1,8 @@
 <div class="container">
     <div id="msg-container" #msgContainer>
         <ng-container *ngFor="let msg of messages, index as i">
-            <app-chat-container [message]="msg" [contentOnly]="this.isSameSender(msg, i)"
-                [align]="this.isMyMsg(msg)"></app-chat-container></ng-container>
+            <app-chat-container [message]="msg" [contentOnly]="this.isSameSender(msg, i)" [align]="this.isMyMsg(msg)"
+                #msgComponents></app-chat-container></ng-container>
 
     </div>
     <div id="send-input">

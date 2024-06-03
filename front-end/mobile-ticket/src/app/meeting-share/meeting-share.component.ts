@@ -28,7 +28,7 @@ export class MeetingShareComponent {
   }
   public ngOnInit(): void {}
   public joinMoim() {
-    this._router.navigate(['/web/meeting-info'], {
+    this._router.navigate(['/'], {
       queryParams: { moimId: this.moimId },
     });
   }

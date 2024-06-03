@@ -27,12 +27,10 @@
         </div>
     </div>
     <div *ngIf="this.showButton()" id="join-button-container">
-        <div *ngIf="this.nowTab === this.meetingInfoTabEnum.TICKET" [style.display]="'flex'">
-            <app-square-button *ngIf="this.isCreator"
-                [buttonElements]="[this.buttonElementsService.editTicketButtons[0]]"
+        <div *ngIf="this.nowTab === this.meetingInfoTabEnum.TICKET">
+            <app-square-button
+                [buttonElements]="(this.isCreator)?this.buttonElementsService.editTicketButtons:[this.buttonElementsService.editTicketButtons[1]]"
                 (onClickEvent)="this.onClickEditTicketButton(0)"></app-square-button>
-            <app-square-button [buttonElements]="[this.buttonElementsService.editTicketButtons[1]]"
-                (onClickEvent)="this.onClickEditTicketButton(1)"></app-square-button>
         </div>
         <app-square-button *ngIf="this.nowTab !== this.meetingInfoTabEnum.TICKET"
             [buttonElements]="this.buttonElementsService.joinButtonElements"

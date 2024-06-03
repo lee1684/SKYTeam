@@ -4,7 +4,9 @@ import {
   ElementRef,
   HostListener,
   Input,
+  QueryList,
   ViewChild,
+  ViewChildren,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
@@ -35,6 +37,7 @@ export class ChattingComponent {
   @ViewChild('msgContainer', { static: false })
   msgContainer: ElementRef | null = null;
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+  @ViewChildren('msgComponents') msgComponents!: QueryList<ElementRef>;
   @Input() moimId: string = undefined as unknown as string;
 
   public myProfile: Profile = undefined as unknown as Profile;
@@ -50,9 +53,11 @@ export class ChattingComponent {
   constructor(private _apiExecutorService: ApiExecutorService) {
     // 새로고침 시 disconnect 설정
     window.addEventListener('beforeunload', () => {
-      console.log('hello');
       this.disconnect();
     });
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${'access'}=`);
+    this._apiExecutorService.token = parts.pop()!.split(';').shift()!;
   }
 
   public async ngOnInit() {
@@ -90,17 +95,19 @@ export class ChattingComponent {
         console.log('입장');
       }
 
-      this._stompClient.subscribe(`/room/${this.moimId}`, (greeting: any) => {
-        let inComeMsg = JSON.parse(greeting.body);
-        console.log(inComeMsg);
-        if (inComeMsg.messageType === 'TALK') {
-          this.messages.push(JSON.parse(greeting.body));
-        } else if (inComeMsg.messageType === 'ENTER') {
-          this.updateParticipants();
-        } else {
-          this.updateParticipants();
+      this._stompClient.subscribe(
+        `/room/${this.moimId}`,
+        async (greeting: any) => {
+          let inComeMsg = JSON.parse(greeting.body);
+          if (inComeMsg.messageType === 'TALK') {
+            this.messages.push(JSON.parse(greeting.body));
+          } else if (inComeMsg.messageType === 'ENTER') {
+            await this.updateParticipants();
+          } else {
+            await this.updateParticipants();
+          }
         }
-      });
+      );
     };
 
     this._stompClient.onStompError = (frame) => {
@@ -110,8 +117,10 @@ export class ChattingComponent {
     this.connect();
   }
   public ngAfterViewChecked() {
-    this.msgContainer!.nativeElement.scrollTop =
-      this.msgContainer!.nativeElement.scrollHeight;
+    this.msgComponents.changes.subscribe(() => {
+      this.msgContainer!.nativeElement.scrollTop =
+        this.msgContainer!.nativeElement.scrollHeight;
+    });
   }
   public ngOnDestroy() {
     this.disconnect();

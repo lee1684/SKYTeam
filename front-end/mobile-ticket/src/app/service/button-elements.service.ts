@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NewButtonElement } from '../ssalon-component/simple-toggle-group/simple-toggle-group.component';
+import { ApiExecutorService } from './api-executor.service';
 
 @Injectable({
   providedIn: 'root',
@@ -160,12 +161,6 @@ export class ButtonElementsService {
       label: '템플릿으로 만들기',
       imgSrc: 'assets/create-ticket-type-icons/template.png',
     },
-    {
-      selected: false,
-      value: 2,
-      label: 'OpenAI 이미지 생성',
-      imgSrc: 'assets/create-ticket-type-icons/template.png',
-    }
   ];
   public nextButtons: NewButtonElement[] = [
     {
@@ -209,7 +204,7 @@ export class ButtonElementsService {
       label: '프로필 수정하기',
     },
   ];
-  constructor() {
+  constructor(private _apiExecutorService: ApiExecutorService) {
     for (let i = 0; i < 10; i++) {
       this.interestSelectionButtons.push({
         selected: false,
@@ -232,6 +227,38 @@ export class ButtonElementsService {
       });
     }
   }
+
+  public async updateCategoryOrder(): Promise<boolean> {
+    this.categorySelectionButtons = [];
+    let orderedCateogrySelectionButtons =
+      await this._apiExecutorService.getCategorys();
+    orderedCateogrySelectionButtons.forEach(
+      (category: { id: number; name: string }) => {
+        this.categorySelectionButtons.push({
+          selected: false, // 0번 버튼은 선택된 상태로 초기화
+          value: category.id,
+          label: this.category[category.id - 1],
+          solid: true,
+          unselectedBackgroundColor: '#F8F8F8',
+          unselectedFontColor: '#000000',
+          selectedBackgroundColor: '#000000',
+          selectedFontColor: '#ffffff',
+        });
+      }
+    );
+    this.categorySelectionButtons.unshift({
+      selected: true,
+      value: 0,
+      label: '추천',
+      solid: true,
+      unselectedBackgroundColor: '#F8F8F8',
+      unselectedFontColor: '#000000',
+      selectedBackgroundColor: '#000000',
+      selectedFontColor: '#ffffff',
+    });
+    return true;
+  }
+
   public getLabelByValue(buttonElements: NewButtonElement[], value: number) {
     return buttonElements.find((element) => element.value === value)?.label;
   }

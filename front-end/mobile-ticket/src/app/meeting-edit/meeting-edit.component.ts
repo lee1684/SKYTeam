@@ -71,9 +71,10 @@ export class MeetingEditComponent {
   ) {
     this._route.queryParams.subscribe((params) => {
       this.editType = params['editType'];
-      this.editType === 'moimInfo'
-        ? '모임 정보 수정하기'
-        : '모임 후기 수정하기';
+      this.title =
+        this.editType === 'moimInfo'
+          ? '모임 정보 수정하기'
+          : '모임 후기 수정하기';
       this.moimId = params['moimId'];
     });
   }
@@ -245,7 +246,10 @@ export class MeetingEditComponent {
     if (this.editType === 'moimInfo') {
       await this._apiExecutorService.editMoimInfo(this.moimId, this.moimInfo);
     } else {
-      await this._apiExecutorService.editMoimReview(this.moimId, this.moimInfo);
+      await this._apiExecutorService.editMoimReview(
+        this.moimId,
+        this.reviewInfo
+      );
     }
 
     this._router.navigate(['/web/meeting-info'], {

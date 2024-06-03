@@ -1,5 +1,11 @@
 import { NgFor, NgIf } from '@angular/common';
-import { Component, ElementRef, ViewChild, ViewChildren, QueryList } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  ViewChildren,
+  QueryList,
+} from '@angular/core';
 import {
   NewButtonElement,
   SimpleToggleGroupComponent,
@@ -7,6 +13,7 @@ import {
 import {
   ImageRowContainerComponent,
   Ticket,
+  TicketList,
 } from '../../ssalon-component/image-row-container/image-row-container.component';
 import { Router } from '@angular/router';
 import { ButtonElementsService } from '../../service/button-elements.service';
@@ -29,42 +36,44 @@ export class MoimListComponent {
   ticketContainer: ElementRef<HTMLDivElement> | null = null;
   @ViewChildren('rowContainers') rowContainers!: QueryList<ElementRef>;
 
-  public ticketThumbnails: Ticket[][] = [];
+  public isCategoryOrderUpdated: boolean = false;
+  public ticketThumbnails: TicketList[] = [];
   constructor(
     private _apiExecutorService: ApiExecutorService,
     public buttonElementsService: ButtonElementsService
   ) {}
   public async ngOnInit() {
     /** 전체 */
+    let recommendedTickets: Ticket[] =
+      await this._apiExecutorService.getRecommendedMoims();
+    this.isCategoryOrderUpdated =
+      await this.buttonElementsService.updateCategoryOrder();
     let tickets = await this._apiExecutorService.getMoims();
-    this.ticketThumbnails.push(tickets.content);
+    this.ticketThumbnails = tickets.content;
+    this.ticketThumbnails.unshift({
+      categoryName: '추천',
+      meetingList: recommendedTickets,
+    });
+  }
 
-    for (
-      let i = 0;
-      i < this.buttonElementsService.interestSelectionButtons.length;
-      i++
-    ) {
-      let tickets = await this._apiExecutorService.getMoims(
-        this.buttonElementsService.interestSelectionButtons[i].label
-      );
-      this.ticketThumbnails.push(tickets.content);
-    }
+  public ngOnDestroy() {
+    this.isCategoryOrderUpdated = false;
   }
   public onClickCategoryButton(value: number): void {
-    const rowContainer = this.rowContainers.toArray().find(rowContainer => rowContainer.nativeElement.id === value.toString());
-    this.ticketContainer!.nativeElement.scrollTo({
-      top: rowContainer!.nativeElement.offsetTop - 50,
+    const rowContainer = this.rowContainers
+      .toArray()
+      .find(
+        (rowContainer) => rowContainer.nativeElement.id === value.toString()
+      );
+    this.ticketContainer?.nativeElement.scrollTo({
+      top: rowContainer?.nativeElement.offsetTop - 50,
       behavior: 'smooth',
     });
   }
 
-  public isLoadedTickets(i: number): boolean {
-    if (this.ticketThumbnails.length > 0) {
-      if (this.ticketThumbnails[i] !== undefined) {
-        if (this.ticketThumbnails[i].length > 0) {
-          return true;
-        } else return false;
-      } else return false;
+  public isLoadedTickets(): boolean {
+    if (this.ticketThumbnails.length > 0 && this.isCategoryOrderUpdated) {
+      return true;
     } else return false;
   }
 }

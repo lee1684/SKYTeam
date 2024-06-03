@@ -22,7 +22,7 @@
             (click)="this.onClickImgSendButton()" />
         <img *ngIf="this.type === 'chat-input'" id="chat-send-button" src="assets/icons/send_message.png"
             (click)="this.onClickChatSendButton()" />
-        <img *ngIf="this.type === 'search'" id="chat-send-button" src="assets/navigator_icons/search.svg"
+        <img *ngIf="this.type === 'search-input'" id="chat-send-button" src="assets/navigator_icons/search.svg"
             (click)="this.onClickSearchButton()" />
         <textarea *ngIf="this.type === 'longText' && showGeneralHTML" id="text" [placeholder]="this.placeholder"
             (click)="this.onClickInput()" (input)="this.onChangeInput($event)" [(ngModel)]="this.innerText"

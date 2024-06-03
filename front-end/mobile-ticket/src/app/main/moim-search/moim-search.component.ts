@@ -18,24 +18,25 @@ import { NgIf } from '@angular/common';
 export class MoimSearchComponent {
   public searchTimeout: any;
   public runningTickets: Ticket[] = [];
+  public isSearching: boolean = false;
   constructor(private _apiExecutorService: ApiExecutorService) {}
-  public async ngOnInit() {
-    let runningTickets = await this._apiExecutorService.getRunningMoims();
-    this.runningTickets = runningTickets.content;
-  }
+  public async ngOnInit() {}
 
   public isLoaded(): boolean {
     return this.runningTickets.length > 0;
   }
 
-  public onInput(value: string) {
+  public async onInput(value: string) {
     clearTimeout(this.searchTimeout);
-    this.searchTimeout = setTimeout(() => {
-      this.onFindRelativeMoim(value);
-    }, 2000);
+    this.runningTickets = [];
+    this.isSearching = true;
+    await this.onFindRelativeMoim(value);
+    this.isSearching = false;
   }
 
-  public onFindRelativeMoim(value: string) {
-    console.log('searching moim...');
+  public async onFindRelativeMoim(value: string) {
+    this.runningTickets = (
+      await this._apiExecutorService.searchMoims(value)
+    ).content;
   }
 }
