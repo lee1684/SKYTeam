@@ -58,12 +58,14 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         // redirect 경로 설정
         if (Objects.equals(role, "ROLE_ADMIN")) {
-            log.info("@@@@@@@@@@@@@@@@@if문 role: {}", role);
-            log.info("#################" + request.getHeader("Host"));
             response.sendRedirect("http://localhost:3000");
         } else {
-            log.info("@@@@@@@@@@@@@@@@@else문 role: {}", role);
-            response.sendRedirect("https://ssalon.co.kr/web/ssalon-login-redirect");
+            String goMoimId = request.getParameter("goMoimId");
+            if (goMoimId == null) {
+                response.sendRedirect("https://ssalon.co.kr/web/ssalon-login-redirect");
+            } else {
+                response.sendRedirect("https://ssalon.co.kr/web/ssalon-login-redirect?goMoimId=" + goMoimId);
+            }
         }
 
         // JSON 객체 생성
