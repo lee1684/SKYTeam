@@ -1,13 +1,11 @@
 package kr.co.ssalon.web.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import kr.co.ssalon.domain.entity.Category;
+import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.repository.CategoryRepository;
+import kr.co.ssalon.domain.service.CategoryService;
+import kr.co.ssalon.domain.service.MemberService;
 import kr.co.ssalon.web.controller.annotation.WithCustomMockUser;
-import kr.co.ssalon.web.dto.CategoryHomeDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +33,11 @@ public class CategoryControllerTest {
     @MockBean
     private CategoryRepository categoryRepository;
 
+    @MockBean
+    private CategoryService categoryService;
+
+    @MockBean
+    private MemberService memberService;
 
     @Test
     @DisplayName("카테고리 전체 조회 API(GET /api/category/all) 테스트")
@@ -69,6 +71,10 @@ public class CategoryControllerTest {
 
         // then
         resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].name", is("categoryNameTest1")))
+                .andExpect(jsonPath("$[1].id", is(2)))
+                .andExpect(jsonPath("$[1].name", is("categoryNameTest2")))
         ;
     }
 
@@ -76,24 +82,49 @@ public class CategoryControllerTest {
     @DisplayName("추천 카테고리 리스트 전체 조회 API(GET /api/category/recommend) 테스트")
     @WithCustomMockUser(username = "test")
     public void 추천카테고리전체조회API() throws Exception {
+        // given
 
+        String username = "test";
+
+        String categoryRecommendation = "[2,1]";
+
+        Member member = Member.builder()
+                .categoryRecommendation(categoryRecommendation)
+                .build();
+
+        List<Category> categories = new ArrayList<>();
+
+        Category category1 = Category.builder()
+                .id(1L)
+                .name("categoryNameTest1")
+                .description("categoryDescriptionTest1")
+                .imageUrl("categoryImageUrlTest1")
+                .build();
+
+        Category category2 = Category.builder()
+                .id(2L)
+                .name("categoryNameTest2")
+                .description("categoryDescriptionTest2")
+                .imageUrl("categoryImageUrlTest2")
+                .build();
+
+        categories.add(category1);
+        categories.add(category2);
+
+        when(categoryService.findCategory(1L)).thenReturn(category1);
+        when(categoryService.findCategory(2L)).thenReturn(category2);
+        when(memberService.findMember(username)).thenReturn(member);
+        when(categoryRepository.findAll()).thenReturn(categories);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/api/category/recommend").with(csrf()));
+
+        // then
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id", is(2)))
+                .andExpect(jsonPath("$[0].name", is("categoryNameTest2")))
+                .andExpect(jsonPath("$[1].id", is(1)))
+                .andExpect(jsonPath("$[1].name", is("categoryNameTest1")))
+        ;
     }
-
-
-    /*
-    @Operation(summary = "카테고리 전체 조회")
-    @ApiResponse(responseCode = "200", description = "카테고리 전체 조회 성공", content = {
-            @Content(schema = @Schema(implementation = Category.class))
-    })
-    @GetMapping("/api/category/all")
-
-    @Operation(summary = "추천 카테고리 리스트 전체 조회")
-    @ApiResponse(responseCode = "200", description = "카테고리 전체 조회 성공", content = {
-            @Content(schema = @Schema(implementation = CategoryHomeDTO.class))
-    })
-    @GetMapping("/api/category/recommend")
-
-     */
-
-
 }
