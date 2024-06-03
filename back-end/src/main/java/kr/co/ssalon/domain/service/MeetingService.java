@@ -8,7 +8,9 @@ import kr.co.ssalon.web.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -119,6 +121,12 @@ public class MeetingService {
         return meetings;
     }
 
+    public Page<Meeting> searchByKeyword(String keyword, Pageable pageable){
+        if(keyword == null) keyword = "";
+
+        Page<Meeting> byKeywordContaining = meetingRepository.searchByTitleOrDescription(keyword, pageable);
+        return byKeywordContaining;
+    }
 
     // 모임 정보 업데이트
     @Transactional
