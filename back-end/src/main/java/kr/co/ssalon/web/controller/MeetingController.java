@@ -89,7 +89,7 @@ public class MeetingController {
             @Content(schema = @Schema(implementation = MeetingListSearchDTO.class))
     })
     @GetMapping("/api/moims/recommend")
-    public ResponseEntity<?> getMoimsByRecommend(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
+    public ResponseEntity<?> getMoimsByRecommend(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, MeetingSearchCondition meetingSearchCondition) {
         try {
             Gson gson = new Gson();
 
@@ -100,11 +100,21 @@ public class MeetingController {
             List<Long> meetingRecommendList = gson.fromJson(member.getMeetingRecommendation(), new TypeToken<List<Long>>() {});
 
             for (int i = 0; i < meetingRecommendList.size(); i++) {
-                if (meetingRecommendList != null) {
+                if (member.getMeetingRecommendation() != null) {
+                    // This block handles the case where member.getMeetingRecommendation() is not null
                     Meeting meeting = meetingService.findMeeting(meetingRecommendList.get(i));
-                    MeetingListSearchDTO meetingListSearchDTO = new MeetingListSearchDTO(meeting, username);
-                    meetingListSearchDTOs.add(meetingListSearchDTO);
+                    if (meeting.getIsFinished() && meetingSearchCondition.getIsEnd()) {
+                        MeetingListSearchDTO meetingListSearchDTO = new MeetingListSearchDTO(meeting, username);
+                        meetingListSearchDTOs.add(meetingListSearchDTO);
+                    } else if (!meeting.getIsFinished() && !meetingSearchCondition.getIsEnd()) {
+                        MeetingListSearchDTO meetingListSearchDTO = new MeetingListSearchDTO(meeting, username);
+                        meetingListSearchDTOs.add(meetingListSearchDTO);
+                    } else {
+                        MeetingListSearchDTO meetingListSearchDTO = new MeetingListSearchDTO(meeting, username);
+                        meetingListSearchDTOs.add(meetingListSearchDTO);
+                    }
                 } else {
+                    // This block handles the case where member.getMeetingRecommendation() is null
                     Meeting meeting = meetingService.findMeeting((long) (i));
                     MeetingListSearchDTO meetingListSearchDTO = new MeetingListSearchDTO(meeting, username);
                     meetingListSearchDTOs.add(meetingListSearchDTO);
