@@ -103,18 +103,19 @@ public class MeetingController {
                 Meeting meeting;
 
                 if (member.getMeetingRecommendation() != null) {
-                    // This block handles the case where member.getMeetingRecommendation() is not null
+                    // member.getMeetingRecommendation()이 null이 아닌 경우
                     meeting = meetingService.findMeeting(meetingRecommendList.get(i));
                 } else {
-                    // This block handles the case where member.getMeetingRecommendation() is null
+                    // member.getMeetingRecommendation()이 null인 경우
                     meeting = meetingService.findMeeting((long) i);
                 }
 
-                boolean isMeetingFinished = meeting.getIsFinished();
-                boolean isSearchForEnd = meetingSearchCondition.getIsEnd();
+                Boolean isSearchForEnd = meetingSearchCondition.getIsEnd();
 
-                if ((isMeetingFinished && isSearchForEnd) || (!isMeetingFinished && !isSearchForEnd)) {
-                    // Add meeting to the list if it matches the search condition
+                if (isSearchForEnd == null ||
+                        (meeting.getIsFinished() && isSearchForEnd) ||
+                        (!meeting.getIsFinished() && !isSearchForEnd)) {
+                    // 검색 조건이 null이거나, 조건과 일치하는 미팅만 리스트에 추가
                     MeetingListSearchDTO meetingListSearchDTO = new MeetingListSearchDTO(meeting, username);
                     meetingListSearchDTOs.add(meetingListSearchDTO);
                 }
