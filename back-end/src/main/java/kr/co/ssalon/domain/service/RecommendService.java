@@ -4,12 +4,14 @@ import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.repository.MeetingRepository;
 import kr.co.ssalon.domain.repository.MemberRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class RecommendService {
 
@@ -49,9 +51,10 @@ public class RecommendService {
         String moimResult = "1,2,3,4,5,6,7,8,9,10";
         String categoryResult = "1,2,3,4,5,6,7,8,9,10";
         try {
+            log.info("Trying to update user embedding");
             awsLambdaService.updateUserEmbedding(memberId, memberName, prompt.toString());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Exception in updateMemberEmbedding", e);
         } finally {
             moimResult = awsLambdaService.fetchMoimRecommendation(memberId).block();
             categoryResult = awsLambdaService.fetchCategoryRecommendation(memberId).block();
@@ -61,6 +64,8 @@ public class RecommendService {
         member.changeCategoryRecommendation(categoryResult);
 
         memberRepository.save(member);
+
+        log.info("updateMemberEmbedding finished for member: {}", member.getId());
     }
 
     @Async
