@@ -45,7 +45,15 @@ public class CategoryController {
     @GetMapping("/api/category/all")
     public ResponseEntity<?> getCategories(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) {
         try {
-            return ResponseEntity.ok().body(categoryRepository.findAll());
+            List<Category> categories = categoryRepository.findAll();
+            List<CategoryHomeDTO> categoryHomeDTOS = new ArrayList<>();
+
+            for (Category category : categories) {
+                CategoryHomeDTO categoryHomeDTO = new CategoryHomeDTO(category);
+                categoryHomeDTOS.add(categoryHomeDTO);
+            }
+
+            return ResponseEntity.ok().body(categoryHomeDTOS);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
