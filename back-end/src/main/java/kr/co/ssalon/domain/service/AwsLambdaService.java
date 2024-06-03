@@ -49,6 +49,8 @@ public class AwsLambdaService {
         jsonObject.addProperty("username", username);
         jsonObject.addProperty("prompt", prompt);
 
+        log.info("Sending request to update user embedding for userID: {}", userID);
+
         webClient.post()
                 .uri(uriBuilder -> uriBuilder
                         .path("/api/embedding/user")
@@ -57,6 +59,8 @@ public class AwsLambdaService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .timeout(Duration.ofSeconds(10))
+                .doOnNext(response -> log.info("Response received: {}", response))
+                .doOnError(error -> log.error("Error occurred: ", error))
                 .block();
 
         log.warn("UserEmbedding query sent.");
