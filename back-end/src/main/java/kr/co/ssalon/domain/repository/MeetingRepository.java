@@ -16,8 +16,10 @@ public interface MeetingRepository extends JpaRepository<Meeting,Long>, MeetingR
     @Query("SELECT m FROM Meeting m WHERE m.isFinished = false")
     List<Meeting> findAllUnfinishedMeetings();
 
-
+    /*
     @Query("SELECT m FROM Meeting m WHERE m.title LIKE %:keyword% OR m.description LIKE %:keyword%")
     Page<Meeting> searchByTitleOrDescription(@Param("keyword") String keyword, Pageable pageable);
+
+     */
 
 }
