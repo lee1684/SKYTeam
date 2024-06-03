@@ -31,6 +31,7 @@ public class SearchController {
 
     private final MeetingService meetingService;
 
+    /*
     @Operation(summary = "키워드로 모임 리스트 조회")
     @ApiResponse(responseCode = "200", description = "키워드로 모임 리스트 조회 성공", content = {
             @Content(schema = @Schema(implementation = MeetingListSearchPageDTO.class))
@@ -43,4 +44,6 @@ public class SearchController {
         MeetingListSearchPageDTO meetingListSearchPageDTO = new MeetingListSearchPageDTO(moimsDto);
         return ResponseEntity.ok().body(new JsonResult<>(meetingListSearchPageDTO).getData());
     }
+
+     */
 }
