@@ -30,7 +30,7 @@
         <div *ngIf="this.nowTab === this.meetingInfoTabEnum.TICKET">
             <app-square-button
                 [buttonElements]="(this.isCreator)?this.buttonElementsService.editTicketButtons:[this.buttonElementsService.editTicketButtons[1]]"
-                (onClickEvent)="this.onClickEditTicketButton(0)"></app-square-button>
+                (onClickEvent)="this.onClickEditTicketButton($event)"></app-square-button>
         </div>
         <app-square-button *ngIf="this.nowTab !== this.meetingInfoTabEnum.TICKET"
             [buttonElements]="this.buttonElementsService.joinButtonElements"

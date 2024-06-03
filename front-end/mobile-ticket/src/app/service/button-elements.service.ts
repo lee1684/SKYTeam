@@ -231,7 +231,7 @@ export class ButtonElementsService {
   public async updateCategoryOrder(): Promise<boolean> {
     this.categorySelectionButtons = [];
     let orderedCateogrySelectionButtons =
-      await this._apiExecutorService.getCategorys();
+      await this._apiExecutorService.getRecommendedCategorys();
     orderedCateogrySelectionButtons.forEach(
       (category: { id: number; name: string }) => {
         this.categorySelectionButtons.push({

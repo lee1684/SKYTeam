@@ -448,6 +448,7 @@ export class MobileTicketEditorComponent {
   }
 
   public selectSticker(value: number): void {
+    console.log('select');
     if (
       this.ssalonStickerAttribute.src.includes(this.stickers[value].imgSrc!)
     ) {
@@ -532,6 +533,7 @@ export class MobileTicketEditorComponent {
     } else {
       array = this.ssalonGenAIImageAttribute;
     }
+    console.log(array.src);
     if (index === array.src.length) {
       this.onObjectEditEnded.emit(this.fabricObjects);
 
@@ -580,6 +582,7 @@ export class MobileTicketEditorComponent {
       let keys = Object.keys(result.mapURI);
       for (var i = 0; i < keys.length; i++) {
         var key = keys[i];
+        console.log(i);
         this.ssalonPhotoAttribute.src.push(result.mapURI[key]);
       }
       this.ssalonPhotoAttribute.src.forEach((url) => {
@@ -602,11 +605,11 @@ export class MobileTicketEditorComponent {
         case MobileTicketEditMode.AI_GENERATE:
           this.textFocused = false;
           this.loadImageRecursive(0);
-          break;
+          return;
         case MobileTicketEditMode.PHOTO:
         case MobileTicketEditMode.STICKER:
           this.loadImageRecursive(0);
-          break;
+          return;
         case MobileTicketEditMode.TEXT:
           if (this.fabricObjects.length === 0) {
             (this.fabricObjects as FabricText[]).push(
@@ -641,8 +644,10 @@ export class MobileTicketEditorComponent {
           break;
         case MobileTicketEditMode.DRAW:
           this._isDrawingFabricCanvasLoaded = true;
+          this.lastUsedFeature = MobileTicketEditMode.NONE;
           break;
         case MobileTicketEditMode.NONE:
+          this.lastUsedFeature = MobileTicketEditMode.NONE;
           break;
       }
       this.drawingFabricCanvas?.destroy();
@@ -656,9 +661,7 @@ export class MobileTicketEditorComponent {
           ? null
           : this.fabricObjects
       );
-      this.lastUsedFeature = MobileTicketEditMode.NONE;
     }
-
     this.fabricObjects = [];
   }
 

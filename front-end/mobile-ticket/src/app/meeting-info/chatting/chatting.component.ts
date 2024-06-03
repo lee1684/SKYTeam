@@ -58,6 +58,9 @@ export class ChattingComponent {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${'access'}=`);
     this._apiExecutorService.token = parts.pop()!.split(';').shift()!;
+    /*
+    this._apiExecutorService.token =
+      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTc0MDY5MDgsImV4cCI6MTcxNzQ5MzMwOH0.TyRWScFy0Fq-W0JRE2n0Woune8B2fvCJH58pYTEbyeQ';*/
   }
 
   public async ngOnInit() {
@@ -99,6 +102,7 @@ export class ChattingComponent {
         `/room/${this.moimId}`,
         async (greeting: any) => {
           let inComeMsg = JSON.parse(greeting.body);
+          console.log(inComeMsg);
           if (inComeMsg.messageType === 'TALK') {
             this.messages.push(JSON.parse(greeting.body));
           } else if (inComeMsg.messageType === 'ENTER') {
@@ -115,6 +119,11 @@ export class ChattingComponent {
       console.error('Additional details: ' + frame.body);
     };
     this.connect();
+  }
+
+  public ngAfterViewInit() {
+    this.msgContainer!.nativeElement.scrollTop =
+      this.msgContainer!.nativeElement.scrollHeight;
   }
   public ngAfterViewChecked() {
     this.msgComponents.changes.subscribe(() => {
@@ -140,6 +149,7 @@ export class ChattingComponent {
           MessageType: 'LEAVE',
         },
       });
+
       this._stompClient.deactivate();
       this.isConnected = false;
       this.isEntered = false;

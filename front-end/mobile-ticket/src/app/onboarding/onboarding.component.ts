@@ -66,7 +66,11 @@ export class OnboardingComponent {
     public buttonElementsService: ButtonElementsService,
     private _route: ActivatedRoute
   ) {
-    this._goMoimId = sessionStorage.getItem('goMoimId')!;
+    if (sessionStorage.getItem('goMoimId')) {
+      this._goMoimId = sessionStorage.getItem('goMoimId')!;
+    } else {
+      this._goMoimId = 'undefined';
+    }
   }
 
   public ngOnInit() {

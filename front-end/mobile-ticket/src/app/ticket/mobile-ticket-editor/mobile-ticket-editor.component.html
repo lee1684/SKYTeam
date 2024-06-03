@@ -101,7 +101,7 @@
                 *ngFor="let stickerRow of this.getStickerArray()">
                 <div *ngFor="let sticker of stickerRow">
                     <div class="sticker" [style.width]="'100px'" [style.height]="'150px'"
-                        (click)="this.selectSticker(sticker.value)">
+                        (mouseup)="this.selectSticker(sticker.value)">
                         <img [src]="sticker.imgSrc" width="80px" />
                         <div *ngIf="sticker.selected" class="selected-status"></div>
                     </div>

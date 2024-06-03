@@ -20,9 +20,13 @@ export class SsalonLoginRedirectComponent {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${'access'}=`);
     this._apiExecutorService.setToken(parts.pop()!.split(';').shift()!);
+    if (sessionStorage.getItem('goMoimId')) {
+      this.goMoimId = sessionStorage.getItem('goMoimId')!;
+    } else {
+      this.goMoimId = 'undefined';
+    }
   }
   public async ngOnInit() {
-    this.goMoimId = sessionStorage.getItem('goMoimId')!;
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${'access'}=`);
     this._apiExecutorService.setToken(parts.pop()!.split(';').shift()!);

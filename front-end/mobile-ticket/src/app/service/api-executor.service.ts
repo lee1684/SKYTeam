@@ -43,10 +43,9 @@ export class ApiExecutorService {
     const parts = value.split(`; ${'access'}=`);
     this.token = parts.pop()!.split(';').shift()!;
 
-    /*
     this.token =
       'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTc0MDY5MDgsImV4cCI6MTcxNzQ5MzMwOH0.TyRWScFy0Fq-W0JRE2n0Woune8B2fvCJH58pYTEbyeQ';
-*/
+
     this.initApiExecutor();
   }
 
