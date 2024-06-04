@@ -5,11 +5,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn
 @Getter
-@Builder
 @AllArgsConstructor
-public class Payment {
+public abstract class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,26 +25,40 @@ public class Payment {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "meeting_id")
     private Meeting meeting;
 
     private Integer amount;
 
     private String purpose;
+    private String tid;
+    @Column(insertable = false, updatable = false)
+    private String dtype;
 
-    protected Payment() {}
-
-    public void changeMember(Member member) {
+    public Payment(Member member, Meeting meeting, Integer amount, String purpose, String tid) {
         this.member = member;
+        this.meeting = meeting;
+        this.amount = amount;
+        this.purpose = purpose;
+        this.tid = tid;
     }
 
-    public static Payment createPayment(Member member, Integer amount) {
-        Payment payment = Payment.builder()
-                .amount(amount)
-                .build();
+    protected Payment() {
+    }
 
-        payment.changeMember(member);
+    // ***** 연관 메서드 *****
+    public void changeMemberByMoim(Member member) {
+        this.member = member;
+        member.getPayments().add(this);
+    }
 
-        return payment;
+    public void changeMemberByAdvertise(Member member) {
+        this.member = member;
+        member.getAdvertisements().add(this);
+    }
+
+    public void changeMeeting(Meeting meeting) {
+        this.meeting = meeting;
     }
 }

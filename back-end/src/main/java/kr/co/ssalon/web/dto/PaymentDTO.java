@@ -20,7 +20,7 @@ public class PaymentDTO {
     @NotBlank
     private Long meetingId;
     @NotBlank
-    private Integer amount;
+    private Integer payment;
     @NotBlank
     private String purpose;
 
@@ -28,7 +28,7 @@ public class PaymentDTO {
         this.id = payment.getId();
         this.memberId = payment.getMember().getId();
         this.meetingId = payment.getMeeting().getId();
-        this.amount = payment.getAmount();
+        this.payment = payment.getAmount();
         this.purpose = payment.getPurpose();
     }
 }
