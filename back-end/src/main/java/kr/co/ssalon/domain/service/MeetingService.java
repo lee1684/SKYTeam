@@ -109,12 +109,13 @@ public class MeetingService {
         Member member = findMember(username);
         Meeting meeting = findMeeting(moimId);
 
-        if(!isParticipant(moimId, member)) {
+        if (!isParticipant(moimId, member)) {
             throw new BadRequestException("모임의 참여자가 아닙니다.");
         }
 
         return member.equals(meeting.getCreator());
     }
+
     // 모임 목록 조회
     public Page<Meeting> getMoims(MeetingSearchCondition meetingSearchCondition, String username, Pageable pageable) {
         Page<Meeting> meetings = meetingRepository.searchMoims(meetingSearchCondition, username, pageable);
@@ -133,7 +134,6 @@ public class MeetingService {
     }
 
 
-
     // 모임 정보 업데이트
     @Transactional
     public Long editMoim(String username, Long moimId, MeetingInfoDTO meetingInfoDTO) throws BadRequestException {
@@ -145,9 +145,7 @@ public class MeetingService {
         Meeting currentMeeting = findMeeting(moimId);
 
         // 개최자 검증
-        if (!currentMeeting.getCreator().equals(currentUser)) {
-            throw new BadRequestException("모임을 개설한 회원이 아닙니다.");
-        }
+        ValidationService.validationCreatorMoim(currentMeeting, currentUser);
 
         // 카테고리 찾기
         Category category = findCategory(meetingInfoDTO.getCategory());
@@ -183,10 +181,7 @@ public class MeetingService {
         Meeting currentMeeting = findMeeting(moimId);
 
         // 개최자 검증
-        if (!currentMeeting.getCreator().equals(currentUser)) {
-            throw new BadRequestException("모임을 개설한 회원이 아닙니다.");
-        }
-
+        ValidationService.validationCreatorMoim(currentMeeting, currentUser);
         // 모임 참여자 찾기
         List<MemberMeeting> participants = currentMeeting.getParticipants();
 
@@ -230,13 +225,15 @@ public class MeetingService {
         MemberMeeting targetMemberMeeting = findMemberMeeting(targetUser, meeting);
 
         // 요청자가 모임에 포함되어 있는지 검증
-        if(!isParticipant(moimId, currentUser)) {throw new BadRequestException("요청자가 모임에 참여자 목록에 존재하지 않습니다.");}
+        if (!isParticipant(moimId, currentUser)) {
+            throw new BadRequestException("요청자가 모임에 참여자 목록에 존재하지 않습니다.");
+        }
 
         targetUser.deleteMemberMeeting(targetMemberMeeting);
         meeting.deleteMemberMeeting(targetMemberMeeting);
 
         // 요청자가 모임 개최자인 경우 -> 강퇴
-        if(currentUser.equals(meeting.getCreator()) || !currentUser.equals(targetUser)) {
+        if (currentUser.equals(meeting.getCreator()) || !currentUser.equals(targetUser)) {
 
             MeetingOut meetingOut = MeetingOut.createMeetingOutReason(targetUser, meeting, "강퇴", reason);
             meetingOutRepository.save(meetingOut);
@@ -251,9 +248,7 @@ public class MeetingService {
             meetingOutRepository.save(meetingOut);
             memberMeetingRepository.delete(targetMemberMeeting);
             return meetingOut;
-        }
-
-        else {
+        } else {
             throw new BadRequestException("요청자와 타겟의 관계가 잘못 설정되었습니다.");
         }
     }
