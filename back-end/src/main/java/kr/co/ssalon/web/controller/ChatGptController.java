@@ -14,6 +14,7 @@ public class ChatGptController {
 
     @PostMapping("/api/image/generate/{moimId}")
     public String generateImage(@RequestBody ImageGenerationDTO imageGenerationDTO, @PathVariable Long moimId) throws IOException {
-        return chatGptService.generateAndResizeImage(moimId, imageGenerationDTO);
+//        return chatGptService.generateAndResizeImage(moimId, imageGenerationDTO);
+        return chatGptService.generateByKarlo(moimId, imageGenerationDTO);
     }
 }
