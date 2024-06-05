@@ -133,9 +133,9 @@ public class PaymentController {
                 .quantity(1)
                 .totalPayment(meeting.getPayment())
                 .taxFreeAmount(0)
-                .approvalUrl("http://localhost:8080/payment/success")
-                .cancelUrl("http://localhost:8080/payment/fail")
-                .failUrl("http://localhost:8080/payment/cancel")
+                .approvalUrl("https://ssalon.co.kr/payment/success")
+                .cancelUrl("https://ssalon.co.kr/payment/fail")
+                .failUrl("https://ssalon.co.kr/payment/cancel")
                 .build();
         KakaopayReadyResponseDto kakaopayReadyResponseDto = payService.kakaoPayReady(dto);
         commonPayInfo.setTid(kakaopayReadyResponseDto.getTid());
@@ -163,7 +163,7 @@ public class PaymentController {
         KakaopayApproveResponseDto kakaopayApproveResponseDto = payService.kakaoPayApprove(dto);
         String username = commonPayInfo.getUsername();
         // 프론트 도메인으로 변경 필요
-        String redirectUrl = "http://localhost:5173";
+        String redirectUrl = "https://ssalon.co.kr";
         paymentService.checkPayment(username, commonPayInfo.getMoimId());
         Long id = paymentService.completeMoimPayment(username, commonPayInfo.getMoimId(), "모임 가입 완료", kakaopayApproveResponseDto.returnTotal(), commonPayInfo.getTid());
         meetingService.join(username, commonPayInfo.getMoimId());
