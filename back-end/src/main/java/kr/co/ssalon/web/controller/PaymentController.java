@@ -127,7 +127,7 @@ public class PaymentController {
     // 모임비가 있는 모임 참가 비용 결제 -> 결제 준비
     @Operation(summary = "모임 참가 비용 결제")
     @ApiResponse(responseCode = "200", description = "모임 참가 비용 결제 성공", content = {
-            @Content(schema = @Schema(implementation = KakaopayReadyRequestDto.class))
+            @Content(schema = @Schema(implementation = KakaopayReadyResponseDto.class))
     })
     @PostMapping("/api/moims/{moimId}/billings")
     public ResponseEntity<?> moimPaymentReady(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable("moimId") Long moimId) throws Exception {
@@ -159,7 +159,7 @@ public class PaymentController {
 
     // 모임 결제 승인
     @GetMapping("/api/payment/success")
-    @Parameter(hidden = true)
+    @Schema(hidden = true)
     public void moimPaymentApprove(@RequestParam("pg_token") String pgToken, HttpServletResponse response) throws Exception {
         log.info("{}", pgToken);
         // 결제 내역 저장 후 회원가입 -> 가입 후 바로 리다이렉트 << 프론트 처리
@@ -175,7 +175,7 @@ public class PaymentController {
         KakaopayApproveResponseDto kakaopayApproveResponseDto = payService.kakaoPayApprove(dto);
         String username = commonPayInfo.getUsername();
         // 프론트 도메인으로 변경 필요
-        String redirectUrl = "https://ssalon.co.kr";
+        String redirectUrl = "https://ssalon.co.kr/web/meeting-info?moimId=" + commonPayInfo.moimId;
         paymentService.checkPayment(username, commonPayInfo.getMoimId());
         Long id = paymentService.completeMoimPayment(username, commonPayInfo.getMoimId(), "모임 가입 완료", kakaopayApproveResponseDto.returnTotal(), commonPayInfo.getTid());
         meetingService.join(username, commonPayInfo.getMoimId());
