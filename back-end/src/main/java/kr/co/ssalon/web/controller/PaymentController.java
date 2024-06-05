@@ -1,5 +1,6 @@
 package kr.co.ssalon.web.controller;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -144,9 +145,9 @@ public class PaymentController {
                 .quantity(1)
                 .totalPayment(meeting.getPayment())
                 .taxFreeAmount(0)
-                .approvalUrl("https://ssalon.co.kr/payment/success")
-                .cancelUrl("https://ssalon.co.kr/payment/fail")
-                .failUrl("https://ssalon.co.kr/payment/cancel")
+                .approvalUrl("https://ssalon.co.kr/api/payment/success")
+                .cancelUrl("https://ssalon.co.kr/api/payment/fail")
+                .failUrl("https://ssalon.co.kr/api/payment/cancel")
                 .build();
         KakaopayReadyResponseDto kakaopayReadyResponseDto = payService.kakaoPayReady(dto);
         commonPayInfo.setTid(kakaopayReadyResponseDto.getTid());
@@ -159,7 +160,7 @@ public class PaymentController {
 
     // 모임 결제 승인
     @GetMapping("/api/payment/success")
-    @Schema(hidden = true)
+    @Hidden
     public void moimPaymentApprove(@RequestParam("pg_token") String pgToken, HttpServletResponse response) throws Exception {
         log.info("{}", pgToken);
         // 결제 내역 저장 후 회원가입 -> 가입 후 바로 리다이렉트 << 프론트 처리
