@@ -44,7 +44,7 @@
     <tr>
         <td><center><img align="top" src="https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white" alt="AWS"></center></td>
         <td valign="">AWS Lambda</td>
-        <td valign="">추천 시스템 관련 로직 구현</td>
+        <td valign="">임베딩 이용 추천 시스템 관련 로직 구현</td>
     </tr>
     <tr>
         <td><center><img align="top" src="https://img.shields.io/badge/Spring_Security-6DB33F?style=for-the-badge&logo=Spring-Security&logoColor=white" alt="Spring Security"></center></td>
@@ -98,7 +98,7 @@
     <tr>
         <td><center><img align="top" src="https://img.shields.io/badge/OpenAI-74aa9c?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI"></center></td>
         <td valign="">OpenAI</td>
-        <td valign="">사용자/모임/카테고리 정보 임베딩</td>
+        <td valign="">사용자, 모임, 카테고리 정보 임베딩 / DALL-E 이미지 생성</td>
     </tr>
     <tr>
         <td><center><img align="top" src="https://img.shields.io/badge/google-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="Google"></center></td>
