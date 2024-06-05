@@ -1,5 +1,10 @@
 package kr.co.ssalon.web.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Member;
@@ -12,7 +17,9 @@ import kr.co.ssalon.kakaopay.KakaoPayProperties;
 import kr.co.ssalon.kakaopay.PayService;
 import kr.co.ssalon.kakaopay.dto.*;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
+import kr.co.ssalon.web.dto.ImageResponseDTO;
 import kr.co.ssalon.web.dto.JsonResult;
+import kr.co.ssalon.web.dto.MeetingDTO;
 import kr.co.ssalon.web.dto.PaymentDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -118,7 +125,11 @@ public class PaymentController {
 
 
     // 모임비가 있는 모임 참가 비용 결제 -> 결제 준비
-    @PostMapping("/moims/{moimId}/billings")
+    @Operation(summary = "모임 참가 비용 결제")
+    @ApiResponse(responseCode = "200", description = "모임 참가 비용 결제 성공", content = {
+            @Content(schema = @Schema(implementation = KakaopayReadyRequestDto.class))
+    })
+    @PostMapping("/api/moims/{moimId}/billings")
     public ResponseEntity<?> moimPaymentReady(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable("moimId") Long moimId) throws Exception {
         String username = customOAuth2Member.getUsername();
         Meeting meeting = meetingService.findMeeting(moimId);
@@ -147,7 +158,8 @@ public class PaymentController {
     }
 
     // 모임 결제 승인
-    @GetMapping("/payment/success")
+    @GetMapping("/api/payment/success")
+    @Parameter(hidden = true)
     public void moimPaymentApprove(@RequestParam("pg_token") String pgToken, HttpServletResponse response) throws Exception {
         log.info("{}", pgToken);
         // 결제 내역 저장 후 회원가입 -> 가입 후 바로 리다이렉트 << 프론트 처리
@@ -171,7 +183,11 @@ public class PaymentController {
     }
 
     // 모임 참가 비용 환불 (모임 참가 취소, 강튀, 모임 삭제 시 후에 작동되는 부분)
-    @PostMapping("/moims/{moimId}/billings/{paymentId}")
+    @Operation(summary = "모임 참가 비용 환불")
+    @ApiResponse(responseCode = "200", description = "모임 참가 비용 환불 성공", content = {
+            @Content(schema = @Schema(implementation = KakaopayCancelResponseDto.class))
+    })
+    @PostMapping("/api/moims/{moimId}/billings/{paymentId}")
     public ResponseEntity<?> moimPaymentCancel(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable("moimId") Long moimid, @PathVariable("paymentId") Long paymentId) throws Exception {
         Payment payment = paymentService.getPayment(paymentId);
         PayService payService = new PayService(kakaoPayProperties);
@@ -189,11 +205,15 @@ public class PaymentController {
     }
 
     // 해당 모임 참가 비용 결제 내역 조회
-    @GetMapping("/moims/{moimId}/billings")
+    @Operation(summary = "특정 모임에 결제한 참가 비용 조회")
+    @ApiResponse(responseCode = "200", description = "특정 모임에 결제한 참가 비용 조회 성공", content = {
+            @Content(schema = @Schema(implementation = PaymentDTO.class))
+    })
+    @GetMapping("/api/moims/{moimId}/billings")
     public ResponseEntity<?> getMoimPayments(@PathVariable("moimId") Long moimId) {
         List<Payment> paymentAll = paymentService.getMoimPaymentAll(moimId);
         List<PaymentDTO> collect = paymentAll.stream().map(PaymentDTO::new).collect(Collectors.toList());
-        return ResponseEntity.ok().body(new JsonResult<>(collect));
+        return ResponseEntity.ok().body(new JsonResult<>(collect).getData());
     }
 
 
