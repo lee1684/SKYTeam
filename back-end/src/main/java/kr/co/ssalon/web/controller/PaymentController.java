@@ -37,84 +37,84 @@ public class PaymentController {
     private final CommonPayInfo commonPayInfo = new CommonPayInfo();
 
     // 개최자 광고 게시 비용 결제
-    @PostMapping("/advertisements/{moimId}")
-    public ResponseEntity<?> advertisePaymentReady(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable("moimId") Long moimId) throws Exception {
-        String username = customOAuth2Member.getUsername();
-        Member member = memberService.findMember(username);
-        Meeting meeting = meetingService.findMeeting(moimId);
-        // 개설자 검증
-        ValidationService.validationCreatorMoim(meeting, member);
-        // 결제 중복 검증
-        paymentService.checkPayment(username, moimId);
-        int advertiseTotalPaymentSize = paymentService.getAdvertiseTotalPayment().size();
-        PayService payService = new PayService(kakaoPayProperties);
-        KakaopayReadyRequestDto dto = KakaopayReadyRequestDto.builder()
-                .cid(kakaoPayProperties.getCid())
-                .partnerOrderId(String.valueOf(advertiseTotalPaymentSize))
-                .partnerUserId(kakaoPayProperties.getPartnerUserId())
-                .itemName("상단 광고")
-                .quantity(1)
-                .totalPayment(10000)
-                .taxFreeAmount(0)
-                .approvalUrl("http://localhost:8080/advertise/success")
-                .cancelUrl("http://localhost:8080/advertise/fail")
-                .failUrl("http://localhost:8080/advertise/cancel")
-                .build();
-        KakaopayReadyResponseDto kakaopayReadyResponseDto = payService.kakaoPayReady(dto);
-        commonPayInfo.setTid(kakaopayReadyResponseDto.getTid());
-        commonPayInfo.setMoimId(moimId);
-        commonPayInfo.setUsername(username);
-        log.info("{}", kakaopayReadyResponseDto);
-        return ResponseEntity.ok().body(kakaopayReadyResponseDto);
-    }
+//    @PostMapping("/advertisements/{moimId}")
+//    public ResponseEntity<?> advertisePaymentReady(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable("moimId") Long moimId) throws Exception {
+//        String username = customOAuth2Member.getUsername();
+//        Member member = memberService.findMember(username);
+//        Meeting meeting = meetingService.findMeeting(moimId);
+//        // 개설자 검증
+//        ValidationService.validationCreatorMoim(meeting, member);
+//        // 결제 중복 검증
+//        paymentService.checkPayment(username, moimId);
+//        int advertiseTotalPaymentSize = paymentService.getAdvertiseTotalPayment().size();
+//        PayService payService = new PayService(kakaoPayProperties);
+//        KakaopayReadyRequestDto dto = KakaopayReadyRequestDto.builder()
+//                .cid(kakaoPayProperties.getCid())
+//                .partnerOrderId(String.valueOf(advertiseTotalPaymentSize))
+//                .partnerUserId(kakaoPayProperties.getPartnerUserId())
+//                .itemName("상단 광고")
+//                .quantity(1)
+//                .totalPayment(10000)
+//                .taxFreeAmount(0)
+//                .approvalUrl("http://localhost:8080/advertise/success")
+//                .cancelUrl("http://localhost:8080/advertise/fail")
+//                .failUrl("http://localhost:8080/advertise/cancel")
+//                .build();
+//        KakaopayReadyResponseDto kakaopayReadyResponseDto = payService.kakaoPayReady(dto);
+//        commonPayInfo.setTid(kakaopayReadyResponseDto.getTid());
+//        commonPayInfo.setMoimId(moimId);
+//        commonPayInfo.setUsername(username);
+//        log.info("{}", kakaopayReadyResponseDto);
+//        return ResponseEntity.ok().body(kakaopayReadyResponseDto);
+//    }
 
     // 광고 결제 승인
-    @GetMapping("/advertise/success")
-    public void advertisePaymentApprove(@RequestParam("pg_token") String pgToken, HttpServletResponse response) throws Exception {
-        log.info("{}", pgToken);
-        // 결제 내역 저장 후 회원가입 -> 가입 후 바로 리다이렉트 << 프론트 처리
-        PayService payService = new PayService(kakaoPayProperties);
-        int advertiseTotalPaymentSize = paymentService.getAdvertiseTotalPayment().size();
-        KakaopayApproveRequestDto dto = KakaopayApproveRequestDto.builder()
-                .tid(commonPayInfo.getTid())
-                .cid(kakaoPayProperties.getCid())
-                .partnerOrderId(String.valueOf(advertiseTotalPaymentSize))
-                .partnerUserId(kakaoPayProperties.getPartnerUserId())
-                .pgToken(pgToken)
-                .build();
-        KakaopayApproveResponseDto kakaopayApproveResponseDto = payService.kakaoPayApprove(dto);
-        String username = commonPayInfo.getUsername();
-
-        // 프론트 도메인으로 변경 필요
-        String redirectUrl = "http://localhost:5173";
-        paymentService.checkPayment(username, commonPayInfo.getMoimId());
-        Long id = paymentService.completeAdvertisePayment(username, commonPayInfo.getMoimId(), "광고 가입 완료", kakaopayApproveResponseDto.returnTotal(), commonPayInfo.getTid());
-        response.sendRedirect(redirectUrl);
-    }
+//    @GetMapping("/advertise/success")
+//    public void advertisePaymentApprove(@RequestParam("pg_token") String pgToken, HttpServletResponse response) throws Exception {
+//        log.info("{}", pgToken);
+//        // 결제 내역 저장 후 회원가입 -> 가입 후 바로 리다이렉트 << 프론트 처리
+//        PayService payService = new PayService(kakaoPayProperties);
+//        int advertiseTotalPaymentSize = paymentService.getAdvertiseTotalPayment().size();
+//        KakaopayApproveRequestDto dto = KakaopayApproveRequestDto.builder()
+//                .tid(commonPayInfo.getTid())
+//                .cid(kakaoPayProperties.getCid())
+//                .partnerOrderId(String.valueOf(advertiseTotalPaymentSize))
+//                .partnerUserId(kakaoPayProperties.getPartnerUserId())
+//                .pgToken(pgToken)
+//                .build();
+//        KakaopayApproveResponseDto kakaopayApproveResponseDto = payService.kakaoPayApprove(dto);
+//        String username = commonPayInfo.getUsername();
+//
+//        // 프론트 도메인으로 변경 필요
+//        String redirectUrl = "http://localhost:5173";
+//        paymentService.checkPayment(username, commonPayInfo.getMoimId());
+//        Long id = paymentService.completeAdvertisePayment(username, commonPayInfo.getMoimId(), "광고 가입 완료", kakaopayApproveResponseDto.returnTotal(), commonPayInfo.getTid());
+//        response.sendRedirect(redirectUrl);
+//    }
 
     // 광고 게시 비용 환불
-    @PostMapping("/advertisements/billings/{userId}/{paymentId}")
-    public ResponseEntity<?> advertisePaymentCancel(@PathVariable("userId") Long userId, @PathVariable("paymentId") Long paymentId) throws Exception {
-        Payment payment = paymentService.getPayment(paymentId);
-        PayService payService = new PayService(kakaoPayProperties);
-        KakaopayCancelRequestDto dto = KakaopayCancelRequestDto.builder()
-                .cid(kakaoPayProperties.getCid())
-                .tid(payment.getTid())
-                .cancelAmount(payment.getAmount())
-                .cancelTaxFreeAmount(0)
-                .build();
-        KakaopayCancelResponseDto kakaopayCancelResponseDto = payService.kakaoPayCancel(dto);
-        paymentService.completeAdvertiseRefund(userId, paymentId);
-        return ResponseEntity.ok().body(kakaopayCancelResponseDto);
-    }
-
-    // 광고 게시 비용 결제 내역 조회
-    @GetMapping("/advertisements/billings/{userId}")
-    public ResponseEntity<?> getAdvertisePayments(@PathVariable("userId") Long userId) {
-        List<Payment> paymentAll = paymentService.getAdvertisePaymentAll(userId);
-        List<PaymentDTO> collect = paymentAll.stream().map(PaymentDTO::new).collect(Collectors.toList());
-        return ResponseEntity.ok().body(new JsonResult<>(collect));
-    }
+//    @PostMapping("/advertisements/billings/{userId}/{paymentId}")
+//    public ResponseEntity<?> advertisePaymentCancel(@PathVariable("userId") Long userId, @PathVariable("paymentId") Long paymentId) throws Exception {
+//        Payment payment = paymentService.getPayment(paymentId);
+//        PayService payService = new PayService(kakaoPayProperties);
+//        KakaopayCancelRequestDto dto = KakaopayCancelRequestDto.builder()
+//                .cid(kakaoPayProperties.getCid())
+//                .tid(payment.getTid())
+//                .cancelAmount(payment.getAmount())
+//                .cancelTaxFreeAmount(0)
+//                .build();
+//        KakaopayCancelResponseDto kakaopayCancelResponseDto = payService.kakaoPayCancel(dto);
+//        paymentService.completeAdvertiseRefund(userId, paymentId);
+//        return ResponseEntity.ok().body(kakaopayCancelResponseDto);
+//    }
+//
+//    // 광고 게시 비용 결제 내역 조회
+//    @GetMapping("/advertisements/billings/{userId}")
+//    public ResponseEntity<?> getAdvertisePayments(@PathVariable("userId") Long userId) {
+//        List<Payment> paymentAll = paymentService.getAdvertisePaymentAll(userId);
+//        List<PaymentDTO> collect = paymentAll.stream().map(PaymentDTO::new).collect(Collectors.toList());
+//        return ResponseEntity.ok().body(new JsonResult<>(collect));
+//    }
 
 
     // 모임비가 있는 모임 참가 비용 결제 -> 결제 준비
