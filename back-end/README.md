@@ -98,7 +98,7 @@
     <tr>
         <td><center><img align="top" src="https://img.shields.io/badge/OpenAI-74aa9c?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI"></center></td>
         <td valign="">OpenAI</td>
-        <td valign="">사용자, 모임, 카테고리 정보 임베딩 / DALL-E 이미지 생성</td>
+        <td valign="">사용자, 모임, 카테고리 정보 임베딩</td>
     </tr>
     <tr>
         <td><center><img align="top" src="https://img.shields.io/badge/google-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="Google"></center></td>
@@ -108,7 +108,7 @@
     <tr>
         <td><center><img align="top" src="https://img.shields.io/badge/kakao-ffcd00.svg?style=for-the-badge&logo=kakao&logoColor=000000" alt="Kakao"></center></td>
         <td valign="">Kakao</td>
-        <td valign="">OAuth 사용자 인증 / 카카오페이 결제 처리</td>
+        <td valign="">OAuth 사용자 인증 / 카카오페이 결제 처리 / Karlo 이미지 생성 AI</td>
     </tr>
     <tr>
         <td><center><img align="top" src="https://img.shields.io/badge/naver-00C300?style=for-the-badge&logo=naver&logoColor=white" alt="Naver"></center></td>
@@ -128,8 +128,3 @@
 | [이정준](https://github.com/lee1684) | 소프트웨어학과 |   백엔드   |  -  |  |
 
 + 팀원 이름 클릭 시 해당 팀원의 Github 프로필로 연결됩니다.
-
-<br><br>
-
-## 📜 라이선스 (License)
-라이선스 내용입니다.

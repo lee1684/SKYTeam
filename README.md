@@ -32,9 +32,9 @@
 
 ## 🌠 프로젝트 주요 기능 (Key Features)
 ### 3D 인터랙티브 증표
-WebGL 라이브러리인 **Three.js**를 통해 증표를 렌더링하고, 이벤트 처리를 통해 상호작용 할 수 있도록 구현하였습니다. HTML Canvas 라이브러리인 **Fabric.js**를 통해 증표의 앞, 뒤를 꾸밀 수 있는 에디터를 개발했습니다.
+WebGL 라이브러리인 **Three.js**를 통해 증표를 렌더링하고, 이벤트 처리를 통해 상호작용 할 수 있도록 구현하였습니다. HTML Canvas 라이브러리인 **Fabric.js**를 통해 증표의 앞, 뒤를 꾸밀 수 있는 에디터를 개발했습니다. 사용자가 쉽게 이미지 생성 AI를 활용할 수 있도록 카카오의 **Karlo** API를 연결하였습니다.
 
-### 모임/카테고리 추천 시스템 (_In progress_)
+### 모임/카테고리 추천 시스템
 **OpenAI의 Embedding API**를 사용하여 사용자, 모임, 카테고리 정보를 임베딩합니다. 이를 MongoDB Atlas의 벡터 DB에 저장하고 신속한 유사도 계산을 통한 추천 결과 도출로 사용자 맞춤 모임 노출 및 카테고리 정렬을 구현합니다.
 
 ### 모임 참가자 간 채팅
@@ -89,7 +89,7 @@ WebGL 라이브러리인 **Three.js**를 통해 증표를 렌더링하고, 이�
     <tr>
         <td><center><img align="top" src="https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white" alt="Github Actions"></center></td>
         <td valign="">Swagger</td>
-        <td valign="">API 명세서 관리 자동화</td>
+        <td valign="">API 명세 관리 자동화</td>
     </tr>
     <tr>
         <td><center><img align="top" src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white" alt="Slack"></center></td>
@@ -146,8 +146,3 @@ AJOU SOFTCON 홈페이지의 [살롱 소개 페이지](https://softcon.ajou.ac.k
 
 ### 전시 소개 영상 (Presentation Video)
 AJOU SOFTCON 홈페이지의 [살롱 소개 페이지](https://softcon.ajou.ac.kr/works/works.asp?uid=1784)를 참조해주세요.  
-
-<br><br>
-
-## 📜 라이선스 (License)
-라이선스 내용입니다.
