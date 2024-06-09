@@ -28,6 +28,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -205,6 +206,19 @@ public class PaymentController {
         // 환불
         paymentService.completeMoimRefund(username, moimid);
         return ResponseEntity.ok().body(kakaopayCancelResponseDto);
+    }
+
+    // 특정 모임에 대한 나의 결제 내역 조회
+    @Operation(summary = "특정 모임에 대한 나의 결제 내역 조회")
+    @ApiResponse(responseCode = "200", description = "특정 모임에 대한 나의 결제 내역 조회 성공")
+    @GetMapping("/api/moims/{moimId}/me/payment")
+    public PaymentDTO getPayment(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable("moimId") Long moimId) throws BadRequestException {
+        String username = customOAuth2Member.getUsername();
+        Meeting meeting = meetingService.findMeeting(moimId);
+
+        Payment payment = paymentService.findPayment(username, meeting.getId());
+
+        return new PaymentDTO(payment);
     }
 
     // 해당 모임 참가 비용 결제 내역 조회
