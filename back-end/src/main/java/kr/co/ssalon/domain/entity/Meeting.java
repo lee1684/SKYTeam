@@ -37,6 +37,9 @@ public class Meeting {
     @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<MemberMeeting> participants = new ArrayList<>();
 
+    @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<MeetingOut> meetingOuts = new ArrayList<>();
+
     @ElementCollection
     @CollectionTable(name = "meeting_picture", joinColumns = @JoinColumn(name = "meeting_id"))
     private final List<String> meetingPictureUrls = new ArrayList<>();
