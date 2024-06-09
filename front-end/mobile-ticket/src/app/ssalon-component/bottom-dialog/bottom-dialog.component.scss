@@ -44,5 +44,15 @@
 
 .complete-button {
     position: absolute;
-    bottom: 0px;
+    bottom: 20px;
+}
+
+.feature-success-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 100px;
 }

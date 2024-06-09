@@ -9,7 +9,7 @@ import { ApiExecutorService } from '../service/api-executor.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   BottomDialogComponent,
-  BottomNavigatorType,
+  BottomDialogType,
 } from '../ssalon-component/bottom-dialog/bottom-dialog.component';
 import { SimpleInputComponent } from '../ssalon-component/simple-input/simple-input.component';
 import { NewButtonElement } from '../ssalon-component/simple-toggle-group/simple-toggle-group.component';
@@ -45,7 +45,7 @@ export class MeetingEditComponent {
   @ViewChild('capacity', { static: false })
   capacity: SimpleInputComponent | null = null;
   @ViewChild('fee', { static: false }) fee: SimpleInputComponent | null = null;
-  public bottomNavigatorType = BottomNavigatorType;
+  public bottomDialogType = BottomDialogType;
   public isPopUpBottomNavigator = false;
   @Input() photos: NewButtonElement[] = [
     {
@@ -102,6 +102,7 @@ export class MeetingEditComponent {
         };
         this.photos.unshift(body);
       });
+      this.moimInfo.meetingPictureUrls = [];
     } else {
       this.reviewInfo = await this._apiExecutorService.getMoimReview(
         this.moimId
@@ -115,6 +116,7 @@ export class MeetingEditComponent {
         };
         this.photos.unshift(body);
       });
+      this.reviewInfo.diaryPictureUrls = [];
     }
   }
 
@@ -243,6 +245,7 @@ export class MeetingEditComponent {
   }
 
   public async editInfo() {
+    console.log(this.moimInfo, this.reviewInfo);
     if (this.editType === 'moimInfo') {
       await this._apiExecutorService.editMoimInfo(this.moimId, this.moimInfo);
     } else {

@@ -11,6 +11,10 @@ import { ProfileUpdateComponent } from './profile-update/profile-update.componen
 import { NgIf } from '@angular/common';
 import { SquareButtonComponent } from '../../ssalon-component/square-button/square-button.component';
 import { ButtonElementsService } from '../../service/button-elements.service';
+import {
+  BottomDialogComponent,
+  BottomDialogType,
+} from '../../ssalon-component/bottom-dialog/bottom-dialog.component';
 
 @Component({
   selector: 'app-profile',
@@ -22,6 +26,7 @@ import { ButtonElementsService } from '../../service/button-elements.service';
     ProfileUpdateComponent,
     NgIf,
     SquareButtonComponent,
+    BottomDialogComponent,
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
@@ -32,6 +37,8 @@ export class ProfileComponent {
   @Input() myProfile: Profile = undefined as unknown as Profile;
 
   public mode: 'edit' | 'info' = 'info';
+  public bottomDialogType = BottomDialogType;
+  public isPopUpBottomDialog = false;
   constructor(
     private _router: Router,
     private _apiExecutorService: ApiExecutorService,
@@ -63,5 +70,14 @@ export class ProfileComponent {
       this.buttonElementsService.editProfileButton[0].selected = false;
       this.mode = 'info';
     }
+  }
+
+  public onClickRemoveAccount() {
+    this.isPopUpBottomDialog = true;
+  }
+
+  public async removeAccount() {
+    await this._apiExecutorService.removeAccount();
+    this._router.navigate(['/']);
   }
 }

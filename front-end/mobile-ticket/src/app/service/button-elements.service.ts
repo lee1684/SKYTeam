@@ -204,6 +204,18 @@ export class ButtonElementsService {
       label: '프로필 수정하기',
     },
   ];
+  public manageParticipantsButtons: NewButtonElement[] = [
+    {
+      selected: false,
+      value: 0,
+      label: '신고하기',
+    },
+    {
+      selected: false,
+      value: 1,
+      label: '강퇴하기',
+    },
+  ];
   constructor(private _apiExecutorService: ApiExecutorService) {
     for (let i = 0; i < 10; i++) {
       this.interestSelectionButtons.push({

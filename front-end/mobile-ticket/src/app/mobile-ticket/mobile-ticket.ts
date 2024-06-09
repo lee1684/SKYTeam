@@ -119,10 +119,9 @@ export class MobileTicket {
     const cameraDirection = this._sceneGraphService.camera?.getWorldDirection(
       new Vector3(0, 0, 0)
     );
-    const frontSideDirection =
-      this.frontSide === null
-        ? new Vector3(0, 0, 1)
-        : new Vector3(0, 0, 1).applyQuaternion(this.frontSide.quaternion);
+    const frontSideDirection = new Vector3(0, 0, 1).applyQuaternion(
+      this.mobileTicket!.quaternion
+    );
     if (cameraDirection!.dot(frontSideDirection!) >= 0) {
       this.frontSide!.visible = false;
       this.backSide!.visible = true;

@@ -20,6 +20,7 @@ import { TicketComponent } from '../../ticket/ticket.component';
 })
 export class QrShowComponent {
   @Input() moimId: string = '';
+  @Input() participants: any = undefined as unknown as any;
   public qrCodeSrc: string = '';
   public ticketViewerSrc: SafeResourceUrl = '';
 
@@ -29,9 +30,7 @@ export class QrShowComponent {
     public sanitizer: DomSanitizer
   ) {}
   public async ngOnInit() {
-    //let url = `http://localhost:3000/web/ticket?moimId=${this.moimId}&viewType=view`;
     let url = `https://ssalon.co.kr/web/ticket?moimId=${this.moimId}&viewType=view`;
-    //let url = `http://localhost:8080/web/ticket?moimId=${this.moimId}&viewType=view`;
     this.ticketViewerSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     await this.setQrCodeImgSrc();
   }
@@ -41,5 +40,19 @@ export class QrShowComponent {
     //a.addData('https://www.naver.com');
     a.make();
     this.qrCodeSrc = a.createDataURL(5, 0);
+  }
+
+  public getAttendance() {
+    if (
+      this.participants.find((participant: any) => {
+        if (participant.id === this._apiExecutorService.myProfile.id) {
+          return participant.attendance;
+        }
+      })
+    ) {
+      return '출석완료';
+    } else {
+      return '출석안함';
+    }
   }
 }

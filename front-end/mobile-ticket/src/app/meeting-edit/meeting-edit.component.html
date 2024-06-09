@@ -34,7 +34,7 @@
             (onClickImageEvent)="this.onClickImage($event)"></app-image-row-container>
     </div>
     <div *ngIf="this.isPopUpBottomNavigator">
-        <app-bottom-dialog [content]="this.bottomNavigatorType.MEETING_CATEGORY"
+        <app-bottom-dialog [content]="this.bottomDialogType.MEETING_CATEGORY"
             (onClickEvent)="this.onCategorySelectedEvent($event)"></app-bottom-dialog>
     </div>
 </div>

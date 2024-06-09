@@ -1,5 +1,6 @@
 import { NgFor, NgIf, NgOptimizedImage } from '@angular/common';
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   HostListener,
@@ -49,7 +50,7 @@ export class ImageRowContainerComponent {
   @Input() public filter: string = '';
   @Input() public ticketRowContainerWidth = 350;
   @Output() public readonly onClickImageEvent = new EventEmitter();
-  constructor(private _router: Router) {}
+  constructor(private _router: Router, private _cd: ChangeDetectorRef) {}
   public ngOnInit(): void {
     if (this.isTicketContainer) {
       this._setLayout();
@@ -60,7 +61,9 @@ export class ImageRowContainerComponent {
       this.ticketRowContainerWidth = window.innerWidth * 0.95;
     }
   }
-  public ngAfterViewInit(): void {}
+  public ngAfterViewInit(): void {
+    this._cd.detectChanges();
+  }
 
   public ngAfterViewChecked(): void {}
   private _setLayout() {
@@ -79,13 +82,13 @@ export class ImageRowContainerComponent {
   }
 
   public getThumbSrc(moimId: number): string {
-    return (
+    let url =
       'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/Thumbnails/' +
       moimId +
       '/Thumb-' +
       moimId +
-      '.png'
-    );
+      '.png';
+    return url;
   }
 
   public onClickTicket(value: number) {

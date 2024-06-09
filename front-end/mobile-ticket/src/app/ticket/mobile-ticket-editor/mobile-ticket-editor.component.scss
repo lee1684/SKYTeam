@@ -33,11 +33,16 @@
     align-items: center;
 }
 
+.complete-button-container {
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+}
+
 #detail-editor {
     position: fixed;
     top: 0px;
     left: 0px;
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: rgba(0, 0, 0, 0.7);
     width: 100%;
     height: 100%;
 }

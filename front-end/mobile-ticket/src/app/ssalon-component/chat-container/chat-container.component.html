@@ -6,7 +6,7 @@
     </div>
 
     <div id="content-container" [style.justify-content]="this.align"
-        [style.margin-left.px]="(this.align === 'left')?45:0" [style.margin-right.px]="(this.align === 'right')?30:0">
+        [style.margin-left.px]="(this.align === 'left')?45:0" [style.margin-right.px]="(this.align === 'right')?45:0">
         <div id="date-container" *ngIf="this.align==='right'" [style.margin-right.px]="5">
             {{this.getTime(this.message.date)}}</div>
         <div *ngIf="this.message.imageUrl?.length === 0" id="text-container" [innerHTML]="convertedHTML"></div>

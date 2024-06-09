@@ -9,7 +9,7 @@ import { SimpleInputComponent } from '../../ssalon-component/simple-input/simple
 import { ButtonElementsService } from '../../service/button-elements.service';
 import {
   BottomDialogComponent,
-  BottomNavigatorType,
+  BottomDialogType,
 } from '../../ssalon-component/bottom-dialog/bottom-dialog.component';
 import { SquareButtonComponent } from '../../ssalon-component/square-button/square-button.component';
 import { NgIf } from '@angular/common';
@@ -35,7 +35,7 @@ export class CreateMeetingInfoComponent {
   @ViewChild('capacity', { static: true })
   capacity: SimpleInputComponent | null = null;
   @ViewChild('fee', { static: true }) fee: SimpleInputComponent | null = null;
-  public bottomNavigatorType = BottomNavigatorType;
+  public bottomDialogType = BottomDialogType;
   public isPopUpBottomNavigator = false;
   @Input() public meetingInfo: any = {
     title: '',

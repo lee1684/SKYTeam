@@ -19,4 +19,9 @@
         <app-square-button [buttonElements]="this.buttonElementsService.editProfileButton"
             (onClickEvent)="this.onClickProfileUpdate()"></app-square-button>
     </div>
+    <div id="remove-account-button" (click)="this.onClickRemoveAccount()">회원탈퇴</div>
+    <div *ngIf="this.isPopUpBottomDialog">
+        <app-bottom-dialog [content]="this.bottomDialogType.DELETE_ACCOUNT"
+            (onClickCompleteButtonEvent)="this.removeAccount()"></app-bottom-dialog>
+    </div>
 </div>

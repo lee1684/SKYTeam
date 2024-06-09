@@ -12,14 +12,15 @@
         </div>
     </div>
     <!-- detailed editor view -->
-    <div id="detail-editor" #detailedEditor [hidden]="this.editMode === this.mobileTicketEditMode.NONE">
+    <div id="detail-editor" #detailedEditor [hidden]="this.editMode === this.mobileTicketEditMode.NONE"
+        [style.background-color]="this.getBackgroundColor()">
         <!--back button-->
         <div class="horizontal-container">
             <div>
                 <app-simple-button class="back-button" [buttonElement]="this.goBackButtonElement" [heightSize]="40"
                     (onClickEvent)="this.onClickEndDetailedEditViewer()"></app-simple-button>
             </div>
-            <div>
+            <div class="complete-button-container">
                 <app-simple-button class="complete-button" [buttonElement]="this.completeButtonElement"
                     [heightSize]="15" (onClickEvent)="this.onClickEndDetailedEditViewer()" [type]="'text'"
                     [highContrast]="true"></app-simple-button>
@@ -52,7 +53,7 @@
       " class="color-board-container">
             <svg class="ticket-background" width="350" height="600" viewBox="0 0 350 600" fill="none"
                 xmlns="http://www.w3.org/2000/svg" #backgroundPath>
-                <rect width="350" height="600" rx="10" />
+                <rect width="350" height="600" rx="25" />
             </svg>
             <app-color-board class="color-board" [outerSize]="'30px'" [innerSize]="'24px'"
                 (onClickToggleButtonEvent)="this.changeBackgroundColor($event)"
@@ -111,15 +112,12 @@
 
         <!-- draw edit feature -->
         <div *ngIf="this.editMode === this.mobileTicketEditMode.DRAW">
-            <svg class="ticket-background" width="350" height="600" viewBox="0 0 350 600" fill="none"
-                xmlns="http://www.w3.org/2000/svg" #backgroundPath>
-                <rect width="350" height="600" rx="10" />
-                <foreignObject width="350" height="600">
-                    <canvas id="draw-canvas" #drawCanvas width="350" height="600"></canvas>
-                </foreignObject>
-            </svg>
+            <div class="ticket-background">
+                <canvas #drawCanvas width="350" height="600"></canvas>
+            </div>
+
             <app-color-board class="color-board" [outerSize]="'30px'" [innerSize]="'24px'" (onClickToggleButtonEvent)="
-          this.onChangeSsalonTextAttribute('color', $event)
+          this.onChangePencilColor($event)
         "></app-color-board>
         </div>
     </div>

@@ -13,12 +13,12 @@
     (onClickEvent)="this.popUpLocationDialog()"></app-simple-input>
 </div>
 <div *ngIf="this.isInterestPopUp">
-  <app-bottom-dialog [content]="this.bottomNavigatorType.MEETING_CATEGORY"
+  <app-bottom-dialog [content]="this.bottomDialogType.MEETING_CATEGORY"
     (onClickEvent)="this.onInterestSelectedEvent($event)"
     (onClickCompleteButtonEvent)="this.popUpInterestsDialog()"></app-bottom-dialog>
 </div>
 <div *ngIf="this.isLocationPopUp">
-  <app-bottom-dialog [content]="this.bottomNavigatorType.MEETING_LOCATION"
+  <app-bottom-dialog [content]="this.bottomDialogType.MEETING_LOCATION"
     (onClickEvent)="this.onLocationSelectedEvent($event)"
     (onClickCompleteButtonEvent)="this.popUpLocationDialog()"></app-bottom-dialog>
 </div>

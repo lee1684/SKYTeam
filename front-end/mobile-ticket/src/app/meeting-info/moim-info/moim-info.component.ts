@@ -6,6 +6,8 @@ import { NgIf } from '@angular/common';
 import { ChatContainerComponent } from '../../ssalon-component/chat-container/chat-container.component';
 import { SimpleInputComponent } from '../../ssalon-component/simple-input/simple-input.component';
 import { NewButtonElement } from '../../ssalon-component/simple-toggle-group/simple-toggle-group.component';
+import { Router } from '@angular/router';
+import { CircleToggleStatusGroupComponent } from '../../ssalon-component/circle-toggle-status-group/circle-toggle-status-group.component';
 
 @Component({
   selector: 'app-moim-info',
@@ -27,6 +29,9 @@ export class MoimInfoComponent {
 
   @Input() moimId: string = '';
   @Input() moimInfo: any = {};
+  @Input() participants: any[] = [];
+  @Input() isCreator: boolean = false;
+  @Input() isParticipant: boolean = false;
   public photos: NewButtonElement[] = [
     {
       imgSrc: 'assets/add_photo.png',
@@ -36,7 +41,10 @@ export class MoimInfoComponent {
     },
   ];
 
-  constructor(private _apiExecutorService: ApiExecutorService) {}
+  constructor(
+    private _apiExecutorService: ApiExecutorService,
+    private _router: Router
+  ) {}
 
   public async ngOnInit() {}
 
@@ -71,5 +79,19 @@ export class MoimInfoComponent {
     });
 
     return newButtonElements;
+  }
+
+  public getParticipantImages() {
+    return this.getImageUrlsToNewButtonElements(
+      this.participants.map((participant: any) => {
+        return participant.profilePictureUrl;
+      })
+    );
+  }
+
+  public onClickParticipantButton() {
+    this._router.navigate(['/web/meeting-participants'], {
+      queryParams: { id: this.moimId },
+    });
   }
 }

@@ -64,6 +64,7 @@ export class MeetingInfoComponent {
 
   public moimId: string = '';
   public moimInfo: any = undefined as unknown as any;
+  public participants: any = undefined as unknown as any;
   public ticketInfo: any = undefined as unknown as any;
   public joined: boolean = false;
   public meetingInfoTabEnum = MeetingInfoTabEnum;
@@ -87,6 +88,9 @@ export class MeetingInfoComponent {
 
   public async ngOnInit() {
     this.moimInfo = await this._apiExecutorService.getMoimInfo(this.moimId);
+    this.participants = await this._apiExecutorService.getJoiningUsers(
+      this.moimId
+    );
     this.ticketInfo = await this._apiExecutorService.getTicket(this.moimId);
     await this.checkDiaryCreated();
     this.tabs = await this.getTabs();
@@ -101,6 +105,7 @@ export class MeetingInfoComponent {
         status: userInfo.attendance,
       });
     });
+    console.log(this.moimInfo);
   }
 
   public async onClickTab(tab: MeetingInfoTabEnum) {
@@ -134,8 +139,8 @@ export class MeetingInfoComponent {
       if (this.isParticipant) {
         this.buttonElementsService.joinButtonElements[0].selected = false;
         this.buttonElementsService.joinButtonElements[0].label = this.isCreator
-          ? '모임 정보 수정하기(개최자입니다)'
-          : '참가 취소하기(참가자입니다)';
+          ? '모임 정보 수정하기'
+          : '참가 취소하기';
       } else {
         this.buttonElementsService.joinButtonElements[0].selected = true;
         this.buttonElementsService.joinButtonElements[0].label = '참가하기';
@@ -243,9 +248,27 @@ export class MeetingInfoComponent {
     }
   }
   public async onClickJoinButton() {
-    if (this.buttonElementsService.joinButtonElements[0].selected) {
-      await this._apiExecutorService.joinMoim(this.moimId);
-      location.reload();
+    if (
+      this.buttonElementsService.joinButtonElements[0].selected &&
+      !this.isParticipant
+    ) {
+      if (this.moimInfo.payment) {
+        let result = await this._apiExecutorService.payFee(this.moimId);
+        function isMobile(): boolean {
+          const userAgent = navigator.userAgent;
+          return /android|avantgo|blackberry|bada|bb|meego|palm|ipad|playbook|plucker|series60|symbian|webos|windows phone|windows ce|ipod|iphone/i.test(
+            userAgent
+          );
+        }
+        if (isMobile()) {
+          location.href = result.next_redirect_mobile_url;
+        } else {
+          location.href = result.next_redirect_pc_url;
+        }
+      } else {
+        await this._apiExecutorService.joinMoim(this.moimId);
+        location.reload();
+      }
     } else {
       if (this.nowTab === this.meetingInfoTabEnum.INFO && this.isCreator) {
         this._router.navigate(['/web/meeting-edit'], {
@@ -254,6 +277,16 @@ export class MeetingInfoComponent {
             moimId: this.moimId,
           },
         });
+      } else if (
+        this.nowTab === this.meetingInfoTabEnum.INFO &&
+        this.isParticipant
+      ) {
+        await this._apiExecutorService.kickParticipant(
+          this.moimId,
+          this._apiExecutorService.myProfile.id,
+          '참가 취소'
+        );
+        location.reload();
       } else if (this.nowTab === this.meetingInfoTabEnum.DIARY) {
         this._router.navigate(['/web/meeting-edit'], {
           queryParams: {

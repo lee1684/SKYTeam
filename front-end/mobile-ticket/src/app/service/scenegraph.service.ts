@@ -55,7 +55,8 @@ export class ScenegraphService {
     this.createArcballControls();
     this.mobileTicket = new MobileTicket(this._apiExecutorService, this);
     this.mobileTicket!.initMobileTicket(moimId);
-    this.animationId = startAnimation(this)!;
+    startAnimation(this)!;
+    console.log(this.animationId);
   }
 
   private createLight(lightName: string, position: THREE.Vector3) {
@@ -85,8 +86,6 @@ export class ScenegraphService {
   }
 
   public destroy() {
-    cancelAnimationFrame(this.animationId!);
-
     this.webGLRenderer!.dispose();
     this.scene!.children.forEach((child) => {
       if ((child as THREE.Mesh).geometry) {
@@ -106,6 +105,7 @@ export class ScenegraphService {
         this.css3dRenderer!.domElement
       );
     }
+    cancelAnimationFrame(this.animationId!);
   }
 
   private createArcballControls(): void {
@@ -153,8 +153,7 @@ const startAnimation = function (sceneSetting: ScenegraphService) {
       sceneSetting.rotateCard();
     }
     sceneSetting.onRender();
-    return requestAnimationFrame(animationFrame);
+    sceneSetting.animationId = requestAnimationFrame(animationFrame);
   };
-
   animationFrame();
 };

@@ -117,17 +117,14 @@ export class MobileTicketEditViewerComponent {
   public updateCanvas(
     fabricObjects: FabricImage[] | FabricText[] | Path[] | null
   ): void {
-    console.log(this.canvas?.toJSON());
+    console.log(fabricObjects);
     if (fabricObjects !== null) {
       for (let index = 0; index < fabricObjects.length; index++) {
         this.canvas!.add(fabricObjects[index]);
-        this.canvas!.moveObjectTo(
-          fabricObjects[index] as FabricObject,
-          this.canvas!.getObjects().length - 1
-        );
       }
     }
     this.canvas?.renderAll();
+    console.log(this.canvas?.toJSON());
   }
 
   public getCanvasCapture(): any {

@@ -1,16 +1,24 @@
 <div class="container">
     <div id="bottom-container">
-        <div id="title">
-            {{'카테고리'}}
-        </div>
         <div class="content-container">
-            <div *ngIf="this.content === this.bottomNavigatorType.MEETING_CATEGORY">
+            <div *ngIf="this.content === this.bottomDialogType.MEETING_CATEGORY">
 
                 <app-meeting-category (onCategorySelectedEvent)="this.onClickButton($event)"></app-meeting-category>
             </div>
-            <div *ngIf="this.content === this.bottomNavigatorType.MEETING_LOCATION">
+            <div *ngIf="this.content === this.bottomDialogType.MEETING_LOCATION">
 
                 <app-meeting-location (onCategorySelectedEvent)="this.onClickButton($event)"></app-meeting-location>
+            </div>
+            <div *ngIf="this.content === this.bottomDialogType.FEATURE_SUCCESS">
+                <div class="feature-success-container">
+                    <img src="assets/icons/feature-success.png" width="90" height="90" />
+                    완료하였습니다!
+                </div>
+            </div>
+            <div *ngIf="this.content === this.bottomDialogType.DELETE_ACCOUNT">
+                <div class="feature-success-container">
+                    회원 탈퇴를 진행하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+                </div>
             </div>
         </div>
         <div class="complete-button">

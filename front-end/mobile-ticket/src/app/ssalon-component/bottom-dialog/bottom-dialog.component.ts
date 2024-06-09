@@ -8,7 +8,7 @@ import { NgIf } from '@angular/common';
 import { MeetingLocationComponent } from './meeting-location/meeting-location.component';
 import { SquareButtonComponent } from '../square-button/square-button.component';
 
-export enum BottomNavigatorType {
+export enum BottomDialogType {
   MEETING_CATEGORY,
   MEETING_JOIN_CANCEL,
   MEETING_JOIN,
@@ -18,6 +18,8 @@ export enum BottomNavigatorType {
   TICKET_EDIT_COMPLETE,
   DIARY_MAKE_COMPLETE,
   MEETING_LOCATION,
+  FEATURE_SUCCESS,
+  DELETE_ACCOUNT,
 }
 @Component({
   selector: 'app-bottom-dialog',
@@ -34,11 +36,11 @@ export enum BottomNavigatorType {
 export class BottomDialogComponent {
   @Input() title: string = '';
   @Input() buttonElements: NewButtonElement[] = [];
-  @Input() content: BottomNavigatorType = BottomNavigatorType.MEETING_CATEGORY;
+  @Input() content: BottomDialogType = BottomDialogType.MEETING_CATEGORY;
 
   @Output() public readonly onClickEvent = new EventEmitter();
   @Output() public readonly onClickCompleteButtonEvent = new EventEmitter();
-  public bottomNavigatorType = BottomNavigatorType;
+  public bottomDialogType = BottomDialogType;
   constructor() {}
   public onClickButton(value: number) {
     this.onClickEvent.emit({ contentType: this.content, value: value });

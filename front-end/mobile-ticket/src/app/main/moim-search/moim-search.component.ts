@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { SimpleInputComponent } from '../../ssalon-component/simple-input/simple-input.component';
-import { Clock } from 'three';
 import {
   ImageRowContainerComponent,
   Ticket,
@@ -16,7 +15,6 @@ import { NgIf } from '@angular/common';
   styleUrl: './moim-search.component.scss',
 })
 export class MoimSearchComponent {
-  public searchTimeout: any;
   public runningTickets: Ticket[] = [];
   public isSearching: boolean = false;
   constructor(private _apiExecutorService: ApiExecutorService) {}
@@ -27,7 +25,6 @@ export class MoimSearchComponent {
   }
 
   public async onInput(value: string) {
-    clearTimeout(this.searchTimeout);
     this.runningTickets = [];
     this.isSearching = true;
     await this.onFindRelativeMoim(value);

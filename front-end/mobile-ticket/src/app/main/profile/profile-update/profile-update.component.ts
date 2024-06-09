@@ -9,10 +9,9 @@ import { SimpleInputComponent } from '../../../ssalon-component/simple-input/sim
 import { ProfileImgComponent } from '../../../ssalon-component/profile-img/profile-img.component';
 import { SimpleToggleGroupComponent } from '../../../ssalon-component/simple-toggle-group/simple-toggle-group.component';
 import { SquareButtonComponent } from '../../../ssalon-component/square-button/square-button.component';
-import { BottomNavigatorComponent } from '../../../ssalon-component/bottom-navigator/bottom-navigator.component';
 import {
   BottomDialogComponent,
-  BottomNavigatorType,
+  BottomDialogType,
 } from '../../../ssalon-component/bottom-dialog/bottom-dialog.component';
 
 @Component({
@@ -35,7 +34,7 @@ export class ProfileUpdateComponent {
   profileImg: ProfileImgComponent | null = null;
 
   @Output() public readonly onUpdatedEvent = new EventEmitter();
-  public bottomNavigatorType = BottomNavigatorType;
+  public bottomDialogType = BottomDialogType;
   public isInterestPopUp = false;
   public isLocationPopUp = false;
 

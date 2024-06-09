@@ -53,6 +53,7 @@ export class ChattingComponent {
     window.addEventListener('beforeunload', () => {
       this.disconnect();
     });
+    this._apiExecutorService.setToken();
   }
 
   public async ngOnInit() {

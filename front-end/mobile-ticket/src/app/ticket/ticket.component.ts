@@ -164,7 +164,7 @@ export class TicketComponent {
       this._sceneGraphService.mobileTicketAutoRotate = false;
       this.changeViewMode(MobileTicketViewMode.APPEDITVIEW);
     } else if (this.viewType === 'view') {
-      this._sceneGraphService.mobileTicketAutoRotate = false;
+      this._sceneGraphService.mobileTicketAutoRotate = true;
       this.changeViewMode(MobileTicketViewMode.APPVIEW);
     } else {
       this._sceneGraphService.mobileTicketAutoRotate = true;

@@ -225,7 +225,7 @@ export class MobileTicketEditorComponent {
   public ssalonTextAttribute: SsalonTextAttribute = {
     text: '',
     fontFamily: 'Josefin Sans',
-    color: '#FFFFFF',
+    color: '#000000',
     textAlign: 'left',
   };
   public ssalonPhotoAttribute: SsalonImageAttribute = {
@@ -235,7 +235,7 @@ export class MobileTicketEditorComponent {
     src: [],
   };
   public ssalonPathAttribute: SsalonPathAttribute = {
-    color: '#FFFFFF',
+    color: '#000000',
     strokeWidth: 1,
   };
   /** 새로 추가할 fabric object */
@@ -544,7 +544,7 @@ export class MobileTicketEditorComponent {
       } else {
         this.ssalonGenAIImageAttribute.src = [];
       }
-
+      this.fabricObjects = [];
       this.lastUsedFeature = MobileTicketEditMode.NONE;
     } else {
       let tempImg = await FabricImage.fromURL(array.src[index], {
@@ -643,19 +643,21 @@ export class MobileTicketEditorComponent {
           this.textFocused = false;
           break;
         case MobileTicketEditMode.DRAW:
-          this._isDrawingFabricCanvasLoaded = true;
-          this.lastUsedFeature = MobileTicketEditMode.NONE;
-          break;
+          this._isDrawingFabricCanvasLoaded = false;
+          this.drawingFabricCanvas?.clear();
+          this.fabricObjects = [];
+          return;
         case MobileTicketEditMode.NONE:
           this.lastUsedFeature = MobileTicketEditMode.NONE;
           break;
       }
-      this.drawingFabricCanvas?.destroy();
+
       /** text의 경우, 수정하는 경우가 있는데, 이 함수에서 미리 다 바꾸기 때문에 object를 넘길 필요가 없음.
        * 그렇기 때문에, 미리 editMode를 NONE으로 바꿔버려 null을 보냄.
        * null을 받은 viewer는 canvas.renderAll()만 진행.
        * 이미지의 경우, asyncronous하게 진행되기 때문에 밑의 코드가 진행되지 않게 해놔야 의도대로 진행될 수 있음.
        */
+
       this.onObjectEditEnded.emit(
         this.lastUsedFeature === MobileTicketEditMode.NONE
           ? null
@@ -673,6 +675,7 @@ export class MobileTicketEditorComponent {
 
     this.drawingFabricCanvas!.on('mouse:down', (options) => {
       this._isDrawing = true;
+      (this.fabricObjects as Path[]).length = 0;
       this.addPoint(options.e);
       this.drawPath();
     });
@@ -686,6 +689,7 @@ export class MobileTicketEditorComponent {
     this.drawingFabricCanvas!.on('mouse:up', () => {
       this._isDrawing = false;
       this._drawingPoints.length = 0;
+      this.onObjectEditEnded.emit(this.fabricObjects);
     });
   }
 
@@ -702,7 +706,7 @@ export class MobileTicketEditorComponent {
       .join(' ');
     const path = new Path(`M ${pathData}`, {
       fill: 'transparent',
-      stroke: 'white',
+      stroke: this.ssalonPathAttribute.color,
       strokeWidth: 2,
     });
     (this.fabricObjects as Path[]).length = 0;
@@ -712,7 +716,23 @@ export class MobileTicketEditorComponent {
     this.drawingFabricCanvas!.add(path);
   }
 
+  public onChangePencilColor(value: number): void {
+    this.ssalonPathAttribute.color =
+      this.ssalonColor.getSsalonColorObjectByValue(value).color;
+  }
+
   public endTicketWebView(): void {
     this._router.navigate(['/web/main']);
+  }
+
+  public getBackgroundColor(): string {
+    if (
+      this.editMode === MobileTicketEditMode.BACKGROUND_COLOR_CHANGE ||
+      this.editMode === MobileTicketEditMode.DRAW
+    ) {
+      return 'rgba(0, 0, 0, 0.2)';
+    } else {
+      return 'rgba(0, 0, 0, 0.7)';
+    }
   }
 }

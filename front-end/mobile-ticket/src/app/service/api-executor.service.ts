@@ -3,14 +3,8 @@ import { SsalonConfigService } from './ssalon-config.service';
 import { Injectable } from '@angular/core';
 import { RegisterUserInfo } from '../onboarding/onboarding.component';
 
-export const setToken = function (
-  token: string,
-  apiExecutorService: ApiExecutorService
-) {
-  apiExecutorService.setToken(token);
-};
-
 export interface Profile {
+  id: number;
   nickname: string;
   profilePictureUrl: string;
   gender: 'M' | 'F' | 'G';
@@ -32,22 +26,21 @@ export class ApiExecutorService {
   public apiExecutor: AxiosInstance | null = null;
   public apiExecutorJson: AxiosInstance | null = null;
   public apiURL: string = 'https://ssalon.co.kr/api';
-  //public apiURL: string = 'http://localhost:8080/api';
   public tokens = {};
   public token: string = '';
 
   public refreshToken: string = '';
   public myProfile: Profile = undefined as unknown as Profile;
   constructor(private _ssalonConfigService: SsalonConfigService) {
-    this.token =
-      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoibmF2ZXIgbHphV19oUmprc1kzZXo1NUtJckpXdE9mMk1qTi1GZzJJbUF5SXBPOFNlcyIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTc0MDY5MDgsImV4cCI6MTcxNzQ5MzMwOH0.TyRWScFy0Fq-W0JRE2n0Woune8B2fvCJH58pYTEbyeQ';
-    /**/
+    this.token = '';
 
     this.initApiExecutor();
   }
 
-  public setToken(token: string) {
-    this.token = token;
+  public setToken() {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${'access'}=`);
+    this.token = parts.pop()!.split(';').shift()!;
   }
 
   private initApiExecutor() {
@@ -419,6 +412,78 @@ export class ApiExecutorService {
     }
   }
 
+  public async payFee(moimId: string) {
+    try {
+      let response = await this.apiExecutorJson?.post(
+        `moims/${moimId}/billings`
+      );
+      return response?.data;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  public async leaveMoim(moimId: string, myId: string) {
+    try {
+      let response = await this.apiExecutorJson?.delete(
+        `moims/${moimId}/users/${myId}`
+      );
+      return response?.data;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /** 개최자는 참가자 모두 강퇴 가능, 참가자는 자신만. */
+  public async kickParticipant(moimId: string, userId: number, reason: string) {
+    try {
+      let body = {
+        reason: reason,
+      };
+      let response = await this.apiExecutorJson?.delete(
+        `moims/${moimId}/users/${userId}`,
+        {
+          data: body,
+        }
+      );
+      return response?.data;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  public async reportParticipant(
+    reporterId: number,
+    reportedUserId: number,
+    reason: string
+  ) {
+    try {
+      let body = {
+        id: 0,
+        reporterId: reporterId,
+        reportedUserId: reportedUserId,
+        reportPictureUrls: [],
+        reason: reason,
+        isSolved: false,
+        reportDate: new Date(),
+        solvedDate: '',
+      };
+      let response = await this.apiExecutorJson?.post(`report`, body);
+      return response?.data;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  public async exitSsalon() {
+    try {
+      let response = await this.apiExecutorJson?.delete(`users/me`);
+      return response?.data;
+    } catch (e) {
+      return false;
+    }
+  }
+
   public async checkParticipant(moimId: string) {
     try {
       let response = await this.apiExecutorJson?.get(
@@ -469,6 +534,26 @@ export class ApiExecutorService {
   public async registerUser(body: RegisterUserInfo) {
     try {
       let response = await this.apiExecutorJson?.post('/auth/signup', body);
+      return response!.data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  public async getUserInfoByEmail(email: string) {
+    try {
+      let response = await this.apiExecutorJson?.get(
+        `/users/email/profile?email=${email}`
+      );
+      return response!.data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  public async removeAccount() {
+    try {
+      let response = await this.apiExecutorJson?.delete(`/users/me`);
       return response!.data;
     } catch (e) {
       console.log(e);
