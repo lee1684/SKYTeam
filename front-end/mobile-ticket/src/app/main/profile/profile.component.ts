@@ -57,18 +57,22 @@ export class ProfileComponent {
     }
   }
 
-  public async onClickProfileUpdate() {
-    if (this.mode === 'info') {
-      this.buttonElementsService.editProfileButton[0].label = '수정완료';
-      this.buttonElementsService.editProfileButton[0].selected = true;
-      this.mode = 'edit';
+  public async onClickProfile(value: number) {
+    if (value === 0) {
+      if (this.mode === 'info') {
+        this.buttonElementsService.editProfileButton[0].label = '수정완료';
+        this.buttonElementsService.editProfileButton[0].selected = true;
+        this.mode = 'edit';
+      } else {
+        await this.profileUpdate!.onClickUpdate();
+        await this._apiExecutorService.getMyProfile();
+        this.myProfile = this._apiExecutorService.myProfile;
+        this.buttonElementsService.editProfileButton[0].label = '프로필 수정';
+        this.buttonElementsService.editProfileButton[0].selected = false;
+        this.mode = 'info';
+      }
     } else {
-      await this.profileUpdate!.onClickUpdate();
-      await this._apiExecutorService.getMyProfile();
-      this.myProfile = this._apiExecutorService.myProfile;
-      this.buttonElementsService.editProfileButton[0].label = '프로필 수정';
-      this.buttonElementsService.editProfileButton[0].selected = false;
-      this.mode = 'info';
+      location.href = await this._apiExecutorService.logout();
     }
   }
 
@@ -76,8 +80,12 @@ export class ProfileComponent {
     this.isPopUpBottomDialog = true;
   }
 
-  public async removeAccount() {
-    await this._apiExecutorService.removeAccount();
-    this._router.navigate(['/']);
+  public async removeAccount(value: number) {
+    if (value === 0) {
+      this.isPopUpBottomDialog = false;
+    } else {
+      await this._apiExecutorService.removeAccount();
+      this._router.navigate(['/']);
+    }
   }
 }

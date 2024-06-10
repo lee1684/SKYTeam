@@ -1,6 +1,6 @@
 <div class="container">
     <div id="bottom-container">
-        <div class="content-container">
+        <div class="content-container" [style.height.px]="(this.completeButton)?280:380">
             <div *ngIf="this.content === this.bottomDialogType.MEETING_CATEGORY">
 
                 <app-meeting-category (onCategorySelectedEvent)="this.onClickButton($event)"></app-meeting-category>
@@ -21,8 +21,14 @@
                 </div>
             </div>
         </div>
-        <div class="complete-button">
-            <app-square-button (onClickEvent)="this.onClickCompleteButton()"></app-square-button>
+        <div *ngIf="this.completeButton && this.content !== this.bottomDialogType.DELETE_ACCOUNT"
+            class="complete-button">
+            <app-square-button (onClickEvent)="this.onClickCompleteButton($event)"></app-square-button>
+        </div>
+        <div *ngIf="this.completeButton  && this.content === this.bottomDialogType.DELETE_ACCOUNT"
+            class="complete-button">
+            <app-square-button [buttonElements]="this.buttonElementsService.removeAccountButtons"
+                (onClickEvent)="this.onClickCompleteButton($event)"></app-square-button>
         </div>
 
     </div>

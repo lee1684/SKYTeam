@@ -32,8 +32,10 @@ export class ApiExecutorService {
   public refreshToken: string = '';
   public myProfile: Profile = undefined as unknown as Profile;
   constructor(private _ssalonConfigService: SsalonConfigService) {
-    this.token = '';
-
+    this.token =
+      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoia2FrYW8gMzQ1NzYwNDk5MCIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTc5MjAxOTksImV4cCI6MTcxODAwNjU5OX0.Pb22fCf4mHAlalP7sDh9Id-ioLb_P_ba6Y8qc7ZNHGc';
+    this.refreshToken =
+      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6InJlZnJlc2giLCJ1c2VybmFtZSI6Imtha2FvIDM0NTc2MDQ5OTAiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzE3OTkwNTc4LCJleHAiOjE3MTgwNzY5Nzh9.Q-zgJUZF1XuWTHmJkxmorXiHkijshMz4zyRtQsPQ1wM';
     this.initApiExecutor();
   }
 
@@ -412,6 +414,28 @@ export class ApiExecutorService {
     }
   }
 
+  public async getPaymentinfo(moimId: string) {
+    try {
+      let response = await this.apiExecutorJson?.get(
+        `moims/${moimId}/me/payment`
+      );
+      return response?.data;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  public async getRefund(moimId: string, paymentId: string) {
+    try {
+      let response = await this.apiExecutorJson?.post(
+        `moims/${moimId}/billings/${paymentId}`
+      );
+      return response?.data;
+    } catch (e) {
+      return false;
+    }
+  }
+
   public async payFee(moimId: string) {
     try {
       let response = await this.apiExecutorJson?.post(
@@ -554,6 +578,15 @@ export class ApiExecutorService {
   public async removeAccount() {
     try {
       let response = await this.apiExecutorJson?.delete(`/users/me`);
+      return response!.data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  public async logout() {
+    try {
+      let response = await this.apiExecutorJson?.delete(`/auth/logout`);
       return response!.data;
     } catch (e) {
       console.log(e);

@@ -140,7 +140,9 @@ export class MeetingInfoComponent {
         this.buttonElementsService.joinButtonElements[0].selected = false;
         this.buttonElementsService.joinButtonElements[0].label = this.isCreator
           ? '모임 정보 수정하기'
-          : '참가 취소하기';
+          : this.excededMaxParticipants()
+          ? '참가 불가'
+          : '참가하기';
       } else {
         this.buttonElementsService.joinButtonElements[0].selected = true;
         this.buttonElementsService.joinButtonElements[0].label = '참가하기';
@@ -152,6 +154,10 @@ export class MeetingInfoComponent {
           '모임 후기 수정하기';
       }
     }
+  }
+
+  public excededMaxParticipants(): boolean {
+    return this.moimInfo.capacity <= this.participants.length;
   }
 
   public async getTabs(): Promise<NewButtonElement[]> {
@@ -250,7 +256,8 @@ export class MeetingInfoComponent {
   public async onClickJoinButton() {
     if (
       this.buttonElementsService.joinButtonElements[0].selected &&
-      !this.isParticipant
+      !this.isParticipant &&
+      !this.excededMaxParticipants()
     ) {
       if (this.moimInfo.payment) {
         let result = await this._apiExecutorService.payFee(this.moimId);
@@ -281,11 +288,30 @@ export class MeetingInfoComponent {
         this.nowTab === this.meetingInfoTabEnum.INFO &&
         this.isParticipant
       ) {
-        await this._apiExecutorService.kickParticipant(
-          this.moimId,
-          this._apiExecutorService.myProfile.id,
-          '참가 취소'
+        let paymentInfo = await this._apiExecutorService.getPaymentinfo(
+          this.moimId
         );
+        if (paymentInfo) {
+          if (
+            await this._apiExecutorService.getRefund(
+              this.moimId,
+              paymentInfo.id
+            )
+          ) {
+            await this._apiExecutorService.kickParticipant(
+              this.moimId,
+              this._apiExecutorService.myProfile.id,
+              '참가 취소'
+            );
+            alert('환불이 완료되었습니다.');
+          }
+        } else {
+          await this._apiExecutorService.kickParticipant(
+            this.moimId,
+            this._apiExecutorService.myProfile.id,
+            '참가 취소'
+          );
+        }
         location.reload();
       } else if (this.nowTab === this.meetingInfoTabEnum.DIARY) {
         this._router.navigate(['/web/meeting-edit'], {

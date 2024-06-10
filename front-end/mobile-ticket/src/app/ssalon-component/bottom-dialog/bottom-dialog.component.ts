@@ -1,12 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import {
-  NewButtonElement,
-  SimpleToggleGroupComponent,
-} from '../simple-toggle-group/simple-toggle-group.component';
+import { NewButtonElement } from '../simple-toggle-group/simple-toggle-group.component';
 import { MeetingCategoryComponent } from './meeting-category/meeting-category.component';
 import { NgIf } from '@angular/common';
 import { MeetingLocationComponent } from './meeting-location/meeting-location.component';
 import { SquareButtonComponent } from '../square-button/square-button.component';
+import { ButtonElementsService } from '../../service/button-elements.service';
 
 export enum BottomDialogType {
   MEETING_CATEGORY,
@@ -37,15 +35,16 @@ export class BottomDialogComponent {
   @Input() title: string = '';
   @Input() buttonElements: NewButtonElement[] = [];
   @Input() content: BottomDialogType = BottomDialogType.MEETING_CATEGORY;
+  @Input() completeButton: boolean = true;
 
   @Output() public readonly onClickEvent = new EventEmitter();
   @Output() public readonly onClickCompleteButtonEvent = new EventEmitter();
   public bottomDialogType = BottomDialogType;
-  constructor() {}
+  constructor(public buttonElementsService: ButtonElementsService) {}
   public onClickButton(value: number) {
     this.onClickEvent.emit({ contentType: this.content, value: value });
   }
-  public onClickCompleteButton() {
-    this.onClickCompleteButtonEvent.emit();
+  public onClickCompleteButton(value: number) {
+    this.onClickCompleteButtonEvent.emit(value);
   }
 }

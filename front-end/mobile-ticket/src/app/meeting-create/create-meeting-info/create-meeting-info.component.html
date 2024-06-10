@@ -22,6 +22,6 @@
 </div>
 
 <div *ngIf="this.isPopUpBottomNavigator">
-    <app-bottom-dialog [content]="this.bottomDialogType.MEETING_CATEGORY"
+    <app-bottom-dialog [content]="this.bottomDialogType.MEETING_CATEGORY" [completeButton]="false"
         (onClickEvent)="this.onCategorySelectedEvent($event)"></app-bottom-dialog>
 </div>

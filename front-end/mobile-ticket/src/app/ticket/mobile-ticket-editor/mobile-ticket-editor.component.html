@@ -32,10 +32,7 @@
 
                 <img width="300" height="300" #generatedImage />
                 <div id="generator">
-                    <textarea id="prompt" #prompt autocomplete="off" type="text"
-                        [style.text-align]="this.ssalonTextAttribute.textAlign"
-                        [style.color]="this.ssalonTextAttribute.color"
-                        [style.font-family]="this.ssalonTextAttribute.fontFamily" [style.height]="'100px'"
+                    <textarea id="prompt" #prompt autocomplete="off" type="text" [style.height]="'100px'"
                         [style.width]="'300px'" [placeholder]="'생성하고 싶은 사진의 설명을 입력해주세요'"></textarea>
                     <div [style.display]="'flex'" [style.justify-content]="'center'">
                         <button id="generate-button" (click)="this.generateImage()">생성</button>

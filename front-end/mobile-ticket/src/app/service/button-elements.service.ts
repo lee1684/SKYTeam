@@ -203,6 +203,11 @@ export class ButtonElementsService {
       value: 0,
       label: '프로필 수정하기',
     },
+    {
+      selected: false,
+      value: 1,
+      label: '로그아웃',
+    },
   ];
   public manageParticipantsButtons: NewButtonElement[] = [
     {
@@ -214,6 +219,19 @@ export class ButtonElementsService {
       selected: false,
       value: 1,
       label: '강퇴하기',
+    },
+  ];
+
+  public removeAccountButtons: NewButtonElement[] = [
+    {
+      selected: true,
+      value: 0,
+      label: '취소하기',
+    },
+    {
+      selected: false,
+      value: 1,
+      label: '탈퇴하기',
     },
   ];
   constructor(private _apiExecutorService: ApiExecutorService) {

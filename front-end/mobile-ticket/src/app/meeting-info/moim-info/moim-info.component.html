@@ -11,7 +11,7 @@
     <app-simple-content [title]="'모임 날짜'" [content]="this.getDate()"></app-simple-content>
     <app-simple-content [title]="'모임 장소'" [content]="this.moimInfo.location"></app-simple-content>
     <app-simple-content [title]="'참가비'" [content]="this.getBill()"></app-simple-content>
-    <app-simple-content [title]="'참가자'" [extraLabel]="this.participants.length+'명'"
+    <app-simple-content [title]="'참가자'" [extraLabel]="this.participants.length+'명 / ' + this.moimInfo.capacity + '명'"
         [extraButtonLabel]="(this.isParticipant)?'관리':''" (onClickExtraButtonEvent)="this.onClickParticipantButton()"
         [images]="this.getParticipantImages()" [imageHeight]="30"></app-simple-content>
     <app-simple-content [title]="'모임소개'" [content]="this.moimInfo.description"></app-simple-content>
