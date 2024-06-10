@@ -93,7 +93,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         clearCookie(response, "access");
         clearCookie(response, "refresh");
 
-        response.sendRedirect("https://ssalon.co.kr");
+        sendResponse(response, "logout success", HttpServletResponse.SC_OK);
     }
 
     private void clearCookie(HttpServletResponse response, String name) {
