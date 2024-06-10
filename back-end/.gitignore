@@ -38,4 +38,11 @@ out/
 
 ### *.yml / *.properties ###
 *.yml
+<<<<<<< HEAD
 application.properties
+
+### google cloud translation api key ###
+service-account-file.json
+=======
+application.properties
+>>>>>>> develop

@@ -15,10 +15,14 @@ import kr.co.ssalon.domain.service.MeetingService;
 import kr.co.ssalon.domain.service.MemberService;
 import kr.co.ssalon.domain.service.ValidationService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
+<<<<<<< HEAD
+import kr.co.ssalon.web.dto.*;
+=======
 import kr.co.ssalon.web.dto.JsonResult;
 import kr.co.ssalon.web.dto.MeetingListSearchDTO;
 import kr.co.ssalon.web.dto.MeetingListSearchPageDTO;
 import kr.co.ssalon.web.dto.MeetingSearchCondition;
+>>>>>>> develop
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
@@ -94,11 +98,19 @@ public class AdminMeetingController {
             @Content(schema = @Schema(implementation = Long.class))
     })
     @PatchMapping("/api/admin/moims/{moimId}")
+<<<<<<< HEAD
+    public ResponseEntity<?> updateMoim(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MeetingInfoDTO meetingInfoDTO) {
+        try {
+            String username = customOAuth2Member.getUsername();
+            validationAdmin(username);
+            return ResponseEntity.ok().body(meetingService.editMoim(moimId, meetingInfoDTO));
+=======
     public ResponseEntity<?> updateMoim(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MeetingDomainDTO meetingDomainDTO) {
         try {
             String username = customOAuth2Member.getUsername();
             validationAdmin(username);
             return ResponseEntity.ok().body(meetingService.editMoim(moimId, meetingDomainDTO));
+>>>>>>> develop
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

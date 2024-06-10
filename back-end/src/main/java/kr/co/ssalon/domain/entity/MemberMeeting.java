@@ -37,7 +37,11 @@ public class MemberMeeting {
     @JoinColumn(name = "qr_link_id")
     private QrLink qrLink;
 
+<<<<<<< HEAD
+    @OneToMany(mappedBy = "memberMeeting", cascade = CascadeType.ALL)
+=======
     @OneToMany(mappedBy = "memberMeeting")
+>>>>>>> develop
     private final List<Message> messages = new ArrayList<>();
 
     private boolean attendance;

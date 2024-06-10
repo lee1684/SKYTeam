@@ -94,13 +94,22 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "회원 정보 수정 성공"),
     })
     @PatchMapping("/api/users/me/profile")
+<<<<<<< HEAD
+    public MemberDomainDTO update(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MemberDomainDTO additionalInfo) throws BadRequestException {
+=======
     public MemberSignDTO update(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MemberDomainDTO additionalInfo) throws BadRequestException {
+>>>>>>> develop
         String username = customOAuth2Member.getUsername();
 
         // 회원가입(/api/auth/signup) 로직과 일치함
         Member currentUser = memberService.signup(username, additionalInfo);
+<<<<<<< HEAD
+        MemberDomainDTO memberDomainDTO = new MemberDomainDTO(currentUser);
+        return new JsonResult<>(memberDomainDTO).getData();
+=======
         MemberSignDTO memberSignDTO = new MemberSignDTO(currentUser);
         return new JsonResult<>(memberSignDTO).getData();
+>>>>>>> develop
     }
 
     /*

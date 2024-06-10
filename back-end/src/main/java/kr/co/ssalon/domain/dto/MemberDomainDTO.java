@@ -16,6 +16,10 @@ import java.util.List;
 @Builder
 public class MemberDomainDTO {
 
+<<<<<<< HEAD
+    private Long id;
+=======
+>>>>>>> develop
     private String email;
     private String nickname;
     private String profilePictureUrl;
@@ -28,6 +32,10 @@ public class MemberDomainDTO {
     private MemberDates memberDates;
 
     public MemberDomainDTO(Member member) {
+<<<<<<< HEAD
+        this.id = member.getId();
+=======
+>>>>>>> develop
         this.email = member.getEmail();
         this.nickname = member.getNickname();
         this.profilePictureUrl = member.getProfilePictureUrl();
