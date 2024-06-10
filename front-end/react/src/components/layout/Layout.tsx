@@ -146,7 +146,11 @@ export default function Layout() {
           onClick={onClick}
           theme='dark'
           mode='inline'
+<<<<<<< HEAD
           defaultSelectedKeys={['/' + window.location.pathname.split('/')[1]]}
+=======
+          defaultSelectedKeys={['1']}
+>>>>>>> develop
           defaultOpenKeys={['sub1']}
           items={items}
         />

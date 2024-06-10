@@ -1,4 +1,5 @@
 <div class="container">
+<<<<<<< HEAD
     <div *ngIf="this.mode === 'info'" class="container">
         <app-top-navigator [title]="'프로필'" [backButton]="false"></app-top-navigator>
 
@@ -26,4 +27,16 @@
         <app-bottom-dialog [content]="this.bottomDialogType.DELETE_ACCOUNT"
             (onClickCompleteButtonEvent)="this.removeAccount($event)"></app-bottom-dialog>
     </div>
+=======
+    <app-top-navigator [title]="'프로필'" [backButton]="false"></app-top-navigator>
+
+    <div id="profile-img-container">
+        <app-profile-img [imgSrc]="this.myProfile.profilePictureUrl" [isEditable]="false"></app-profile-img>
+    </div>
+    <app-simple-content [title]="'이름'" [content]="this.myProfile.nickname"></app-simple-content>
+    <app-simple-content [title]="'이메일'" [content]="this.myProfile.email"></app-simple-content>
+    <app-simple-content [title]="'성별'" [content]="this.getGender(this.myProfile.gender)"></app-simple-content>
+    <app-simple-content [title]="'지역'" [content]="this.myProfile.address"></app-simple-content>
+    <app-simple-content [title]="'소개'" [content]="this.myProfile.introduction"></app-simple-content>
+>>>>>>> develop
 </div>

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Component, Input, ViewChild } from '@angular/core';
 import { TopNavigatorComponent } from '../ssalon-component/top-navigator/top-navigator.component';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -368,6 +369,8 @@ export class MeetingInfoComponent {
     }
   }
 }
+=======
+>>>>>>> develop
 import { Component, ViewChild } from '@angular/core';
 import { TopNavigatorComponent } from '../ssalon-component/top-navigator/top-navigator.component';
 import { ActivatedRoute, Router } from '@angular/router';

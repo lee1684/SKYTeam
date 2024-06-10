@@ -6,11 +6,18 @@
 
 #title-container {
     width: 100%;
+<<<<<<< HEAD
     font-size: 18px;
     font-weight: 600;
     font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
     display: flex;
     justify-content: space-between;
+=======
+
+    font-size: 18px;
+    font-weight: 600;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+>>>>>>> develop
 }
 
 #content-container {
@@ -22,6 +29,7 @@
     font-weight: 400;
     font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
     margin-bottom: 16px;
+<<<<<<< HEAD
 }
 
 .extra-label {
@@ -38,4 +46,6 @@
     color: #8E8E93;
     cursor: pointer;
     background-color: transparent;
+=======
+>>>>>>> develop
 }

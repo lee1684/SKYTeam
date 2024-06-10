@@ -1,6 +1,13 @@
+<<<<<<< HEAD
 import { Button, Watermark } from 'antd';
 import styled from 'styled-components';
 import { colors } from '../../assets/colors';
+=======
+import { Button, Input, Watermark } from 'antd';
+import styled from 'styled-components';
+import { colors } from '../../assets/colors';
+import { useNavigate } from 'react-router-dom';
+>>>>>>> develop
 
 const Container = styled.div`
   display: flex;
@@ -25,10 +32,16 @@ const Wrapper = styled.form`
 `;
 
 export default function SignIn() {
+<<<<<<< HEAD
+=======
+  const navigate = useNavigate();
+
+>>>>>>> develop
   return (
     <Watermark content={['SSALON']}>
       <Container>
         <Wrapper>
+<<<<<<< HEAD
           <Button
             onClick={() => {
               window.location.replace(
@@ -38,6 +51,17 @@ export default function SignIn() {
             type='primary'
           >
             카카오로 로그인
+=======
+          <Input placeholder='아이디' />
+          <Input type='password' placeholder='비밀번호' />
+          <Button
+            onClick={() => {
+              navigate('/');
+            }}
+            type='primary'
+          >
+            로그인
+>>>>>>> develop
           </Button>
         </Wrapper>
       </Container>

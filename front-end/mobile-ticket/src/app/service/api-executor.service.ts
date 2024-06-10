@@ -3,8 +3,19 @@ import { SsalonConfigService } from './ssalon-config.service';
 import { Injectable } from '@angular/core';
 import { RegisterUserInfo } from '../onboarding/onboarding.component';
 
+<<<<<<< HEAD
 export interface Profile {
   id: number;
+=======
+export const setToken = function (
+  token: string,
+  apiExecutorService: ApiExecutorService
+) {
+  apiExecutorService.setToken(token);
+};
+
+export interface Profile {
+>>>>>>> develop
   nickname: string;
   profilePictureUrl: string;
   gender: 'M' | 'F' | 'G';
@@ -14,11 +25,14 @@ export interface Profile {
   email: string;
 }
 
+<<<<<<< HEAD
 export interface ImageGeneration {
   prompt: string;
   highQuality: boolean;
 }
 
+=======
+>>>>>>> develop
 @Injectable({
   providedIn: 'root',
 })
@@ -26,6 +40,7 @@ export class ApiExecutorService {
   public apiExecutor: AxiosInstance | null = null;
   public apiExecutorJson: AxiosInstance | null = null;
   public apiURL: string = 'https://ssalon.co.kr/api';
+<<<<<<< HEAD
   public tokens = {};
   public token: string = '';
 
@@ -40,6 +55,21 @@ export class ApiExecutorService {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${'access'}=`);
     this.token = parts.pop()!.split(';').shift()!;
+=======
+  //public apiURL: string = 'http://localhost:8080/api';
+  public tokens = {};
+  public token: string = '';
+  public refreshToken: string = '';
+  public myProfile: Profile = undefined as unknown as Profile;
+  constructor(private _ssalonConfigService: SsalonConfigService) {
+    this.initApiExecutor();
+  }
+
+  public async ngOnInit() {}
+
+  public setToken(token: string) {
+    this.token = token;
+>>>>>>> develop
   }
 
   private initApiExecutor() {
@@ -48,6 +78,10 @@ export class ApiExecutorService {
       headers: {
         'Content-Type': 'multipart/form-data',
         'Access-Control-Allow-Origin': '*',
+<<<<<<< HEAD
+=======
+        Authorization: `Bearer ${this.token}`,
+>>>>>>> develop
         withCredentials: true,
       },
     });
@@ -56,6 +90,11 @@ export class ApiExecutorService {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
+<<<<<<< HEAD
+=======
+        Authorization: `Bearer ${this.token}`,
+        Refresh: this.refreshToken,
+>>>>>>> develop
         withCredentials: true,
       },
     });
@@ -69,6 +108,7 @@ export class ApiExecutorService {
     try {
       let response = await this.apiExecutorJson?.get(`/users/me/profile`);
       this.myProfile = response!.data;
+<<<<<<< HEAD
     } catch {}
   }
 
@@ -79,6 +119,9 @@ export class ApiExecutorService {
         body
       );
       this.myProfile = response!.data;
+=======
+      console.log(this.myProfile);
+>>>>>>> develop
     } catch {}
   }
 
@@ -105,7 +148,10 @@ export class ApiExecutorService {
   public async getTicket(moimId: string) {
     try {
       let response = await this.apiExecutor?.get(`/tickets/${moimId}`);
+<<<<<<< HEAD
       console.log(response!.data);
+=======
+>>>>>>> develop
       return response!.data;
     } catch {
       /** dummy data */
@@ -139,6 +185,7 @@ export class ApiExecutorService {
     }
   }
 
+<<<<<<< HEAD
   public async generateImage(moimId: string, body: ImageGeneration) {
     try {
       const response = await this.apiExecutorJson?.post(
@@ -151,6 +198,8 @@ export class ApiExecutorService {
     }
   }
 
+=======
+>>>>>>> develop
   public async uploadTicketImages(moimId: string, body: FormData) {
     try {
       let response = await this.apiExecutor?.post(
@@ -188,6 +237,7 @@ export class ApiExecutorService {
     }
   }
 
+<<<<<<< HEAD
   public async editMoimReview(moimId: string, body: any) {
     try {
       let response = await this.apiExecutorJson?.post(
@@ -200,6 +250,8 @@ export class ApiExecutorService {
     }
   }
 
+=======
+>>>>>>> develop
   public async getDiary(moimId: string) {
     try {
       let response = await this.apiExecutor?.get(`/diary/${moimId}`);
@@ -266,6 +318,7 @@ export class ApiExecutorService {
     }
   }
 
+<<<<<<< HEAD
   public async getCategorys() {
     try {
       let response = await this.apiExecutorJson?.get('/category/all');
@@ -284,6 +337,8 @@ export class ApiExecutorService {
     }
   }
 
+=======
+>>>>>>> develop
   public async getBarcode(moimId: string) {
     try {
       let response = await this.apiExecutorJson?.get(`/tickets/${moimId}/link`);
@@ -349,7 +404,11 @@ export class ApiExecutorService {
     try {
       let url =
         params === ''
+<<<<<<< HEAD
           ? '/moims/home?categoryLen=10&meetingLen=10&categoryPage=1&isEnd=false' //'/moims?size=1000&isEnd=false' //'
+=======
+          ? '/moims?size=1000&isEnd=false'
+>>>>>>> develop
           : `/moims?isEnd=false&category=${params}&size=1000`;
       let response = await this.apiExecutorJson?.get(url);
       return response!.data;
@@ -358,6 +417,7 @@ export class ApiExecutorService {
     }
   }
 
+<<<<<<< HEAD
   public async getRecommendedMoims(params: string = '') {
     try {
       let url = '/moims/recommend?isEnd=false';
@@ -368,6 +428,8 @@ export class ApiExecutorService {
     }
   }
 
+=======
+>>>>>>> develop
   public async getRunningMoims() {
     try {
       let url = `/moims?isParticipant=true&isEnd=false&size=100`;
@@ -388,6 +450,7 @@ export class ApiExecutorService {
     }
   }
 
+<<<<<<< HEAD
   public async searchMoims(keyword: string) {
     try {
       let response = await this.apiExecutorJson?.get(
@@ -399,6 +462,8 @@ export class ApiExecutorService {
     }
   }
 
+=======
+>>>>>>> develop
   public async joinMoim(moimId: string) {
     try {
       let response = await this.apiExecutorJson?.post(`moims/${moimId}/users`);
@@ -408,6 +473,7 @@ export class ApiExecutorService {
     }
   }
 
+<<<<<<< HEAD
   public async getPaymentinfo(moimId: string) {
     try {
       let response = await this.apiExecutorJson?.get(
@@ -502,6 +568,8 @@ export class ApiExecutorService {
     }
   }
 
+=======
+>>>>>>> develop
   public async checkParticipant(moimId: string) {
     try {
       let response = await this.apiExecutorJson?.get(
@@ -549,6 +617,7 @@ export class ApiExecutorService {
     }
   }
 
+<<<<<<< HEAD
   public async removeMeeting(moimId: string) {
     try {
       let response = await this.apiExecutorJson?.delete(`/moims/${moimId}`);
@@ -558,6 +627,8 @@ export class ApiExecutorService {
     }
   }
 
+=======
+>>>>>>> develop
   public async registerUser(body: RegisterUserInfo) {
     try {
       let response = await this.apiExecutorJson?.post('/auth/signup', body);
@@ -566,6 +637,7 @@ export class ApiExecutorService {
       console.log(e);
     }
   }
+<<<<<<< HEAD
 
   public async getUserInfoByEmail(email: string) {
     try {
@@ -595,4 +667,6 @@ export class ApiExecutorService {
       console.log(e);
     }
   }
+=======
+>>>>>>> develop
 }

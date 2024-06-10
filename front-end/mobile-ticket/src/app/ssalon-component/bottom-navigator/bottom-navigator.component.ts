@@ -12,7 +12,10 @@ import { MainTabEnum } from '../../main/main.component';
 })
 export class BottomNavigatorComponent {
   @Output() public readonly onClickNavigatorButtonEvent = new EventEmitter();
+<<<<<<< HEAD
 
+=======
+>>>>>>> develop
   public navigatorButtons: NewButtonElement[] = [
     { selected: true, value: MainTabEnum.MAIN, label: '메인' },
     { selected: false, value: MainTabEnum.SEARCH, label: '검색' },

@@ -1,5 +1,6 @@
 <div class="container">
     <div id="bottom-container">
+<<<<<<< HEAD
         <div class="content-container" [style.height.px]="(this.completeButton)?280:380">
             <div *ngIf="this.content === this.bottomDialogType.MEETING_CATEGORY">
 
@@ -41,6 +42,18 @@
             <app-square-button [buttonElements]="this.buttonElementsService.removeMOimButtons"
                 (onClickEvent)="this.onClickCompleteButton($event)"></app-square-button>
         </div>
+=======
+        <div id="title">
+            {{'모임 카테고리'}}
+        </div>
+        <div class="content-container">
+            <div *ngIf="this.content === this.bottomNavigatorType.MEETING_CATEGORY">
+
+                <app-meeting-category (onCategorySelectedEvent)="this.onClickButton($event)"></app-meeting-category>
+            </div>
+        </div>
+
+>>>>>>> develop
     </div>
 
 </div>

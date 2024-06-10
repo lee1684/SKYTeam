@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Component, Input, ViewChild } from '@angular/core';
 import { SimpleContentComponent } from '../../ssalon-component/simple-content/simple-content.component';
 import {
@@ -94,6 +95,8 @@ export class ProfileComponent {
     }
   }
 }
+=======
+>>>>>>> develop
 import { Component, Input } from '@angular/core';
 import { SimpleContentComponent } from '../../ssalon-component/simple-content/simple-content.component';
 import {

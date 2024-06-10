@@ -15,10 +15,14 @@ import {
   DecorationInfo,
   SsalonConfigService,
 } from '../service/ssalon-config.service';
+<<<<<<< HEAD
 import {
   ApiExecutorService,
   ImageGeneration,
 } from '../service/api-executor.service';
+=======
+import { ApiExecutorService } from '../service/api-executor.service';
+>>>>>>> develop
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { FabricImage, FabricText, Path } from 'fabric';
 import { ScenegraphService } from '../service/scenegraph.service';
@@ -29,7 +33,10 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { TopNavigatorComponent } from '../ssalon-component/top-navigator/top-navigator.component';
 import { NewButtonElement } from '../ssalon-component/simple-toggle-group/simple-toggle-group.component';
+<<<<<<< HEAD
 import { SimpleInputComponent } from '../ssalon-component/simple-input/simple-input.component';
+=======
+>>>>>>> develop
 
 export enum MobileTicketViewMode {
   APPVIEW,
@@ -55,7 +62,10 @@ export interface User {
     CircleToggleButtonGroupComponent,
     CircleToggleStatusGroupComponent,
     SimpleButtonComponent,
+<<<<<<< HEAD
     SimpleInputComponent,
+=======
+>>>>>>> develop
     NgIf,
     TopNavigatorComponent,
   ],
@@ -118,9 +128,12 @@ export class TicketComponent {
     color: string;
     text: string;
   } = { checkStatus: null, color: '#006BFF', text: 'QR코드를 인식해주세요.' };
+<<<<<<< HEAD
   private prompt: string = '';
   private tempImg: any;
   public imageUrl: string = '';
+=======
+>>>>>>> develop
 
   @Input() public moimId: string = undefined as unknown as string;
   @Input() public viewType: string = undefined as unknown as string;
@@ -151,6 +164,7 @@ export class TicketComponent {
     }
   }
 
+<<<<<<< HEAD
   public ngOnDestroy(): void {
     this._sceneGraphService.destroy();
   }
@@ -168,6 +182,14 @@ export class TicketComponent {
       this.changeViewMode(MobileTicketViewMode.APPVIEW);
     } else {
       this._sceneGraphService.mobileTicketAutoRotate = true;
+=======
+  public setFirstPage() {
+    if (this.viewType === 'edit') {
+      this.changeViewMode(MobileTicketViewMode.APPEDITVIEW);
+    } else if (this.viewType === 'view') {
+      this.changeViewMode(MobileTicketViewMode.APPVIEW);
+    } else {
+>>>>>>> develop
       this.changeViewMode(MobileTicketViewMode.WEBVIEW);
     }
   }
@@ -214,9 +236,13 @@ export class TicketComponent {
   }
 
   public async onClickQuitButton() {
+<<<<<<< HEAD
     this._router.navigate(['/web/meeting-info'], {
       queryParams: { moimId: this.moimId },
     });
+=======
+    this._router.navigate(['/web/main']);
+>>>>>>> develop
   }
 
   public async updateServer() {

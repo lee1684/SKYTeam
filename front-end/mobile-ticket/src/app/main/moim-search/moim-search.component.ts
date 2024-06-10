@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+<<<<<<< HEAD
 import { SimpleInputComponent } from '../../ssalon-component/simple-input/simple-input.component';
 import {
   ImageRowContainerComponent,
@@ -6,10 +7,13 @@ import {
 } from '../../ssalon-component/image-row-container/image-row-container.component';
 import { ApiExecutorService } from '../../service/api-executor.service';
 import { NgIf } from '@angular/common';
+=======
+>>>>>>> develop
 
 @Component({
   selector: 'app-moim-search',
   standalone: true,
+<<<<<<< HEAD
   imports: [NgIf, SimpleInputComponent, ImageRowContainerComponent],
   templateUrl: './moim-search.component.html',
   styleUrl: './moim-search.component.scss',
@@ -36,4 +40,12 @@ export class MoimSearchComponent {
       await this._apiExecutorService.searchMoims(value)
     ).content;
   }
+=======
+  imports: [],
+  templateUrl: './moim-search.component.html',
+  styleUrl: './moim-search.component.scss'
+})
+export class MoimSearchComponent {
+
+>>>>>>> develop
 }

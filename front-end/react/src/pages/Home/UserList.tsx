@@ -1,12 +1,17 @@
 import styled from 'styled-components';
+<<<<<<< HEAD
 import { Card, Space, Table } from 'antd';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { UserApi } from '../../apis/user';
+=======
+import { Card, Table } from 'antd';
+>>>>>>> develop
 
 const Container = styled.div`
   padding: 32px;
 `;
 
+<<<<<<< HEAD
 export default function UserList() {
   const queryClient = useQueryClient();
 
@@ -24,20 +29,41 @@ export default function UserList() {
     },
   });
 
+=======
+interface DataType {
+  nickname: string;
+  profilePictureUrl: string;
+  gender: string;
+  address: string;
+  role: string;
+  introduction: string;
+  interests: string[];
+  joinDate: string;
+}
+
+const data: DataType = [];
+
+export default function UserList() {
+>>>>>>> develop
   return (
     <Container>
       <Card title='유저 전체 목록' style={{ width: '100%' }}>
         <Table dataSource={data}>
+<<<<<<< HEAD
           <Table.Column
             title='닉네임'
             dataIndex='nickname'
             key='nickname'
             width={100}
           />
+=======
+          <Table.Column title='닉네임' dataIndex='nickname' key='nickname' />
+>>>>>>> develop
           <Table.Column
             title='프로필 사진'
             dataIndex='profilePictureUrl'
             key='profilePictureUrl'
+<<<<<<< HEAD
             width={150}
             render={(url) => {
               return <img src={url} width={50} height={50} alt='프로필' />;
@@ -56,10 +82,17 @@ export default function UserList() {
             width={100}
           />
 
+=======
+          />
+          <Table.Column title='성별' dataIndex='gender' key='gender' />
+          <Table.Column title='주소' dataIndex='address' key='address' />
+          <Table.Column title='역할' dataIndex='role' key='role' />
+>>>>>>> develop
           <Table.Column
             title='소개'
             dataIndex='introduction'
             key='introduction'
+<<<<<<< HEAD
             width={300}
           />
           <Table.Column
@@ -116,6 +149,12 @@ export default function UserList() {
               </Space>
             )}
           />
+=======
+          />
+          <Table.Column title='관심사' dataIndex='interests' key='interests' />
+          <Table.Column title='가입일' dataIndex='joinDate' key='joinDate' />
+          <Table.Column title='실행' key='action' />
+>>>>>>> develop
         </Table>
       </Card>
     </Container>

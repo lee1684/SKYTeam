@@ -20,8 +20,11 @@ export class ScenegraphService {
 
   public mobileTicket: MobileTicket | null = null;
   public mobileTicketAutoRotate: boolean = false;
+<<<<<<< HEAD
 
   public animationId: number | null = null;
+=======
+>>>>>>> develop
   constructor(
     private _route: ActivatedRoute,
     private _apiExecutorService: ApiExecutorService,
@@ -55,7 +58,11 @@ export class ScenegraphService {
     this.createArcballControls();
     this.mobileTicket = new MobileTicket(this._apiExecutorService, this);
     this.mobileTicket!.initMobileTicket(moimId);
+<<<<<<< HEAD
     startAnimation(this)!;
+=======
+    startAnimation(this);
+>>>>>>> develop
   }
 
   private createLight(lightName: string, position: THREE.Vector3) {
@@ -85,6 +92,7 @@ export class ScenegraphService {
   }
 
   public destroy() {
+<<<<<<< HEAD
     this.webGLRenderer!.dispose();
     this.scene!.children.forEach((child) => {
       if ((child as THREE.Mesh).geometry) {
@@ -105,6 +113,10 @@ export class ScenegraphService {
       );
     }
     cancelAnimationFrame(this.animationId!);
+=======
+    this.nativeElement.removeChild(this.webGLRenderer!.domElement);
+    this.nativeElement.removeChild(this.css3dRenderer!.domElement);
+>>>>>>> develop
   }
 
   private createArcballControls(): void {
@@ -119,10 +131,13 @@ export class ScenegraphService {
     this.arcballControls.addEventListener('change', () => {
       this.css3dRenderer!.render(this.scene!, this.camera!);
       this.mobileTicket?.checkFaceVisible();
+<<<<<<< HEAD
       this.mobileTicketAutoRotate = false;
     });
     this.arcballControls.addEventListener('end', () => {
       this.mobileTicketAutoRotate = true;
+=======
+>>>>>>> develop
     });
     this.arcballControls.enabled = true;
   }
@@ -151,12 +166,22 @@ export class ScenegraphService {
 
 /** 애니메이션 함수 */
 const startAnimation = function (sceneSetting: ScenegraphService) {
+<<<<<<< HEAD
+=======
+  const clock = new THREE.Clock();
+>>>>>>> develop
   const animationFrame = function () {
     if (sceneSetting.mobileTicketAutoRotate) {
       sceneSetting.rotateCard();
     }
     sceneSetting.onRender();
+<<<<<<< HEAD
     sceneSetting.animationId = requestAnimationFrame(animationFrame);
   };
+=======
+    requestAnimationFrame(animationFrame);
+  };
+
+>>>>>>> develop
   animationFrame();
 };

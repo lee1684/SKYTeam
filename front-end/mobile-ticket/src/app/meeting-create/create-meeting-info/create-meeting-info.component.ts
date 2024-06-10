@@ -9,6 +9,7 @@ import { SimpleInputComponent } from '../../ssalon-component/simple-input/simple
 import { ButtonElementsService } from '../../service/button-elements.service';
 import {
   BottomDialogComponent,
+<<<<<<< HEAD
   BottomDialogType,
 } from '../../ssalon-component/bottom-dialog/bottom-dialog.component';
 import { SquareButtonComponent } from '../../ssalon-component/square-button/square-button.component';
@@ -194,6 +195,8 @@ import { SimpleInputComponent } from '../../ssalon-component/simple-input/simple
 import { ButtonElementsService } from '../../service/button-elements.service';
 import {
   BottomDialogComponent,
+=======
+>>>>>>> develop
   BottomNavigatorType,
 } from '../../ssalon-component/bottom-dialog/bottom-dialog.component';
 import { SquareButtonComponent } from '../../ssalon-component/square-button/square-button.component';

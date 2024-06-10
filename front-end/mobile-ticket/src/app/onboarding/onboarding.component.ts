@@ -1,10 +1,21 @@
 import { Component, ElementRef, ViewChild, viewChild } from '@angular/core';
 import { SimpleInputComponent } from '../ssalon-component/simple-input/simple-input.component';
 import { ProfileImgComponent } from '../ssalon-component/profile-img/profile-img.component';
+<<<<<<< HEAD
 import { SimpleToggleGroupComponent } from '../ssalon-component/simple-toggle-group/simple-toggle-group.component';
 import { SimpleButtonComponent } from '../ssalon-component/simple-button/simple-button.component';
 import { NgIf } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+=======
+import {
+  NewButtonElement,
+  SimpleToggleGroupComponent,
+} from '../ssalon-component/simple-toggle-group/simple-toggle-group.component';
+import { SimpleButtonComponent } from '../ssalon-component/simple-button/simple-button.component';
+import { ButtonElement } from '../ssalon-component/circle-toggle-button-group/circle-toggle-button-group.component';
+import { NgIf } from '@angular/common';
+import { Router } from '@angular/router';
+>>>>>>> develop
 import { SquareButtonComponent } from '../ssalon-component/square-button/square-button.component';
 import { ButtonElementsService } from '../service/button-elements.service';
 import { ApiExecutorService } from '../service/api-executor.service';
@@ -17,7 +28,11 @@ export interface OnboardingStep {
 export interface RegisterUserInfo {
   nickname: string;
   profilePictureUrl: string;
+<<<<<<< HEAD
   gender: 'M' | 'F' | 'G';
+=======
+  gender: '' | 'M' | 'F' | 'G';
+>>>>>>> develop
   address: string;
   introduction: string;
   interests: string[];
@@ -52,12 +67,17 @@ export class OnboardingComponent {
   private _userInfo: RegisterUserInfo = {
     nickname: '',
     profilePictureUrl: '',
+<<<<<<< HEAD
     gender: 'M',
+=======
+    gender: '',
+>>>>>>> develop
     address: '',
     introduction: '',
     interests: [],
   };
 
+<<<<<<< HEAD
   private _goMoimId: string = undefined as unknown as string;
 
   constructor(
@@ -74,6 +94,19 @@ export class OnboardingComponent {
   }
 
   public ngOnInit() {}
+=======
+  constructor(
+    private _router: Router,
+    private _apiExecutorService: ApiExecutorService,
+    public buttonElementsService: ButtonElementsService
+  ) {}
+
+  public ngOnInit() {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${'access'}=`);
+    this._apiExecutorService.setToken(parts.pop()!.split(';').shift()!);
+  }
+>>>>>>> develop
   public onChangeUserInfo(type: string, value: string): void {
     switch (type) {
       case 'nickname':
@@ -107,7 +140,11 @@ export class OnboardingComponent {
           });
     }
     if (this.nowOnboardingStep === this.onBoardingStep[0]) {
+<<<<<<< HEAD
       if (this._userInfo!.nickname !== '') {
+=======
+      if (this._userInfo!.nickname !== '' && this._userInfo!.gender !== '') {
+>>>>>>> develop
         this.buttonElementsService.nextButtons[0]!.selected = true;
       }
     } else if (this.nowOnboardingStep === this.onBoardingStep[1]) {
@@ -136,6 +173,7 @@ export class OnboardingComponent {
     if (this.buttonElementsService.nextButtons[0]!.selected) {
       const nextStep = this.nowOnboardingStep.value + 1;
       if (nextStep >= this.onBoardingStep.length) {
+<<<<<<< HEAD
         this.buttonElementsService.interestSelectionButtons.forEach(
           (element) => {
             element.selected = false;
@@ -149,6 +187,14 @@ export class OnboardingComponent {
             queryParams: { moimId: this._goMoimId },
           });
         }
+=======
+        this.buttonElementsService.interestSelectionButtons.every((element) => {
+          element.selected = false;
+        });
+
+        await this._apiExecutorService.registerUser(this._userInfo);
+        await this._router.navigate(['/web/main']);
+>>>>>>> develop
       } else {
         if (this.nowOnboardingStep === this.onBoardingStep[0]) {
           this._userInfo.profilePictureUrl = this.profileImg!.imgSrc;
