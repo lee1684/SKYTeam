@@ -72,12 +72,17 @@ export class ProfileComponent {
         this.mode = 'info';
       }
     } else {
-      location.href = await this._apiExecutorService.logout();
+      await this._apiExecutorService.logout();
+      this._router.navigate(['/']);
     }
   }
 
   public onClickRemoveAccount() {
     this.isPopUpBottomDialog = true;
+  }
+
+  public onClickCSButton() {
+    location.href = 'https://pf.kakao.com/_xjxatUG';
   }
 
   public async removeAccount(value: number) {

@@ -234,6 +234,19 @@ export class ButtonElementsService {
       label: '탈퇴하기',
     },
   ];
+
+  public removeMOimButtons: NewButtonElement[] = [
+    {
+      selected: true,
+      value: 0,
+      label: '취소하기',
+    },
+    {
+      selected: false,
+      value: 1,
+      label: '삭제하기',
+    },
+  ];
   constructor(private _apiExecutorService: ApiExecutorService) {
     for (let i = 0; i < 10; i++) {
       this.interestSelectionButtons.push({

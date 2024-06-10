@@ -64,3 +64,12 @@ svg {
     padding: 10px;
     z-index: 10;
 }
+
+#auto-rotate-checkbox {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 120px;
+    display: flex;
+    align-items: center;
+}

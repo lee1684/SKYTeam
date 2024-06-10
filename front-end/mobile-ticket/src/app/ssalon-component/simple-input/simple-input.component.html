@@ -14,11 +14,14 @@
 
     </div>
     <div id="input-container">
-        <input *ngIf="this.type !== 'longText'" id="input" [type]="this.type" [placeholder]="this.placeholder"
-            [style.padding-left.px]="(this.type==='chat-input')?40:10"
+        <input *ngIf="this.type !== 'longText' && this.type !== 'category'" id="input" [type]="this.type"
+            [placeholder]="this.placeholder" [style.padding-left.px]="(this.type==='chat-input')?40:10"
             [style.padding-right.px]="(this.type==='chat-input')?40:10" autocomplete="off" (click)="this.onClickInput()"
             (keyup)="this.onChangeInput($event)" (input)="this.onChangeInput($event)" [(ngModel)]="this.innerText"
             #textDiv />
+        <input *ngIf="this.type === 'category'" id="input" [type]="this.type" [placeholder]="this.placeholder"
+            inputmode="none" autocomplete="off" (click)="this.onClickInput()" (keyup)="this.onChangeInput($event)"
+            (input)="this.onChangeInput($event)" [(ngModel)]="this.innerText" #textDiv />
         <img *ngIf="this.type === 'chat-input'" id="chat-send-image" src="assets/icons/add.png"
             (click)="this.onClickImgSendButton()" />
         <img *ngIf="this.type === 'chat-input'" id="chat-send-button" src="assets/icons/send_message.png"

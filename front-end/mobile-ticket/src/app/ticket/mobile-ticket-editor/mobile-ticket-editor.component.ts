@@ -735,4 +735,7 @@ export class MobileTicketEditorComponent {
       return 'rgba(0, 0, 0, 0.7)';
     }
   }
+  public isLowerWidth(): boolean {
+    return window.innerWidth < 800;
+  }
 }

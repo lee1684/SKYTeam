@@ -56,7 +56,6 @@ export class ScenegraphService {
     this.mobileTicket = new MobileTicket(this._apiExecutorService, this);
     this.mobileTicket!.initMobileTicket(moimId);
     startAnimation(this)!;
-    console.log(this.animationId);
   }
 
   private createLight(lightName: string, position: THREE.Vector3) {
@@ -120,6 +119,10 @@ export class ScenegraphService {
     this.arcballControls.addEventListener('change', () => {
       this.css3dRenderer!.render(this.scene!, this.camera!);
       this.mobileTicket?.checkFaceVisible();
+      this.mobileTicketAutoRotate = false;
+    });
+    this.arcballControls.addEventListener('end', () => {
+      this.mobileTicketAutoRotate = true;
     });
     this.arcballControls.enabled = true;
   }

@@ -46,7 +46,8 @@ export class MeetingEditComponent {
   capacity: SimpleInputComponent | null = null;
   @ViewChild('fee', { static: false }) fee: SimpleInputComponent | null = null;
   public bottomDialogType = BottomDialogType;
-  public isPopUpBottomNavigator = false;
+  public isPopUpBottomDialog = false;
+  public isPopUpRemoveMoimDialog = false;
   @Input() photos: NewButtonElement[] = [
     {
       imgSrc: 'assets/add_photo.png',
@@ -132,14 +133,14 @@ export class MeetingEditComponent {
 
   public ngAfterViewChecked() {}
   public popUpBottomNavigator() {
-    this.isPopUpBottomNavigator = true;
+    this.isPopUpBottomDialog = true;
   }
   public onCategorySelectedEvent(value: any) {
     this.moimInfo.category = this.buttonElementsService.getLabelByValue(
       this.buttonElementsService.interestSelectionButtons,
       value.value
     );
-    this.isPopUpBottomNavigator = false;
+    this.isPopUpBottomDialog = false;
   }
   public onClickNoLimitCapacity(checkNoLimit: boolean) {
     this.capacity!.innerText = checkNoLimit ? 99999 : '';
@@ -245,7 +246,6 @@ export class MeetingEditComponent {
   }
 
   public async editInfo() {
-    console.log(this.moimInfo, this.reviewInfo);
     if (this.editType === 'moimInfo') {
       await this._apiExecutorService.editMoimInfo(this.moimId, this.moimInfo);
     } else {
@@ -258,5 +258,21 @@ export class MeetingEditComponent {
     this._router.navigate(['/web/meeting-info'], {
       queryParams: { moimId: this.moimId },
     });
+  }
+
+  public onClickRemoveButton() {
+    this.isPopUpRemoveMoimDialog = true;
+  }
+
+  public async onClickRemoveMoimDialogButton(value: number) {
+    if (value === 1) {
+      await this.removeMoim();
+      this._router.navigate(['/web/main']);
+    } else {
+      this.isPopUpRemoveMoimDialog = false;
+    }
+  }
+  public async removeMoim() {
+    await this._apiExecutorService.removeMeeting(this.moimId);
   }
 }

@@ -7,9 +7,9 @@
     (onClickToggleButtonEvent)="this.onChangeUserInfo('gender', $event)"></app-simple-toggle>
   <app-simple-input [innerText]="this.userInfo.introduction" [label]="'소개'" [placeholder]="'간단한 소개를 해주세요.'"
     (onChangeEvent)="this.onChangeUserInfo('introduction', $event)"></app-simple-input>
-  <app-simple-input [label]="'관심사'" [innerText]="this.getInterestString()"
+  <app-simple-input [label]="'관심사'" [innerText]="this.getInterestString()" [type]="'category'"
     (onClickEvent)="this.popUpInterestsDialog()"></app-simple-input>
-  <app-simple-input [label]="'지역'" [innerText]="this.userInfo.address"
+  <app-simple-input [label]="'지역'" [innerText]="this.userInfo.address" [type]="'category'"
     (onClickEvent)="this.popUpLocationDialog()"></app-simple-input>
 </div>
 <div *ngIf="this.isInterestPopUp">
