@@ -20,7 +20,11 @@ public class PaymentDTO {
     @NotBlank
     private Long meetingId;
     @NotBlank
+<<<<<<< HEAD
     private Integer payment;
+=======
+    private Integer amount;
+>>>>>>> develop
     @NotBlank
     private String purpose;
 
@@ -28,7 +32,11 @@ public class PaymentDTO {
         this.id = payment.getId();
         this.memberId = payment.getMember().getId();
         this.meetingId = payment.getMeeting().getId();
+<<<<<<< HEAD
         this.payment = payment.getAmount();
+=======
+        this.amount = payment.getAmount();
+>>>>>>> develop
         this.purpose = payment.getPurpose();
     }
 }

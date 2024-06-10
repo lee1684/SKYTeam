@@ -9,6 +9,10 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 @Data
+<<<<<<< HEAD
+=======
+@AllArgsConstructor
+>>>>>>> develop
 @NoArgsConstructor
 @Builder
 public class MeetingListSearchPageDTO <T>{
@@ -19,9 +23,12 @@ public class MeetingListSearchPageDTO <T>{
         this.content = moims.getContent();
         this.hasNext = moims.hasNext();
     }
+<<<<<<< HEAD
 
     public MeetingListSearchPageDTO(List<T> content, Boolean hasNext) {
         this.content = content;
         this.hasNext = hasNext;
     }
+=======
+>>>>>>> develop
 }

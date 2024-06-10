@@ -1,0 +1,20 @@
+<!-- QRSHOWVIEW: QRCODE 보여주는 화면의 경우 -->
+<div class="container" #qrShowView>
+    <div id="ticket-viewer-container">
+        <app-ticket [moimId]="this.moimId" [viewType]="'view'"></app-ticket>
+    </div>
+
+    <div id="qrcode-overay">
+        <div id="qrcode-container">
+            <img id='qrcode' [src]="this.qrCodeSrc" alt="이미지" />
+        </div>
+    </div>
+
+<<<<<<< HEAD
+    <div id="attendance-status-container">
+        {{this.getAttendance()}}
+    </div>
+=======
+>>>>>>> develop
+
+</div>

@@ -1,5 +1,6 @@
 package kr.co.ssalon.domain.service;
 
+<<<<<<< HEAD
 import com.google.gson.Gson;
 import kr.co.ssalon.domain.dto.MeetingDomainDTO;
 import kr.co.ssalon.domain.entity.*;
@@ -16,6 +17,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+=======
+import kr.co.ssalon.domain.dto.MeetingDomainDTO;
+import kr.co.ssalon.domain.entity.*;
+import kr.co.ssalon.domain.repository.*;
+import kr.co.ssalon.web.dto.ParticipantDTO;
+import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
+import kr.co.ssalon.web.dto.MeetingSearchCondition;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+>>>>>>> develop
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,8 +47,11 @@ public class MeetingService {
     private final CategoryRepository categoryRepository;
     private final MeetingOutRepository meetingOutRepository;
     private final RecommendService recommendService;
+<<<<<<< HEAD
     private final AwsLambdaService awsLambdaService;
     private final ValidationService validationService;
+=======
+>>>>>>> develop
 
     // 모임 개설
     @Transactional
@@ -109,13 +127,20 @@ public class MeetingService {
         Member member = findMember(username);
         Meeting meeting = findMeeting(moimId);
 
+<<<<<<< HEAD
         if (!isParticipant(moimId, member)) {
+=======
+        if(!isParticipant(moimId, member)) {
+>>>>>>> develop
             throw new BadRequestException("모임의 참여자가 아닙니다.");
         }
 
         return member.equals(meeting.getCreator());
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> develop
     // 모임 목록 조회
     public Page<Meeting> getMoims(MeetingSearchCondition meetingSearchCondition, String username, Pageable pageable) {
         Page<Meeting> meetings = meetingRepository.searchMoims(meetingSearchCondition, username, pageable);
@@ -123,6 +148,7 @@ public class MeetingService {
     }
 
 
+<<<<<<< HEAD
     public Page<Meeting> searchByKeyword(String keyword, Pageable pageable) {
         if (keyword == null || keyword.isEmpty()) {
             // keyword가 null이거나 빈 문자열인 경우 빈 페이지 반환
@@ -137,6 +163,11 @@ public class MeetingService {
     // 모임 정보 업데이트
     @Transactional
     public Long editMoim(String username, Long moimId, MeetingInfoDTO meetingInfoDTO) throws BadRequestException {
+=======
+    // 모임 정보 업데이트
+    @Transactional
+    public Long editMoim(String username, Long moimId, MeetingDomainDTO meetingDomainDTO) throws BadRequestException {
+>>>>>>> develop
 
         // 모임 개최자 찾기
         Member currentUser = findMember(username);
@@ -145,11 +176,23 @@ public class MeetingService {
         Meeting currentMeeting = findMeeting(moimId);
 
         // 개최자 검증
+<<<<<<< HEAD
         ValidationService.validationCreatorMoim(currentMeeting, currentUser);
 
         // 카테고리 찾기
         Category category = findCategory(meetingInfoDTO.getCategory());
         currentMeeting.updateMeeting(category, meetingInfoDTO.getPayment(), meetingInfoDTO.getMeetingPictureUrls(), meetingInfoDTO.getTitle(), meetingInfoDTO.getDescription(), meetingInfoDTO.getLocation(), meetingInfoDTO.getCapacity(), meetingInfoDTO.getMeetingDate(), meetingInfoDTO.getIsSharable());
+=======
+        if (!currentMeeting.getCreator().equals(currentUser)) {
+            throw new BadRequestException("모임을 개설한 회원이 아닙니다.");
+        }
+
+        // 카테고리 찾기
+        Category category = findCategory(meetingDomainDTO.getCategory());
+
+        // Dirty Checking
+        currentMeeting.updateMeeting(category, meetingDomainDTO.getMeetingPictureUrls(), meetingDomainDTO.getTitle(), meetingDomainDTO.getDescription(), meetingDomainDTO.getLocation(), meetingDomainDTO.getCapacity(), meetingDomainDTO.getMeetingDate());
+>>>>>>> develop
 
         // 임베딩 업데이트
         Meeting updatedMeeting = findMeeting(moimId);
@@ -160,10 +203,17 @@ public class MeetingService {
 
     // 모임 정보 업데이트
     @Transactional
+<<<<<<< HEAD
     public Long editMoim(Long moimId, MeetingInfoDTO meetingInfoDTO) throws BadRequestException {
         Meeting currentMeeting = findMeeting(moimId);
         Category category = findCategory(meetingInfoDTO.getCategory());
         currentMeeting.updateMeeting(category, meetingInfoDTO.getPayment(), meetingInfoDTO.getMeetingPictureUrls(), meetingInfoDTO.getTitle(), meetingInfoDTO.getDescription(), meetingInfoDTO.getLocation(), meetingInfoDTO.getCapacity(), meetingInfoDTO.getMeetingDate(), meetingInfoDTO.getIsSharable());
+=======
+    public Long editMoim(Long moimId, MeetingDomainDTO meetingDomainDTO) throws BadRequestException {
+        Meeting currentMeeting = findMeeting(moimId);
+        Category category = findCategory(meetingDomainDTO.getCategory());
+        currentMeeting.updateMeeting(category, meetingDomainDTO.getMeetingPictureUrls(), meetingDomainDTO.getTitle(), meetingDomainDTO.getDescription(), meetingDomainDTO.getLocation(), meetingDomainDTO.getCapacity(), meetingDomainDTO.getMeetingDate());
+>>>>>>> develop
 
         Meeting updatedMeeting = findMeeting(moimId);
         recommendService.updateMoimEmbedding(updatedMeeting);
@@ -174,6 +224,7 @@ public class MeetingService {
     // 모임 삭제
     @Transactional
     public Long deleteMoim(String username, Long moimId) throws BadRequestException {
+<<<<<<< HEAD
 //        // 멤버 찾기
 //        Member currentUser = findMember(username);
 //
@@ -192,6 +243,29 @@ public class MeetingService {
 //
 //        // 해당 모임 참가자 삭제
 //        memberMeetingRepository.deleteByMeetingId(moimId);
+=======
+        // 멤버 찾기
+        Member currentUser = findMember(username);
+
+        // 삭제할 미팅 찾기
+        Meeting currentMeeting = findMeeting(moimId);
+
+        // 개최자 검증
+        if (!currentMeeting.getCreator().equals(currentUser)) {
+            throw new BadRequestException("모임을 개설한 회원이 아닙니다.");
+        }
+
+        // 모임 참여자 찾기
+        List<MemberMeeting> participants = currentMeeting.getParticipants();
+
+
+        // 연관 관계 제거
+        // 내가 참여한 모임 중에서 해당 모임을 삭제
+        participants.forEach(participant -> participant.getMember().deleteMemberMeeting(participant));
+
+        // 해당 모임 참가자 삭제
+        memberMeetingRepository.deleteByMeetingId(moimId);
+>>>>>>> develop
 
         // 해당 모임 삭제
         meetingRepository.deleteById(moimId);
@@ -225,15 +299,23 @@ public class MeetingService {
         MemberMeeting targetMemberMeeting = findMemberMeeting(targetUser, meeting);
 
         // 요청자가 모임에 포함되어 있는지 검증
+<<<<<<< HEAD
         if (!isParticipant(moimId, currentUser)) {
             throw new BadRequestException("요청자가 모임에 참여자 목록에 존재하지 않습니다.");
         }
+=======
+        if(!isParticipant(moimId, currentUser)) {throw new BadRequestException("요청자가 모임에 참여자 목록에 존재하지 않습니다.");}
+>>>>>>> develop
 
         targetUser.deleteMemberMeeting(targetMemberMeeting);
         meeting.deleteMemberMeeting(targetMemberMeeting);
 
         // 요청자가 모임 개최자인 경우 -> 강퇴
+<<<<<<< HEAD
         if (currentUser.equals(meeting.getCreator()) || !currentUser.equals(targetUser)) {
+=======
+        if(currentUser.equals(meeting.getCreator()) || !currentUser.equals(targetUser)) {
+>>>>>>> develop
 
             MeetingOut meetingOut = MeetingOut.createMeetingOutReason(targetUser, meeting, "강퇴", reason);
             meetingOutRepository.save(meetingOut);
@@ -248,6 +330,7 @@ public class MeetingService {
             meetingOutRepository.save(meetingOut);
             memberMeetingRepository.delete(targetMemberMeeting);
             return meetingOut;
+<<<<<<< HEAD
         } else {
             throw new BadRequestException("요청자와 타겟의 관계가 잘못 설정되었습니다.");
         }
@@ -267,6 +350,12 @@ public class MeetingService {
             prompt.append(meeting.getDescription());
 
             awsLambdaService.updateMoimEmbedding(moimId, moimTitle, prompt.toString());
+=======
+        }
+
+        else {
+            throw new BadRequestException("요청자와 타겟의 관계가 잘못 설정되었습니다.");
+>>>>>>> develop
         }
     }
 

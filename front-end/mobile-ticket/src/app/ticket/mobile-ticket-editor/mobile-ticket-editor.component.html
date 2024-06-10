@@ -1,0 +1,169 @@
+<div class="container">
+    <!-- edit buttons & back button-->
+    <div class="horizontal-container" [style.justify-content]="'right'">
+        <div id="edit-feature-buttons">
+            <app-circle-toggle-button-group #editFeatureButtons [elements]="this.editFeatures" [innerSize]="20"
+                [outerSize]="'36px'" [noneStatusValue]="this.mobileTicketEditMode.NONE"
+                (onClickToggleButtonEvent)="this.onClickChangeEditMode($event)"></app-circle-toggle-button-group>
+        </div>
+<<<<<<< HEAD
+        <div *ngIf="!this.isLowerWidth()">
+            <app-simple-button class="complete-button" [buttonElement]="this.previewButtonElement" [heightSize]="15"
+                (onClickEvent)="this.onClickPreviewButton()" [type]="'text'"></app-simple-button>
+        </div>
+        <div class="complete-button" *ngIf="this.isLowerWidth()" (mouseup)="this.onClickPreviewButton()">
+            <img src="assets/icons/view.png" width="20" height="20" />
+        </div>
+    </div>
+    <!-- detailed editor view -->
+    <div id="detail-editor" #detailedEditor [hidden]="this.editMode === this.mobileTicketEditMode.NONE"
+        [style.background-color]="this.getBackgroundColor()">
+=======
+        <div>
+            <app-simple-button class="complete-button" [buttonElement]="this.previewButtonElement" [heightSize]="15"
+                (onClickEvent)="this.onClickPreviewButton()" [type]="'text'"></app-simple-button>
+        </div>
+    </div>
+    <!-- detailed editor view -->
+    <div id="detail-editor" #detailedEditor [hidden]="this.editMode === this.mobileTicketEditMode.NONE">
+>>>>>>> develop
+        <!--back button-->
+        <div class="horizontal-container">
+            <div>
+                <app-simple-button class="back-button" [buttonElement]="this.goBackButtonElement" [heightSize]="40"
+                    (onClickEvent)="this.onClickEndDetailedEditViewer()"></app-simple-button>
+            </div>
+<<<<<<< HEAD
+            <div class="complete-button-container">
+=======
+            <div>
+>>>>>>> develop
+                <app-simple-button class="complete-button" [buttonElement]="this.completeButtonElement"
+                    [heightSize]="15" (onClickEvent)="this.onClickEndDetailedEditViewer()" [type]="'text'"
+                    [highContrast]="true"></app-simple-button>
+            </div>
+        </div>
+<<<<<<< HEAD
+        <!-- ai-generate feature -->
+        <div *ngIf="this.editMode === this.mobileTicketEditMode.AI_GENERATE">
+            <div id="generate-container">
+
+                <img width="300" height="300" #generatedImage />
+                <div id="generator">
+                    <textarea id="prompt" #prompt autocomplete="off" type="text" [style.height]="'100px'"
+                        [style.width]="'300px'" [placeholder]="'생성하고 싶은 사진의 설명을 입력해주세요'"></textarea>
+                    <div [style.display]="'flex'" [style.justify-content]="'center'">
+                        <button id="generate-button" (click)="this.generateImage()">생성</button>
+                        <div *ngIf="this.generatingImage" id="spinner"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <!-- background color edit feature -->
+        <div *ngIf="
+        this.editMode === this.mobileTicketEditMode.BACKGROUND_COLOR_CHANGE
+      " class="color-board-container">
+            <svg class="ticket-background" width="350" height="600" viewBox="0 0 350 600" fill="none"
+                xmlns="http://www.w3.org/2000/svg" #backgroundPath>
+                <rect width="350" height="600" rx="25" />
+=======
+        <!-- background color edit feature -->
+        <div *ngIf="
+        this.editMode === this.mobileTicketEditMode.BACKGROUND_COLOR_CHANGE
+      ">
+            <svg width="350" height="600" viewBox="0 0 350 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="175" height="300" rx="10" fill="#D9D9D9" />
+>>>>>>> develop
+            </svg>
+            <app-color-board class="color-board" [outerSize]="'30px'" [innerSize]="'24px'"
+                (onClickToggleButtonEvent)="this.changeBackgroundColor($event)"
+                [selectedValue]="this.backgroundColor.value"></app-color-board>
+        </div>
+        <!-- text edit feature -->
+        <div *ngIf="this.editMode === this.mobileTicketEditMode.TEXT">
+            <div id="text-edit-feature-container" #textEditFeatureContainer>
+<<<<<<< HEAD
+                <textarea class="text-edit-input" #textEditInput autocomplete="off" type="text"
+=======
+                <textarea id="text-edit-input" #textEditInput autocomplete="off" type="text"
+>>>>>>> develop
+                    [style.text-align]="this.ssalonTextAttribute.textAlign"
+                    [style.color]="this.ssalonTextAttribute.color"
+                    [style.font-family]="this.ssalonTextAttribute.fontFamily"
+                    (input)="this.onChangeSsalonTextAttribute('text', $event)"></textarea>
+            </div>
+            <div class="horizontal-container" id="text-align" [style.justify-content]="'center'">
+                <app-circle-toggle-button-group [elements]="this.textAlignButtons" [outerSize]="'30px'"
+                    [selectedValues]="[
+            this.getSsalonTextEnumByString(this.ssalonTextAttribute.textAlign)
+          ]" (onClickToggleButtonEvent)="
+            this.onChangeSsalonTextAttribute('textAlign', $event)
+          "></app-circle-toggle-button-group>
+                <!--<input type="color" />-->
+            </div>
+            <app-simple-toggle-button-group class="fonts" [elements]="this.fonts" (onClickToggleButtonEvent)="
+          this.onChangeSsalonTextAttribute('fontFamily', $event)
+        "></app-simple-toggle-button-group>
+            <app-color-board class="color-board" [outerSize]="'30px'" [innerSize]="'24px'" (onClickToggleButtonEvent)="
+          this.onChangeSsalonTextAttribute('color', $event)
+        " [selectedValue]="
+          this.ssalonColor.getSsalonColorObjectByColor(
+            this.ssalonTextAttribute.color
+          ).value
+        "></app-color-board>
+        </div>
+
+        <!-- phtoo edit feature -->
+        <div id="photo-edit-feature-container" *ngIf="this.editMode === this.mobileTicketEditMode.PHOTO">
+            <div id="upload-photo-num">{{this.uploadPhotoNum}}</div>
+            <img id="selected-photo-container" #selectedPhotoContainer />
+        </div>
+
+        <!-- sticker edit feature -->
+        <div id="sticker-edit-feature-container" #stickerEditFeatureContainer
+            *ngIf="this.editMode === this.mobileTicketEditMode.STICKER">
+            <div [style.display]="'flex'" [style.justify-content]="'space-evenly'" [style.margin-bottom]="'20px'"
+                *ngFor="let stickerRow of this.getStickerArray()">
+                <div *ngFor="let sticker of stickerRow">
+                    <div class="sticker" [style.width]="'100px'" [style.height]="'150px'"
+<<<<<<< HEAD
+                        (mouseup)="this.selectSticker(sticker.value)">
+=======
+                        (click)="this.selectSticker(sticker.value)">
+>>>>>>> develop
+                        <img [src]="sticker.imgSrc" width="80px" />
+                        <div *ngIf="sticker.selected" class="selected-status"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- draw edit feature -->
+        <div *ngIf="this.editMode === this.mobileTicketEditMode.DRAW">
+<<<<<<< HEAD
+            <div class="ticket-background">
+                <canvas #drawCanvas width="350" height="600"></canvas>
+            </div>
+
+            <app-color-board class="color-board" [outerSize]="'30px'" [innerSize]="'24px'" (onClickToggleButtonEvent)="
+          this.onChangePencilColor($event)
+=======
+            <svg class="ticket-background" width="350" height="600" viewBox="-87.5 -150 525 900" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" #backgroundPath
+                    d="M9.53674e-06 40C9.53674e-06 17.9086 17.9086 0 40 0H310C332.091 0 350 17.9086 350 40L350 451.714C333.431 451.714 320 463.227 320 477.429C320 491.63 333.431 503.143 350 503.143L350 560C350 582.091 332.091 600 310 600H40C17.9086 600 9.53674e-06 582.091 9.53674e-06 560L0 503.143C16.5685 503.143 30 491.63 30 477.429C30 463.227 16.5685 451.714 0 451.714L9.53674e-06 40Z"
+                    fill="#D9D9D9" />
+                <foreignObject width="350" height="600">
+                    <canvas id="draw-canvas" #drawCanvas width="350" height="600"></canvas>
+                </foreignObject>
+            </svg>
+            <app-color-board class="color-board" [outerSize]="'30px'" [innerSize]="'24px'" (onClickToggleButtonEvent)="
+          this.onChangeSsalonTextAttribute('color', $event)
+>>>>>>> develop
+        "></app-color-board>
+        </div>
+    </div>
+</div>

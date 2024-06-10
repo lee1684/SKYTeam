@@ -5,6 +5,7 @@
     "version": "6.0.0-rc1",
     "objects": [
       {
+<<<<<<< HEAD
         "cropX": 0,
         "cropY": 0,
         "type": "Image",
@@ -51,6 +52,16 @@
         "text": "모임 후기를 작성해주세요.",
         "charSpacing": 0,
         "textAlign": "left",
+=======
+        "fontSize": 40,
+        "fontWeight": "normal",
+        "fontFamily": "Jersey 15",
+        "fontStyle": "normal",
+        "lineHeight": 1.16,
+        "text": "티켓을\n불러오지\n못했습니다",
+        "charSpacing": 0,
+        "textAlign": "center",
+>>>>>>> develop
         "styles": [],
         "pathStartOffset": 0,
         "pathSide": "left",
@@ -64,11 +75,19 @@
         "version": "6.0.0-rc1",
         "originX": "left",
         "originY": "top",
+<<<<<<< HEAD
         "left": 24,
         "top": 123,
         "width": 410.932,
         "height": 45.2,
         "fill": "#FFFFFF",
+=======
+        "left": 100,
+        "top": 100,
+        "width": 173,
+        "height": 150.064,
+        "fill": "#FF0000",
+>>>>>>> develop
         "stroke": null,
         "strokeWidth": 1,
         "strokeDashArray": null,
@@ -77,8 +96,13 @@
         "strokeLineJoin": "miter",
         "strokeUniform": false,
         "strokeMiterLimit": 4,
+<<<<<<< HEAD
         "scaleX": 0.75,
         "scaleY": 0.75,
+=======
+        "scaleX": 1,
+        "scaleY": 1,
+>>>>>>> develop
         "angle": 0,
         "flipX": false,
         "flipY": false,

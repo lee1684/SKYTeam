@@ -54,6 +54,7 @@ jobs:
           echo "${{ secrets.AWS_PROPERTIES }}" > ./application.yml
         shell: bash
 
+<<<<<<< HEAD
       # Google Translation key 설정
       - name: Create Google Translation JSON file from secret
         uses: jsdaniell/create-json@1.1.2
@@ -65,6 +66,8 @@ jobs:
         run: cat ./back-end/src/main/resources/service-account-file.json
         
 
+=======
+>>>>>>> develop
       # gradlew 파일 실행권한 설정
       - name: Grant execute permission for gradlew
         run: |

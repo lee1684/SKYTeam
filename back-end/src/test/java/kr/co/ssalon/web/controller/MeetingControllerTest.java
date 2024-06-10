@@ -1,21 +1,30 @@
 package kr.co.ssalon.web.controller;
 
+<<<<<<< HEAD
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import kr.co.ssalon.config.JacksonConfig;
 import kr.co.ssalon.domain.dto.MeetingDomainDTO;
+=======
+>>>>>>> develop
 import kr.co.ssalon.domain.entity.*;
 import kr.co.ssalon.domain.repository.CategoryRepository;
 import kr.co.ssalon.domain.repository.MeetingRepository;
 import kr.co.ssalon.domain.service.CategoryService;
 import kr.co.ssalon.domain.service.MeetingService;
 import kr.co.ssalon.domain.service.MemberService;
+<<<<<<< HEAD
 import kr.co.ssalon.domain.service.RecommendService;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import kr.co.ssalon.web.controller.annotation.WithCustomMockUser;
 import kr.co.ssalon.web.dto.*;
+=======
+import kr.co.ssalon.oauth2.CustomOAuth2Member;
+import kr.co.ssalon.web.controller.annotation.WithCustomMockUser;
+import kr.co.ssalon.web.dto.MeetingSearchCondition;
+>>>>>>> develop
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +32,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+<<<<<<< HEAD
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.*;
 import org.springframework.http.converter.HttpMessageNotWritableException;
+=======
+import org.springframework.data.domain.*;
+>>>>>>> develop
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -33,6 +46,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+<<<<<<< HEAD
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -51,12 +65,25 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+=======
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.util.Collections;
+
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+>>>>>>> develop
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(MeetingController.class)
+<<<<<<< HEAD
 @Import(JacksonConfig.class)
+=======
+>>>>>>> develop
 public class MeetingControllerTest {
 
     @MockBean
@@ -74,6 +101,7 @@ public class MeetingControllerTest {
     @MockBean
     private CategoryService categoryService;
 
+<<<<<<< HEAD
     @MockBean
     private RecommendService recommendService;
 
@@ -112,6 +140,11 @@ public class MeetingControllerTest {
 
 
 
+=======
+    @Autowired
+    private MockMvc mockMvc;
+
+>>>>>>> develop
     @Test
     @DisplayName("모임 목록 조회 API(GET /api/moims) 테스트")
     @WithCustomMockUser(username = "test")
@@ -165,6 +198,7 @@ public class MeetingControllerTest {
         resultActions.andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].categoryName",is("운동")));
     }
+<<<<<<< HEAD
 
     @Test
     @DisplayName("모임 개설 API(POST /api/moims) 테스트")
@@ -467,3 +501,6 @@ public class MeetingControllerTest {
 
 
 }
+=======
+}
+>>>>>>> develop

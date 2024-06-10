@@ -76,6 +76,7 @@ dependencies {
 
     // WebSocket
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+<<<<<<< HEAD
 
     // ChatGpt
     implementation 'com.squareup.okhttp3:okhttp:4.9.1'
@@ -83,6 +84,8 @@ dependencies {
 
     // Google Cloud Translation
     implementation 'com.google.cloud:google-cloud-translate:2.6.0'
+=======
+>>>>>>> develop
 }
 
 tasks.named('test') {

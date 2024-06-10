@@ -37,15 +37,21 @@ public class Meeting {
     @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<MemberMeeting> participants = new ArrayList<>();
 
+<<<<<<< HEAD
     @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<MeetingOut> meetingOuts = new ArrayList<>();
 
+=======
+>>>>>>> develop
     @ElementCollection
     @CollectionTable(name = "meeting_picture", joinColumns = @JoinColumn(name = "meeting_id"))
     private final List<String> meetingPictureUrls = new ArrayList<>();
 
+<<<<<<< HEAD
     @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Payment> payments = new ArrayList<>();
+=======
+>>>>>>> develop
 
     private String title;
     private String description;
@@ -96,25 +102,38 @@ public class Meeting {
         this.thumbnail = thumbnail != null ? thumbnail : this.thumbnail;
     }
 
+<<<<<<< HEAD
     public void changePayment(Integer payment) {this.payment = payment != null ? payment : this.payment;}
 
     public void changeIsSharable(Boolean isSharable) {this.isSharable = isSharable != null ? isSharable : this.isSharable;}
+=======
+
+>>>>>>> develop
     public void addMeetingPictureUrls(List<String> meetingPictureUrls) {
         for (String meetingPictureUrl : meetingPictureUrls) {
             getMeetingPictureUrls().add(meetingPictureUrl);
         }
     }
 
+<<<<<<< HEAD
     public void updateMeeting(Category category, Integer payment, List<String> meetingPictureUrls, String title, String description, String location, Integer capacity, LocalDateTime meetingDates, Boolean isSharable) {
         changeCategory(category);
         changePayment(payment);
+=======
+    public void updateMeeting(Category category, List<String> meetingPictureUrls, String title, String description, String location, Integer capacity, LocalDateTime meetingDates) {
+        changeCategory(category);
+>>>>>>> develop
         addMeetingPictureUrls(meetingPictureUrls);
         changeTitle(title);
         changeDescription(description);
         changeLocation(location);
         changeCapacity(capacity);
         changeLocalDateTime(meetingDates);
+<<<<<<< HEAD
         changeIsSharable(isSharable);
+=======
+
+>>>>>>> develop
     }
 
     // ***** 연관 메서드 *****

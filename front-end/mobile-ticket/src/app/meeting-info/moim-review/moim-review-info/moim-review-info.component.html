@@ -1,0 +1,10 @@
+<div class="container" *ngIf="this.isReviewLoaded()">
+    <app-simple-content [title]="'후기'" [content]="this.reviewInfo.description"></app-simple-content>
+<<<<<<< HEAD
+    <app-simple-content [title]="'사진'" [images]="this.getImagesToNewButtonElements(this.reviewInfo.diaryPictureUrls)"
+        [imageHeight]="300"></app-simple-content>
+=======
+    <app-simple-content [title]="'사진'"
+        [images]="this.getImagesToNewButtonElements(this.reviewInfo.diaryPictureUrls)"></app-simple-content>
+>>>>>>> develop
+</div>

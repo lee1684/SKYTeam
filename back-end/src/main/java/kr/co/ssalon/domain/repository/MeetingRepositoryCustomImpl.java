@@ -14,6 +14,10 @@ import kr.co.ssalon.domain.dto.MeetingOrder;
 import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.MemberMeeting;
+<<<<<<< HEAD
+=======
+import kr.co.ssalon.domain.entity.QMemberMeeting;
+>>>>>>> develop
 import kr.co.ssalon.domain.service.MeetingService;
 import kr.co.ssalon.web.dto.MeetingSearchCondition;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +26,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Component;
 
+<<<<<<< HEAD
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+=======
+import java.util.List;
+>>>>>>> develop
 
 import static com.querydsl.jpa.JPAExpressions.select;
 import static kr.co.ssalon.domain.entity.QMeeting.meeting;
@@ -33,6 +41,10 @@ import static kr.co.ssalon.domain.entity.QMemberMeeting.memberMeeting;
 @Component
 public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
 
+<<<<<<< HEAD
+=======
+    MeetingService meetingService;
+>>>>>>> develop
     EntityManager em;
     JPAQueryFactory query;
 
@@ -128,6 +140,7 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
     }
 
     private Member findMemberByUsername(String username) {
+<<<<<<< HEAD
         System.out.println("Finding member by username: " + username);
         Member member = em.createQuery("SELECT m FROM Member m WHERE m.username = :username", Member.class)
                 .setParameter("username", username)
@@ -137,4 +150,13 @@ public class MeetingRepositoryCustomImpl implements MeetingRepositoryCustom {
     }
 
 
+=======
+        // Implement a method to find a Member entity by username
+        // Example:
+        return em.createQuery("SELECT m FROM Member m WHERE m.username = :username", Member.class)
+                .setParameter("username", username)
+                .getSingleResult();
+    }
+
+>>>>>>> develop
 }

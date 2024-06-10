@@ -5,7 +5,10 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
+<<<<<<< HEAD
 import jakarta.servlet.http.Cookie;
+=======
+>>>>>>> develop
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.ssalon.jwt.JWTUtil;
@@ -46,6 +49,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         String refresh = null;
 
         refresh = request.getHeader("Refresh");
+<<<<<<< HEAD
 
         if (refresh == null) {
             // 쿠키 토큰 사용
@@ -61,6 +65,8 @@ public class CustomLogoutFilter extends GenericFilterBean {
             }
         }
 
+=======
+>>>>>>> develop
         if (refresh == null) {
             sendResponse(response, "refresh token is null", HttpServletResponse.SC_BAD_REQUEST);
             return;
@@ -89,6 +95,7 @@ public class CustomLogoutFilter extends GenericFilterBean {
         RedisRefreshToken deleteRefresh = redisRefreshTokenRepository.findByRefresh(refresh);
         redisRefreshTokenRepository.delete(deleteRefresh);
 
+<<<<<<< HEAD
         // 'access' 및 'refresh' 쿠키 제거
         clearCookie(response, "access");
         clearCookie(response, "refresh");
@@ -104,6 +111,11 @@ public class CustomLogoutFilter extends GenericFilterBean {
         response.addCookie(cookie);
     }
 
+=======
+        sendResponse(response, "logout success", HttpServletResponse.SC_OK);
+    }
+
+>>>>>>> develop
     private void sendResponse(HttpServletResponse response, String message, int status) {
         log.info(message);
         try (PrintWriter writer = response.getWriter()) {

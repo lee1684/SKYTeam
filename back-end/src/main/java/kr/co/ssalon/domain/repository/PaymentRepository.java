@@ -1,5 +1,6 @@
 package kr.co.ssalon.domain.repository;
 
+<<<<<<< HEAD
 import kr.co.ssalon.domain.entity.Meeting;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.entity.Payment;
@@ -16,4 +17,10 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     List<Payment> findAllByMemberIdAndDtype(Long memberId, String dtype);
     List<Payment> findAllByDtype(String dtype);
 
+=======
+import kr.co.ssalon.domain.entity.Payment;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PaymentRepository extends JpaRepository<Payment, Long> {
+>>>>>>> develop
 }

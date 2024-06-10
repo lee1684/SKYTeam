@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+<<<<<<< HEAD
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
@@ -14,6 +15,13 @@ import java.text.DecimalFormat;
 @Getter
 @AllArgsConstructor
 public abstract class Payment {
+=======
+@Entity
+@Getter
+@Builder
+@AllArgsConstructor
+public class Payment {
+>>>>>>> develop
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,13 +33,18 @@ public abstract class Payment {
     @JoinColumn(name = "member_id")
     private Member member;
 
+<<<<<<< HEAD
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "meeting_id")
+=======
+    @OneToOne(fetch = FetchType.LAZY)
+>>>>>>> develop
     private Meeting meeting;
 
     private Integer amount;
 
     private String purpose;
+<<<<<<< HEAD
     private String tid;
     @Column(insertable = false, updatable = false)
     private String dtype;
@@ -60,5 +73,22 @@ public abstract class Payment {
 
     public void changeMeeting(Meeting meeting) {
         this.meeting = meeting;
+=======
+
+    protected Payment() {}
+
+    public void changeMember(Member member) {
+        this.member = member;
+    }
+
+    public static Payment createPayment(Member member, Integer amount) {
+        Payment payment = Payment.builder()
+                .amount(amount)
+                .build();
+
+        payment.changeMember(member);
+
+        return payment;
+>>>>>>> develop
     }
 }

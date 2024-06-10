@@ -36,22 +36,28 @@ public class ValidationService {
             throw new BadRequestException("회원이 참여하고 있는 모임을 찾을 수 없습니다.");
     }
 
+<<<<<<< HEAD
     public static void validationCreatorMoim(Meeting currentMeeting, Member currentUser) throws BadRequestException {
         if (!currentMeeting.getCreator().equals(currentUser)) {
             throw new BadRequestException("모임을 개설한 회원이 아닙니다.");
         }
     }
+=======
+>>>>>>> develop
     public static Ticket validationTicket(Optional<Ticket> ticket) throws BadRequestException {
         if (ticket.isPresent()) {
             return ticket.get();
         } else
             throw new BadRequestException("해당 티켓을 찾을 수 없습니다");
     }
+<<<<<<< HEAD
     public static void validationExistPayment(Optional<Payment> checkPayment) throws BadRequestException {
         if (checkPayment.isPresent()) {
             throw new BadRequestException("이미 해당 결제 내역이 존재합니다.");
         }
     }
+=======
+>>>>>>> develop
 
     public static Payment validationPayment(Optional<Payment> payment) throws BadRequestException {
         if (payment.isPresent()) {

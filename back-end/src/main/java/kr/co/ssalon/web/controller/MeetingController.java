@@ -2,7 +2,10 @@ package kr.co.ssalon.web.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+<<<<<<< HEAD
 import com.sun.jdi.LongValue;
+=======
+>>>>>>> develop
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -84,6 +87,7 @@ public class MeetingController {
         return ResponseEntity.ok().body(new JsonResult<>(meetingListSearchPageDTO).getData());
     }
 
+<<<<<<< HEAD
     @Operation(summary = "추천 모임 리스트 조회")
     @ApiResponse(responseCode = "200", description = "추천 모임 리스트 조회 성공", content = {
             @Content(schema = @Schema(implementation = MeetingListSearchDTO.class))
@@ -133,12 +137,18 @@ public class MeetingController {
         }
     }
 
+=======
+>>>>>>> develop
     // 홈 화면 조회
     // 모임 목록 필터 설정, 목록에 표시될 모임의 숫자 등
     // 현재 개설된 모임 목록
     @Operation(summary = "홈 화면 조회")
     @ApiResponse(responseCode = "200", description = "홈 화면 조회 성공", content = {
+<<<<<<< HEAD
             @Content(schema = @Schema(implementation = MeetingListSearchPageDTO.class))
+=======
+            @Content(schema = @Schema(implementation = MeetingHomeDTO.class))
+>>>>>>> develop
     })
     @GetMapping("/api/moims/home")
     public ResponseEntity<?> getHomeMoims(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, HomeMeetingSearchCondition homeMeetingSearchCondition) {
@@ -147,6 +157,7 @@ public class MeetingController {
 
             List<MeetingHomeDTO> categorizedMeetings = new ArrayList<>();
             String username = customOAuth2Member.getUsername();
+<<<<<<< HEAD
             Member member = memberService.findMember(username);
             List<Long> categoryRecommendList = gson.fromJson(member.getCategoryRecommendation(), new TypeToken<List<Long>>() {});
             Integer index = homeMeetingSearchCondition.getCategoryLen() * (homeMeetingSearchCondition.getCategoryPage() - 1);
@@ -216,14 +227,55 @@ public class MeetingController {
                                 .collect(Collectors.toList()));
                         categorizedMeetings.add(meetingHomeDTO);
                     }
+=======
+
+            Member member = memberService.findMember(username);
+            String meetingRecommendString = member.getMeetingRecommendation();
+            String categoryRecommendString =member.getCategoryRecommendation();
+            List<Long> meetingRecommendList = gson.fromJson(meetingRecommendString, new TypeToken<List<Long>>() {});
+            List<Long> categoryRecommendList = gson.fromJson(categoryRecommendString, new TypeToken<List<Long>>() {});
+
+            List<MeetingHomeSearchDTO> recommendMeetings = new ArrayList<>();
+            for (Long i : meetingRecommendList) {
+                Meeting meeting = meetingService.findMeeting(i);
+                if (meeting == null) continue;
+                MeetingHomeSearchDTO meetingHomeSearchDTO = new MeetingHomeSearchDTO(meeting, username);
+                recommendMeetings.add(meetingHomeSearchDTO);
+            }
+            MeetingHomeDTO recomMeetingHomeDTO = new MeetingHomeDTO("살롱추", recommendMeetings);
+            categorizedMeetings.add(recomMeetingHomeDTO);
+
+            for (int i = 1; i <= homeMeetingSearchCondition.getCategoryLen(); i++) {
+                try {
+                    String categoryName = categoryService.findCategory(categoryRecommendList.get(i-1)).getName();
+                    List<Meeting> meetings = meetingRepository.findMeetingsByCategoryId(categoryRecommendList.get(i-1)).stream()
+                            .filter(meeting -> {
+                                if (homeMeetingSearchCondition.getIsEnd() != null) {
+                                    return homeMeetingSearchCondition.getIsEnd().equals(meeting.getIsFinished());
+                                }
+                                return true; // isEnd 필터가 없는 경우 모든 모임 포함
+                            })
+                            .limit(homeMeetingSearchCondition.getMeetingLen()) // 각 카테고리당 모임 최대 개수 설정
+                            .collect(Collectors.toList());
+                    MeetingHomeDTO meetingHomeDTO = new MeetingHomeDTO(categoryName, meetings.stream()
+                            .map(meeting -> new MeetingHomeSearchDTO(meeting, username))
+                            .collect(Collectors.toList()));
+                    categorizedMeetings.add(meetingHomeDTO);
+>>>>>>> develop
                 } catch (BadRequestException e) {
                     // 카테고리가 없는 경우 해당 카테고리를 무시하고 다음 카테고리를 조회
                     continue;
                 }
             }
+<<<<<<< HEAD
             Boolean bool = categoryRepository.existsById((long) (homeMeetingSearchCondition.getCategoryLen() * homeMeetingSearchCondition.getCategoryPage()));
             MeetingListSearchPageDTO meetingListSearchPageDTO = new MeetingListSearchPageDTO(categorizedMeetings, bool);
             return ResponseEntity.ok().body(new JsonResult<>(meetingListSearchPageDTO).getData());
+=======
+
+            return ResponseEntity.ok().body(new JsonResult<>(categorizedMeetings).getData());
+
+>>>>>>> develop
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -276,10 +328,17 @@ public class MeetingController {
             @Content(schema = @Schema(implementation = Long.class))
     })
     @PatchMapping("/api/moims/{moimId}")
+<<<<<<< HEAD
     public ResponseEntity<?> updateMoim(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MeetingInfoDTO meetingInfoDTO) {
         try {
             String username = customOAuth2Member.getUsername();
             return ResponseEntity.ok().body(meetingService.editMoim(username, moimId, meetingInfoDTO));
+=======
+    public ResponseEntity<?> updateMoim(@PathVariable Long moimId, @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @RequestBody MeetingDomainDTO meetingDomainDTO) {
+        try {
+            String username = customOAuth2Member.getUsername();
+            return ResponseEntity.ok().body(meetingService.editMoim(username, moimId, meetingDomainDTO));
+>>>>>>> develop
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -377,7 +436,11 @@ public class MeetingController {
             Member member = memberService.findMember(customOAuth2Member.getUsername());
 
             if (member.getRole().equals("ROLE_ADMIN")) {
+<<<<<<< HEAD
                 meetingService.updateMoimEmbeddingAll();
+=======
+                recommendService.updateMoimEmbeddingAll();
+>>>>>>> develop
                 return ResponseEntity.ok( "Request Sent");
             }
             else {

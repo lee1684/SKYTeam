@@ -88,9 +88,14 @@ public class MemberService {
         );
         if (isRealSignup) {
             currentUser.initMemberDates();
+<<<<<<< HEAD
         }
         recommendService.updateMemberEmbedding(currentUser);
 
+=======
+            recommendService.updateMemberEmbedding(currentUser);
+        }
+>>>>>>> develop
         return currentUser;
     }
 

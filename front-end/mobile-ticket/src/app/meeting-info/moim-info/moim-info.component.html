@@ -1,0 +1,60 @@
+<div class="container">
+<<<<<<< HEAD
+    <div id="creator-container">
+        <div id="title-container">
+            개최자
+        </div>
+        <div id="profile-container">
+            <img id="profile-img-container" [src]="this.moimInfo.creatorProfilePictureUrl" />
+            <div id="name-container">{{this.moimInfo.creator}}</div>
+        </div>
+    </div>
+    <app-simple-content [title]="'모임 날짜'" [content]="this.getDate()"></app-simple-content>
+    <app-simple-content [title]="'모임 장소'" [content]="this.moimInfo.location"></app-simple-content>
+    <app-simple-content [title]="'참가비'" [content]="this.getBill()"></app-simple-content>
+    <app-simple-content [title]="'참가자'" [extraLabel]="this.participants.length+'명 / ' + this.moimInfo.capacity + '명'"
+        [extraButtonLabel]="(this.isParticipant)?'관리':''" (onClickExtraButtonEvent)="this.onClickParticipantButton()"
+        [images]="this.getParticipantImages()" [imageHeight]="30"></app-simple-content>
+    <app-simple-content [title]="'모임소개'" [content]="this.moimInfo.description"></app-simple-content>
+    <app-simple-content *ngIf="(this.moimInfo.meetingPictureUrls).length > 0" [title]="'사진'"
+        [images]="this.getImageUrlsToNewButtonElements(this.moimInfo.meetingPictureUrls)"
+        [imageHeight]="300"></app-simple-content>
+=======
+    <div *ngIf="this.mode === 'show'">
+        <div id="creator-container">
+            <div id="title-container">
+                개최자
+            </div>
+            <div id="profile-container">
+                <img id="profile-img-container" [src]="this.moimInfo.creatorProfilePictureUrl" />
+                <div id="name-container">{{this.moimInfo.creator}}</div>
+            </div>
+        </div>
+        <app-simple-content [title]="'모임 날짜'" [content]="this.getDate()"></app-simple-content>
+        <app-simple-content [title]="'모임 장소'" [content]="this.moimInfo.location"></app-simple-content>
+        <app-simple-content [title]="'모임소개'" [content]="this.moimInfo.description"></app-simple-content>
+        <app-simple-content *ngIf="(this.moimInfo.meetingPictureUrls).length > 0" [title]="'사진'"
+            [images]="this.getImageUrlsToNewButtonElements(this.moimInfo.meetingPictureUrls)"></app-simple-content>
+        <app-simple-content [title]="'참가비'" [content]="this.getBill()"></app-simple-content>
+    </div>
+    <div *ngIf="this.mode === 'edit'">
+        <app-simple-input [type]="'datetime-local'" [label]="'날짜'" [placeholder]="'모임이 진행될 날짜를 선택해주세요'"
+            (onChangeEvent)="this.onInput('meetingDate', $event)" #date></app-simple-input>
+        <app-simple-input [label]="'장소'" [placeholder]="'모임이 진행될 자세한 장소를 입력해주세요'"
+            (onChangeEvent)="this.onInput('location', $event)" #location></app-simple-input>
+        <app-simple-input [type]="'longText'" [label]="'모임 소개'" [placeholder]="'어떤 활동을 하는지 모임에 대해 소개해주세요'"
+            [checkBoxLabel]="'마크다운 미리보기'" [enableCheckbox]="true" (onChangeEvent)="this.onInput('description', $event)"
+            #description></app-simple-input>
+        <app-image-row-container [label]="'사진'" [extraLabel]="'(선택)'" [extraLabelColor]="'#006BFF'"
+            [isTicketContainer]="false" [imageHeight]="100" [images]="this.photos"
+            (onClickImageEvent)="this.onClickImage($event)" #photo></app-image-row-container>
+        <app-simple-input [type]="'number'" [checkBoxLabel]="'인원 제한 없음'" [enableCheckbox]="true" [label]="'최대 인원수'"
+            [placeholder]="'원하는 최대 인원 수를 입력해주세요'" (onClickCheckboxEvent)="this.onClickNoLimitCapacity($event)"
+            (onChangeEvent)="this.onInput('capacity', $event)" #capacity></app-simple-input>
+        <app-simple-input [type]="'number'" [checkBoxLabel]="'무료'" [enableCheckbox]="true" [label]="'참가비'"
+            [placeholder]="'참가비를 입력해주세요'" (onClickCheckboxEvent)="this.onClickFree($event)"
+            (onChangeEvent)="this.onInput('payment', $event)" #fee></app-simple-input>
+    </div>
+
+>>>>>>> develop
+</div>

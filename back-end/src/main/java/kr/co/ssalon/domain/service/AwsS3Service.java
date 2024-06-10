@@ -17,7 +17,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+<<<<<<< HEAD
 import java.util.UUID;
+=======
+>>>>>>> develop
 
 @Slf4j
 @RequiredArgsConstructor
@@ -110,6 +113,7 @@ public class AwsS3Service {
         return "200 OK";
     }
 
+<<<<<<< HEAD
     public String uploadFileViaByteArray(Long moimId, byte[] byteArray) {
         String keyName = "Images/" + moimId + "/" + UUID.randomUUID() + ".png";
         try {
@@ -136,6 +140,8 @@ public class AwsS3Service {
         return imageUrl;
     }
 
+=======
+>>>>>>> develop
     public int uploadMultiFilesViaMultipart(List<MultipartFile> multipartFiles, Map<String, String> imageKeyMap) {
         int successfulUpload = 0;
 

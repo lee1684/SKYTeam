@@ -1,0 +1,49 @@
+<app-top-navigator [title]="'모임 정보 수정하기'"></app-top-navigator>
+<div class="container">
+    <div *ngIf="this.editType === 'moimInfo' && this.isMoimInfoLoaded()">
+        <app-simple-input [label]="'모임 카테고리'" [placeholder]="'모임 카테고리를 설정해주세요'"
+            (onClickEvent)="this.popUpBottomNavigator()" [innerText]="this.moimInfo.category"></app-simple-input>
+        <app-simple-input [label]="'모임 이름'" [placeholder]="'모임명을 입력해주세요'" [innerText]="this.moimInfo.title"
+            (onChangeEvent)="this.onInput('title', $event)"></app-simple-input>
+        <app-simple-input [type]="'datetime-local'" [label]="'날짜'" [placeholder]="'모임이 진행될 날짜를 선택해주세요'"
+            [innerText]="this.moimInfo.meetingDate" (onChangeEvent)="this.onInput('meetingDate', $event)"
+            #date></app-simple-input>
+        <app-simple-input [label]="'장소'" [placeholder]="'모임이 진행될 자세한 장소를 입력해주세요'" [innerText]="this.moimInfo.location"
+            (onChangeEvent)="this.onInput('location', $event)" #location></app-simple-input>
+        <app-simple-input [type]="'longText'" [label]="'모임 소개'" [placeholder]="'어떤 활동을 하는지 모임에 대해 소개해주세요'"
+            [checkBoxLabel]="'마크다운 미리보기'" [enableCheckbox]="true" [innerText]="this.moimInfo.description"
+            (onChangeEvent)="this.onInput('description', $event)" #description></app-simple-input>
+        <app-image-row-container [label]="'사진'" [extraLabel]="'(선택)'" [extraLabelColor]="'#006BFF'"
+            [isTicketContainer]="false" [imageHeight]="100" [images]="this.photos"
+            (onClickImageEvent)="this.onClickImage($event)" #photo></app-image-row-container>
+        <app-simple-input [type]="'number'" [checkBoxLabel]="'인원 제한 없음'" [enableCheckbox]="true" [label]="'최대 인원수'"
+            [placeholder]="'원하는 최대 인원 수를 입력해주세요'" [innerText]="this.moimInfo.capacity"
+            (onClickCheckboxEvent)="this.onClickNoLimitCapacity($event)"
+            (onChangeEvent)="this.onInput('capacity', $event)" #capacity></app-simple-input>
+        <app-simple-input [type]="'number'" [checkBoxLabel]="'무료'" [enableCheckbox]="true" [label]="'참가비'"
+            [placeholder]="'참가비를 입력해주세요'" [innerText]="this.moimInfo.payment"
+            (onClickCheckboxEvent)="this.onClickFree($event)" (onChangeEvent)="this.onInput('payment', $event)"
+            #fee></app-simple-input>
+    </div>
+    <div *ngIf="this.editType === 'reviewInfo' && this.isReviewInfoLoaded()">
+        <app-simple-input [type]="'longText'" [label]="'후기'" [placeholder]="'재밌었던 점을 작성해주세요!'"
+            [checkBoxLabel]="'마크다운 미리보기'" [enableCheckbox]="true" [innerText]="this.reviewInfo.description"
+            (onChangeEvent)="this.onInput('description', $event)"></app-simple-input>
+        <app-image-row-container [label]="'사진'" [extraLabel]="'(선택)'" [extraLabelColor]="'#006BFF'"
+            [isTicketContainer]="false" [imageHeight]="100" [images]="this.photos"
+            (onClickImageEvent)="this.onClickImage($event)"></app-image-row-container>
+    </div>
+    <div *ngIf="this.isPopUpBottomDialog">
+        <app-bottom-dialog [content]="this.bottomDialogType.MEETING_CATEGORY"
+            (onClickEvent)="this.onCategorySelectedEvent($event)"></app-bottom-dialog>
+    </div>
+</div>
+<div class="bottom-button" *ngIf="!this.isPopUpBottomDialog">
+    <app-square-button [buttonElements]="this.buttonElementsService.editCompleteButtons" (onClickEvent)="
+        this.editInfo()"></app-square-button>
+    <div id="remove-account-button" (click)="this.onClickRemoveButton()">모임삭제</div>
+</div>
+<div *ngIf="this.isPopUpRemoveMoimDialog">
+    <app-bottom-dialog [content]="this.bottomDialogType.REMOVE_MOIM"
+        (onClickCompleteButtonEvent)="this.onClickRemoveMoimDialogButton($event)"></app-bottom-dialog>
+</div>
