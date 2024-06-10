@@ -44,6 +44,8 @@ public class Meeting {
     @CollectionTable(name = "meeting_picture", joinColumns = @JoinColumn(name = "meeting_id"))
     private final List<String> meetingPictureUrls = new ArrayList<>();
 
+    @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Payment> payments = new ArrayList<>();
 
     private String title;
     private String description;
