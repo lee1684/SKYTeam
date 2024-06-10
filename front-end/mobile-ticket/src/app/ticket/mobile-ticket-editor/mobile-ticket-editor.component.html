@@ -6,9 +6,12 @@
                 [outerSize]="'36px'" [noneStatusValue]="this.mobileTicketEditMode.NONE"
                 (onClickToggleButtonEvent)="this.onClickChangeEditMode($event)"></app-circle-toggle-button-group>
         </div>
-        <div>
+        <div *ngIf="!this.isLowerWidth()">
             <app-simple-button class="complete-button" [buttonElement]="this.previewButtonElement" [heightSize]="15"
                 (onClickEvent)="this.onClickPreviewButton()" [type]="'text'"></app-simple-button>
+        </div>
+        <div class="complete-button" *ngIf="this.isLowerWidth()" (mouseup)="this.onClickPreviewButton()">
+            <img src="assets/icons/view.png" width="20" height="20" />
         </div>
     </div>
     <!-- detailed editor view -->

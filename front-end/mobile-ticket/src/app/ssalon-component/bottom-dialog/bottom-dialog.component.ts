@@ -18,6 +18,7 @@ export enum BottomDialogType {
   MEETING_LOCATION,
   FEATURE_SUCCESS,
   DELETE_ACCOUNT,
+  REMOVE_MOIM,
 }
 @Component({
   selector: 'app-bottom-dialog',

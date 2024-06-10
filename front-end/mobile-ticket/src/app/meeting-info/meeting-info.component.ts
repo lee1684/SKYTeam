@@ -24,6 +24,7 @@ import { QrShowComponent } from './qr-show/qr-show.component';
 import { MobileTicketViewerComponent } from '../ticket/mobile-ticket-viewer/mobile-ticket-viewer.component';
 import { MoimReviewComponent } from './moim-review/moim-review.component';
 import { trigger, state, style } from '@angular/animations';
+import { ScenegraphService } from '../service/scenegraph.service';
 
 export enum MeetingInfoTabEnum {
   TICKET,
@@ -79,7 +80,8 @@ export class MeetingInfoComponent {
     private _route: ActivatedRoute,
     private _router: Router,
     private _apiExecutorService: ApiExecutorService,
-    public buttonElementsService: ButtonElementsService
+    public buttonElementsService: ButtonElementsService,
+    public sceneGraphService: ScenegraphService
   ) {
     this._route.queryParams.subscribe((params) => {
       this.moimId = params['moimId'];
@@ -142,10 +144,10 @@ export class MeetingInfoComponent {
           ? '모임 정보 수정하기'
           : this.excededMaxParticipants()
           ? '참가 불가'
-          : '참가하기';
+          : '참가 취소';
       } else {
         this.buttonElementsService.joinButtonElements[0].selected = true;
-        this.buttonElementsService.joinButtonElements[0].label = '참가하기';
+        this.buttonElementsService.joinButtonElements[0].label = '참가 하기';
       }
     } else if (tabEnum === MeetingInfoTabEnum.DIARY) {
       if (this.isReviewCreated) {

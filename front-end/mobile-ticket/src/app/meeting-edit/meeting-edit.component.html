@@ -33,12 +33,17 @@
             [isTicketContainer]="false" [imageHeight]="100" [images]="this.photos"
             (onClickImageEvent)="this.onClickImage($event)"></app-image-row-container>
     </div>
-    <div *ngIf="this.isPopUpBottomNavigator">
+    <div *ngIf="this.isPopUpBottomDialog">
         <app-bottom-dialog [content]="this.bottomDialogType.MEETING_CATEGORY"
             (onClickEvent)="this.onCategorySelectedEvent($event)"></app-bottom-dialog>
     </div>
 </div>
-<div class="bottom-button">
+<div class="bottom-button" *ngIf="!this.isPopUpBottomDialog">
     <app-square-button [buttonElements]="this.buttonElementsService.editCompleteButtons" (onClickEvent)="
         this.editInfo()"></app-square-button>
+    <div id="remove-account-button" (click)="this.onClickRemoveButton()">모임삭제</div>
+</div>
+<div *ngIf="this.isPopUpRemoveMoimDialog">
+    <app-bottom-dialog [content]="this.bottomDialogType.REMOVE_MOIM"
+        (onClickCompleteButtonEvent)="this.onClickRemoveMoimDialogButton($event)"></app-bottom-dialog>
 </div>

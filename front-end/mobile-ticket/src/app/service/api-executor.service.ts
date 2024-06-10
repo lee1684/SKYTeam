@@ -32,10 +32,7 @@ export class ApiExecutorService {
   public refreshToken: string = '';
   public myProfile: Profile = undefined as unknown as Profile;
   constructor(private _ssalonConfigService: SsalonConfigService) {
-    this.token =
-      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoia2FrYW8gMzQ1NzYwNDk5MCIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTc5MjAxOTksImV4cCI6MTcxODAwNjU5OX0.Pb22fCf4mHAlalP7sDh9Id-ioLb_P_ba6Y8qc7ZNHGc';
-    this.refreshToken =
-      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6InJlZnJlc2giLCJ1c2VybmFtZSI6Imtha2FvIDM0NTc2MDQ5OTAiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzE3OTkwNTc4LCJleHAiOjE3MTgwNzY5Nzh9.Q-zgJUZF1XuWTHmJkxmorXiHkijshMz4zyRtQsPQ1wM';
+    this.token = '';
     this.initApiExecutor();
   }
 
@@ -51,7 +48,6 @@ export class ApiExecutorService {
       headers: {
         'Content-Type': 'multipart/form-data',
         'Access-Control-Allow-Origin': '*',
-        Authorization: `Bearer ${this.token}`,
         withCredentials: true,
       },
     });
@@ -60,8 +56,6 @@ export class ApiExecutorService {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
-        Authorization: `Bearer ${this.token}`,
-        Refresh: this.refreshToken,
         withCredentials: true,
       },
     });
@@ -549,6 +543,15 @@ export class ApiExecutorService {
   public async createMeeting(body: any) {
     try {
       let response = await this.apiExecutorJson?.post(`/moims`, body);
+      return response!.data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  public async removeMeeting(moimId: string) {
+    try {
+      let response = await this.apiExecutorJson?.delete(`/moims/${moimId}`);
       return response!.data;
     } catch (e) {
       console.log(e);
