@@ -191,7 +191,7 @@ public class PaymentController {
     @ApiResponse(responseCode = "200", description = "모임 참가 비용 환불 성공", content = {
             @Content(schema = @Schema(implementation = KakaopayCancelResponseDto.class))
     })
-    @PostMapping("/api/moims/{moimId}/billings/{paymentId}")
+    @DeleteMapping("/api/moims/{moimId}/billings/{paymentId}")
     public ResponseEntity<?> moimPaymentCancel(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, @PathVariable("moimId") Long moimid, @PathVariable("paymentId") Long paymentId) throws Exception {
         Payment payment = paymentService.getPayment(paymentId);
         PayService payService = new PayService(kakaoPayProperties);
@@ -205,6 +205,38 @@ public class PaymentController {
         KakaopayCancelResponseDto kakaopayCancelResponseDto = payService.kakaoPayCancel(dto);
         // 환불
         paymentService.completeMoimRefund(username, moimid);
+        return ResponseEntity.ok().body(kakaopayCancelResponseDto);
+    }
+
+    @Operation(summary = "특정 사용자의 모임 참가 비용 환불")
+    @ApiResponse(responseCode = "200", description = "특정 사용자의 모임 참가 비용 환불 성공", content = {
+            @Content(schema = @Schema(implementation = KakaopayCancelResponseDto.class))
+    })
+    @DeleteMapping("/api/moims/{moimId}/members/{userId}/billings/{paymentId}")
+    public ResponseEntity<?> moimMemberPaymentCancel(
+            @AuthenticationPrincipal CustomOAuth2Member customOAuth2Member,
+            @PathVariable("moimId") Long moimid,
+            @PathVariable("paymentId") Long paymentId,
+            @PathVariable("userId") Long userId
+    ) throws Exception {
+        // 개최자인지 확인
+        String username = customOAuth2Member.getUsername();
+        Member currentUser = memberService.findMember(username);
+        Meeting meeting = meetingService.findMeeting(moimid);
+        ValidationService.validationCreatorMoim(meeting, currentUser);
+
+        Payment payment = paymentService.getPayment(paymentId);
+        PayService payService = new PayService(kakaoPayProperties);
+        Member member = memberService.findMember(userId);
+        KakaopayCancelRequestDto dto = KakaopayCancelRequestDto.builder()
+                .cid(kakaoPayProperties.getCid())
+                .tid(payment.getTid())
+                .cancelAmount(payment.getAmount())
+                .cancelTaxFreeAmount(0)
+                .build();
+        KakaopayCancelResponseDto kakaopayCancelResponseDto = payService.kakaoPayCancel(dto);
+        // 환불
+        paymentService.completeMoimRefund(member.getUsername(), moimid);
         return ResponseEntity.ok().body(kakaopayCancelResponseDto);
     }
 
