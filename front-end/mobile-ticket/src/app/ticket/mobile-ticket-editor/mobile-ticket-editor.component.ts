@@ -12,7 +12,14 @@ import {
 } from '../../ssalon-component/color-board/color-board.component';
 import { SimpleToggleButtonGroupComponent } from '../../ssalon-component/simple-toggle-button-group/simple-toggle-button-group.component';
 import { Vector2 } from 'three';
+<<<<<<< HEAD
+import {
+  ApiExecutorService,
+  ImageGeneration,
+} from '../../service/api-executor.service';
+=======
 import { ApiExecutorService } from '../../service/api-executor.service';
+>>>>>>> develop
 import {
   ViewChild,
   ElementRef,
@@ -25,8 +32,15 @@ import { Canvas, FabricImage, FabricText, Path } from 'fabric';
 import { NewButtonElement } from '../../ssalon-component/simple-toggle-group/simple-toggle-group.component';
 import { ButtonElementsService } from '../../service/button-elements.service';
 import { Router } from '@angular/router';
+<<<<<<< HEAD
+import { SquareButtonComponent } from '../../ssalon-component/square-button/square-button.component';
 
 export enum MobileTicketEditMode {
+  AI_GENERATE,
+=======
+
+export enum MobileTicketEditMode {
+>>>>>>> develop
   BACKGROUND_COLOR_CHANGE,
   PHOTO,
   STICKER,
@@ -67,6 +81,10 @@ export interface SsalonPathAttribute {
     ColorBoardComponent,
     NgFor,
     NgIf,
+<<<<<<< HEAD
+    SquareButtonComponent,
+=======
+>>>>>>> develop
   ],
   templateUrl: './mobile-ticket-editor.component.html',
   styleUrl: './mobile-ticket-editor.component.scss',
@@ -82,6 +100,15 @@ export class MobileTicketEditorComponent {
   drawCanvas: ElementRef | null = null;
   @ViewChild('selectedPhotoContainer', { static: false })
   selectedPhotoContainer: ElementRef | null = null;
+<<<<<<< HEAD
+  @ViewChild('generatedImageContainer', { static: false })
+  generatedImageContainer: ElementRef | null = null;
+  @ViewChild('prompt', { static: false })
+  prompt: ElementRef | null = null;
+  @ViewChild('generatedImage', { static: false })
+  generatedImage: ElementRef | null = null;
+=======
+>>>>>>> develop
 
   @Input() moimId: string = '';
   @Input() face: string = 'front';
@@ -115,8 +142,18 @@ export class MobileTicketEditorComponent {
 
   public editFeatures: ButtonElement[] = [
     {
+<<<<<<< HEAD
+      imgSrc: 'assets/icons/ai_generate.png',
+      label: 'ai',
+      value: MobileTicketEditMode.AI_GENERATE,
+    },
+    {
+      imgSrc: 'assets/icons/color-board.png',
+      label: '배경색 변경',
+=======
       imgSrc: 'assets/icons/color-board.png',
       label: '미리보기 뷰',
+>>>>>>> develop
       value: MobileTicketEditMode.BACKGROUND_COLOR_CHANGE,
     },
     {
@@ -146,6 +183,11 @@ export class MobileTicketEditorComponent {
     },
   ];
 
+<<<<<<< HEAD
+  public generatingImage: boolean = false;
+
+=======
+>>>>>>> develop
   private _backgroundColorViewLoaded: boolean = false;
 
   public uploadPhotoNum: number = 0;
@@ -199,11 +241,21 @@ export class MobileTicketEditorComponent {
    * @param sslonTextAttribute: SsalonTextAttribute 텍스트
    * @param sslonPathAttribute: SsalonPathAttribute 그림
    */
+<<<<<<< HEAD
+  public ssalonGenAIImageAttribute: SsalonImageAttribute = {
+    src: [],
+  };
+=======
+>>>>>>> develop
   public backgroundColor: SsalonColorElement = this.ssalonColor.LIGHT_GRAY;
   public ssalonTextAttribute: SsalonTextAttribute = {
     text: '',
     fontFamily: 'Josefin Sans',
+<<<<<<< HEAD
+    color: '#000000',
+=======
     color: '#FFFFFF',
+>>>>>>> develop
     textAlign: 'left',
   };
   public ssalonPhotoAttribute: SsalonImageAttribute = {
@@ -213,7 +265,11 @@ export class MobileTicketEditorComponent {
     src: [],
   };
   public ssalonPathAttribute: SsalonPathAttribute = {
+<<<<<<< HEAD
+    color: '#000000',
+=======
     color: '#FFFFFF',
+>>>>>>> develop
     strokeWidth: 1,
   };
   /** 새로 추가할 fabric object */
@@ -234,6 +290,14 @@ export class MobileTicketEditorComponent {
   /** 기능 실행 버튼 클릭 후, detailed editor view가 켜진 후에 설정 값들을 적용. */
   public ngAfterViewChecked(): void {
     /* background color feature */
+<<<<<<< HEAD
+    if (this.prompt && !this.textFocused) {
+      this.prompt!.nativeElement.focus();
+      this.textFocused = true;
+    }
+    /* background color feature */
+=======
+>>>>>>> develop
     if (this.backgroundPath && !this._backgroundColorViewLoaded) {
       this.backgroundPath.nativeElement.setAttribute(
         'fill',
@@ -270,6 +334,97 @@ export class MobileTicketEditorComponent {
     this.onBackgroundColorEditEnded.emit(this.backgroundColor.color);
   }
 
+<<<<<<< HEAD
+  public async generateImage() {
+    const body: ImageGeneration = {
+      prompt: this.prompt?.nativeElement.value,
+      highQuality: true, // true: 0.08 달러 사용, false: 0.02 달러 사용
+    };
+
+    //실제 API 사용 (비용 O)
+    this.generatingImage = true;
+    let imageUrl = await this._apiExecutorService.generateImage(
+      this.moimId,
+      body
+    );
+    this.generatingImage = false;
+    // 테스트용 (비용 X)
+    //let imageUrl =
+    //  'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/Images/62/1b30cc57-fa8d-4491-a609-06ccf3ba83dc.png';
+    this.ssalonGenAIImageAttribute.src.push(imageUrl);
+
+    this.generatedImage!.nativeElement.setAttribute('src', imageUrl);
+
+    (this.generatedImage!.nativeElement as HTMLImageElement).src = imageUrl;
+  }
+
+  private uploadImage() {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.multiple = true;
+    let fileUrls: string[] = [];
+
+    // 파일 선택 이벤트 처리
+    fileInput.onchange = async function (this: MobileTicketEditorComponent) {
+      // 파일 URL 배열 초기화
+      fileUrls = [];
+
+      // 파일이 선택되었는지 확인
+      if (fileInput.files && fileInput.files.length > 0) {
+        const files = Array.from(fileInput.files);
+        let loadedFiles = 0;
+
+        files.forEach((file, index) => {
+          const reader = new FileReader();
+
+          reader.onload = async function (
+            this: MobileTicketEditorComponent,
+            e: any
+          ) {
+            // 파일 URL을 배열에 추가
+            fileUrls.push(e.target.result);
+
+            // 첫 번째 파일만 미리보기로 보여주기
+            if (index === 0) {
+              let img = document.getElementById('selected-photo-container');
+              if (!img) {
+                img = document.createElement('img');
+                img.id = 'selected-photo-container';
+                document.body.appendChild(img);
+              }
+              (img as HTMLImageElement).src = e.target.result;
+              (img as HTMLImageElement).width = 80; // 이미지 크기 조절
+            }
+
+            // 모든 파일을 다 읽었을 때
+            loadedFiles++;
+            if (loadedFiles === files.length) {
+              this.uploadPhotoNum = files.length;
+              await this.getImageUrl(fileUrls);
+            }
+          }.bind(this);
+
+          // 파일을 읽어들임
+          reader.readAsDataURL(file);
+        });
+      }
+    }.bind(this);
+
+    // 파일 선택 대화 상자 열기
+    fileInput.click();
+  }
+
+  /** 기능 실행 */
+  public async onClickChangeEditMode(value: MobileTicketEditMode) {
+    switch (value) {
+      case MobileTicketEditMode.AI_GENERATE:
+        break;
+      case MobileTicketEditMode.BACKGROUND_COLOR_CHANGE:
+        break;
+      case MobileTicketEditMode.PHOTO:
+        this.uploadImage();
+=======
   /** 기능 실행 */
   public async onClickChangeEditMode(value: MobileTicketEditMode) {
     switch (value) {
@@ -332,6 +487,7 @@ export class MobileTicketEditorComponent {
 
         // 파일 선택 대화 상자 열기
         fileInput.click();
+>>>>>>> develop
         break;
       case MobileTicketEditMode.STICKER:
         break;
@@ -394,6 +550,10 @@ export class MobileTicketEditorComponent {
   }
 
   public selectSticker(value: number): void {
+<<<<<<< HEAD
+    console.log('select');
+=======
+>>>>>>> develop
     if (
       this.ssalonStickerAttribute.src.includes(this.stickers[value].imgSrc!)
     ) {
@@ -470,6 +630,28 @@ export class MobileTicketEditorComponent {
   }
 
   public async loadImageRecursive(index: number) {
+<<<<<<< HEAD
+    let array;
+    if (this.lastUsedFeature === MobileTicketEditMode.PHOTO) {
+      array = this.ssalonPhotoAttribute;
+    } else if (this.lastUsedFeature === MobileTicketEditMode.STICKER) {
+      array = this.ssalonStickerAttribute;
+    } else {
+      array = this.ssalonGenAIImageAttribute;
+    }
+    console.log(array.src);
+    if (index === array.src.length) {
+      this.onObjectEditEnded.emit(this.fabricObjects);
+
+      if (this.lastUsedFeature === MobileTicketEditMode.PHOTO) {
+        this.ssalonPhotoAttribute.src = [];
+      } else if (this.lastUsedFeature === MobileTicketEditMode.STICKER) {
+        this.ssalonStickerAttribute.src = [];
+      } else {
+        this.ssalonGenAIImageAttribute.src = [];
+      }
+      this.fabricObjects = [];
+=======
     let array =
       this.lastUsedFeature === MobileTicketEditMode.PHOTO
         ? this.ssalonPhotoAttribute
@@ -479,11 +661,18 @@ export class MobileTicketEditorComponent {
       this.lastUsedFeature === MobileTicketEditMode.PHOTO
         ? (this.ssalonPhotoAttribute.src = [])
         : (this.ssalonStickerAttribute.src = []);
+>>>>>>> develop
       this.lastUsedFeature = MobileTicketEditMode.NONE;
     } else {
       let tempImg = await FabricImage.fromURL(array.src[index], {
         crossOrigin: 'anonymous',
       });
+<<<<<<< HEAD
+      let ratio = 200 / tempImg.width;
+      console.log(ratio);
+      tempImg.scale(ratio);
+=======
+>>>>>>> develop
       (this.fabricObjects as FabricImage[]).push(tempImg);
       this.loadImageRecursive(index + 1);
     }
@@ -513,6 +702,10 @@ export class MobileTicketEditorComponent {
       let keys = Object.keys(result.mapURI);
       for (var i = 0; i < keys.length; i++) {
         var key = keys[i];
+<<<<<<< HEAD
+        console.log(i);
+=======
+>>>>>>> develop
         this.ssalonPhotoAttribute.src.push(result.mapURI[key]);
       }
       this.ssalonPhotoAttribute.src.forEach((url) => {
@@ -529,11 +722,22 @@ export class MobileTicketEditorComponent {
   public async onEndEditObject() {
     if (this.lastUsedFeature === MobileTicketEditMode.BACKGROUND_COLOR_CHANGE) {
       this.onBackgroundColorEditEnded.emit(this.backgroundColor.color);
+<<<<<<< HEAD
+      this._backgroundColorViewLoaded = false;
+    } else {
+      switch (this.lastUsedFeature) {
+        case MobileTicketEditMode.AI_GENERATE:
+          this.textFocused = false;
+          this.loadImageRecursive(0);
+          return;
+        case MobileTicketEditMode.PHOTO:
+=======
     } else {
       switch (this.lastUsedFeature) {
         case MobileTicketEditMode.PHOTO:
           this.loadImageRecursive(0);
           return;
+>>>>>>> develop
         case MobileTicketEditMode.STICKER:
           this.loadImageRecursive(0);
           return;
@@ -567,28 +771,52 @@ export class MobileTicketEditorComponent {
             );
             this.lastUsedFeature = MobileTicketEditMode.NONE;
           }
+<<<<<<< HEAD
+          this.textFocused = false;
+          break;
+        case MobileTicketEditMode.DRAW:
+          this._isDrawingFabricCanvasLoaded = false;
+          this.drawingFabricCanvas?.clear();
+          this.fabricObjects = [];
+          return;
+        case MobileTicketEditMode.NONE:
+          this.lastUsedFeature = MobileTicketEditMode.NONE;
+          break;
+      }
+
+=======
           break;
         case MobileTicketEditMode.DRAW:
           break;
         case MobileTicketEditMode.NONE:
           break;
       }
+>>>>>>> develop
       /** text의 경우, 수정하는 경우가 있는데, 이 함수에서 미리 다 바꾸기 때문에 object를 넘길 필요가 없음.
        * 그렇기 때문에, 미리 editMode를 NONE으로 바꿔버려 null을 보냄.
        * null을 받은 viewer는 canvas.renderAll()만 진행.
        * 이미지의 경우, asyncronous하게 진행되기 때문에 밑의 코드가 진행되지 않게 해놔야 의도대로 진행될 수 있음.
        */
+<<<<<<< HEAD
+
+=======
+>>>>>>> develop
       this.onObjectEditEnded.emit(
         this.lastUsedFeature === MobileTicketEditMode.NONE
           ? null
           : this.fabricObjects
       );
+<<<<<<< HEAD
+    }
+    this.fabricObjects = [];
+=======
       this.lastUsedFeature = MobileTicketEditMode.NONE;
     }
 
     this.fabricObjects = [];
 
     this.drawingFabricCanvas?.destroy();
+>>>>>>> develop
   }
 
   public onClickCompletedEditing(): void {}
@@ -599,6 +827,10 @@ export class MobileTicketEditorComponent {
 
     this.drawingFabricCanvas!.on('mouse:down', (options) => {
       this._isDrawing = true;
+<<<<<<< HEAD
+      (this.fabricObjects as Path[]).length = 0;
+=======
+>>>>>>> develop
       this.addPoint(options.e);
       this.drawPath();
     });
@@ -612,6 +844,10 @@ export class MobileTicketEditorComponent {
     this.drawingFabricCanvas!.on('mouse:up', () => {
       this._isDrawing = false;
       this._drawingPoints.length = 0;
+<<<<<<< HEAD
+      this.onObjectEditEnded.emit(this.fabricObjects);
+=======
+>>>>>>> develop
     });
   }
 
@@ -628,7 +864,11 @@ export class MobileTicketEditorComponent {
       .join(' ');
     const path = new Path(`M ${pathData}`, {
       fill: 'transparent',
+<<<<<<< HEAD
+      stroke: this.ssalonPathAttribute.color,
+=======
       stroke: 'white',
+>>>>>>> develop
       strokeWidth: 2,
     });
     (this.fabricObjects as Path[]).length = 0;
@@ -638,7 +878,32 @@ export class MobileTicketEditorComponent {
     this.drawingFabricCanvas!.add(path);
   }
 
+<<<<<<< HEAD
+  public onChangePencilColor(value: number): void {
+    this.ssalonPathAttribute.color =
+      this.ssalonColor.getSsalonColorObjectByValue(value).color;
+  }
+
   public endTicketWebView(): void {
     this._router.navigate(['/web/main']);
   }
+
+  public getBackgroundColor(): string {
+    if (
+      this.editMode === MobileTicketEditMode.BACKGROUND_COLOR_CHANGE ||
+      this.editMode === MobileTicketEditMode.DRAW
+    ) {
+      return 'rgba(0, 0, 0, 0.2)';
+    } else {
+      return 'rgba(0, 0, 0, 0.7)';
+    }
+  }
+  public isLowerWidth(): boolean {
+    return window.innerWidth < 800;
+  }
+=======
+  public endTicketWebView(): void {
+    this._router.navigate(['/web/main']);
+  }
+>>>>>>> develop
 }

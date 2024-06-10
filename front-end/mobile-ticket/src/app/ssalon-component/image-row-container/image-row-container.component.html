@@ -14,7 +14,7 @@
 
                             <svg width="175" height="300" viewBox="0 0 175 300" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
-                                <rect width="175" height="300" rx="10" [attr.fill]="ticket.backgroundColor" />
+                                <rect width="175" height="300" rx="12.5" [attr.fill]="ticket.backgroundColor" />
                             </svg>
 
                             <img class="deco-container" [ngSrc]="this.getThumbSrc(ticket.moimId)" height="300"
@@ -29,7 +29,6 @@
                                         d="M3.4512 14.9992C3.4512 14.6264 3.7534 14.3242 4.1262 14.3242H13.8762C14.249 14.3242 14.5512 14.6264 14.5512 14.9992C14.5512 15.372 14.249 15.6742 13.8762 15.6742H4.1262C3.7534 15.6742 3.4512 15.372 3.4512 14.9992Z"
                                         fill="#ffffff" />
                                 </svg>
-
                             </div>
                             <div class="title-container">{{ticket.meetingTitle}}</div>
                         </div>
@@ -40,7 +39,7 @@
         <div *ngIf="!this.isTicketContainer" class="image-row-container">
             <ng-container *ngFor="let image of images">
                 <img class="image-container" [src]="image.imgSrc" [height]="this.imageHeight"
-                    (click)="this.onClickImage(image.value)" />
+                    [style.border-radius]="(this.circleImage)?'50%':'10px'" (click)="this.onClickImage(image.value)" />
             </ng-container>
 
         </div>

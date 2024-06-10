@@ -14,9 +14,24 @@
 .container {
     width: 100%;
     height: 100%;
+<<<<<<< HEAD
+    margin-top: 10px;
     position: relative;
 }
 
+.color-board-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+
+}
+
+=======
+    position: relative;
+}
+
+>>>>>>> develop
 .horizontal-container {
     position: relative;
     display: flex;
@@ -25,16 +40,37 @@
     align-items: center;
 }
 
+<<<<<<< HEAD
+.complete-button {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.complete-button-container {
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+}
+
+=======
+>>>>>>> develop
 #detail-editor {
     position: fixed;
     top: 0px;
     left: 0px;
+<<<<<<< HEAD
+    background-color: rgba(0, 0, 0, 0.7);
+=======
     background-color: rgba(0, 0, 0, 0.9);
+>>>>>>> develop
     width: 100%;
     height: 100%;
 }
 
+<<<<<<< HEAD
+.text-edit-input {
+=======
 #text-edit-input {
+>>>>>>> develop
     font-size: 30px;
     font-family: 'Courier New', Courier, monospace;
     -webkit-text-size-adjust: 100%;
@@ -102,7 +138,11 @@
 
 .ticket-background {
     position: absolute;
+<<<<<<< HEAD
+    top: 70px;
+=======
     top: 0px;
+>>>>>>> develop
     left: 50%;
     transform: translateX(-50%);
 }
@@ -150,4 +190,65 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+<<<<<<< HEAD
+}
+
+#generator {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: auto;
+    margin-top: 20px;
+}
+
+#generate-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#generate-button {
+    background-color: transparent;
+    width: auto;
+    height: auto;
+    border: none;
+    outline: none;
+    color: white;
+    cursor: pointer;
+}
+
+#prompt {
+    font-size: 20px;
+    -webkit-text-size-adjust: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    caret-color: #006BFF;
+    color: #efefef;
+    width: 70%;
+    height: 400px;
+    border: none;
+    outline: none;
+    text-align: left;
+}
+
+#spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-top-color: #3498db;
+    border-radius: 50%;
+    box-sizing: border-box;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+=======
+>>>>>>> develop
 }

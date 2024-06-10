@@ -1,5 +1,46 @@
 <div class="container">
     <app-top-navigator *ngIf="this.isLoadedMoimInfo()" [style.width]="'100%'" [title]="this.moimInfo.title"
+        [shareButton]="true" (shareButtonClickEvent)="this.onClickShareButton()"
+        (backButtonClickEvent)="this.onClickBackButton()" [defaultBack]="false"></app-top-navigator>
+    <div *ngIf="this.isCopyButtonClicked" id="copy-alert-container" [@copiedAnim]="this.isCopyButtonClicked">링크 복사 완료!
+    </div>
+    <app-tab-group [tabs]="this.tabs" (onClickTabEvent)="this.onClickTab($event)"></app-tab-group>
+    <div id="tab-container">
+        <div *ngIf="this.nowTab === this.meetingInfoTabEnum.QRCHECK" class="content">
+            <app-qr-check [moimId]="this.moimId"></app-qr-check>
+        </div>
+        <div *ngIf="this.nowTab === this.meetingInfoTabEnum.QRSHOW" class="content">
+            <app-qr-show [moimId]="this.moimId" [participants]="this.participants"></app-qr-show>
+        </div>
+        <div *ngIf="this.nowTab === this.meetingInfoTabEnum.TICKET" class="content">
+            <app-ticket [moimId]="this.moimId" [viewType]="'view'"></app-ticket>
+        </div>
+        <div *ngIf="(this.nowTab === this.meetingInfoTabEnum.INFO && this.isLoadedMoimInfo())" class="content"
+            [style.margin-top.px]="20">
+            <app-moim-info [moimId]="this.moimId" [moimInfo]="this.moimInfo" [participants]="this.participants"
+                [isCreator]="this.isCreator" [isParticipant]="this.isParticipant"></app-moim-info>
+        </div>
+        <div *ngIf="this.nowTab === this.meetingInfoTabEnum.CHATTING" class="content">
+            <app-chatting [moimId]="this.moimId"></app-chatting>
+        </div>
+        <div *ngIf="this.nowTab === this.meetingInfoTabEnum.DIARY" class="content">
+            <app-moim-review [moimId]="this.moimId" [moimTitle]="this.moimInfo.title"
+                [isReviewCreated]="this.isReviewCreated"></app-moim-review>
+        </div>
+    </div>
+    <div *ngIf="this.showButton()" id="join-button-container">
+        <div *ngIf="this.nowTab === this.meetingInfoTabEnum.TICKET && this.isParticipant">
+            <app-square-button
+                [buttonElements]="(this.isCreator)?this.buttonElementsService.editTicketButtons:[this.buttonElementsService.editTicketButtons[1]]"
+                (onClickEvent)="this.onClickEditTicketButton($event)"></app-square-button>
+        </div>
+        <app-square-button *ngIf="this.nowTab !== this.meetingInfoTabEnum.TICKET || !this.isParticipant"
+            [buttonElements]="this.buttonElementsService.joinButtonElements"
+            (onClickEvent)="this.onClickJoinButton()"></app-square-button>
+    </div>
+</div>
+<div class="container">
+    <app-top-navigator *ngIf="this.isLoadedMoimInfo()" [style.width]="'100%'" [title]="this.moimInfo.title"
         [shareButton]="true"></app-top-navigator>
     <app-tab-group [tabs]="this.tabs" (onClickTabEvent)="this.onClickTab($event)"></app-tab-group>
     <div id="tab-container">

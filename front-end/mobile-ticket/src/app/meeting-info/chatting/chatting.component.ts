@@ -4,7 +4,13 @@ import {
   ElementRef,
   HostListener,
   Input,
+<<<<<<< HEAD
+  QueryList,
   ViewChild,
+  ViewChildren,
+=======
+  ViewChild,
+>>>>>>> develop
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
@@ -12,7 +18,10 @@ import {
   Profile,
 } from '../../service/api-executor.service';
 import { Client, Message } from '@stomp/stompjs';
+<<<<<<< HEAD
+=======
 import SockJS from 'sockjs-client';
+>>>>>>> develop
 import { SimpleInputComponent } from '../../ssalon-component/simple-input/simple-input.component';
 import { ChatContainerComponent } from '../../ssalon-component/chat-container/chat-container.component';
 
@@ -35,6 +44,10 @@ export class ChattingComponent {
   @ViewChild('msgContainer', { static: false })
   msgContainer: ElementRef | null = null;
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+<<<<<<< HEAD
+  @ViewChildren('msgComponents') msgComponents!: QueryList<ElementRef>;
+=======
+>>>>>>> develop
   @Input() moimId: string = undefined as unknown as string;
 
   public myProfile: Profile = undefined as unknown as Profile;
@@ -43,16 +56,25 @@ export class ChattingComponent {
   public isConnected: boolean = false;
   public isEntered: boolean = false;
   public messages: any[] = [];
+<<<<<<< HEAD
+=======
 
+>>>>>>> develop
   private _imageUrl: string = '';
   private _file: File = undefined as unknown as File;
   private _stompClient: Client = undefined as unknown as Client;
   constructor(private _apiExecutorService: ApiExecutorService) {
     // 새로고침 시 disconnect 설정
     window.addEventListener('beforeunload', () => {
+<<<<<<< HEAD
+      this.disconnect();
+    });
+    this._apiExecutorService.setToken();
+=======
       console.log('hello');
       this.disconnect();
     });
+>>>>>>> develop
   }
 
   public async ngOnInit() {
@@ -90,6 +112,22 @@ export class ChattingComponent {
         console.log('입장');
       }
 
+<<<<<<< HEAD
+      this._stompClient.subscribe(
+        `/room/${this.moimId}`,
+        async (greeting: any) => {
+          let inComeMsg = JSON.parse(greeting.body);
+          console.log(inComeMsg);
+          if (inComeMsg.messageType === 'TALK') {
+            this.messages.push(JSON.parse(greeting.body));
+          } else if (inComeMsg.messageType === 'ENTER') {
+            await this.updateParticipants();
+          } else {
+            await this.updateParticipants();
+          }
+        }
+      );
+=======
       this._stompClient.subscribe(`/room/${this.moimId}`, (greeting: any) => {
         let inComeMsg = JSON.parse(greeting.body);
         console.log(inComeMsg);
@@ -101,6 +139,7 @@ export class ChattingComponent {
           this.updateParticipants();
         }
       });
+>>>>>>> develop
     };
 
     this._stompClient.onStompError = (frame) => {
@@ -109,10 +148,24 @@ export class ChattingComponent {
     };
     this.connect();
   }
+<<<<<<< HEAD
+
+  public ngAfterViewInit() {
+    this.msgContainer!.nativeElement.scrollTop =
+      this.msgContainer!.nativeElement.scrollHeight;
+  }
+  public ngAfterViewChecked() {
+    this.msgComponents.changes.subscribe(() => {
+      this.msgContainer!.nativeElement.scrollTop =
+        this.msgContainer!.nativeElement.scrollHeight;
+    });
+  }
+=======
   public ngAfterViewChecked() {
     this.msgContainer!.nativeElement.scrollTop =
       this.msgContainer!.nativeElement.scrollHeight;
   }
+>>>>>>> develop
   public ngOnDestroy() {
     this.disconnect();
   }
@@ -124,6 +177,17 @@ export class ChattingComponent {
   public disconnect() {
     if (this._stompClient) {
       this._stompClient.publish({
+<<<<<<< HEAD
+        destination: `/send/${this.moimId}`,
+        body: JSON.stringify({ message: this.simpleInput!.innerText }),
+        headers: {
+          Authorization: `Bearer ${this._apiExecutorService.token}`,
+          MessageType: 'LEAVE',
+        },
+      });
+      this._stompClient.publish({
+=======
+>>>>>>> develop
         destination: `/send/disconnect`,
         body: JSON.stringify({ message: this.simpleInput!.innerText }),
         headers: {

@@ -33,7 +33,12 @@ export class SimpleInputComponent {
     | 'datetime-local'
     | 'number'
     | 'category'
+<<<<<<< HEAD
+    | 'chat-input'
+    | 'search-input' = 'text';
+=======
     | 'chat-input' = 'text';
+>>>>>>> develop
   @Input() innerText: string | number = '';
   @Input() enableCheckbox: boolean = false;
   @Input() checkBoxLabel: string = '';
@@ -43,12 +48,30 @@ export class SimpleInputComponent {
   @Output() public readonly onClickCheckboxEvent = new EventEmitter();
   @Output() public readonly onClickChatSendButtonEvent = new EventEmitter();
   @Output() public readonly onClickImgSendButtonEvent = new EventEmitter();
+<<<<<<< HEAD
+  @Output() public readonly onClickSearchButtonEvent = new EventEmitter();
+=======
+>>>>>>> develop
 
   public isChecked: boolean = false;
   public convertedHTML: any = '';
   public showGeneralHTML: boolean = true;
+<<<<<<< HEAD
+  public today: any;
 
   constructor(private cd: ChangeDetectorRef) {}
+  public ngOnInit() {
+    if (this.textDiv != null) {
+      if (this.textDiv.nativeElement.type === 'datetime-local') {
+        this.today = new Date().toISOString().split('T')[0];
+        this.textDiv.nativeElement.setAttribute('min', this.today);
+      }
+    }
+  }
+=======
+
+  constructor(private cd: ChangeDetectorRef) {}
+>>>>>>> develop
   public onClickInput(): void {
     this.onClickEvent.emit(this.innerText);
   }
@@ -79,6 +102,13 @@ export class SimpleInputComponent {
     this.onClickImgSendButtonEvent.emit();
   }
 
+<<<<<<< HEAD
+  public onClickSearchButton(): void {
+    this.onClickSearchButtonEvent.emit();
+  }
+
+=======
+>>>>>>> develop
   public onClickMarkdown(): void {
     this.showGeneralHTML = false;
     this.convertedHTML = this.convertMarkdown(this.innerText as string)

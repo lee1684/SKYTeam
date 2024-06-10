@@ -1,6 +1,10 @@
 .container {
     width: 100%;
+<<<<<<< HEAD
+    height: 90%;
+=======
     height: 100%;
+>>>>>>> develop
 }
 
 #join-button-container {
@@ -9,4 +13,21 @@
     width: 350px;
     left: 50%;
     transform: translateX(-50%);
+<<<<<<< HEAD
+}
+
+#title-container {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    width: auto;
+    height: auto;
+    font-size: 20px;
+    font-weight: 700;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+
+
+=======
+>>>>>>> develop
 }

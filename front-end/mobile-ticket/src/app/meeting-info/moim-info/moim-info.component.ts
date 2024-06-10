@@ -6,6 +6,11 @@ import { NgIf } from '@angular/common';
 import { ChatContainerComponent } from '../../ssalon-component/chat-container/chat-container.component';
 import { SimpleInputComponent } from '../../ssalon-component/simple-input/simple-input.component';
 import { NewButtonElement } from '../../ssalon-component/simple-toggle-group/simple-toggle-group.component';
+<<<<<<< HEAD
+import { Router } from '@angular/router';
+import { CircleToggleStatusGroupComponent } from '../../ssalon-component/circle-toggle-status-group/circle-toggle-status-group.component';
+=======
+>>>>>>> develop
 
 @Component({
   selector: 'app-moim-info',
@@ -21,6 +26,8 @@ import { NewButtonElement } from '../../ssalon-component/simple-toggle-group/sim
   styleUrl: './moim-info.component.scss',
 })
 export class MoimInfoComponent {
+<<<<<<< HEAD
+=======
   @ViewChild('date', { static: true })
   date: SimpleInputComponent | null = null;
   @ViewChild('location', { static: true })
@@ -29,13 +36,20 @@ export class MoimInfoComponent {
   description: SimpleInputComponent | null = null;
   @ViewChild('photo', { static: true })
   photo: ImageRowContainerComponent | null = null;
+>>>>>>> develop
   @ViewChild('capacity', { static: true })
   capacity: SimpleInputComponent | null = null;
   @ViewChild('fee', { static: true }) fee: SimpleInputComponent | null = null;
 
   @Input() moimId: string = '';
   @Input() moimInfo: any = {};
+<<<<<<< HEAD
+  @Input() participants: any[] = [];
+  @Input() isCreator: boolean = false;
+  @Input() isParticipant: boolean = false;
+=======
   @Input() mode: 'show' | 'edit' = 'show';
+>>>>>>> develop
   public photos: NewButtonElement[] = [
     {
       imgSrc: 'assets/add_photo.png',
@@ -45,6 +59,14 @@ export class MoimInfoComponent {
     },
   ];
 
+<<<<<<< HEAD
+  constructor(
+    private _apiExecutorService: ApiExecutorService,
+    private _router: Router
+  ) {}
+
+  public async ngOnInit() {}
+=======
   constructor(private _apiExecutorService: ApiExecutorService) {}
 
   public async ngOnInit() {
@@ -57,6 +79,7 @@ export class MoimInfoComponent {
       this.moimInfo.meetingPictureUrls
     );
   }
+>>>>>>> develop
 
   public getDate() {
     const date = new Date(this.moimInfo.meetingDate);
@@ -91,6 +114,20 @@ export class MoimInfoComponent {
     return newButtonElements;
   }
 
+<<<<<<< HEAD
+  public getParticipantImages() {
+    return this.getImageUrlsToNewButtonElements(
+      this.participants.map((participant: any) => {
+        return participant.profilePictureUrl;
+      })
+    );
+  }
+
+  public onClickParticipantButton() {
+    this._router.navigate(['/web/meeting-participants'], {
+      queryParams: { id: this.moimId },
+    });
+=======
   public onInput(type: string, value: any) {
     this.moimInfo[type] = value;
   }
@@ -181,5 +218,6 @@ export class MoimInfoComponent {
   public onClickFree(checkFreePayment: boolean) {
     this.fee!.innerText = checkFreePayment ? 0 : '';
     this.moimInfo.payment = checkFreePayment ? 0 : -1;
+>>>>>>> develop
   }
 }

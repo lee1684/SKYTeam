@@ -1,4 +1,15 @@
+<<<<<<< HEAD
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
+=======
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+>>>>>>> develop
 import { ImageRowContainerComponent } from '../image-row-container/image-row-container.component';
 import { NewButtonElement } from '../simple-toggle-group/simple-toggle-group.component';
 import { NgIf } from '@angular/common';
@@ -17,8 +28,18 @@ export class SimpleContentComponent {
   contentContainer: ElementRef = undefined as unknown as ElementRef;
 
   @Input() title: string = '';
+<<<<<<< HEAD
+  @Input() extraLabel: string = '';
+  @Input() extraButtonLabel: string = '';
   @Input() content: string = '';
   @Input() images: NewButtonElement[] = [];
+  @Input() imageHeight: number = 200;
+
+  @Output() public readonly onClickExtraButtonEvent = new EventEmitter();
+=======
+  @Input() content: string = '';
+  @Input() images: NewButtonElement[] = [];
+>>>>>>> develop
   constructor() {}
   public ngOnInit(): void {
     this.contentContainer.nativeElement.innerHTML = this.convertMarkdown(
@@ -37,4 +58,11 @@ export class SimpleContentComponent {
 
     return emojiConvertedHtml.replace(/<p[^>]*>/g, '').replace(/<\/p>/g, '');
   }
+<<<<<<< HEAD
+
+  public onClickExtraButton(): void {
+    this.onClickExtraButtonEvent.emit();
+  }
+=======
+>>>>>>> develop
 }

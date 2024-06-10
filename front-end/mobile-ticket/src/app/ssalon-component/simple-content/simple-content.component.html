@@ -1,9 +1,14 @@
 <div class="container">
     <div id="title-container">
-        {{title}}
+        <div>
+            {{title}}
+            <span *ngIf="this.extraLabel !== ''" class="extra-label">{{this.extraLabel}}</span>
+        </div>
+        <div *ngIf="this.extraButtonLabel !== ''" class="extra-button-label" (click)="this.onClickExtraButton()">
+            {{this.extraButtonLabel}}</div>
     </div>
     <div *ngIf="this.images.length>0" [style.margin-top.px]="16">
-        <app-image-row-container [images]="this.images" [imageHeight]="100"
+        <app-image-row-container [images]="this.images" [imageHeight]="this.imageHeight"
             [isTicketContainer]="false"></app-image-row-container>
     </div>
 

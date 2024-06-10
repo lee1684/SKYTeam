@@ -1,4 +1,19 @@
 .ticket-view-elements {
+<<<<<<< HEAD
+  width: 350px;
+  height: 600px;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+svg {
+  filter: drop-shadow(2px 2px 1px rgb(0 0 0 / 0.4));
+=======
     width: 350px;
     height: 600px;
 }
@@ -8,4 +23,5 @@
     justify-content: center;
     height: 100%;
     width: 100%;
+>>>>>>> develop
 }

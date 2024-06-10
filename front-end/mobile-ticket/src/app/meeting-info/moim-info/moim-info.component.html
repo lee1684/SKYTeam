@@ -1,4 +1,25 @@
 <div class="container">
+<<<<<<< HEAD
+    <div id="creator-container">
+        <div id="title-container">
+            개최자
+        </div>
+        <div id="profile-container">
+            <img id="profile-img-container" [src]="this.moimInfo.creatorProfilePictureUrl" />
+            <div id="name-container">{{this.moimInfo.creator}}</div>
+        </div>
+    </div>
+    <app-simple-content [title]="'모임 날짜'" [content]="this.getDate()"></app-simple-content>
+    <app-simple-content [title]="'모임 장소'" [content]="this.moimInfo.location"></app-simple-content>
+    <app-simple-content [title]="'참가비'" [content]="this.getBill()"></app-simple-content>
+    <app-simple-content [title]="'참가자'" [extraLabel]="this.participants.length+'명 / ' + this.moimInfo.capacity + '명'"
+        [extraButtonLabel]="(this.isParticipant)?'관리':''" (onClickExtraButtonEvent)="this.onClickParticipantButton()"
+        [images]="this.getParticipantImages()" [imageHeight]="30"></app-simple-content>
+    <app-simple-content [title]="'모임소개'" [content]="this.moimInfo.description"></app-simple-content>
+    <app-simple-content *ngIf="(this.moimInfo.meetingPictureUrls).length > 0" [title]="'사진'"
+        [images]="this.getImageUrlsToNewButtonElements(this.moimInfo.meetingPictureUrls)"
+        [imageHeight]="300"></app-simple-content>
+=======
     <div *ngIf="this.mode === 'show'">
         <div id="creator-container">
             <div id="title-container">
@@ -35,4 +56,5 @@
             (onChangeEvent)="this.onInput('payment', $event)" #fee></app-simple-input>
     </div>
 
+>>>>>>> develop
 </div>

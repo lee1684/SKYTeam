@@ -1,5 +1,14 @@
 <div class="container">
     <div id="profile-container" *ngIf="!this.contentOnly" [style.justify-content]="this.align">
+<<<<<<< HEAD
+        <img id="profile-img-container" *ngIf="this.align==='left'" [src]="message.profilePicture" />
+        <div id="name-container">{{this.message.nickname}}</div>
+        <img id="profile-img-container" *ngIf="this.align==='right'" [src]="message.profilePicture" />
+    </div>
+
+    <div id="content-container" [style.justify-content]="this.align"
+        [style.margin-left.px]="(this.align === 'left')?45:0" [style.margin-right.px]="(this.align === 'right')?45:0">
+=======
         <img id="profile-img-container" *ngIf="this.align==='left'" src="assets/add_photo.png" />
         <div id="name-container">{{this.message.nickname}}</div>
         <img id="profile-img-container" *ngIf="this.align==='right'" src="assets/add_photo.png" />
@@ -7,6 +16,7 @@
 
     <div id="content-container" [style.justify-content]="this.align"
         [style.margin-left.px]="(this.align === 'left')?45:0" [style.margin-right.px]="(this.align === 'right')?30:0">
+>>>>>>> develop
         <div id="date-container" *ngIf="this.align==='right'" [style.margin-right.px]="5">
             {{this.getTime(this.message.date)}}</div>
         <div *ngIf="this.message.imageUrl?.length === 0" id="text-container" [innerHTML]="convertedHTML"></div>
@@ -16,5 +26,8 @@
         <div id="date-container" *ngIf="this.align==='left'" [style.margin-left.px]="5">
             {{this.getTime(this.message.date)}}</div>
     </div>
+<<<<<<< HEAD
+=======
 
+>>>>>>> develop
 </div>
