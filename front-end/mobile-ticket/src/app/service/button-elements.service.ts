@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NewButtonElement } from '../ssalon-component/simple-toggle-group/simple-toggle-group.component';
+import { ApiExecutorService } from './api-executor.service';
 
 @Injectable({
   providedIn: 'root',
@@ -175,7 +176,65 @@ export class ButtonElementsService {
       label: '모임 참여해보기',
     },
   ];
-  constructor() {
+
+  public editCompleteButtons: NewButtonElement[] = [
+    {
+      selected: true,
+      value: 0,
+      label: '수정 완료',
+    },
+  ];
+
+  public editTicketButtons: NewButtonElement[] = [
+    {
+      selected: false,
+      value: 0,
+      label: '증표 앞면 수정하기',
+    },
+    {
+      selected: false,
+      value: 1,
+      label: '증표 뒷면 수정하기',
+    },
+  ];
+  public editProfileButton: NewButtonElement[] = [
+    {
+      selected: false,
+      value: 0,
+      label: '프로필 수정하기',
+    },
+    {
+      selected: false,
+      value: 1,
+      label: '로그아웃',
+    },
+  ];
+  public manageParticipantsButtons: NewButtonElement[] = [
+    {
+      selected: false,
+      value: 0,
+      label: '신고하기',
+    },
+    {
+      selected: false,
+      value: 1,
+      label: '강퇴하기',
+    },
+  ];
+
+  public removeAccountButtons: NewButtonElement[] = [
+    {
+      selected: true,
+      value: 0,
+      label: '취소하기',
+    },
+    {
+      selected: false,
+      value: 1,
+      label: '탈퇴하기',
+    },
+  ];
+  constructor(private _apiExecutorService: ApiExecutorService) {
     for (let i = 0; i < 10; i++) {
       this.interestSelectionButtons.push({
         selected: false,
@@ -198,8 +257,44 @@ export class ButtonElementsService {
       });
     }
   }
+
+  public async updateCategoryOrder(): Promise<boolean> {
+    this.categorySelectionButtons = [];
+    let orderedCateogrySelectionButtons =
+      await this._apiExecutorService.getRecommendedCategorys();
+    orderedCateogrySelectionButtons.forEach(
+      (category: { id: number; name: string }) => {
+        this.categorySelectionButtons.push({
+          selected: false, // 0번 버튼은 선택된 상태로 초기화
+          value: category.id,
+          label: this.category[category.id - 1],
+          solid: true,
+          unselectedBackgroundColor: '#F8F8F8',
+          unselectedFontColor: '#000000',
+          selectedBackgroundColor: '#000000',
+          selectedFontColor: '#ffffff',
+        });
+      }
+    );
+    this.categorySelectionButtons.unshift({
+      selected: true,
+      value: 0,
+      label: '추천',
+      solid: true,
+      unselectedBackgroundColor: '#F8F8F8',
+      unselectedFontColor: '#000000',
+      selectedBackgroundColor: '#000000',
+      selectedFontColor: '#ffffff',
+    });
+    return true;
+  }
+
   public getLabelByValue(buttonElements: NewButtonElement[], value: number) {
     return buttonElements.find((element) => element.value === value)?.label;
+  }
+
+  public getValueByLabel(buttonElements: NewButtonElement[], label: string) {
+    return buttonElements.find((element) => element.label === label)?.value;
   }
   public inintButtons() {
     /**

@@ -2,5 +2,9 @@
     <app-ticket [moimId]="this.moimId" [viewType]="'view'"></app-ticket>
 </div>
 <div id="join-button-container">
-    <app-square-button [buttonElements]="this.buttonElementsService.shareJoinButtons"></app-square-button>
+    <app-square-button [buttonElements]="this.buttonElementsService.shareJoinButtons"
+        (onClickEvent)="this.joinMoim()"></app-square-button>
+</div>
+<div id="title-container">
+    {{this.title}}
 </div>

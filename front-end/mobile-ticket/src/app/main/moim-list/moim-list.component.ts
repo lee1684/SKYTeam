@@ -1,5 +1,15 @@
 import { NgFor, NgIf } from '@angular/common';
+<<<<<<< HEAD
 import { Component, ElementRef, ViewChild, ViewChildren, QueryList } from '@angular/core';
+=======
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  ViewChildren,
+  QueryList,
+} from '@angular/core';
+>>>>>>> angular
 import {
   NewButtonElement,
   SimpleToggleGroupComponent,
@@ -7,6 +17,10 @@ import {
 import {
   ImageRowContainerComponent,
   Ticket,
+<<<<<<< HEAD
+=======
+  TicketList,
+>>>>>>> angular
 } from '../../ssalon-component/image-row-container/image-row-container.component';
 import { Router } from '@angular/router';
 import { ButtonElementsService } from '../../service/button-elements.service';
@@ -29,13 +43,19 @@ export class MoimListComponent {
   ticketContainer: ElementRef<HTMLDivElement> | null = null;
   @ViewChildren('rowContainers') rowContainers!: QueryList<ElementRef>;
 
+<<<<<<< HEAD
   public ticketThumbnails: Ticket[][] = [];
+=======
+  public isCategoryOrderUpdated: boolean = false;
+  public ticketThumbnails: TicketList[] = [];
+>>>>>>> angular
   constructor(
     private _apiExecutorService: ApiExecutorService,
     public buttonElementsService: ButtonElementsService
   ) {}
   public async ngOnInit() {
     /** 전체 */
+<<<<<<< HEAD
     let tickets = await this._apiExecutorService.getMoims();
     this.ticketThumbnails.push(tickets.content);
 
@@ -54,10 +74,36 @@ export class MoimListComponent {
     const rowContainer = this.rowContainers.toArray().find(rowContainer => rowContainer.nativeElement.id === value.toString());
     this.ticketContainer!.nativeElement.scrollTo({
       top: rowContainer!.nativeElement.offsetTop - 50,
+=======
+    let recommendedTickets: Ticket[] =
+      await this._apiExecutorService.getRecommendedMoims();
+    this.isCategoryOrderUpdated =
+      await this.buttonElementsService.updateCategoryOrder();
+    let tickets = await this._apiExecutorService.getMoims();
+    this.ticketThumbnails = tickets.content;
+    this.ticketThumbnails.unshift({
+      categoryName: '추천',
+      meetingList: recommendedTickets,
+    });
+  }
+
+  public ngOnDestroy() {
+    this.isCategoryOrderUpdated = false;
+  }
+  public onClickCategoryButton(value: number): void {
+    const rowContainer = this.rowContainers
+      .toArray()
+      .find(
+        (rowContainer) => rowContainer.nativeElement.id === value.toString()
+      );
+    this.ticketContainer?.nativeElement.scrollTo({
+      top: rowContainer?.nativeElement.offsetTop - 50,
+>>>>>>> angular
       behavior: 'smooth',
     });
   }
 
+<<<<<<< HEAD
   public isLoadedTickets(i: number): boolean {
     if (this.ticketThumbnails.length > 0) {
       if (this.ticketThumbnails[i] !== undefined) {
@@ -65,6 +111,11 @@ export class MoimListComponent {
           return true;
         } else return false;
       } else return false;
+=======
+  public isLoadedTickets(): boolean {
+    if (this.ticketThumbnails.length > 0 && this.isCategoryOrderUpdated) {
+      return true;
+>>>>>>> angular
     } else return false;
   }
 }

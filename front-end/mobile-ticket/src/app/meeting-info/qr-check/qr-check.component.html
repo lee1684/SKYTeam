@@ -4,8 +4,12 @@
         <video #qrVideo [style.width]="'100%'" [style.height]="'100%'" autoplay playsInline
             [style.object-fit]="'cover'"></video>
         <canvas id="qr-canvas" #qrCanvas [style.display]="'none'"></canvas>
+
         <div id="qr-guide-container">
+            <!--
             <img id="qr-guide" src="assets/qr-guide.png" height="300px" />
+            -->
+            카메라 안에 들어오면 자동으로 QR코드를 인식합니다.
         </div>
     </div>
 

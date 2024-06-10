@@ -3,14 +3,8 @@ import { SsalonConfigService } from './ssalon-config.service';
 import { Injectable } from '@angular/core';
 import { RegisterUserInfo } from '../onboarding/onboarding.component';
 
-export const setToken = function (
-  token: string,
-  apiExecutorService: ApiExecutorService
-) {
-  apiExecutorService.setToken(token);
-};
-
 export interface Profile {
+  id: number;
   nickname: string;
   profilePictureUrl: string;
   gender: 'M' | 'F' | 'G';
@@ -20,6 +14,11 @@ export interface Profile {
   email: string;
 }
 
+export interface ImageGeneration {
+  prompt: string;
+  highQuality: boolean;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -27,19 +26,23 @@ export class ApiExecutorService {
   public apiExecutor: AxiosInstance | null = null;
   public apiExecutorJson: AxiosInstance | null = null;
   public apiURL: string = 'https://ssalon.co.kr/api';
-  //public apiURL: string = 'http://localhost:8080/api';
   public tokens = {};
   public token: string = '';
+
   public refreshToken: string = '';
   public myProfile: Profile = undefined as unknown as Profile;
   constructor(private _ssalonConfigService: SsalonConfigService) {
+    this.token =
+      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoia2FrYW8gMzQ1NzYwNDk5MCIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3MTc5MjAxOTksImV4cCI6MTcxODAwNjU5OX0.Pb22fCf4mHAlalP7sDh9Id-ioLb_P_ba6Y8qc7ZNHGc';
+    this.refreshToken =
+      'eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6InJlZnJlc2giLCJ1c2VybmFtZSI6Imtha2FvIDM0NTc2MDQ5OTAiLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNzE3OTkwNTc4LCJleHAiOjE3MTgwNzY5Nzh9.Q-zgJUZF1XuWTHmJkxmorXiHkijshMz4zyRtQsPQ1wM';
     this.initApiExecutor();
   }
 
-  public async ngOnInit() {}
-
-  public setToken(token: string) {
-    this.token = token;
+  public setToken() {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${'access'}=`);
+    this.token = parts.pop()!.split(';').shift()!;
   }
 
   private initApiExecutor() {
@@ -72,7 +75,16 @@ export class ApiExecutorService {
     try {
       let response = await this.apiExecutorJson?.get(`/users/me/profile`);
       this.myProfile = response!.data;
-      console.log(this.myProfile);
+    } catch {}
+  }
+
+  public async updateMyProfile(body: RegisterUserInfo) {
+    try {
+      let response = await this.apiExecutorJson?.patch(
+        `/users/me/profile`,
+        body
+      );
+      this.myProfile = response!.data;
     } catch {}
   }
 
@@ -99,6 +111,7 @@ export class ApiExecutorService {
   public async getTicket(moimId: string) {
     try {
       let response = await this.apiExecutor?.get(`/tickets/${moimId}`);
+      console.log(response!.data);
       return response!.data;
     } catch {
       /** dummy data */
@@ -129,6 +142,18 @@ export class ApiExecutorService {
       /** dummy data */
       let tempJson = await axios.get('assets/decoration.json');
       return tempJson.data;
+    }
+  }
+
+  public async generateImage(moimId: string, body: ImageGeneration) {
+    try {
+      const response = await this.apiExecutorJson?.post(
+        `/image/generate/${moimId}`,
+        body
+      );
+      return response!.data;
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -163,6 +188,18 @@ export class ApiExecutorService {
     try {
       let response = await this.apiExecutorJson?.get(`/diary/${moimId}/info`);
       console.log(response!.data);
+      return response!.data;
+    } catch {
+      return false;
+    }
+  }
+
+  public async editMoimReview(moimId: string, body: any) {
+    try {
+      let response = await this.apiExecutorJson?.post(
+        `/diary/${moimId}/info`,
+        body
+      );
       return response!.data;
     } catch {
       return false;
@@ -235,6 +272,24 @@ export class ApiExecutorService {
     }
   }
 
+  public async getCategorys() {
+    try {
+      let response = await this.apiExecutorJson?.get('/category/all');
+      return response!.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  public async getRecommendedCategorys() {
+    try {
+      let response = await this.apiExecutorJson?.get('category/recommend');
+      return response!.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   public async getBarcode(moimId: string) {
     try {
       let response = await this.apiExecutorJson?.get(`/tickets/${moimId}/link`);
@@ -300,8 +355,18 @@ export class ApiExecutorService {
     try {
       let url =
         params === ''
-          ? '/moims?size=1000&isEnd=false'
+          ? '/moims/home?categoryLen=10&meetingLen=10&categoryPage=1&isEnd=false' //'/moims?size=1000&isEnd=false' //'
           : `/moims?isEnd=false&category=${params}&size=1000`;
+      let response = await this.apiExecutorJson?.get(url);
+      return response!.data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  public async getRecommendedMoims(params: string = '') {
+    try {
+      let url = '/moims/recommend?isEnd=false';
       let response = await this.apiExecutorJson?.get(url);
       return response!.data;
     } catch (e) {
@@ -329,9 +394,114 @@ export class ApiExecutorService {
     }
   }
 
+  public async searchMoims(keyword: string) {
+    try {
+      let response = await this.apiExecutorJson?.get(
+        `/moims/search/keyword?keyword=${keyword}`
+      );
+      return response!.data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   public async joinMoim(moimId: string) {
     try {
       let response = await this.apiExecutorJson?.post(`moims/${moimId}/users`);
+      return response?.data;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  public async getPaymentinfo(moimId: string) {
+    try {
+      let response = await this.apiExecutorJson?.get(
+        `moims/${moimId}/me/payment`
+      );
+      return response?.data;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  public async getRefund(moimId: string, paymentId: string) {
+    try {
+      let response = await this.apiExecutorJson?.post(
+        `moims/${moimId}/billings/${paymentId}`
+      );
+      return response?.data;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  public async payFee(moimId: string) {
+    try {
+      let response = await this.apiExecutorJson?.post(
+        `moims/${moimId}/billings`
+      );
+      return response?.data;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  public async leaveMoim(moimId: string, myId: string) {
+    try {
+      let response = await this.apiExecutorJson?.delete(
+        `moims/${moimId}/users/${myId}`
+      );
+      return response?.data;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /** 개최자는 참가자 모두 강퇴 가능, 참가자는 자신만. */
+  public async kickParticipant(moimId: string, userId: number, reason: string) {
+    try {
+      let body = {
+        reason: reason,
+      };
+      let response = await this.apiExecutorJson?.delete(
+        `moims/${moimId}/users/${userId}`,
+        {
+          data: body,
+        }
+      );
+      return response?.data;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  public async reportParticipant(
+    reporterId: number,
+    reportedUserId: number,
+    reason: string
+  ) {
+    try {
+      let body = {
+        id: 0,
+        reporterId: reporterId,
+        reportedUserId: reportedUserId,
+        reportPictureUrls: [],
+        reason: reason,
+        isSolved: false,
+        reportDate: new Date(),
+        solvedDate: '',
+      };
+      let response = await this.apiExecutorJson?.post(`report`, body);
+      return response?.data;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  public async exitSsalon() {
+    try {
+      let response = await this.apiExecutorJson?.delete(`users/me`);
       return response?.data;
     } catch (e) {
       return false;
@@ -388,6 +558,35 @@ export class ApiExecutorService {
   public async registerUser(body: RegisterUserInfo) {
     try {
       let response = await this.apiExecutorJson?.post('/auth/signup', body);
+      return response!.data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  public async getUserInfoByEmail(email: string) {
+    try {
+      let response = await this.apiExecutorJson?.get(
+        `/users/email/profile?email=${email}`
+      );
+      return response!.data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  public async removeAccount() {
+    try {
+      let response = await this.apiExecutorJson?.delete(`/users/me`);
+      return response!.data;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  public async logout() {
+    try {
+      let response = await this.apiExecutorJson?.delete(`/auth/logout`);
       return response!.data;
     } catch (e) {
       console.log(e);

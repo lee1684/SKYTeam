@@ -75,13 +75,18 @@ export class MobileTicketEditViewerComponent {
     this.canvas.on('object:rotating', (event: any) => {
       this.isCursorDown = false;
     });
+    this.canvas.on('object:modified', (event: any) => {
+      this.canvas?.moveObjectTo(
+        event.target as FabricObject,
+        this.canvas.getObjects().length - 1
+      );
+    });
 
     await this.canvas?.loadFromJSON(this.decorationInfo.fabric);
     this.canvas?.renderAll();
   }
 
   public async loadDecorationInfo() {
-    console.log(this.moimId);
     let decorationInfo: any = null;
     if (this.createTemplate !== undefined) {
       if (this.face === 'front') {
@@ -112,13 +117,14 @@ export class MobileTicketEditViewerComponent {
   public updateCanvas(
     fabricObjects: FabricImage[] | FabricText[] | Path[] | null
   ): void {
-    console.log(this.canvas?.toJSON());
+    console.log(fabricObjects);
     if (fabricObjects !== null) {
       for (let index = 0; index < fabricObjects.length; index++) {
-        this.canvas?.add(fabricObjects[index]);
+        this.canvas!.add(fabricObjects[index]);
       }
     }
     this.canvas?.renderAll();
+    console.log(this.canvas?.toJSON());
   }
 
   public getCanvasCapture(): any {

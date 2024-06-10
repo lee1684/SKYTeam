@@ -1,14 +1,20 @@
 import { NgFor, NgIf, NgOptimizedImage } from '@angular/common';
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   HostListener,
   Input,
+  OnChanges,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import { NewButtonElement } from '../simple-toggle-group/simple-toggle-group.component';
 import { Router } from '@angular/router';
-
+export interface TicketList {
+  categoryName: string;
+  meetingList: Ticket[];
+}
 export interface Ticket {
   ticketThumb: string;
   backgroundColor: string;
@@ -35,6 +41,7 @@ export class ImageRowContainerComponent {
   @Input() images: NewButtonElement[] = [
     { imgSrc: 'assets/heart.png', value: 0, label: 'heart', selected: false },
   ];
+  @Input() circleImage: boolean = false;
   @Input() tickets: Ticket[] = [];
   @Input() modifiedTickets: Ticket[][] = [];
   @Input() columnType: boolean = false;
@@ -43,7 +50,7 @@ export class ImageRowContainerComponent {
   @Input() public filter: string = '';
   @Input() public ticketRowContainerWidth = 350;
   @Output() public readonly onClickImageEvent = new EventEmitter();
-  constructor(private _router: Router) {}
+  constructor(private _router: Router, private _cd: ChangeDetectorRef) {}
   public ngOnInit(): void {
     if (this.isTicketContainer) {
       this._setLayout();
@@ -53,6 +60,9 @@ export class ImageRowContainerComponent {
 
       this.ticketRowContainerWidth = window.innerWidth * 0.95;
     }
+  }
+  public ngAfterViewInit(): void {
+    this._cd.detectChanges();
   }
 
   public ngAfterViewChecked(): void {}
@@ -72,13 +82,13 @@ export class ImageRowContainerComponent {
   }
 
   public getThumbSrc(moimId: number): string {
-    return (
+    let url =
       'https://test-bukkit-240415.s3.ap-northeast-2.amazonaws.com/Thumbnails/' +
       moimId +
       '/Thumb-' +
       moimId +
-      '.png'
-    );
+      '.png';
+    return url;
   }
 
   public onClickTicket(value: number) {

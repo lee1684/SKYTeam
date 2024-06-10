@@ -1,13 +1,15 @@
-<div id="category-container">
+<div *ngIf="this.isLoadedTickets()" id="category-container">
     <app-simple-toggle [buttonElements]="this.buttonElementsService.categorySelectionButtons" [columnNum]="-1"
         [buttonWidth]="60" [buttonHeight]="30" [componentWidth]="430" [fontSize]="14"
         (onClickToggleButtonEvent)="this.onClickCategoryButton($event)"></app-simple-toggle>
 </div>
-<div id="ticket-container" #ticketContainer>
-    <ng-container *ngFor="let categoryElement of this.buttonElementsService.categorySelectionButtons; index as i">
-        <div #rowContainers [id]="i" *ngIf="this.isLoadedTickets(i)" class="tickets-row-container">
-            <app-image-row-container [tickets]="this.ticketThumbnails[i]" [isTicketContainer]="true"
-                [label]="categoryElement.label"></app-image-row-container>
+<div *ngIf="this.isLoadedTickets()" id="ticket-container" #ticketContainer>
+    <ng-container *ngFor="let ticketList of this.ticketThumbnails; index as i">
+        <div #rowContainers
+            [id]="this.buttonElementsService.getValueByLabel(this.buttonElementsService.categorySelectionButtons, ticketList.categoryName)"
+            class="tickets-row-container">
+            <app-image-row-container [tickets]="ticketList.meetingList" [isTicketContainer]="true"
+                [label]="ticketList.categoryName"></app-image-row-container>
         </div>
     </ng-container>
 </div>

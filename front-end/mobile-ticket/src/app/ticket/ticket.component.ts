@@ -15,7 +15,10 @@ import {
   DecorationInfo,
   SsalonConfigService,
 } from '../service/ssalon-config.service';
-import { ApiExecutorService } from '../service/api-executor.service';
+import {
+  ApiExecutorService,
+  ImageGeneration,
+} from '../service/api-executor.service';
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { FabricImage, FabricText, Path } from 'fabric';
 import { ScenegraphService } from '../service/scenegraph.service';
@@ -26,6 +29,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { TopNavigatorComponent } from '../ssalon-component/top-navigator/top-navigator.component';
 import { NewButtonElement } from '../ssalon-component/simple-toggle-group/simple-toggle-group.component';
+import { SimpleInputComponent } from '../ssalon-component/simple-input/simple-input.component';
 
 export enum MobileTicketViewMode {
   APPVIEW,
@@ -51,6 +55,7 @@ export interface User {
     CircleToggleButtonGroupComponent,
     CircleToggleStatusGroupComponent,
     SimpleButtonComponent,
+    SimpleInputComponent,
     NgIf,
     TopNavigatorComponent,
   ],
@@ -113,6 +118,9 @@ export class TicketComponent {
     color: string;
     text: string;
   } = { checkStatus: null, color: '#006BFF', text: 'QR코드를 인식해주세요.' };
+  private prompt: string = '';
+  private tempImg: any;
+  public imageUrl: string = '';
 
   @Input() public moimId: string = undefined as unknown as string;
   @Input() public viewType: string = undefined as unknown as string;
@@ -143,12 +151,23 @@ export class TicketComponent {
     }
   }
 
+  public ngOnDestroy(): void {
+    this._sceneGraphService.destroy();
+  }
+
+  public onChangeInput(prompt: string): void {
+    this.prompt = prompt;
+  }
+
   public setFirstPage() {
     if (this.viewType === 'edit') {
+      this._sceneGraphService.mobileTicketAutoRotate = false;
       this.changeViewMode(MobileTicketViewMode.APPEDITVIEW);
     } else if (this.viewType === 'view') {
+      this._sceneGraphService.mobileTicketAutoRotate = true;
       this.changeViewMode(MobileTicketViewMode.APPVIEW);
     } else {
+      this._sceneGraphService.mobileTicketAutoRotate = true;
       this.changeViewMode(MobileTicketViewMode.WEBVIEW);
     }
   }
@@ -195,7 +214,9 @@ export class TicketComponent {
   }
 
   public async onClickQuitButton() {
-    this._router.navigate(['/web/main']);
+    this._router.navigate(['/web/meeting-info'], {
+      queryParams: { moimId: this.moimId },
+    });
   }
 
   public async updateServer() {

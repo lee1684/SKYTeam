@@ -96,7 +96,7 @@ export class MobileTicket {
         (this.frontDecorationInfo as DecorationInfo).fabric
       );
       this.frontSide.rotateZ(-Math.PI / 2);
-      this.frontSide.position.add(new Vector3(0, 0, 1.2));
+      this.frontSide.position.add(new Vector3(0, 0, 0.6));
       this.mobileTicket?.add(this.frontSide);
       this.frontSide.scale.multiplyScalar(0.2);
     } else if (side === 'back') {
@@ -109,7 +109,7 @@ export class MobileTicket {
       );
       this.backSide.rotateZ(-Math.PI / 2);
       this.backSide.rotateY(-Math.PI);
-      this.backSide.position.add(new Vector3(0, 0, -1.2));
+      this.backSide.position.add(new Vector3(0, 0, -0.6));
       this.mobileTicket?.add(this.backSide);
       this.backSide.scale.multiplyScalar(0.2);
     }
@@ -119,10 +119,9 @@ export class MobileTicket {
     const cameraDirection = this._sceneGraphService.camera?.getWorldDirection(
       new Vector3(0, 0, 0)
     );
-    const frontSideDirection =
-      this.frontSide === null
-        ? new Vector3(0, 0, 1)
-        : new Vector3(0, 0, 1).applyQuaternion(this.frontSide.quaternion);
+    const frontSideDirection = new Vector3(0, 0, 1).applyQuaternion(
+      this.mobileTicket!.quaternion
+    );
     if (cameraDirection!.dot(frontSideDirection!) >= 0) {
       this.frontSide!.visible = false;
       this.backSide!.visible = true;

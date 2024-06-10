@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ApiExecutorService } from '../service/api-executor.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-ssalon-login-redirect',
@@ -11,24 +11,32 @@ import { Router } from '@angular/router';
 })
 export class SsalonLoginRedirectComponent {
   public ts = '';
+  private goMoimId = undefined as unknown as string;
   constructor(
     private _apiExecutorService: ApiExecutorService,
-    private _router: Router
+    private _router: Router,
+    private _route: ActivatedRoute
   ) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${'access'}=`);
-    this._apiExecutorService.setToken(parts.pop()!.split(';').shift()!);
+    if (sessionStorage.getItem('goMoimId')) {
+      this.goMoimId = sessionStorage.getItem('goMoimId')!;
+    } else {
+      this.goMoimId = 'undefined';
+    }
   }
   public async ngOnInit() {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${'access'}=`);
-    this._apiExecutorService.setToken(parts.pop()!.split(';').shift()!);
+    this._apiExecutorService.setToken();
     let response = await this._apiExecutorService.getIsRegister();
-    console.log(response);
-    setTimeout(() => {}, 3000);
 
     if (response !== false) {
-      this._router.navigate(['/web/main']);
+      if (this.goMoimId === 'undefined') {
+        this._router.navigate(['/web/main']);
+      } else {
+        this._router.navigate(['/web/meeting-info'], {
+          queryParams: { moimId: this.goMoimId },
+        });
+      }
     } else {
       this._router.navigate(['/web/onboarding']);
     }

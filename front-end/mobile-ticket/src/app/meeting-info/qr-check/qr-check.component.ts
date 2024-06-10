@@ -79,7 +79,9 @@ export class QrCheckComponent {
           this.qrVideo.nativeElement.readyState ===
           this.qrVideo.nativeElement.HAVE_ENOUGH_DATA
         ) {
-          const canvasContext = this.qrCanvas.nativeElement.getContext('2d');
+          const canvasContext = this.qrCanvas.nativeElement.getContext('2d', {
+            willReadFrequently: true,
+          });
           this.qrCanvas.nativeElement.height =
             this.qrVideo.nativeElement.videoHeight;
           this.qrCanvas.nativeElement.width =
@@ -148,9 +150,27 @@ export class QrCheckComponent {
   }
   public stopDetectQRCode() {
     if (this.qrStream) {
-      this.qrStream.getTracks().forEach((track) => {
-        track.stop();
-      });
+      // 비디오 스트림 정지
+      this.qrStream.getTracks().forEach((track) => track.stop());
+      this.qrStream = null;
+
+      // 비디오 엘리먼트 정지 및 제거
+      if (this.qrVideo) {
+        this.qrVideo.nativeElement.pause();
+        this.qrVideo.nativeElement.srcObject = null;
+      }
+
+      // 캔버스 정리
+      if (this.qrCanvas) {
+        const canvasContext = this.qrCanvas.nativeElement.getContext('2d');
+        canvasContext?.clearRect(
+          0,
+          0,
+          this.qrCanvas.nativeElement.width,
+          this.qrCanvas.nativeElement.height
+        );
+      }
+
       this.isDetectingQRCode = false;
       this.isCameraLoaded = false;
     }

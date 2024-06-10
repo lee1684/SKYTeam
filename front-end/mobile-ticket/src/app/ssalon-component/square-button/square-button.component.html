@@ -1,7 +1,7 @@
 <div id="container">
     <ng-container *ngFor="let button of this.buttonElements">
         <div [ngClass]="this.getClass(button.value)"
-            [style.width.px]="(350-(10*this.buttonElements.length)/this.buttonElements.length)"
+            [style.width.px]="((350-(10*this.buttonElements.length))/this.buttonElements.length)"
             (click)="this.onClickButton(button.value)">{{button.label}}</div>
     </ng-container>
 </div>
