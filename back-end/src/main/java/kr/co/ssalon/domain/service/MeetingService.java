@@ -174,24 +174,24 @@ public class MeetingService {
     // 모임 삭제
     @Transactional
     public Long deleteMoim(String username, Long moimId) throws BadRequestException {
-        // 멤버 찾기
-        Member currentUser = findMember(username);
-
-        // 삭제할 미팅 찾기
-        Meeting currentMeeting = findMeeting(moimId);
-
-        // 개최자 검증
-        ValidationService.validationCreatorMoim(currentMeeting, currentUser);
-        // 모임 참여자 찾기
-        List<MemberMeeting> participants = currentMeeting.getParticipants();
-
-
-        // 연관 관계 제거
-        // 내가 참여한 모임 중에서 해당 모임을 삭제
-        participants.forEach(participant -> participant.getMember().deleteMemberMeeting(participant));
-
-        // 해당 모임 참가자 삭제
-        memberMeetingRepository.deleteByMeetingId(moimId);
+//        // 멤버 찾기
+//        Member currentUser = findMember(username);
+//
+//        // 삭제할 미팅 찾기
+//        Meeting currentMeeting = findMeeting(moimId);
+//
+//        // 개최자 검증
+//        ValidationService.validationCreatorMoim(currentMeeting, currentUser);
+//        // 모임 참여자 찾기
+//        List<MemberMeeting> participants = currentMeeting.getParticipants();
+//
+//
+//        // 연관 관계 제거
+//        // 내가 참여한 모임 중에서 해당 모임을 삭제
+//        participants.forEach(participant -> participant.getMember().deleteMemberMeeting(participant));
+//
+//        // 해당 모임 참가자 삭제
+//        memberMeetingRepository.deleteByMeetingId(moimId);
 
         // 해당 모임 삭제
         meetingRepository.deleteById(moimId);
