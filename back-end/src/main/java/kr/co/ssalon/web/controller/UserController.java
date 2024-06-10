@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import kr.co.ssalon.domain.dto.MemberDomainDTO;
 import kr.co.ssalon.domain.entity.Member;
 import kr.co.ssalon.domain.repository.MemberRepository;
@@ -179,9 +181,21 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공"),
     })
     @DeleteMapping("/api/users/me")
-    public ResponseEntity<String> withdraw(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member) throws BadRequestException {
+    public ResponseEntity<String> withdraw(@AuthenticationPrincipal CustomOAuth2Member customOAuth2Member, HttpServletResponse response) throws BadRequestException {
         String username = customOAuth2Member.getUsername();
         memberService.withdraw(username);
+
+        // access 쿠키 생성, 값은 빈 문자열로 설정하고, 만료 시간을 0으로 설정
+        Cookie access = new Cookie("access", "");
+        access.setMaxAge(0);
+        access.setPath("/");
+        response.addCookie(access);
+
+        // refresh 쿠키 생성, 값은 빈 문자열로 설정하고, 만료 시간을 0으로 설정
+        Cookie refresh = new Cookie("refresh", "");
+        refresh.setMaxAge(0);
+        refresh.setPath("/");
+        response.addCookie(refresh);
         return ResponseEntity.ok("회원 탈퇴 성공");
     }
 }
