@@ -5,6 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.ssalon.jwt.JWTUtil;
@@ -73,7 +74,19 @@ public class CustomLogoutFilter extends GenericFilterBean {
         RedisRefreshToken deleteRefresh = redisRefreshTokenRepository.findByRefresh(refresh);
         redisRefreshTokenRepository.delete(deleteRefresh);
 
-        sendResponse(response, "logout success", HttpServletResponse.SC_OK);
+        // 'access' 및 'refresh' 쿠키 제거
+        clearCookie(response, "access");
+        clearCookie(response, "refresh");
+
+        response.sendRedirect("https://ssalon.co.kr");
+    }
+
+    private void clearCookie(HttpServletResponse response, String name) {
+        Cookie cookie = new Cookie(name, null);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(0); // 쿠키 만료
+        response.addCookie(cookie);
     }
 
     private void sendResponse(HttpServletResponse response, String message, int status) {
