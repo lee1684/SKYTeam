@@ -32,3 +32,12 @@
     padding: 10px;
     cursor: pointer;
 }
+
+#delete-account-container {
+    position: absolute;
+    bottom: -120px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 100%;
+}

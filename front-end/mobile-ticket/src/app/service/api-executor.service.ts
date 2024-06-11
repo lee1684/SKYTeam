@@ -419,9 +419,20 @@ export class ApiExecutorService {
     }
   }
 
+  public async getOthersPaymentInfo(moimId: string) {
+    try {
+      let response = await this.apiExecutorJson?.get(
+        `moims/${moimId}/billings`
+      );
+      return response?.data;
+    } catch (e) {
+      return false;
+    }
+  }
+
   public async getRefund(moimId: string, paymentId: string) {
     try {
-      let response = await this.apiExecutorJson?.post(
+      let response = await this.apiExecutorJson?.delete(
         `moims/${moimId}/billings/${paymentId}`
       );
       return response?.data;
@@ -430,6 +441,20 @@ export class ApiExecutorService {
     }
   }
 
+  public async refundParticipant(
+    moimId: string,
+    userId: number,
+    paymentId: string
+  ) {
+    try {
+      let response = await this.apiExecutorJson?.delete(
+        `moims/${moimId}/members/${userId}/billings/${paymentId}`
+      );
+      return response?.data;
+    } catch (e) {
+      return false;
+    }
+  }
   public async payFee(moimId: string) {
     try {
       let response = await this.apiExecutorJson?.post(

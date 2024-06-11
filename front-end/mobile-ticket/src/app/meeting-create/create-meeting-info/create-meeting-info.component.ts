@@ -68,6 +68,15 @@ export class CreateMeetingInfoComponent {
   public ngAfterViewChecked() {
     this.onCreateButtonReadyEvent.emit(this.isAllTyped());
   }
+
+  public ngOnDestroy() {
+    this.buttonElementsService.interestSelectionButtons.forEach(
+      (interestSelectionButton) => {
+        interestSelectionButton.selected = false;
+      }
+    );
+  }
+
   public popUpBottomNavigator() {
     this.isPopUpBottomNavigator = true;
   }
@@ -77,6 +86,11 @@ export class CreateMeetingInfoComponent {
       value.value
     );
     this.isPopUpBottomNavigator = false;
+    this.buttonElementsService.interestSelectionButtons.forEach(
+      (interestSelectionButton) => {
+        interestSelectionButton.selected = false;
+      }
+    );
   }
   public onClickNoLimitCapacity(checkNoLimit: boolean) {
     this.capacity!.innerText = checkNoLimit ? 99999 : '';

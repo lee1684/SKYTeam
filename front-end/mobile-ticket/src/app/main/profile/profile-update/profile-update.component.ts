@@ -92,6 +92,19 @@ export class ProfileUpdateComponent {
     );
   }
 
+  public ngOnDestroy() {
+    this.buttonElementsService.interestSelectionButtons.forEach(
+      (interestSelectionButton) => {
+        interestSelectionButton.selected = false;
+      }
+    );
+    this.buttonElementsService.locationSelectionButtons.forEach(
+      (locationSelectionButton) => {
+        locationSelectionButton.selected = false;
+      }
+    );
+  }
+
   public onChangeUserInfo(type: string, value: string): void {
     switch (type) {
       case 'nickname':

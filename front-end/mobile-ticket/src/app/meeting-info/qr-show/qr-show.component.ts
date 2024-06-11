@@ -32,7 +32,13 @@ export class QrShowComponent {
   public async ngOnInit() {
     let url = `https://ssalon.co.kr/web/ticket?moimId=${this.moimId}&viewType=view`;
     this.ticketViewerSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+
+    this.participants = await this._apiExecutorService.getJoiningUsers(
+      this.moimId
+    );
+
     await this.setQrCodeImgSrc();
+    console.log(this.participants);
   }
   public async setQrCodeImgSrc() {
     let a = qrcode(0, 'L');
@@ -45,10 +51,10 @@ export class QrShowComponent {
   public getAttendance() {
     if (
       this.participants.find((participant: any) => {
-        if (participant.id === this._apiExecutorService.myProfile.id) {
+        if (participant.userId === this._apiExecutorService.myProfile.id) {
           return participant.attendance;
         }
-      })
+      }).attendance
     ) {
       return '출석완료';
     } else {
