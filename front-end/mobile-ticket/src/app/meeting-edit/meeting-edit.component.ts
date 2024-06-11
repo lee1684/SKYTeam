@@ -273,6 +273,16 @@ export class MeetingEditComponent {
     }
   }
   public async removeMoim() {
+    let participantsPaymentInfos =
+      await this._apiExecutorService.getOthersPaymentInfo(this.moimId);
+    for (let i = 0; i < participantsPaymentInfos.length; i++) {
+      let participantPaymentInfo = participantsPaymentInfos[i];
+      await this._apiExecutorService.refundParticipant(
+        this.moimId,
+        participantPaymentInfo.memberId,
+        participantPaymentInfo.id
+      );
+    }
     await this._apiExecutorService.removeMeeting(this.moimId);
   }
 }

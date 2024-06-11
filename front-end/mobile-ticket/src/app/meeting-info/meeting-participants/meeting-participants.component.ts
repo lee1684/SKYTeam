@@ -44,6 +44,7 @@ export class MeetingParticipantsComponent {
   private _participants: any = undefined as unknown as any;
   public isCreator: boolean = false;
   public participantButtonElements: NewButtonElement[] = [];
+  private _participantsPaymentInfos: any[] = [];
   public bottomDialogType = BottomDialogType;
   public isPopUpBottomDialog: boolean = false;
   @Output() onBackButtonClickEvent = new EventEmitter<void>();
@@ -63,6 +64,9 @@ export class MeetingParticipantsComponent {
       this._moimId
     );
     this.participantButtonElements = this.getParticipantsButtonElements();
+    this._participantsPaymentInfos =
+      await this._apiExecutorService.getOthersPaymentInfo(this._moimId);
+    console.log(this._participantsPaymentInfos);
   }
 
   public getParticipantsButtonElements() {
@@ -132,14 +136,33 @@ export class MeetingParticipantsComponent {
         }
       } else {
         // 강퇴
-        for (let i = 0; i < reportParticipants.length; i++) {
-          await this._apiExecutorService.kickParticipant(
-            this._moimId,
-            reportParticipants[i],
-            this.reasonContainer!.innerText as string
-          );
+        if (this._participantsPaymentInfos.length > 0) {
+          for (let i = 0; i < reportParticipants.length; i++) {
+            let paymentInfo = this._participantsPaymentInfos.find(
+              (paymentInfo) => {
+                return paymentInfo.memberId === reportParticipants[i];
+              }
+            );
+            console.log(paymentInfo);
+            if (paymentInfo !== undefined) {
+              let refundResult =
+                await this._apiExecutorService.refundParticipant(
+                  this._moimId,
+                  reportParticipants[i],
+                  paymentInfo.id
+                );
+              console.log(refundResult);
+            }
+
+            await this._apiExecutorService.kickParticipant(
+              this._moimId,
+              reportParticipants[i],
+              this.reasonContainer!.innerText as string
+            );
+          }
         }
       }
+
       this.popUpSuccessBottomDialog();
     }
   }

@@ -73,11 +73,15 @@ export class ProfileComponent {
       }
     } else {
       await this._apiExecutorService.logout();
+      this.deleteCookie('access');
+      this.deleteCookie('refresh');
+      this.deleteCookie('JSESSIONID');
       this._router.navigate(['/']);
     }
   }
 
   public onClickRemoveAccount() {
+    window.scrollTo(0, 0);
     this.isPopUpBottomDialog = true;
   }
 
@@ -90,8 +94,15 @@ export class ProfileComponent {
       this.isPopUpBottomDialog = false;
     } else {
       await this._apiExecutorService.removeAccount();
+      this.deleteCookie('access');
+      this.deleteCookie('refresh');
+      this.deleteCookie('JSESSIONID');
       this._router.navigate(['/']);
     }
+  }
+
+  private deleteCookie(name: string) {
+    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
   }
 }
 import { Component, Input } from '@angular/core';
