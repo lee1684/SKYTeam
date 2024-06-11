@@ -1,5 +1,4 @@
 <div id="meeting-info-conatiner">
-<<<<<<< HEAD
     <app-simple-input [label]="'모임 카테고리'" [placeholder]="'모임 카테고리를 설정해주세요'" [type]="'category'"
         (onClickEvent)="this.popUpBottomNavigator()" [innerText]="this.meetingInfo.category"></app-simple-input>
     <app-simple-input [label]="'모임 이름'" [placeholder]="'모임명을 입력해주세요'"
@@ -27,8 +26,6 @@
         (onClickEvent)="this.onCategorySelectedEvent($event)"></app-bottom-dialog>
 </div>
 <div id="meeting-info-conatiner">
-=======
->>>>>>> develop
     <app-simple-input [label]="'모임 카테고리'" [placeholder]="'모임 카테고리를 설정해주세요'" (onClickEvent)="this.popUpBottomNavigator()"
         [innerText]="this.meetingInfo.category"></app-simple-input>
     <app-simple-input [label]="'모임 이름'" [placeholder]="'모임명을 입력해주세요'"
@@ -52,6 +49,6 @@
 </div>
 
 <div *ngIf="this.isPopUpBottomNavigator">
-    <app-bottom-dialog [content]="this.bottomNavigatorType.MEETING_CATEGORY"
+    <app-bottom-dialog [content]="this.bottomDialogType.MEETING_CATEGORY"
         (onClickEvent)="this.onCategorySelectedEvent($event)"></app-bottom-dialog>
 </div>

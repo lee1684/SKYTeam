@@ -20,10 +20,7 @@ import { TicketComponent } from '../../ticket/ticket.component';
 })
 export class QrShowComponent {
   @Input() moimId: string = '';
-<<<<<<< HEAD
   @Input() participants: any = undefined as unknown as any;
-=======
->>>>>>> develop
   public qrCodeSrc: string = '';
   public ticketViewerSrc: SafeResourceUrl = '';
 
@@ -33,18 +30,9 @@ export class QrShowComponent {
     public sanitizer: DomSanitizer
   ) {}
   public async ngOnInit() {
-<<<<<<< HEAD
     let url = `https://ssalon.co.kr/web/ticket?moimId=${this.moimId}&viewType=view`;
     this.ticketViewerSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     await this.setQrCodeImgSrc();
-=======
-    //let url = `http://localhost:3000/web/ticket?moimId=${this.moimId}&viewType=view`;
-    let url = `https://ssalon.co.kr/web/ticket?moimId=${this.moimId}&viewType=view`;
-    //let url = `http://localhost:8080/web/ticket?moimId=${this.moimId}&viewType=view`;
-    this.ticketViewerSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    await this.setQrCodeImgSrc();
-    this._sceneGraphService.mobileTicketAutoRotate = true;
->>>>>>> develop
   }
   public async setQrCodeImgSrc() {
     let a = qrcode(0, 'L');
@@ -53,7 +41,6 @@ export class QrShowComponent {
     a.make();
     this.qrCodeSrc = a.createDataURL(5, 0);
   }
-<<<<<<< HEAD
 
   public getAttendance() {
     if (
@@ -68,6 +55,4 @@ export class QrShowComponent {
       return '출석안함';
     }
   }
-=======
->>>>>>> develop
 }
