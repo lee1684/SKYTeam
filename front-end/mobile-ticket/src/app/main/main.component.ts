@@ -12,6 +12,7 @@ import { MoimListComponent } from './moim-list/moim-list.component';
 import { MoimSearchComponent } from './moim-search/moim-search.component';
 import { MyTicketListComponent } from './my-ticket-list/my-ticket-list.component';
 import { ProfileComponent } from './profile/profile.component';
+import { ApiExecutorService } from '../service/api-executor.service';
 
 export enum MainTabEnum {
   MAIN,
@@ -51,9 +52,12 @@ export class MainComponent {
   public nowTab: MainTabEnum = MainTabEnum.MAIN;
   constructor(
     private _router: Router,
-    public thumbnailMakerService: ThumbnailMakerService
+    public thumbnailMakerService: ThumbnailMakerService,
+    private _apiExecutorService: ApiExecutorService
   ) {}
-  public ngOnInit(): void {}
+  public async ngOnInit() {
+    await this._apiExecutorService.getMyProfile();
+  }
 
   public onClickNavigatorButton(value: MainTabEnum): void {
     this.nowTab = value;
