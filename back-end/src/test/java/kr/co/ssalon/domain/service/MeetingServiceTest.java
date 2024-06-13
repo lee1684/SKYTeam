@@ -272,22 +272,34 @@ public class MeetingServiceTest {
 
     @Test
     @DisplayName("MeetingService.deleteMoim 메소드 테스트")
-    @WithCustomMockUser(username = "username", email = "email@email.com", role = "ROLE_USER")
+    @WithCustomMockUser()
     public void 모임삭제() throws Exception {
         //given
+
+        // Member Mock 객체 생성
         Member member = Member.createMember(username, email, role);
         Meeting meeting = mock(Meeting.class);
         when(meeting.getId()).thenReturn(1L);
+
+        // 현재 로그인한 회원이, 삭제하려는 모임의 개최자임을 전제
         when(meeting.getCreator()).thenReturn(member);
 
+        // MemberRepository.findByUsername() stub
         when(memberRepository.findByUsername(username)).thenReturn(Optional.of(member));
-        when(meetingRepository.findById(meeting.getId())).thenReturn(Optional.of(meeting));
-        doNothing().when(memberMeetingRepository).deleteByMeetingId(1L);
-        doNothing().when(meetingRepository).deleteById(1L);
-        //when
-        Long moimId = meetingService.deleteMoim(username, meeting.getId());
-        //then
 
+        // MeetingRepository.findById() stub
+        when(meetingRepository.findById(meeting.getId())).thenReturn(Optional.of(meeting));
+
+        // MemberMeetingRepository.deleteByMeetingId() stub
+        doNothing().when(memberMeetingRepository).deleteByMeetingId(1L);
+
+        // MeetingRepository.deleteById() stub
+        doNothing().when(meetingRepository).deleteById(1L);
+
+        // when (모임 삭제)
+        Long moimId = meetingService.deleteMoim(username, meeting.getId());
+
+        // then (삭제한 모임에 대한 검증)
         assertThat(moimId).isEqualTo(meeting.getId());
     }
 
