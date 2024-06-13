@@ -5,6 +5,7 @@ import kr.co.ssalon.domain.entity.*;
 import kr.co.ssalon.domain.repository.*;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import kr.co.ssalon.web.controller.annotation.WithCustomMockUser;
+import kr.co.ssalon.web.dto.MeetingInfoDTO;
 import kr.co.ssalon.web.dto.MeetingSearchCondition;
 import kr.co.ssalon.web.dto.ParticipantDTO;
 import kr.co.ssalon.web.dto.TicketInitResponseDTO;
@@ -229,39 +230,44 @@ public class MeetingServiceTest {
 
     @Test
     @DisplayName("MeetingService.editMoim 메소드 테스트")
-    @WithCustomMockUser(username = "username", email = "email@email.com", role = "ROLE_USER")
-    public void 모임수정() throws Exception {
-        /*
+    @WithCustomMockUser()
+    public void 모임정보수정() throws Exception {
         //given
-        Member member = Member.createMember(username, email, role);
-        Category category = mock(Category.class);
+
+        // 모임의 id가 10임을 전제
         Meeting meeting = mock(Meeting.class);
+        when(meeting.getId()).thenReturn(10L);
 
-        when(meeting.getId()).thenReturn(1L);
+        // 현재 로그인한 회원이, 수정하려는 모임의 개최자임을 전제
+        Member member = Member.createMember(username, email, role);
         when(meeting.getCreator()).thenReturn(member);
-        when(category.getName()).thenReturn("운동");
 
+        // MemberRepository.findByUsername() stub
         when(memberRepository.findByUsername(username)).thenReturn(Optional.of(member));
+
+        // MeetingRepository.findById() stub
         when(meetingRepository.findById(meeting.getId())).thenReturn(Optional.of(meeting));
+
+        // CategoryRepository.findByName() stub
+        Category category = mock(Category.class);
+        when(category.getName()).thenReturn("독서");
         when(categoryRepository.findByName(category.getName())).thenReturn(Optional.of(category));
 
-        // MeetingDomainDTO 생성 -> 수정할 DTO
-        MeetingDomainDTO mtdo = MeetingDomainDTO.builder()
-                .category("운동")
-                .meetingPictureUrls(new ArrayList<>(new ArrayList<>(Arrays.asList("http:picture1", "http:picture2"))))
-                .title("모임 제목")
-                .description("모임 내용")
+        // when (모임 정보 수정)
+
+        // MeetingInfoDTO 생성 (= 모임의 수정 정보를 담고 있는 DTO)
+        MeetingInfoDTO meetingInfoDTO = MeetingInfoDTO.builder()
+                .category("독서")
+                .meetingPictureUrls(Arrays.asList("https://ssalon.co.kr/picture1", "https://ssalon.co.kr/picture2"))
+                .title("독서를 합시다.")
+                .description("독서를 좋아하는 사람들의 모임")
                 .location("서울 신림")
-                .capacity(8)
-                .meetingDate(LocalDateTime.now()).build();
-        //when
-        Long moimId = meetingService.editMoim(username, meeting.getId(), mtdo);
+                .capacity(3)
+                .build();
+        Long moimId = meetingService.editMoim(username, meeting.getId(), meetingInfoDTO);
 
-        //then
-        assertThat(moimId).isEqualTo(meeting.getId());
-
-
-         */
+        // then (수정한 모임에 대한 검증)
+        assertThat(moimId).isEqualTo(10L);
     }
 
     @Test
