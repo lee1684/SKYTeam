@@ -137,27 +137,32 @@ public class MeetingServiceTest {
 
     @Test
     @DisplayName("MeetingService.join 메소드 테스트")
-    @WithCustomMockUser(username = "username", email = "email@email.com", role = "ROLE_USER")
+    @WithCustomMockUser()
     public void 모임참가() throws Exception {
         //given
-        Member member = Member.createMember(username, email, role);
-        Optional<Member> optionalMember = Optional.of(member);
-        when(memberRepository.findByUsername(username)).thenReturn(optionalMember);
 
+        // MemberRepository.findByUsername() stub
+        Member member = mock(Member.class);
+        when(memberRepository.findByUsername(any())).thenReturn(Optional.of(member));
+
+        // MeetingRepository.findById() stub
         Meeting meeting = mock(Meeting.class);
         when(meeting.getId()).thenReturn(1L);
-        when(meetingRepository.findById(meeting.getId())).thenReturn(Optional.of(meeting));
-        when(memberMeetingRepository.existsByMemberIdAndMeetingId(member.getId(),meeting.getId())).thenReturn(false);
+        when(meetingRepository.findById(any())).thenReturn(Optional.of(meeting));
 
+        // MemberMeetingRepository.existsByMemberIdAndMeetingId() stub
+        when(memberMeetingRepository.existsByMemberIdAndMeetingId(any(), any())).thenReturn(false);
+
+        // MemberMeetingRepository.save() stub
         MemberMeeting memberMeeting = mock(MemberMeeting.class);
         when(memberMeeting.getId()).thenReturn(1L);
         when(memberMeetingRepository.save(any())).thenReturn(memberMeeting);
-        //when
-        System.out.println(username);
-        Long joinId = meetingService.join(username, meeting.getId());
-        //then
-        assertThat(joinId).isEqualTo(memberMeeting.getId());
 
+        // when (모임 참가)
+        Long joinId = meetingService.join(username, meeting.getId());
+
+        // then (참가한 모임에 대한 검증)
+        assertThat(joinId).isEqualTo(1L);
     }
 
     @Test
