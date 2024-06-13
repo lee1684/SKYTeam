@@ -7,7 +7,7 @@ import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import kr.co.ssalon.web.controller.annotation.WithCustomMockUser;
 import kr.co.ssalon.web.dto.MeetingSearchCondition;
 import kr.co.ssalon.web.dto.ParticipantDTO;
-import org.assertj.core.api.Assertions;
+import kr.co.ssalon.web.dto.TicketInitResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,14 +41,15 @@ public class MeetingServiceTest {
     private MemberRepository memberRepository;
     @Mock
     private MemberMeetingRepository memberMeetingRepository;
-    @Mock
-    private TicketRepository ticketRepository;
-
-    @Mock
-    private AwsS3Service awsS3Service;
 
     @Mock
     private CategoryRepository categoryRepository;
+
+    @Mock
+    private RecommendService recommendService;
+
+    @Mock
+    private TicketService ticketService;
 
     @InjectMocks
     private MeetingService meetingService;
@@ -60,9 +61,6 @@ public class MeetingServiceTest {
     private MemberMeetingService memberMeetingService;
 
     @InjectMocks
-    private TicketService ticketService;
-
-    @InjectMocks
     private CategoryService categoryService;
 
 
@@ -72,7 +70,7 @@ public class MeetingServiceTest {
 
     @BeforeEach
     public void getUsernameAndEmailAndRole() {
-        // 소셜로부터 가져온 유저(@WithMockUser)의 username, email, role 가져오기
+        // Mock 유저(@WithMockUser)의 username, email, role 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomOAuth2Member customOAuth2Member = (CustomOAuth2Member) authentication.getPrincipal();
 
@@ -92,54 +90,49 @@ public class MeetingServiceTest {
 
     @Test
     @DisplayName("MeetingService.createMoim 메소드 테스트")
-    @WithCustomMockUser(username = "username", email = "email@email.com", role = "ROLE_USER")
+    @WithCustomMockUser()
     public void 모임개설() throws Exception {
         //given
 
-        // 개최자 생성
-        Member member = Member.createMember(username, email, role);
-        Optional<Member> optionalMember = Optional.of(member);
-        // member :::: stub
-        when(memberRepository.findByUsername(username)).thenReturn(optionalMember);
+        // MemberRepository.findByUsername() stub
+        Member member = mock(Member.class);
+        when(memberRepository.findByUsername(any())).thenReturn(Optional.of(member));
+
+        // MeetingRepository.save() stub
+        Meeting meeting = mock(Meeting.class);
+        when(meeting.getId()).thenReturn(1L);
+        when(meetingRepository.save(any())).thenReturn(meeting);
+
+        // CategoryRepository.findByName() stub
+        Category category = mock(Category.class);
+        when(categoryRepository.findByName(any())).thenReturn(Optional.of(category));
+
+        // MemberMeetingRepository.save() stub
+        MemberMeeting memberMeeting = mock(MemberMeeting.class);
+        when(memberMeetingRepository.save(memberMeeting)).thenReturn(memberMeeting);
+
+        // 티켓 초기 정보 설정 stub
+        TicketInitResponseDTO TicketInitResponseDTO = mock(TicketInitResponseDTO.class);
+        when(ticketService.initTicket(meeting.getId(), "N")).thenReturn(TicketInitResponseDTO);
+
+        // 모임 정보 임베딩 stub
+        doNothing().when(recommendService).updateMoimEmbedding(meeting);
+
+        //when (모임 생성)
 
         // meetingDomainDTO 생성
         MeetingDomainDTO meetingDomainDTO = MeetingDomainDTO.builder()
                 .category("운동")
-                .meetingPictureUrls(new ArrayList<>(new ArrayList<>(Arrays.asList("http:picture1", "http:picture2"))))
-                .title("모임 제목")
-                .description("모임 내용")
+                .meetingPictureUrls(Arrays.asList("https://ssalon.co.kr/picture1", "https://ssalon.co.kr/picture2"))
+                .title("운동을 합시다.")
+                .description("운동을 좋아하는 사람들의 모임")
                 .location("서울 신림")
                 .capacity(8)
-                .meetingDate(LocalDateTime.now()).build();
-
-        // 카테고리 생성
-        Category category = mock(Category.class);
-        when(category.getName()).thenReturn("운동");
-        when(categoryRepository.findByName(category.getName())).thenReturn(Optional.of(category));
-
-        // 멤버모임 생성
-        MemberMeeting memberMeeting = mock(MemberMeeting.class);
-        when(memberMeetingRepository.save(any())).thenReturn(memberMeeting);
-
-        // 모임 생성
-        Meeting meeting = mock(Meeting.class);
-        // meeting :::: stub
-        when(meeting.getId()).thenReturn(1L);
-        when(meetingRepository.save(any())).thenReturn(meeting);
-
-        // 티켓 생성 --> 오류
-        when(ticketService.initTicket(meeting.getId(), "N")).thenReturn(null);
-        when(awsS3Service.getFileAsJsonString("json")).thenReturn("12345678");
-
-        when(awsS3Service.uploadFileViaStream(meeting.getId(), "json")).thenReturn(null);
-        when(awsS3Service.copyFilesFromTemplate(null)).thenReturn(null);
-
-        //when
+                .build();
         Long moimId = meetingService.createMoim(username, meetingDomainDTO);
 
-        //then
+        //then (생성한 모임에 대한 검증)
         assertThat(moimId).isEqualTo(1L);
-
     }
 
     @Test
