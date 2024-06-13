@@ -15,8 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -25,10 +23,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.time.LocalDateTime;
 import java.util.*;
-
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -38,8 +33,10 @@ public class MeetingServiceTest {
 
     @Mock
     private MeetingRepository meetingRepository;
+
     @Mock
     private MemberRepository memberRepository;
+
     @Mock
     private MemberMeetingRepository memberMeetingRepository;
 
@@ -54,16 +51,6 @@ public class MeetingServiceTest {
 
     @InjectMocks
     private MeetingService meetingService;
-
-    @InjectMocks
-    private MemberService memberService;
-
-    @InjectMocks
-    private MemberMeetingService memberMeetingService;
-
-    @InjectMocks
-    private CategoryService categoryService;
-
 
     String username = "";
     String email = "";
@@ -87,7 +74,6 @@ public class MeetingServiceTest {
         GrantedAuthority auth = iterator.next();
         role = auth.getAuthority();
     }
-
 
     @Test
     @DisplayName("MeetingService.createMoim 메소드 테스트")
@@ -189,7 +175,6 @@ public class MeetingServiceTest {
         //then
         assertThat(participantCheck).isTrue();
     }
-
 
     @Test
     @DisplayName("MeetingService.getMoims 메소드 테스트")
@@ -343,6 +328,4 @@ public class MeetingServiceTest {
         assertThat(participantUsers.get(2).getNickname()).isEqualTo(createMemberMeeting3.getMember().getNickname());
 
     }
-
-
 }
