@@ -192,12 +192,9 @@ public class MeetingServiceTest {
 
     @Test
     @DisplayName("MeetingService.getMoims 메소드 테스트")
-    @WithCustomMockUser(username = "username", email = "email@email.com", role = "ROLE_USER")
+    @WithCustomMockUser()
     public void 모임목록조회() {
         // given
-
-        Member member = Member.createMember(username, email, role);
-        String username = member.getUsername();
 
         // "운동" 카테고리 Mock 객체 생성
         Category category = mock(Category.class);
@@ -207,15 +204,16 @@ public class MeetingServiceTest {
         Meeting meeting = mock(Meeting.class);
         when(meeting.getCategory()).thenReturn(category);
 
-        // 모임 목록 필터("운동", "서울특별시") 객체 생성
+        // "진행 중", "운동" 모임 목록 필터 객체 생성
         MeetingSearchCondition meetingSearchCondition = MeetingSearchCondition.builder()
                 .category("운동")
+                .isEnd(false)
                 .build();
 
         // Pageable 객체 생성
         PageRequest pageable = PageRequest.of(0, 10);
 
-        // "운동", "서울특별시" 모임 Mock 객체에 대한 Page 객체 생성
+        // "진행 중", "운동" 모임 Mock 객체에 대한 Page 객체 생성
         Page<Meeting> meetingsPage = new PageImpl<>(Collections.singletonList(meeting));
         when(meetingRepository.searchMoims(meetingSearchCondition, username, pageable)).thenReturn(meetingsPage);
 
@@ -226,6 +224,7 @@ public class MeetingServiceTest {
         assertThat(result).isNotNull();
         assertThat(result.getContent()).hasSize(1);
         assertThat(result.getContent().get(0).getCategory().getName()).isEqualTo("운동");
+        assertThat(result.getContent().get(0).getIsFinished()).isEqualTo(false);
     }
 
     @Test
