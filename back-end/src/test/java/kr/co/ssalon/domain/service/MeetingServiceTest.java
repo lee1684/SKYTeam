@@ -76,7 +76,7 @@ public class MeetingServiceTest {
     }
 
     @Test
-    @DisplayName("MeetingService.createMoim 메소드 테스트")
+    @DisplayName("모임개설 테스트")
     @WithCustomMockUser()
     public void 모임개설() throws Exception {
         //given
@@ -123,7 +123,7 @@ public class MeetingServiceTest {
     }
 
     @Test
-    @DisplayName("MeetingService.join 메소드 테스트")
+    @DisplayName("모임참가 테스트")
     @WithCustomMockUser()
     public void 모임참가() throws Exception {
         //given
@@ -153,7 +153,7 @@ public class MeetingServiceTest {
     }
 
     @Test
-    @DisplayName("MeetingService.isParticipant 메소드 테스트")
+    @DisplayName("모임 참가자 확인 테스트")
     @WithCustomMockUser(username = "username", email = "email@email.com", role = "ROLE_USER")
     public void 모임참가자확인() throws Exception {
         //given
@@ -177,7 +177,7 @@ public class MeetingServiceTest {
     }
 
     @Test
-    @DisplayName("MeetingService.getMoims 메소드 테스트")
+    @DisplayName("모임 목록 조회 테스트")
     @WithCustomMockUser()
     public void 모임목록조회() {
         // given
@@ -214,7 +214,7 @@ public class MeetingServiceTest {
     }
 
     @Test
-    @DisplayName("MeetingService.editMoim 메소드 테스트")
+    @DisplayName("모임 정보 수정 테스트")
     @WithCustomMockUser()
     public void 모임정보수정() throws Exception {
         //given
@@ -256,7 +256,7 @@ public class MeetingServiceTest {
     }
 
     @Test
-    @DisplayName("MeetingService.deleteMoim 메소드 테스트")
+    @DisplayName("모임 삭제 테스트")
     @WithCustomMockUser()
     public void 모임삭제() throws Exception {
         //given
@@ -289,7 +289,7 @@ public class MeetingServiceTest {
     }
 
     @Test
-    @DisplayName("MeetingService.getUsers 메소드 테스트")
+    @DisplayName("모임 참여 유저 조회 테스트")
     @WithCustomMockUser(username = "username", email = "email@email.com", role = "ROLE_USER")
     public void 모임참여유저조회() throws Exception {
         //given
