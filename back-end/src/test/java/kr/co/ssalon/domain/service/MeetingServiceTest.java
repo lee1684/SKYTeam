@@ -5,17 +5,16 @@ import kr.co.ssalon.domain.entity.*;
 import kr.co.ssalon.domain.repository.*;
 import kr.co.ssalon.oauth2.CustomOAuth2Member;
 import kr.co.ssalon.web.controller.annotation.WithCustomMockUser;
+import kr.co.ssalon.web.dto.MeetingInfoDTO;
 import kr.co.ssalon.web.dto.MeetingSearchCondition;
 import kr.co.ssalon.web.dto.ParticipantDTO;
-import org.assertj.core.api.Assertions;
+import kr.co.ssalon.web.dto.TicketInitResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -24,10 +23,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.time.LocalDateTime;
 import java.util.*;
-
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -37,34 +33,24 @@ public class MeetingServiceTest {
 
     @Mock
     private MeetingRepository meetingRepository;
-    @Mock
-    private MemberRepository memberRepository;
-    @Mock
-    private MemberMeetingRepository memberMeetingRepository;
-    @Mock
-    private TicketRepository ticketRepository;
 
     @Mock
-    private AwsS3Service awsS3Service;
+    private MemberRepository memberRepository;
+
+    @Mock
+    private MemberMeetingRepository memberMeetingRepository;
 
     @Mock
     private CategoryRepository categoryRepository;
 
-    @InjectMocks
-    private MeetingService meetingService;
+    @Mock
+    private RecommendService recommendService;
 
-    @InjectMocks
-    private MemberService memberService;
-
-    @InjectMocks
-    private MemberMeetingService memberMeetingService;
-
-    @InjectMocks
+    @Mock
     private TicketService ticketService;
 
     @InjectMocks
-    private CategoryService categoryService;
-
+    private MeetingService meetingService;
 
     String username = "";
     String email = "";
@@ -72,7 +58,7 @@ public class MeetingServiceTest {
 
     @BeforeEach
     public void getUsernameAndEmailAndRole() {
-        // 소셜로부터 가져온 유저(@WithMockUser)의 username, email, role 가져오기
+        // Mock 유저(@WithMockUser)의 username, email, role 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomOAuth2Member customOAuth2Member = (CustomOAuth2Member) authentication.getPrincipal();
 
@@ -89,82 +75,81 @@ public class MeetingServiceTest {
         role = auth.getAuthority();
     }
 
-
     @Test
     @DisplayName("MeetingService.createMoim 메소드 테스트")
-    @WithCustomMockUser(username = "username", email = "email@email.com", role = "ROLE_USER")
+    @WithCustomMockUser()
     public void 모임개설() throws Exception {
         //given
 
-        // 개최자 생성
-        Member member = Member.createMember(username, email, role);
-        Optional<Member> optionalMember = Optional.of(member);
-        // member :::: stub
-        when(memberRepository.findByUsername(username)).thenReturn(optionalMember);
+        // MemberRepository.findByUsername() stub
+        Member member = mock(Member.class);
+        when(memberRepository.findByUsername(any())).thenReturn(Optional.of(member));
+
+        // MeetingRepository.save() stub
+        Meeting meeting = mock(Meeting.class);
+        when(meeting.getId()).thenReturn(1L);
+        when(meetingRepository.save(any())).thenReturn(meeting);
+
+        // CategoryRepository.findByName() stub
+        Category category = mock(Category.class);
+        when(categoryRepository.findByName(any())).thenReturn(Optional.of(category));
+
+        // MemberMeetingRepository.save() stub
+        MemberMeeting memberMeeting = mock(MemberMeeting.class);
+        when(memberMeetingRepository.save(memberMeeting)).thenReturn(memberMeeting);
+
+        // 티켓 초기 정보 설정 stub
+        TicketInitResponseDTO TicketInitResponseDTO = mock(TicketInitResponseDTO.class);
+        when(ticketService.initTicket(meeting.getId(), "N")).thenReturn(TicketInitResponseDTO);
+
+        // 모임 정보 임베딩 stub
+        doNothing().when(recommendService).updateMoimEmbedding(meeting);
+
+        //when (모임 생성)
 
         // meetingDomainDTO 생성
         MeetingDomainDTO meetingDomainDTO = MeetingDomainDTO.builder()
                 .category("운동")
-                .meetingPictureUrls(new ArrayList<>(new ArrayList<>(Arrays.asList("http:picture1", "http:picture2"))))
-                .title("모임 제목")
-                .description("모임 내용")
+                .meetingPictureUrls(Arrays.asList("https://ssalon.co.kr/picture1", "https://ssalon.co.kr/picture2"))
+                .title("운동을 합시다.")
+                .description("운동을 좋아하는 사람들의 모임")
                 .location("서울 신림")
                 .capacity(8)
-                .meetingDate(LocalDateTime.now()).build();
-
-        // 카테고리 생성
-        Category category = mock(Category.class);
-        when(category.getName()).thenReturn("운동");
-        when(categoryRepository.findByName(category.getName())).thenReturn(Optional.of(category));
-
-        // 멤버모임 생성
-        MemberMeeting memberMeeting = mock(MemberMeeting.class);
-        when(memberMeetingRepository.save(any())).thenReturn(memberMeeting);
-
-        // 모임 생성
-        Meeting meeting = mock(Meeting.class);
-        // meeting :::: stub
-        when(meeting.getId()).thenReturn(1L);
-        when(meetingRepository.save(any())).thenReturn(meeting);
-
-        // 티켓 생성 --> 오류
-        when(ticketService.initTicket(meeting.getId(), "N")).thenReturn(null);
-        when(awsS3Service.getFileAsJsonString("json")).thenReturn("12345678");
-
-        when(awsS3Service.uploadFileViaStream(meeting.getId(), "json")).thenReturn(null);
-        when(awsS3Service.copyFilesFromTemplate(null)).thenReturn(null);
-
-        //when
+                .build();
         Long moimId = meetingService.createMoim(username, meetingDomainDTO);
 
-        //then
+        //then (생성한 모임에 대한 검증)
         assertThat(moimId).isEqualTo(1L);
-
     }
 
     @Test
     @DisplayName("MeetingService.join 메소드 테스트")
-    @WithCustomMockUser(username = "username", email = "email@email.com", role = "ROLE_USER")
+    @WithCustomMockUser()
     public void 모임참가() throws Exception {
         //given
-        Member member = Member.createMember(username, email, role);
-        Optional<Member> optionalMember = Optional.of(member);
-        when(memberRepository.findByUsername(username)).thenReturn(optionalMember);
 
+        // MemberRepository.findByUsername() stub
+        Member member = mock(Member.class);
+        when(memberRepository.findByUsername(any())).thenReturn(Optional.of(member));
+
+        // MeetingRepository.findById() stub
         Meeting meeting = mock(Meeting.class);
         when(meeting.getId()).thenReturn(1L);
-        when(meetingRepository.findById(meeting.getId())).thenReturn(Optional.of(meeting));
-        when(memberMeetingRepository.existsByMemberIdAndMeetingId(member.getId(),meeting.getId())).thenReturn(false);
+        when(meetingRepository.findById(any())).thenReturn(Optional.of(meeting));
 
+        // MemberMeetingRepository.existsByMemberIdAndMeetingId() stub
+        when(memberMeetingRepository.existsByMemberIdAndMeetingId(any(), any())).thenReturn(false);
+
+        // MemberMeetingRepository.save() stub
         MemberMeeting memberMeeting = mock(MemberMeeting.class);
         when(memberMeeting.getId()).thenReturn(1L);
         when(memberMeetingRepository.save(any())).thenReturn(memberMeeting);
-        //when
-        System.out.println(username);
-        Long joinId = meetingService.join(username, meeting.getId());
-        //then
-        assertThat(joinId).isEqualTo(memberMeeting.getId());
 
+        // when (모임 참가)
+        Long joinId = meetingService.join(username, meeting.getId());
+
+        // then (참가한 모임에 대한 검증)
+        assertThat(joinId).isEqualTo(1L);
     }
 
     @Test
@@ -191,15 +176,11 @@ public class MeetingServiceTest {
         assertThat(participantCheck).isTrue();
     }
 
-
     @Test
     @DisplayName("MeetingService.getMoims 메소드 테스트")
-    @WithCustomMockUser(username = "username", email = "email@email.com", role = "ROLE_USER")
+    @WithCustomMockUser()
     public void 모임목록조회() {
         // given
-
-        Member member = Member.createMember(username, email, role);
-        String username = member.getUsername();
 
         // "운동" 카테고리 Mock 객체 생성
         Category category = mock(Category.class);
@@ -209,15 +190,16 @@ public class MeetingServiceTest {
         Meeting meeting = mock(Meeting.class);
         when(meeting.getCategory()).thenReturn(category);
 
-        // 모임 목록 필터("운동", "서울특별시") 객체 생성
+        // "진행 중", "운동" 모임 목록 필터 객체 생성
         MeetingSearchCondition meetingSearchCondition = MeetingSearchCondition.builder()
                 .category("운동")
+                .isEnd(false)
                 .build();
 
         // Pageable 객체 생성
         PageRequest pageable = PageRequest.of(0, 10);
 
-        // "운동", "서울특별시" 모임 Mock 객체에 대한 Page 객체 생성
+        // "진행 중", "운동" 모임 Mock 객체에 대한 Page 객체 생성
         Page<Meeting> meetingsPage = new PageImpl<>(Collections.singletonList(meeting));
         when(meetingRepository.searchMoims(meetingSearchCondition, username, pageable)).thenReturn(meetingsPage);
 
@@ -228,63 +210,81 @@ public class MeetingServiceTest {
         assertThat(result).isNotNull();
         assertThat(result.getContent()).hasSize(1);
         assertThat(result.getContent().get(0).getCategory().getName()).isEqualTo("운동");
+        assertThat(result.getContent().get(0).getIsFinished()).isEqualTo(false);
     }
 
     @Test
     @DisplayName("MeetingService.editMoim 메소드 테스트")
-    @WithCustomMockUser(username = "username", email = "email@email.com", role = "ROLE_USER")
-    public void 모임수정() throws Exception {
-        /*
+    @WithCustomMockUser()
+    public void 모임정보수정() throws Exception {
         //given
-        Member member = Member.createMember(username, email, role);
-        Category category = mock(Category.class);
+
+        // 모임의 id가 10임을 전제
         Meeting meeting = mock(Meeting.class);
+        when(meeting.getId()).thenReturn(10L);
 
-        when(meeting.getId()).thenReturn(1L);
+        // 현재 로그인한 회원이, 수정하려는 모임의 개최자임을 전제
+        Member member = Member.createMember(username, email, role);
         when(meeting.getCreator()).thenReturn(member);
-        when(category.getName()).thenReturn("운동");
 
+        // MemberRepository.findByUsername() stub
         when(memberRepository.findByUsername(username)).thenReturn(Optional.of(member));
+
+        // MeetingRepository.findById() stub
         when(meetingRepository.findById(meeting.getId())).thenReturn(Optional.of(meeting));
+
+        // CategoryRepository.findByName() stub
+        Category category = mock(Category.class);
+        when(category.getName()).thenReturn("독서");
         when(categoryRepository.findByName(category.getName())).thenReturn(Optional.of(category));
 
-        // MeetingDomainDTO 생성 -> 수정할 DTO
-        MeetingDomainDTO mtdo = MeetingDomainDTO.builder()
-                .category("운동")
-                .meetingPictureUrls(new ArrayList<>(new ArrayList<>(Arrays.asList("http:picture1", "http:picture2"))))
-                .title("모임 제목")
-                .description("모임 내용")
+        // when (모임 정보 수정)
+
+        // MeetingInfoDTO 생성 (= 모임의 수정 정보를 담고 있는 DTO)
+        MeetingInfoDTO meetingInfoDTO = MeetingInfoDTO.builder()
+                .category("독서")
+                .meetingPictureUrls(Arrays.asList("https://ssalon.co.kr/picture1", "https://ssalon.co.kr/picture2"))
+                .title("독서를 합시다.")
+                .description("독서를 좋아하는 사람들의 모임")
                 .location("서울 신림")
-                .capacity(8)
-                .meetingDate(LocalDateTime.now()).build();
-        //when
-        Long moimId = meetingService.editMoim(username, meeting.getId(), mtdo);
+                .capacity(3)
+                .build();
+        Long moimId = meetingService.editMoim(username, meeting.getId(), meetingInfoDTO);
 
-        //then
-        assertThat(moimId).isEqualTo(meeting.getId());
-
-
-         */
+        // then (수정한 모임에 대한 검증)
+        assertThat(moimId).isEqualTo(10L);
     }
 
     @Test
     @DisplayName("MeetingService.deleteMoim 메소드 테스트")
-    @WithCustomMockUser(username = "username", email = "email@email.com", role = "ROLE_USER")
+    @WithCustomMockUser()
     public void 모임삭제() throws Exception {
         //given
+
+        // Member Mock 객체 생성
         Member member = Member.createMember(username, email, role);
         Meeting meeting = mock(Meeting.class);
         when(meeting.getId()).thenReturn(1L);
+
+        // 현재 로그인한 회원이, 삭제하려는 모임의 개최자임을 전제
         when(meeting.getCreator()).thenReturn(member);
 
+        // MemberRepository.findByUsername() stub
         when(memberRepository.findByUsername(username)).thenReturn(Optional.of(member));
-        when(meetingRepository.findById(meeting.getId())).thenReturn(Optional.of(meeting));
-        doNothing().when(memberMeetingRepository).deleteByMeetingId(1L);
-        doNothing().when(meetingRepository).deleteById(1L);
-        //when
-        Long moimId = meetingService.deleteMoim(username, meeting.getId());
-        //then
 
+        // MeetingRepository.findById() stub
+        when(meetingRepository.findById(meeting.getId())).thenReturn(Optional.of(meeting));
+
+        // MemberMeetingRepository.deleteByMeetingId() stub
+        doNothing().when(memberMeetingRepository).deleteByMeetingId(1L);
+
+        // MeetingRepository.deleteById() stub
+        doNothing().when(meetingRepository).deleteById(1L);
+
+        // when (모임 삭제)
+        Long moimId = meetingService.deleteMoim(username, meeting.getId());
+
+        // then (삭제한 모임에 대한 검증)
         assertThat(moimId).isEqualTo(meeting.getId());
     }
 
@@ -328,6 +328,4 @@ public class MeetingServiceTest {
         assertThat(participantUsers.get(2).getNickname()).isEqualTo(createMemberMeeting3.getMember().getNickname());
 
     }
-
-
 }
