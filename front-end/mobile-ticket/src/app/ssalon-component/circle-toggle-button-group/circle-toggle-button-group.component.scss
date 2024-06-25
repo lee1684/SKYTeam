@@ -1,0 +1,38 @@
+#container {
+    display: flex;
+}
+
+#container::-webkil-scrollbar {
+    display: none;
+}
+
+#feature-buttons {
+    position: absolute;
+    display: flex;
+    right: 0;
+}
+
+.toggle-button {
+    border-radius: 50%;
+    background-color: #efefef;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 8px;
+    flex: 0 0 auto;
+}
+
+.toggle-button:hover {
+    cursor: pointer;
+}
+
+.selected {
+    background-color: #000000 !important;
+}
+
+.color-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-bottom: 10px;
+}

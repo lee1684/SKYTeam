@@ -1,0 +1,12 @@
+<div class="container" *ngIf="this.isReviewCreated"><app-moim-review-info [moimId]="this.moimId"></app-moim-review-info>
+</div>
+<div class="container" *ngIf="!this.isReviewCreated">
+    <div id="explanation">
+        아직 '{{this.moimTitle}}'의 <br />후기를 작성하지 않았어요!
+    </div>
+    <div>
+        <img src="assets/create_diary.png" width="150px" />
+    </div>
+    <app-square-button [buttonElements]="this.buttonElementService.createDiaryButtonElements"
+        (onClickEvent)="this.onClickCreateDiaryButton()"></app-square-button>
+</div>

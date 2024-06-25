@@ -1,0 +1,8 @@
+<div class="container">
+    <app-simple-input [type]="'search-input'" [placeholder]="'모임 검색'"
+        (onChangeEvent)="this.onInput($event)"></app-simple-input>
+    <app-image-row-container *ngIf="!this.isSearching" [isTicketContainer]="true" [tickets]="this.runningTickets"
+        [columnType]="true"></app-image-row-container>
+    <div id="spinner" *ngIf="this.isSearching"></div>
+</div>
+<p>moim-search works!</p>

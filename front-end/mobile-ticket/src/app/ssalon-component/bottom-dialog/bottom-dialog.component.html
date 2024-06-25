@@ -1,0 +1,46 @@
+<div class="container">
+    <div id="bottom-container">
+        <div class="content-container" [style.height.px]="(this.completeButton)?280:380">
+            <div *ngIf="this.content === this.bottomDialogType.MEETING_CATEGORY">
+
+                <app-meeting-category (onCategorySelectedEvent)="this.onClickButton($event)"></app-meeting-category>
+            </div>
+            <div *ngIf="this.content === this.bottomDialogType.MEETING_LOCATION">
+
+                <app-meeting-location (onCategorySelectedEvent)="this.onClickButton($event)"></app-meeting-location>
+            </div>
+            <div *ngIf="this.content === this.bottomDialogType.FEATURE_SUCCESS">
+                <div class="feature-success-container">
+                    <img src="assets/icons/feature-success.png" width="90" height="90" />
+                    완료하였습니다!
+                </div>
+            </div>
+            <div *ngIf="this.content === this.bottomDialogType.DELETE_ACCOUNT">
+                <div class="feature-success-container">
+                    회원 탈퇴를 진행하시겠습니까?<br />
+                    이 작업은 되돌릴 수 없습니다.
+                </div>
+            </div>
+            <div *ngIf="this.content === this.bottomDialogType.REMOVE_MOIM">
+                <div class="feature-success-container">
+                    모임을 삭제하시겠습니까? <br />
+                    이 작업은 되돌릴 수 없습니다.
+                </div>
+            </div>
+        </div>
+        <div *ngIf="this.completeButton && this.content !== this.bottomDialogType.DELETE_ACCOUNT && this.content !== this.bottomDialogType.REMOVE_MOIM"
+            class="complete-button">
+            <app-square-button (onClickEvent)="this.onClickCompleteButton($event)"></app-square-button>
+        </div>
+        <div *ngIf="this.completeButton  && this.content === this.bottomDialogType.DELETE_ACCOUNT"
+            class="complete-button">
+            <app-square-button [buttonElements]="this.buttonElementsService.removeAccountButtons"
+                (onClickEvent)="this.onClickCompleteButton($event)"></app-square-button>
+        </div>
+        <div *ngIf="this.completeButton  && this.content === this.bottomDialogType.REMOVE_MOIM" class="complete-button">
+            <app-square-button [buttonElements]="this.buttonElementsService.removeMOimButtons"
+                (onClickEvent)="this.onClickCompleteButton($event)"></app-square-button>
+        </div>
+    </div>
+
+</div>

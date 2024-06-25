@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_2" data-name="레이어 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 103.59 47.96">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #000;
+        font-family: BalooThambi2-Medium, 'Baloo Thambi 2';
+        font-size: 24px;
+        font-weight: 500;
+      }
+
+      .cls-2 {
+        letter-spacing: .01em;
+      }
+
+      .cls-3 {
+        fill: #3fa9f5;
+      }
+
+      .cls-3, .cls-4 {
+        stroke-width: 0px;
+      }
+
+      .cls-4 {
+        fill: #2e3192;
+      }
+    </style>
+  </defs>
+  <g id="_레이어_1-2" data-name="레이어 1">
+    <g>
+      <path class="cls-4" d="M26.46,41.98l-19.94,5.86c-1.81.53-3.62-.82-3.62-2.71V10.77c0-1.25.82-2.35,2.03-2.71L24.87,2.2c1.81-.53,3.62.82,3.62,2.71v34.37c0,1.25-.82,2.35-2.03,2.71Z"/>
+      <path class="cls-3" d="M23.55,39.9l-19.94,5.86c-1.81.53-3.62-.82-3.62-2.71V8.69c0-1.25.82-2.35,2.03-2.71L21.96.12c1.81-.53,3.62.82,3.62,2.71v34.37c0,1.25-.82,2.35-2.03,2.71Z"/>
+    </g>
+    <text class="cls-1" transform="translate(35.86 29.47) rotate(.36)"><tspan x="0" y="0">s</tspan><tspan class="cls-2" x="11.02" y="0">s</tspan><tspan x="22.3" y="0">alon</tspan></text>
+  </g>
+</svg>

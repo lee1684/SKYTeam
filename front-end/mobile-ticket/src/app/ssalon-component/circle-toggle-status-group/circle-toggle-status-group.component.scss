@@ -1,0 +1,57 @@
+#container {
+    display: flex;
+}
+
+#container::-webkil-scrollbar {
+    display: none;
+}
+
+#feature-buttons {
+    position: absolute;
+    display: flex;
+    right: 0;
+}
+
+.status-container {
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.circle-status {
+    border-radius: 50%;
+}
+
+.img-container {
+    border-radius: 50%;
+    background-color: #efefef;
+    border-width: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 8px;
+    flex: 0 0 auto;
+}
+
+.nickname-container {
+    text-align: center;
+    text-overflow: ellipsis;
+    font-weight: 500;
+
+}
+
+.toggle-button:hover {
+    cursor: pointer;
+}
+
+.selected {
+    background-color: #000000 !important;
+}
+
+.color-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-bottom: 10px;
+}
