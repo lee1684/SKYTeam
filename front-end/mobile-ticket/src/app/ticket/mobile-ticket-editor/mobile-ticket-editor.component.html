@@ -1,0 +1,124 @@
+<div class="container">
+    <!-- edit buttons & back button-->
+    <div class="horizontal-container" [style.justify-content]="'right'">
+        <div id="edit-feature-buttons">
+            <app-circle-toggle-button-group #editFeatureButtons [elements]="this.editFeatures" [innerSize]="20"
+                [outerSize]="'36px'" [noneStatusValue]="this.mobileTicketEditMode.NONE"
+                (onClickToggleButtonEvent)="this.onClickChangeEditMode($event)"></app-circle-toggle-button-group>
+        </div>
+        <div *ngIf="!this.isLowerWidth()">
+            <app-simple-button class="complete-button" [buttonElement]="this.previewButtonElement" [heightSize]="15"
+                (onClickEvent)="this.onClickPreviewButton()" [type]="'text'"></app-simple-button>
+        </div>
+        <div class="complete-button" *ngIf="this.isLowerWidth()" (mouseup)="this.onClickPreviewButton()">
+            <img src="assets/icons/view.png" width="20" height="20" />
+        </div>
+    </div>
+    <!-- detailed editor view -->
+    <div id="detail-editor" #detailedEditor [hidden]="this.editMode === this.mobileTicketEditMode.NONE"
+        [style.background-color]="this.getBackgroundColor()">
+        <!--back button-->
+        <div class="horizontal-container">
+            <div>
+                <app-simple-button class="back-button" [buttonElement]="this.goBackButtonElement" [heightSize]="40"
+                    (onClickEvent)="this.onClickEndDetailedEditViewer()"></app-simple-button>
+            </div>
+            <div class="complete-button-container">
+                <app-simple-button class="complete-button" [buttonElement]="this.completeButtonElement"
+                    [heightSize]="15" (onClickEvent)="this.onClickEndDetailedEditViewer()" [type]="'text'"
+                    [highContrast]="true"></app-simple-button>
+            </div>
+        </div>
+        <!-- ai-generate feature -->
+        <div *ngIf="this.editMode === this.mobileTicketEditMode.AI_GENERATE">
+            <div id="generate-container">
+
+                <img width="300" height="300" #generatedImage />
+                <div id="generator">
+                    <textarea id="prompt" #prompt autocomplete="off" type="text" [style.height]="'100px'"
+                        [style.width]="'300px'" [placeholder]="'생성하고 싶은 사진의 설명을 입력해주세요'"></textarea>
+                    <div [style.display]="'flex'" [style.justify-content]="'center'">
+                        <button id="generate-button" (click)="this.generateImage()">생성</button>
+                        <div *ngIf="this.generatingImage" id="spinner"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <!-- background color edit feature -->
+        <div *ngIf="
+        this.editMode === this.mobileTicketEditMode.BACKGROUND_COLOR_CHANGE
+      " class="color-board-container">
+            <svg class="ticket-background" width="350" height="600" viewBox="0 0 350 600" fill="none"
+                xmlns="http://www.w3.org/2000/svg" #backgroundPath>
+                <rect width="350" height="600" rx="25" />
+            </svg>
+            <app-color-board class="color-board" [outerSize]="'30px'" [innerSize]="'24px'"
+                (onClickToggleButtonEvent)="this.changeBackgroundColor($event)"
+                [selectedValue]="this.backgroundColor.value"></app-color-board>
+        </div>
+        <!-- text edit feature -->
+        <div *ngIf="this.editMode === this.mobileTicketEditMode.TEXT">
+            <div id="text-edit-feature-container" #textEditFeatureContainer>
+                <textarea class="text-edit-input" #textEditInput autocomplete="off" type="text"
+                    [style.text-align]="this.ssalonTextAttribute.textAlign"
+                    [style.color]="this.ssalonTextAttribute.color"
+                    [style.font-family]="this.ssalonTextAttribute.fontFamily"
+                    (input)="this.onChangeSsalonTextAttribute('text', $event)"></textarea>
+            </div>
+            <div class="horizontal-container" id="text-align" [style.justify-content]="'center'">
+                <app-circle-toggle-button-group [elements]="this.textAlignButtons" [outerSize]="'30px'"
+                    [selectedValues]="[
+            this.getSsalonTextEnumByString(this.ssalonTextAttribute.textAlign)
+          ]" (onClickToggleButtonEvent)="
+            this.onChangeSsalonTextAttribute('textAlign', $event)
+          "></app-circle-toggle-button-group>
+                <!--<input type="color" />-->
+            </div>
+            <app-simple-toggle-button-group class="fonts" [elements]="this.fonts" (onClickToggleButtonEvent)="
+          this.onChangeSsalonTextAttribute('fontFamily', $event)
+        "></app-simple-toggle-button-group>
+            <app-color-board class="color-board" [outerSize]="'30px'" [innerSize]="'24px'" (onClickToggleButtonEvent)="
+          this.onChangeSsalonTextAttribute('color', $event)
+        " [selectedValue]="
+          this.ssalonColor.getSsalonColorObjectByColor(
+            this.ssalonTextAttribute.color
+          ).value
+        "></app-color-board>
+        </div>
+
+        <!-- phtoo edit feature -->
+        <div id="photo-edit-feature-container" *ngIf="this.editMode === this.mobileTicketEditMode.PHOTO">
+            <div id="upload-photo-num">{{this.uploadPhotoNum}}</div>
+            <img id="selected-photo-container" #selectedPhotoContainer />
+        </div>
+
+        <!-- sticker edit feature -->
+        <div id="sticker-edit-feature-container" #stickerEditFeatureContainer
+            *ngIf="this.editMode === this.mobileTicketEditMode.STICKER">
+            <div [style.display]="'flex'" [style.justify-content]="'space-evenly'" [style.margin-bottom]="'20px'"
+                *ngFor="let stickerRow of this.getStickerArray()">
+                <div *ngFor="let sticker of stickerRow">
+                    <div class="sticker" [style.width]="'100px'" [style.height]="'150px'"
+                        (mouseup)="this.selectSticker(sticker.value)">
+                        <img [src]="sticker.imgSrc" width="80px" />
+                        <div *ngIf="sticker.selected" class="selected-status"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- draw edit feature -->
+        <div *ngIf="this.editMode === this.mobileTicketEditMode.DRAW">
+            <div class="ticket-background">
+                <canvas #drawCanvas width="350" height="600"></canvas>
+            </div>
+
+            <app-color-board class="color-board" [outerSize]="'30px'" [innerSize]="'24px'" (onClickToggleButtonEvent)="
+          this.onChangePencilColor($event)
+        "></app-color-board>
+        </div>
+    </div>
+</div>

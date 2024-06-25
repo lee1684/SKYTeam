@@ -1,0 +1,16 @@
+<div id="container" #toggleButtonContainer>
+  <ng-container *ngFor="let row of this.modifiedElements">
+    <ng-container *ngFor="let element of row" class="color-row">
+      <div>
+        <div class="toggle-button" [style.width]="this.outerSize" [style.height]="this.outerSize"
+          (click)="this.onClickToggleButton(element.value)" *ngIf="element.value !== this.noneStatusValue"
+          #toggleButton>
+          <img [src]="this.getImgSrc(element.imgSrc, element.value)" [width]="this.innerSize"
+            [height]="this.innerSize" />
+        </div>
+        <h4 *ngIf="false" [style.width.px]="this.innerSize+10">{{element.label}}</h4>
+      </div>
+
+    </ng-container>
+  </ng-container>
+</div>

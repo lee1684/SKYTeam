@@ -1,0 +1,16 @@
+<div id="container" #toggleButtonContainer>
+    <ng-container *ngFor="let row of this.modifiedElements">
+        <ng-container *ngFor="let element of row" class="color-row">
+            <div class="status-container">
+                <div class="img-container" [style.width.px]="this.outerSize+3" [style.height.px]="this.outerSize+3"
+                    [style.background-color]="this.getBorderColor(element.status)">
+                    <img class="circle-status" [src]="element.imgSrc" [width]="this.outerSize" [height]="this.outerSize"
+                        #circleStatus />
+                </div>
+
+                <div *ngIf="this.isLabelVisible" class="nickname-container" [style.width.px]="this.outerSize*2">
+                    {{element.label}}</div>
+            </div>
+        </ng-container>
+    </ng-container>
+</div>

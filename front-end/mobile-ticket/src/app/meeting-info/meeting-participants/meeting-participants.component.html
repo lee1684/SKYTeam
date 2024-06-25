@@ -1,0 +1,20 @@
+<div *ngIf="this.isParticipantsLoaded()" class="container">
+    <app-top-navigator [style.width]="'100%'" [title]="'참가자관리'" (backButtonClickEvent)="this.onClickBackButton()"
+        [defaultBack]="false"></app-top-navigator>
+    <div class="container">
+        <app-simple-toggle [buttonElements]="this.participantButtonElements" [columnNum]="1" [buttonWidth]="350"
+            [align]="'left'" [multiSelection]="true"
+            (onClickToggleButtonEvent)="this.onClickParticipantButton()"></app-simple-toggle>
+    </div>
+    <div [style.margin-bottom.px]="20">
+        <app-simple-input [type]="'longText'" [label]="'신고 / 강퇴 사유'" [longTextHeight]="200"
+            [placeholder]="'참가자를 선택 후 입력해주세요.'" #reasonContainer></app-simple-input>
+        <app-square-button
+            [buttonElements]="(this.isCreator)?this.buttonElementsService.manageParticipantsButtons:[this.buttonElementsService.manageParticipantsButtons[0]]"
+            (onClickEvent)="this.onClickManageButton($event)"></app-square-button>
+    </div>
+    <div *ngIf="this.isPopUpBottomDialog">
+        <app-bottom-dialog [content]="this.bottomDialogType.FEATURE_SUCCESS"
+            (onClickCompleteButtonEvent)="this.onClickCloseBottomDialog()"></app-bottom-dialog>
+    </div>
+</div>
