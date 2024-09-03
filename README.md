@@ -119,8 +119,7 @@ WebGL 라이브러리인 **Three.js**를 통해 증표를 렌더링하고, 이�
 
 <br><br>
 
-## :running: 주요 기능 시연 (Feature Demostration)
-AJOU SOFTCON 홈페이지의 [살롱 소개 페이지](https://softcon.ajou.ac.kr/works/works.asp?uid=1784)를 참조해주세요.  
+## :running: 주요 기능 시연 (Feature Demostration) 
 
 <br><br>
 
@@ -138,11 +137,3 @@ AJOU SOFTCON 홈페이지의 [살롱 소개 페이지](https://softcon.ajou.ac.k
 
 <br><br>
 
-## 🎊 2024-1 AJOU SOFTCON 전시 (2024-1 AJOU SOFTCON Presentation)
-[2024-1 AJOU SOFTCON](https://softcon.ajou.ac.kr/works/works.asp?uid=1784) : 이 링크를 클릭하여 SOFTCON 홈페이지 내 '살롱' 소개 페이지로 이동할 수 있습니다.
-
-### 전시 포스터 (Presentation Poster)
-![SSALON AJOU SOFTCON 포스터](https://i.imgur.com/yF4g8hi.png)
-
-### 전시 소개 영상 (Presentation Video)
-AJOU SOFTCON 홈페이지의 [살롱 소개 페이지](https://softcon.ajou.ac.kr/works/works.asp?uid=1784)를 참조해주세요.  
